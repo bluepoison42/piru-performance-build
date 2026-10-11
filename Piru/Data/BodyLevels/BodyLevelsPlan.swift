@@ -45,7 +45,7 @@ extension BodyLevelsManager {
                 // over days-to-weeks (their body-load readout is noise), and an
                 // unmodeled release form without a per-product envelope has no
                 // honest absorption limb.
-                if substance?.category == .supplement { continue }
+                if substance?.modelsBodyLoad == false { continue }
                 let productDuration = entry.productDuration
                 // A depot administration keeps its slow depot half-life and no acute
                 // absorption limb (see PKResolver / ActiveSubstanceCalculator), so it

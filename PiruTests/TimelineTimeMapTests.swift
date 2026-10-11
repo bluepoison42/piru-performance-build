@@ -152,6 +152,88 @@ struct TimelineTimeMapTests {
         #expect(map.reversedY(dose) > map.reversedY(now))
     }
 
+    // MARK: - Every input gets a map
+
+    @Test
+    func `A log dated entirely ahead of now still maps`() {
+        // The launch crash loop: the only dose sits two hours ahead and draws
+        // no curve, so the strip's oldest moment (five minutes before it)
+        // lay past its live edge (ten minutes past now), every breakpoint was
+        // filtered out, and the first lookup read `times[0]` of an empty array.
+        let dose = now.addingTimeInterval(minutes(120))
+        let start = dose.addingTimeInterval(-minutes(5))
+        let end = now.addingTimeInterval(minutes(10))
+        let map = TimelineTimeMap(
+            start: start,
+            end: end,
+            now: now,
+            slices: [.init(bottomTime: Calendar.current.startOfDay(for: dose), topTime: end, breakAbove: false, minimumHeight: 80)],
+            anchors: [dose],
+            activeIntervals: [],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(!map.times.isEmpty)
+        #expect(map.reversedY(end).isFinite)
+        #expect(map.reversedY(dose).isFinite)
+        #expect(map.totalHeight >= 0)
+    }
+
+    @Test
+    func `A map with no breakpoints answers zero instead of trapping`() {
+        let nan = Date(timeIntervalSinceReferenceDate: .nan)
+        let map = TimelineTimeMap(
+            start: nan,
+            end: nan,
+            now: now,
+            slices: [],
+            anchors: [],
+            activeIntervals: [],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(map.times.isEmpty)
+        #expect(map.totalHeight == 0)
+        #expect(map.forwardY(now) == 0)
+        #expect(map.reversedY(now) == 0)
+        #expect(map.height(from: now, to: now.addingTimeInterval(60)) == 0)
+    }
+
+    @Test
+    func `A single breakpoint maps every moment to zero height`() {
+        let map = TimelineTimeMap(
+            start: now,
+            end: now,
+            now: now,
+            slices: [],
+            anchors: [],
+            activeIntervals: [],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(map.times.count == 1)
+        #expect(map.forwardY(now.addingTimeInterval(-60)) == 0)
+        #expect(map.forwardY(now.addingTimeInterval(60)) == 0)
+    }
+
+    @Test @MainActor
+    func `The strip's live edge never falls short of the newest dose`() {
+        // No curve, dose two hours ahead: the edge follows the dose, so the
+        // strip's oldest moment always lies below it.
+        let ahead = now.addingTimeInterval(minutes(120))
+        let end = TimelineStripBuilder.stripEnd(now: now, modeledEnds: [], newestDose: ahead)
+        #expect(end > ahead.addingTimeInterval(-minutes(5)))
+        // A dose two days ahead with a curve: the one-day future cap yields to it.
+        let farAhead = now.addingTimeInterval(2 * 86_400)
+        let farEnd = TimelineStripBuilder.stripEnd(
+            now: now, modeledEnds: [farAhead.addingTimeInterval(minutes(240))], newestDose: farAhead,
+        )
+        #expect(farEnd > farAhead)
+        // A past log keeps the usual edge: ten minutes past now.
+        let pastEnd = TimelineStripBuilder.stripEnd(now: now, modeledEnds: [], newestDose: now.addingTimeInterval(-minutes(60)))
+        #expect(pastEnd == now.addingTimeInterval(minutes(10)))
+    }
+
     @Test
     func `Merged intervals are sorted and disjoint`() {
         let t0 = now
