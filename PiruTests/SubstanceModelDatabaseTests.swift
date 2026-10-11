@@ -176,4 +176,36 @@ struct SubstanceModelDatabaseTests {
         #expect(supports(["amphetamine"]))
         #expect(supports(["methamphetamine", "3-MMC"]))
     }
+
+    @Test
+    func `Effect Estimates converts logged mass units and omits volume doses`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let start = Date(timeIntervalSince1970: 0)
+        let pharmacology = ["3-mmc": SubstanceStore.shared.pharmacologyParameters(forSubstanceName: "3-MMC")]
+
+        func modeled(_ amount: Double, unit: String) throws -> (agent: EffectAgent, feeling: [Double]) {
+            let entry = DoseEntry(substance: "3-MMC", amount: amount, unit: unit, route: .oral, timestamp: start)
+            let doses = SessionResolveModel.computeMechanisticDoses([entry], startDate: start)
+            let agent = try #require(MechanisticSessionModel.effectAgents(doses: doses, pharmacology: pharmacology).first)
+            let result = try #require(MechanisticSessionModel.compute(doses: doses, pharmacology: pharmacology, tMax: 12))
+            return (agent, result.timeline.eu)
+        }
+
+        let mg = try modeled(80, unit: "mg")
+        let grams = try modeled(0.08, unit: "g")
+        let micrograms = try modeled(80_000, unit: "µg")
+        for candidate in [grams, micrograms] {
+            #expect(candidate.agent.doses.count == 1)
+            #expect(candidate.agent.doses[0].t == mg.agent.doses[0].t)
+            #expect(candidate.agent.doses[0].amt == mg.agent.doses[0].amt)
+            #expect(candidate.feeling == mg.feeling)
+        }
+        #expect(mg.agent.doses[0].amt == 1)
+
+        let volume = DoseEntry(substance: "3-MMC", amount: 80, unit: "mL", route: .oral, timestamp: start)
+        let volumeDoses = SessionResolveModel.computeMechanisticDoses([volume], startDate: start)
+        #expect(volumeDoses.isEmpty)
+        #expect(MechanisticSessionModel.effectAgents(doses: volumeDoses, pharmacology: pharmacology).isEmpty)
+        #expect(MechanisticSessionModel.compute(doses: volumeDoses, pharmacology: pharmacology, tMax: 12) == nil)
+    }
 }

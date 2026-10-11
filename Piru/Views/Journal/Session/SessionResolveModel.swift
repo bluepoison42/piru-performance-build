@@ -93,7 +93,7 @@ enum SessionResolveModel {
     /// `body` (support gate, task signature) must never pay a store lookup.
     /// Doses whose substance isn't in the library are dropped — they can't be
     /// modeled anyway.
-    private static func computeMechanisticDoses(_ entries: [DoseEntry], startDate: Date) -> [MechanisticSessionModel.DoseInput] {
+    static func computeMechanisticDoses(_ entries: [DoseEntry], startDate: Date) -> [MechanisticSessionModel.DoseInput] {
         var inLibraryCache: [String: Bool] = [:]
         func inLibrary(_ name: String) -> Bool {
             let key = name.lowercased()
@@ -112,9 +112,11 @@ enum SessionResolveModel {
             guard !entry.namesUnmodeledForm else { return nil }
             // No amount, no simulated dose.
             guard !entry.isUnknownDose else { return nil }
+            // Match tolerance replay: units without a mass conversion cannot drive the model.
+            guard let amountMg = DoseUnit.convert(entry.amount, from: entry.unit, to: "mg") else { return nil }
             return MechanisticSessionModel.DoseInput(
                 name: entry.substance,
-                amount: entry.amount,
+                amount: amountMg,
                 route: entry.route,
                 hours: entry.timestamp.timeIntervalSince(startDate) / 3_600,
             )
