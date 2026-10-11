@@ -829,6 +829,98 @@ struct DataExportImportFormatTests {
         #expect(colors.contains { $0.substance == "Ketamine" })
     }
 
+    /// A PsychonautWiki/PsyLog file in the shape a smoked Cannabis dose takes,
+    /// one ingestion per route name, a minute apart.
+    private func pwFile(routes: [String], time: Int64 = 1_759_000_000_000) -> Data {
+        let ingestions = routes.enumerated().map { index, route in
+            """
+            { "substanceName": "Cannabis", "dose": 3, "time": \(time + Int64(index) * 60000), "administrationRoute": "\(route)", "units": "mg", "notes": "", "isHiddenInTimeline": false }
+            """
+        }.joined(separator: ",")
+        return Data("""
+        {
+          "exportSource": "iOS Journal 15.0",
+          "substanceCompanions": [{ "substanceName": "Cannabis", "color": "GREEN" }],
+          "customUnits": [],
+          "experiences": [
+            { "title": "", "text": "", "creationDate": \(time), "sortDate": \(time), "isFavorite": false, "timedNotes": [], "ingestions": [\(ingestions)] }
+          ]
+        }
+        """.utf8)
+    }
+
+    /// A smoked dose lands on inhalation; a PsyLog import of 1,241 smoked
+    /// Cannabis doses filed every one as Other when this importer had its own
+    /// route table.
+    @Test
+    func `PW SMOKED imports as inhalation`() throws {
+        let container = try makeTestContainer()
+        let context = ModelContext(container)
+        try DataExportImport.importJSON(data: pwFile(routes: ["SMOKED"]), context: context)
+        let entry = try #require(try context.fetch(FetchDescriptor<DoseEntry>()).first)
+        #expect(entry.substance == "Cannabis")
+        #expect(entry.route == .inhalation)
+    }
+
+    /// Every route name in PW's journal `AdministrationRoute` maps to a real
+    /// route, so none falls to Other.
+    @Test
+    func `Every PW route name imports to a real route`() throws {
+        let expected: [String: RouteOfAdministration] = [
+            "ORAL": .oral,
+            "SUBLINGUAL": .sublingual,
+            "BUCCAL": .buccal,
+            "INSUFFLATED": .insufflation,
+            "RECTAL": .rectal,
+            "TRANSDERMAL": .transdermal,
+            "SUBCUTANEOUS": .subcutaneous,
+            "INTRAMUSCULAR": .intramuscular,
+            "INTRAVENOUS": .intravenous,
+            "SMOKED": .inhalation,
+            "INHALED": .inhalation,
+        ]
+        let names = expected.keys.sorted()
+        let container = try makeTestContainer()
+        let context = ModelContext(container)
+        try DataExportImport.importJSON(data: pwFile(routes: names), context: context)
+        let entries = try context.fetch(FetchDescriptor<DoseEntry>(sortBy: [SortDescriptor(\.timestamp)]))
+        #expect(entries.count == names.count)
+        for (name, entry) in zip(names, entries) {
+            #expect(entry.route == expected[name], "\(name) imported as \(entry.route)")
+        }
+    }
+
+    /// Re-importing the file restores the route of a dose an earlier import
+    /// filed as Other, rather than adding an inhalation copy beside it.
+    @Test
+    func `Re-import repairs a dose stored as Other`() throws {
+        let container = try makeTestContainer()
+        let context = ModelContext(container)
+        let time: Int64 = 1_759_000_000_000
+        context.insert(DoseEntry(substance: "Cannabis", amount: 3, unit: "mg", route: .other, timestamp: Date(ms: time)))
+        try context.save()
+
+        try DataExportImport.importJSON(data: pwFile(routes: ["SMOKED"], time: time), context: context)
+        let entries = try context.fetch(FetchDescriptor<DoseEntry>())
+        #expect(entries.count == 1)
+        #expect(entries.first?.route == .inhalation)
+    }
+
+    /// The import commits before it signals, so a reader of the committed store
+    /// (a fresh context, as `DatabaseActor` uses) sees the doses the tick
+    /// announces.
+    @Test
+    func `Import commits before the change tick`() throws {
+        let container = try makeTestContainer()
+        let context = ModelContext(container)
+        let before = DoseLogService.shared.revision
+        try DataExportImport.importJSON(data: pwFile(routes: ["SMOKED", "ORAL"]), context: context)
+        #expect(DoseLogService.shared.revision > before)
+        #expect(!context.hasChanges)
+        let committed = try ModelContext(container).fetchCount(FetchDescriptor<DoseEntry>())
+        #expect(committed == 2)
+    }
+
     /// PsychonautWiki writes `sortDate: null` for experiences that never got
     /// one (its own importer falls back to the earliest ingestion). A real
     /// user's export failed on this — the whole file must still import.
