@@ -56,6 +56,13 @@
       "note": "drug.community files this as \"MXP (Methoxphenidine)\", so the exception keys on the split short name. MXP is documented oral and insufflated only — not formulated or characterized for injection. Offering an IV ladder is an invitation, not a reference."
     },
     {
+      "name": "Mitragynine",
+      "routes": [
+        "oral"
+      ],
+      "note": "A kratom-LEAF ladder on the pure alkaloid: the row is in grams and its own unit string says \"g (leaf powder)\", while its note gives the leaf's alkaloid content as 12-21 mg/g — so the numbers describe plant material roughly a thousandfold weaker than the compound the row is filed under. Piru's own mitragynine ladder is in mg and the leaf ladders live on the Kratom row. Not yet reported upstream."
+    },
+    {
       "name": "Para-Methoxyamphetamine",
       "routes": [
         "oral"

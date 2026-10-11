@@ -461,9 +461,11 @@ final class ToleranceStore {
             // prediction" — there is no tolerance curve to predict. (It just produces no card.)
             // Tolerance-relevant if a named target classifies to a (non-rebound) mechanism OR the
             // substance's category alone implies one (a designer benzo with no binding rows still is).
+            let yardstick = mechanismYardstickNanomolar(p)
             let hasTargetMechanism = p.targets.contains(where: {
                 let cls = ReceptorClasses.classify(target: $0.target, action: $0.action)
                 return cls != .unknown && !cls.hostsReboundWarningOnly
+                    && withinSelectivityWindow($0, yardstick: yardstick)
             })
             guard hasTargetMechanism || !p.categoryClasses.isEmpty else { continue }
             // A representative-backed fallback (target- or category-inferred) can still model it ⇒ not incomplete.
@@ -495,9 +497,11 @@ final class ToleranceStore {
             return rep.canComputeOccupancy && rep.referenceDoseMg != nil
         }
         var classes: Set<ReceptorClasses.ReceptorClass> = []
+        let yardstick = mechanismYardstickNanomolar(substanceParams)
         for engagement in substanceParams.targets {
             let cls = ReceptorClasses.classify(target: engagement.target, action: engagement.action)
-            guard cls != .unknown, hasRepresentative(cls) else { continue }
+            guard cls != .unknown, withinSelectivityWindow(engagement, yardstick: yardstick),
+                  hasRepresentative(cls) else { continue }
             classes.insert(cls)
         }
         // Category-inferred classes (independent of binding data) — the RC-tail rescue.
@@ -856,11 +860,16 @@ final class ToleranceStore {
             // same ligand counted N times is N× its real drive. Tightest-first order makes the first
             // engagement per base the one to keep.
             var seenReceptors = Set<String>()
+            let yardstick = ToleranceStore.mechanismYardstickNanomolar(sourceParams)
             for engagement in sourceParams.targets {
                 // Mechanism-direction gate: off-mechanism engagements (a 5-HT2A antagonist, an α7
                 // antagonist) classify to `.unknown` and are skipped — no card.
                 let cls = ReceptorClasses.classify(target: engagement.target, action: engagement.action)
                 guard cls != .unknown else { continue }
+                // Selectivity gate: a target two orders of magnitude weaker than this substance's own
+                // primary mechanism is not one of its mechanisms (ketamine's 42 µM μ-opioid against its
+                // 300 nM NMDA), whatever the dose makes of it.
+                guard ToleranceStore.withinSelectivityWindow(engagement, yardstick: yardstick) else { continue }
                 // Fallback path: only build the representative's targets that fall in the one class
                 // being surrogate-modeled.
                 if let restrictToClass, cls != restrictToClass { continue }
@@ -1213,6 +1222,48 @@ final class ToleranceStore {
     /// ketamine's ~28 µM κ-opioid). Distinct from ``occupancyPruneEpsilon``, which is the numeric
     /// integration tail cutoff.
     nonisolated static let minMeaningfulOccupancy = 0.05
+
+    /// How many times weaker than a substance's **own primary mechanism** an engagement may be and
+    /// still count as one of that substance's tolerance mechanisms (the selectivity gate in
+    /// ``mechanismYardstickNanomolar(_:)``).
+    ///
+    /// People titrate a dose against the mechanism they are taking the drug for, so the primary target
+    /// sits near half-saturation (`O ≈ 0.5`, concentration ≈ its constant) at an ordinary dose. A
+    /// co-engagement whose constant is `N×` higher is then at `≈ 1/(1 + N)` occupancy — 1% at `N = 100`,
+    /// a fifth of ``minMeaningfulOccupancy``. So past 100× a target can only clear the occupancy gate
+    /// when the primary mechanism is several-fold over-saturated, and the card it spawns says more about
+    /// the dose than about the drug. The ratio is relative, never absolute, because the absolute numbers
+    /// are not comparable across mechanisms: alcohol works at millimolar (GABA-A ≈ 3 mM, NMDA ≈ 50 mM)
+    /// and both of those are real mechanisms, 17× apart.
+    ///
+    /// Rebound-only classes are excluded from being the yardstick — see ``mechanismYardstickNanomolar(_:)``.
+    nonisolated static let mechanismSelectivityWindow = 100.0
+
+    /// The half-max constant of a substance's **tightest tolerance-bearing engagement** — the
+    /// denominator of the selectivity gate above. `nil` when the substance engages no tolerance class.
+    ///
+    /// `targets` is tightest-first, so this is a first-match scan. A rebound-only class
+    /// (``ReceptorClasses/ReceptorClass/hostsReboundWarningOnly``) cannot be the yardstick: those model
+    /// a discontinuation rebound rather than a tolerance curve, and a sub-nanomolar adrenergic affinity
+    /// would otherwise disqualify every real mechanism the substance has (CBG binds α₂ at 0.2 nM and
+    /// CB1 at 380 nM — CB1 is still what CBG does).
+    private nonisolated static func mechanismYardstickNanomolar(_ p: PharmacologyParameters) -> Double? {
+        p.targets.first {
+            let cls = ReceptorClasses.classify(target: $0.target, action: $0.action)
+            return cls != .unknown && !cls.hostsReboundWarningOnly && $0.halfMaxNanomolar > 0
+        }?.halfMaxNanomolar
+    }
+
+    /// Whether `engagement` is close enough to the substance's own primary mechanism to be one of its
+    /// tolerance mechanisms — the selectivity gate (``mechanismSelectivityWindow``). Applied wherever a
+    /// target is turned into class membership, so the contributor path, the missing-PK fallback and the
+    /// "can't predict yet" list all agree on which mechanisms a substance has.
+    private nonisolated static func withinSelectivityWindow(
+        _ engagement: PharmacologyParameters.TargetEngagement, yardstick: Double?,
+    ) -> Bool {
+        guard let yardstick, yardstick > 0 else { return true }
+        return engagement.halfMaxNanomolar <= mechanismSelectivityWindow * yardstick
+    }
 
     /// One substance-dose's contribution to one target: PK shape + the nM prefactor + that target's
     /// half-saturation constant, plus the `[onset, expiry]` active window that bounds the integration.

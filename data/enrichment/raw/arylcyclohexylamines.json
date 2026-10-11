@@ -984,21 +984,23 @@
         },
         {
           "target": "σ1",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "action": "agonist",
           "species": "rat",
           "tissue_or_cell": "rat brain",
           "radioligand_or_probe": "[3H](+)-pentazocine",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-rat-transporter"
+          "comparable_set": "roth-2013-rat-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
         },
         {
           "target": "DAT",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "action": "reuptakeInhibitor",
           "species": "human",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter"
+          "comparable_set": "roth-2013-human-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
         }
       ],
       "functional": [],
@@ -1106,11 +1108,12 @@
         },
         {
           "target": "σ2",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "action": "modulator",
           "species": "rat",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-rat-transporter"
+          "comparable_set": "roth-2013-rat-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
         },
         {
           "target": "SERT",
@@ -1362,45 +1365,50 @@
         },
         {
           "target": "NET",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "ic50_nm": 20000,
           "action": "reuptakeInhibitor",
           "species": "human",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter"
+          "comparable_set": "roth-2013-human-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement. The IC50 kept here is above that screening concentration and appears in neither Table 2 nor the paper's text; it is unverified."
         },
         {
           "target": "DAT",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "ic50_nm": 33000,
           "action": "reuptakeInhibitor",
           "species": "human",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter"
+          "comparable_set": "roth-2013-human-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement. The IC50 kept here is above that screening concentration and appears in neither Table 2 nor the paper's text; it is unverified."
         },
         {
           "target": "σ1",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "action": "agonist",
           "species": "guinea pig",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-guinea-pig-transporter"
+          "comparable_set": "roth-2013-guinea-pig-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
         },
         {
           "target": "σ2",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "action": "modulator",
           "species": "rat",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-rat-transporter"
+          "comparable_set": "roth-2013-rat-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
         },
         {
           "target": "μ-opioid",
-          "ki_nm": 10000,
+          "ki_nm": null,
           "action": "agonist",
           "species": "human",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter"
+          "comparable_set": "roth-2013-human-transporter",
+          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
         }
       ],
       "functional": [
