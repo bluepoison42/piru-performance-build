@@ -315,15 +315,11 @@ struct QuickLogCardList: View {
             onTap: {
                 withAnimation(.snappy) {
                     for item in group.unstaged(in: staged) {
-                        stageDailyItem(item)
+                        tray.stage(dailyMed: item, colorLookup: content.cachedColorLookup)
                     }
                 }
             },
         )
-    }
-
-    private func stageDailyItem(_ item: DailyDoseItem) {
-        tray.stage(dailyItem: item, colorLookup: content.cachedColorLookup)
     }
 
     // MARK: - Substance Card
@@ -391,7 +387,8 @@ struct QuickLogCardList: View {
 
     /// Staging-only counterpart to `QuickLogView.openLibrarySubstance` — a card
     /// in the list isn't a search surface, so it stages a draft without the
-    /// search-state reset the dock version performs.
+    /// search-state reset the dock version performs, and opens the draft at
+    /// the dock's half height without raising the keyboard.
     private func openLibrarySubstance(_ substance: Substance) {
         withAnimation(.snappy) {
             tray.stageDraft(
@@ -400,6 +397,7 @@ struct QuickLogCardList: View {
                 unit: substance.defaultUnit,
                 tint: content.cachedColorLookup[substance.name.lowercased()],
                 librarySubstance: substance,
+                focusesAmount: false,
             )
         }
     }

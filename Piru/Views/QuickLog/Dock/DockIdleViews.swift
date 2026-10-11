@@ -215,7 +215,7 @@ extension DockLabelContext {
         let todays = (try? modelContext.fetch(descriptor)) ?? []
 
         context.dueMedNames = DueNowSlot.derive(items: items, todayEntries: todays, now: now)
-            .map { displayName(for: $0.item) }
+            .map(\.item.displayName)
         context.nextMed = nextMed(items: scheduled, todayEntries: todays, now: now, calendar: calendar)
         return context
     }

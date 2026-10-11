@@ -341,12 +341,23 @@ struct QuickLogView: View {
 
     /// Cheap change-signature for the group pills' inputs (tiny N), used to
     /// invalidate `cachedDailyGroups` on an in-place edit from the My Meds
-    /// hub. Times/quiet/PRN all move a med between groups, so they key it.
-    private var routineSignature: [String] {
+    /// hub. Every field the groups copy or group by keys it, since the pills
+    /// read value snapshots rather than the live models. The row identity
+    /// keys it too, so a med deleted and re-inserted with identical fields (a
+    /// restore, an import) still rebuilds the cache off the new rows.
+    private var routineSignature: [RoutineSignatureRow] {
         dailyDoseItems.map { item in
             let times = item.reminderTimesMinutes.map(String.init).joined(separator: ",")
-            return "i:\(item.substance)|\(times)|\(item.isQuiet)|\(item.isAsNeeded)|\(item.sortOrder)"
+            let days = item.frequencyDays.map(String.init).joined(separator: ",")
+            let dose = "\(item.substance)|\(item.productName ?? "")|\(item.route.rawValue)|\(item.amount)|\(item.unit)|\(item.isBackgroundMed)"
+            let schedule = "\(times)|\(item.isQuiet)|\(item.isAsNeeded)|\(item.maxPerDay ?? -1)|\(item.frequencyRaw)|\(days)|\(item.startDate.timeIntervalSinceReferenceDate)"
+            return RoutineSignatureRow(id: item.persistentModelID, fields: "\(dose)|\(schedule)|\(item.sortOrder)")
         }
+    }
+
+    private struct RoutineSignatureRow: Equatable {
+        let id: PersistentIdentifier
+        let fields: String
     }
 
     private func stagedQuantity(_ item: DailyDoseItem) -> Int {

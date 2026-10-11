@@ -113,6 +113,22 @@ struct DoseTrayModelTests {
         #expect(tray.staged[0].wantsAmountFocus)
     }
 
+    /// A card's Custom chip opens its draft at the dock's half height: expanded,
+    /// but not asking for the keyboard that would push the sheet to full height.
+    @Test
+    func `A Custom-chip draft opens without asking for the amount field`() {
+        let tray = DoseTrayModel()
+        tray.stageDraft(substance: "Caffeine", route: .oral, unit: "mg", tint: nil, librarySubstance: nil, focusesAmount: false)
+        let draft = tray.staged[0]
+        #expect(tray.expandedItemIDs == [draft.id])
+        #expect(!draft.wantsAmountFocus)
+
+        tray.expandedItemIDs.removeAll()
+        tray.stageDraft(substance: "Caffeine", route: .oral, unit: "mg", tint: nil, librarySubstance: nil, focusesAmount: false)
+        #expect(tray.expandedItemIDs == [draft.id])
+        #expect(!tray.staged[0].wantsAmountFocus)
+    }
+
     /// Two different substances are two rows, each visible to the card snapshot —
     /// the "Log 2 Doses" button counts rows, and every counted row needs a card.
     @Test
