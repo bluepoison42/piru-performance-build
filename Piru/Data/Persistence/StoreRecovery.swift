@@ -88,7 +88,10 @@ nonisolated enum StoreRecovery {
         let canonical = canonicalStoreURL()
 
         // Canonical already holds data → nothing to do (the common, fast path).
-        if userDataCount(at: canonical) > 0 { return canonical }
+        // Counted with plain SQL on a read-only connection, so a launch that
+        // finds data writes nothing to the App Group store before the real
+        // container opens. See ``launchUserDataCount(at:)``.
+        if launchUserDataCount(at: canonical) > 0 { return canonical }
 
         // Empty / absent / unreadable: recover the richest *unintended* candidate.
         guard let (source, count) = richestRecoverableStore(excluding: canonical), count > 0 else {
@@ -361,6 +364,38 @@ nonisolated enum StoreRecovery {
 
     // MARK: - Helpers
 
+    /// The user-authored models whose rows decide whether a store holds the
+    /// user's data. DoseEntry is the journal — the data "No Entries" refers to —
+    /// plus the other user-authored models. Colors are cosmetic but counted too.
+    static var userDataModels: [any PersistentModel.Type] {
+        [DoseEntry.self, DailyDoseItem.self, FavoriteSubstance.self, SubstanceColor.self]
+    }
+
+    /// The SQLite tables behind ``userDataModels``. Core Data stores an entity
+    /// in the table `Z` + its uppercased entity name, and SwiftData names the
+    /// entity after the model type; none of these models has a subentity
+    /// sharing its table.
+    static var userDataTables: [String] {
+        userDataModels.map { "Z" + String(describing: $0).uppercased() }
+    }
+
+    /// ``userDataCount(at:)`` for the canonical store at launch.
+    ///
+    /// Launch runs inside `App.init`, which a prewarmed or background launch
+    /// can be suspended in at any moment, and the canonical store lives in the
+    /// shared App Group container, where a SQLite lock held into suspension is
+    /// a `0xdead10cc` kill. ``userDataCount(at:)`` answers by opening a
+    /// throwaway `ModelContainer` read-write (so it can migrate) and releasing
+    /// it, which checkpoints the WAL into the store file: a write, in the one
+    /// stretch of the launch that the system may cut short. The plain-SQL count
+    /// on a read-only connection (``StoreHealth/rowCount(at:tables:)``) writes
+    /// nothing and is exact whenever the file is a healthy Core Data store, so
+    /// the SwiftData count runs only when it cannot answer.
+    static func launchUserDataCount(at url: URL) -> Int {
+        guard anyFileExists(at: url) else { return 0 }
+        return StoreHealth.rowCount(at: url, tables: userDataTables) ?? userDataCount(at: url)
+    }
+
     /// Count user-data rows in the store at `url`. Returns 0 if the store is
     /// absent/empty, or -1 if it exists but no strategy can read it (genuine
     /// corruption, locked/encrypted, or an irreconcilable schema).
@@ -419,18 +454,14 @@ nonisolated enum StoreRecovery {
             let config = ModelConfiguration(url: url, allowsSave: allowsSave, cloudKitDatabase: .none)
             let container = try ModelContainer(for: Schema(PiruSchema.models), configurations: config)
             let context = ModelContext(container)
-            // DoseEntry is the journal — the data "No Entries" refers to — plus
-            // the other user-authored models. Colors are cosmetic but counted too.
-            let counts = [
-                (try? context.fetchCount(FetchDescriptor<DoseEntry>())) ?? 0,
-                (try? context.fetchCount(FetchDescriptor<DailyDoseItem>())) ?? 0,
-                (try? context.fetchCount(FetchDescriptor<FavoriteSubstance>())) ?? 0,
-                (try? context.fetchCount(FetchDescriptor<SubstanceColor>())) ?? 0,
-            ]
-            return counts.reduce(0, +)
+            return userDataModels.reduce(0) { $0 + rowCount(of: $1, in: context) }
         } catch {
             return nil
         }
+    }
+
+    private static func rowCount<Model: PersistentModel>(of _: Model.Type, in context: ModelContext) -> Int {
+        (try? context.fetchCount(FetchDescriptor<Model>())) ?? 0
     }
 
     private static func anyFileExists(at storeURL: URL) -> Bool {

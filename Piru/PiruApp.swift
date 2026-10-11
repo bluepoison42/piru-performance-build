@@ -44,6 +44,13 @@ struct PiruApp: App {
         // into suspension is a 0xdead10cc kill. See DatabaseSuspension.
         DatabaseSuspension.install()
 
+        // Opening the store reads, and on an update migrates, the App Group
+        // SQLite file, and `init` also runs for prewarmed and background
+        // launches, which iOS may suspend at any point. A suspension while
+        // SQLite holds a lock there is a 0xdead10cc kill, so ask for the
+        // process to stay up until the store is open. See BackgroundActivity.
+        let storeOpening = BackgroundActivity.hold("Open journal store")
+
         // A successor install's first launch brings the legacy app's journal and
         // settings across before anything opens the store; the legacy build
         // publishes what only its sandbox can see for that successor to read.
@@ -51,6 +58,7 @@ struct PiruApp: App {
         Self.publishLegacyHandoff()
 
         container = AppLaunch.openStore()
+        storeOpening.end()
 
         // Reads what this person owns and starts listening for purchases that
         // land outside a purchase call (Ask to Buy, refunds, another device).

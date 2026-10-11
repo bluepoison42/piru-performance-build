@@ -1,6 +1,7 @@
 import AsyncAlgorithms
 import Foundation
 import SwiftData
+import Synchronization
 
 /// A snapshot of tolerance state for one **mechanism class**, derived by replaying the dose log and
 /// aggregating every engaged target in that class (DAT+NET → Stimulants, all NMDA sites →
@@ -1555,6 +1556,9 @@ final class ToleranceStore {
         states = loaded
     }
 
+    /// The newest ``persist(_:now:)`` call; a persist task writes only while it is still the newest.
+    private nonisolated static let persistGeneration = Mutex(0)
+
     /// Write the durable ``ToleranceState`` cache **off the main actor**, on
     /// ``DatabaseActor``.
     ///
@@ -1565,9 +1569,24 @@ final class ToleranceStore {
     /// database actor (instead of the old unstructured `Task.detached` + throwaway context) keeps
     /// concurrent persists ordered — last writer wins *deterministically* — alongside every other
     /// background database operation; the 2 s debounce + signature gate already make overlap rare.
+    ///
+    /// The save runs under a ``BackgroundActivity``. A dose-log tick can arrive while the app is in
+    /// the background (a notification action, a watch-logged dose, a background launch), and the
+    /// replay it starts finishes seconds later; a save still committing when iOS suspends the app
+    /// holds a lock on the App Group store, which RunningBoard punishes with a `0xdead10cc` kill.
+    /// When the system refuses the hold, the save is skipped: the in-memory ``states`` stay current,
+    /// and the next launch's replay rewrites the cache. Waiting for the hold is a suspension point, so
+    /// a persist that a newer one overtook while waiting steps aside and leaves the write to it.
     private func persist(_ computed: [ReceptorClasses.ReceptorClass: ClassTolerance], now: Date) {
         guard let container else { return }
-        Task { @DatabaseActor in
+        let generation = Self.persistGeneration.withLock { latest in
+            latest += 1
+            return latest
+        }
+        Task(name: "Persist tolerance cache") { @DatabaseActor in
+            guard let activity = await BackgroundActivity.begin("Persist tolerance cache") else { return }
+            defer { activity.end() }
+            guard Self.persistGeneration.withLock({ $0 == generation }) else { return }
             let context = ModelContext(container)
             let existing = (try? context.fetch(FetchDescriptor<ToleranceState>())) ?? []
             var byKey = Dictionary(existing.map { ($0.target, $0) }, uniquingKeysWith: { a, _ in a })
