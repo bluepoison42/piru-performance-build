@@ -340,7 +340,6 @@ import SwiftData
             wipeUserData(context: context)
             do {
                 try DataExportImport.importJSON(data: data, context: context)
-                try context.save()
             } catch {
                 print("DemoData: -piruImportFile import failed: \(DataExportImport.importErrorMessage(for: error))")
                 return true

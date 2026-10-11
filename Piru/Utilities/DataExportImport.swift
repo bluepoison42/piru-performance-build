@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+import WidgetKit
 
 // MARK: - Millisecond Timestamps
 
@@ -138,7 +139,8 @@ enum DataExportImport {
     /// Routes the file to the importer ``classify(_:)`` names. A native file
     /// the decoder rejects surfaces as ``ImportFileError/malformedNative`` so
     /// the alert can say which app wrote it. `mode` is `.replace` only when the
-    /// caller has just emptied the store for this import.
+    /// caller has just emptied the store for this import. Saves the context and
+    /// emits the dose-log change tick itself, so a caller adds neither.
     @MainActor
     static func importJSON(
         data: Data,
@@ -180,8 +182,14 @@ enum DataExportImport {
             applySettings(fileSettings, mode: mode, to: settings)
         }
 
-        // One debounced tick wakes the tolerance cache after a bulk import (the burst coalesces).
+        // Commit, then signal — the order every dose write follows. The tick wakes
+        // readers of the committed store (tolerance, body levels, launch caches,
+        // which fetch on `DatabaseActor`) and keys the Insights models' memos, so
+        // sent before the commit it lets them cache the pre-import log under the
+        // post-import revision, and nothing re-signals when autosave lands.
+        try context.save()
         DoseLogService.shared.changed()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     /// Re-reads everything an import can change that a live singleton holds in
