@@ -80,7 +80,7 @@ enum ActiveSubstanceCalculator {
             // for them ("0% eliminated · clear in 5 months") is noise, not session
             // insight. Excluded here to match their suppression on the timeline and
             // in the entry-row rail (see `from`).
-            if substance?.category == .supplement { continue }
+            if substance?.modelsBodyLoad == false { continue }
             // A dose naming a form we don't model contributes no body-load estimate
             // either. The elimination half-life *is* a property of the molecule and
             // survives the delivery matrix — but the readout is not pure

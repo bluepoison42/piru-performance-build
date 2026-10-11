@@ -643,6 +643,20 @@ struct Substance: Identifiable {
         return representativeAcuteDuration()
     }
 
+    /// Whether a dose of this substance gets a body-load estimate: the
+    /// remaining-% badge, In Your System, Body Levels, the summary's
+    /// co-exposure pass, and the timeline's body-load curves.
+    ///
+    /// Every class qualifies except a supplement with no acute effect profile
+    /// on any route — vitamins and minerals whose clearance runs over days to
+    /// weeks, where a readout like "clear in 5 months" is noise. A supplement
+    /// that does have one (melatonin, L-theanine) already draws an effect
+    /// curve, so it gets a body load from its half-life like any other dose.
+    /// The one predicate behind all five surfaces, so they cannot disagree.
+    var modelsBodyLoad: Bool {
+        category != .supplement || timelineDuration(for: defaultRoute) != nil
+    }
+
     /// A stand-in acute profile for routes that lack their own: the default
     /// route's profile when it's a sane acute curve, otherwise the shortest
     /// acute profile across all routes (the most conservative — least likely to

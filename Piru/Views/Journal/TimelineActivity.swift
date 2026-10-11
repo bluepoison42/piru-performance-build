@@ -133,7 +133,7 @@ enum TimelineActivity {
 
     /// Body-load mode's activity end per dose: six half-lives, the same cutoff
     /// ``TimelineStripBuilder/computeRemainingFractions(entries:)`` treats as
-    /// cleared. Doses that draw no body-load curve (supplements, no half-life)
+    /// cleared. Doses that draw no body-load curve (not ``Substance/modelsBodyLoad``, no half-life)
     /// contribute nothing.
     static func pkActivityEnds(entries: [DoseEntry]) -> [Date] {
         var substanceCache: [String: Substance?] = [:]
@@ -147,7 +147,7 @@ enum TimelineActivity {
                 substance = SubstanceLibrary.lookup(entry.substance)
                 substanceCache[key] = substance
             }
-            if substance?.category == .supplement { continue }
+            if substance?.modelsBodyLoad == false { continue }
             guard let halfLife = PKResolver.halfLifeMinutes(substance: substance) else { continue }
             ends.append(entry.timestamp.addingTimeInterval(halfLife * 6 * 60))
         }
@@ -155,10 +155,10 @@ enum TimelineActivity {
     }
 
     /// PK mode: a substance's rate constants; `nil` for substances that draw
-    /// no body-load curve (no half-life, supplements).
+    /// no body-load curve (no half-life, or not ``Substance/modelsBodyLoad``).
     static func resolvePKConstants(key: String, name _: String) -> PKConstants? {
         guard let substance = SubstanceLibrary.lookup(key),
-              substance.category != .supplement,
+              substance.modelsBodyLoad,
               let halfLife = PKResolver.halfLifeMinutes(substance: substance),
               halfLife > 0 else { return nil }
         let (ke, ka) = PKResolver.rateConstants(

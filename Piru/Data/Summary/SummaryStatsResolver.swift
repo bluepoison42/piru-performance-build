@@ -141,7 +141,7 @@ enum SummaryStatsResolver {
     /// unmodeled forms, which are excluded from co-exposure the same way they're
     /// excluded from the body-load graph.
     private static func rateConstants(substance: Substance?, entry: DoseEntry) -> (Double?, Double?) {
-        if substance?.category == .supplement { return (nil, nil) }
+        if substance?.modelsBodyLoad == false { return (nil, nil) }
         let productDuration = entry.productDuration
         if productDuration == nil, entry.namesUnmodeledForm { return (nil, nil) }
         guard let params = PKResolver.params(

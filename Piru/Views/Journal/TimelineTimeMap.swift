@@ -39,7 +39,7 @@ nonisolated struct TimelineTimeMap {
     let ys: [CGFloat]
 
     var totalHeight: CGFloat {
-        ys[ys.count - 1]
+        ys.last ?? 0
     }
 
     /// The empty run standing in for skipped days.
@@ -99,7 +99,13 @@ nonisolated struct TimelineTimeMap {
             eventTimes.insert(interval.start)
             eventTimes.insert(interval.end)
         }
-        let times = eventTimes.sorted().filter { $0 >= start && $0 <= end }
+        // Bounds taken in either order: a strip whose oldest moment lies past
+        // its live edge (every dose logged ahead of now) still gets a map. Only
+        // a non-finite bound leaves `times` empty, and every lookup below
+        // answers 0 for that rather than trapping.
+        let lower = min(start, end)
+        let upper = max(start, end)
+        let times = eventTimes.sorted().filter { $0 >= lower && $0 <= upper }
 
         var heights: [CGFloat] = []
         heights.reserveCapacity(max(times.count - 1, 0))
@@ -156,8 +162,9 @@ nonisolated struct TimelineTimeMap {
     /// Cumulative height from the strip's start up to `t`, interpolating
     /// within a segment.
     func forwardY(_ t: Date) -> CGFloat {
-        if t <= times[0] { return 0 }
-        if t >= times[times.count - 1] { return totalHeight }
+        guard let first = times.first, let last = times.last else { return 0 }
+        if t <= first { return 0 }
+        if t >= last { return totalHeight }
         var lo = 0
         var hi = times.count - 1
         while hi - lo > 1 {
