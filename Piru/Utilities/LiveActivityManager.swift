@@ -70,7 +70,15 @@ struct DoseSnapshot {
     /// - Posts a Darwin notification so other targets (the widget extension) can
     ///   re-render when content changes.
     /// - Schedules background app refresh via `BGTaskScheduler` to keep the widget
-    ///   alive when the app is suspended.
+    ///   alive when the app is suspended, and to end it once its doses run out.
+    /// - Takes cards with nothing left to show off the Lock Screen on every wake
+    ///   (see `endFinishedActivities(canReplace:releasingDismissed:now:)`).
+    ///
+    /// Nothing ends an activity while the app is suspended and no refresh is
+    /// granted: ActivityKit offers a locally driven activity no scheduled end.
+    /// Its stale date is the one change that lands without the app, so it is
+    /// set at the last dose's end, where the extension collapses the card to a
+    /// single "Session complete" row.
     ///
     /// Session state (which substances are active) lives in `ActiveSessionManager`;
     /// this manager only owns the widget itself.
@@ -82,6 +90,10 @@ struct DoseSnapshot {
 
         private var currentActivity: Activity<PiruActivityAttributes>?
         private var updateTimer: Timer?
+        /// Ends sent to ActivityKit and not yet confirmed. The background
+        /// refresh awaits them before completing its task, or iOS can suspend
+        /// the process with the activity still on the Lock Screen.
+        @ObservationIgnored private var pendingEnds: [Task<Void, Never>] = []
 
         /// Whether a Live Activity is started *automatically* when a session begins.
         /// This gates only auto-start; the user can always start one manually from a
@@ -165,20 +177,21 @@ struct DoseSnapshot {
                 return
             }
 
+            let replacesCapped = endFinishedActivities(canReplace: true)
             let state = session.buildContentState(colorMap: session.cachedColorMap)
 
             if currentActivity != nil {
                 startUpdateTimer()
                 scheduleBackgroundRefresh()
-                pushUpdate(ActivityContent(state: state, staleDate: staleDate()))
-            } else if isAutoStartEnabled {
+                pushUpdate(ActivityContent(state: state, staleDate: Self.staleDate(for: state)))
+            } else if isAutoStartEnabled || replacesCapped {
                 startActivity(state: state)
             }
         }
 
         /// Re-arm every update source for an activity that is already on the
         /// Lock Screen: a fresh push (so the phase label and the countdown's
-        /// target boundary are current, and ``staleDate()`` is measured from
+        /// target boundary are current, and ``staleDate(for:now:)`` is measured from
         /// now), the foreground tick, and the background refresh.
         ///
         /// Called on cold launch after session recovery and whenever the app
@@ -187,20 +200,32 @@ struct DoseSnapshot {
         /// widget keeps the label and boundary of its last push until the user
         /// logs another dose: the "time and phase frozen" report.
         ///
-        /// Only a running activity is refreshed; this never starts one, so a
-        /// widget the user dismissed stays dismissed across a relaunch.
+        /// It is also where a card left behind while the app was suspended
+        /// comes off the Lock Screen: one whose doses all ran out, one
+        /// ActivityKit ended, or one this process no longer tracks
+        /// (``endFinishedActivities(canReplace:releasingDismissed:now:)``).
+        ///
+        /// Only a running activity is refreshed. A new one is started only to
+        /// replace an activity ActivityKit ended at its eight-hour cap
+        /// mid-session, so a widget the user dismissed stays dismissed across a
+        /// relaunch.
         func resumeIfRunning() {
-            guard currentActivity != nil else { return }
             let session = ActiveSessionManager.shared
             session.refresh()
+            let replacesCapped = endFinishedActivities(canReplace: true)
             guard !session.activeEntries.isEmpty else {
                 stopUpdateTimer()
                 return
             }
             let state = session.buildContentState(colorMap: session.cachedColorMap)
+            if replacesCapped, currentActivity == nil {
+                startActivity(state: state)
+                return
+            }
+            guard currentActivity != nil else { return }
             startUpdateTimer()
             scheduleBackgroundRefresh()
-            pushUpdate(ActivityContent(state: state, staleDate: staleDate()))
+            pushUpdate(ActivityContent(state: state, staleDate: Self.staleDate(for: state)))
         }
 
         /// Manually start (or refresh) the Live Activity for the current session,
@@ -210,11 +235,14 @@ struct DoseSnapshot {
             let session = ActiveSessionManager.shared
             guard !session.activeEntries.isEmpty else { return }
 
+            // A held activity the user dismissed, or ActivityKit ended, takes
+            // no updates; let it go so the button starts a fresh one.
+            endFinishedActivities(canReplace: true, releasingDismissed: true)
             let state = session.buildContentState(colorMap: session.cachedColorMap)
 
             if currentActivity != nil {
                 startUpdateTimer()
-                pushUpdate(ActivityContent(state: state, staleDate: staleDate()))
+                pushUpdate(ActivityContent(state: state, staleDate: Self.staleDate(for: state)))
             } else {
                 startActivity(state: state)
             }
@@ -270,17 +298,15 @@ struct DoseSnapshot {
         func handleBackgroundRefresh(_ task: BGAppRefreshTask) {
             // Refresh whenever an activity is live (auto-started or manual), not just
             // when auto-start is enabled — otherwise a manual activity would go stale.
-            guard currentActivity != nil else {
-                task.setTaskCompleted(success: true)
-                return
+            if currentActivity != nil {
+                scheduleBackgroundRefresh()
             }
-            scheduleBackgroundRefresh()
 
-            // Complete the BGTask only after the activity update has actually
-            // landed — completing while a fire-and-forget update is still in
-            // flight lets iOS suspend the process before the widget refreshes.
-            // The refresh resolves substances, so it runs with the databases
-            // resumed and hands the locks back before the task completes.
+            // Complete the BGTask only after the activity update or end has
+            // actually landed — completing while a fire-and-forget call is still
+            // in flight lets iOS suspend the process before the Lock Screen
+            // changes. The refresh resolves substances, so it runs with the
+            // databases resumed and hands the locks back before the task completes.
             let work = Task {
                 await DatabaseSuspension.withResumed {
                     await self.performBackgroundUpdate()
@@ -292,35 +318,44 @@ struct DoseSnapshot {
             }
         }
 
-        /// Awaited variant of the refresh push, driven by `handleBackgroundRefresh`.
+        /// The background refresh: shrink or end the session by what has run
+        /// out, repaint what is left, and take finished cards off the Lock Screen.
+        ///
+        /// iOS often launches the app into the background for this task with no
+        /// session in memory: recovery runs from the root view's launch task,
+        /// which a background launch need not reach. The running activity's own
+        /// content is then the only record of the session, so it decides whether
+        /// the activity is repainted or ended.
         private func performBackgroundUpdate() async {
             let session = ActiveSessionManager.shared
-            if !session.activeEntries.isEmpty {
-                session.refresh()
-                guard !session.activeEntries.isEmpty else {
-                    stopUpdateTimer()
-                    return
-                }
-                guard currentActivity != nil else { return }
+            // Pruning ends the activity (`sessionCleared`) when the last dose
+            // has run out, and shrinks it (`sessionDidChange`) when one has.
+            session.refresh()
+            if currentActivity != nil, !session.activeEntries.isEmpty {
                 let state = session.buildContentState(colorMap: session.cachedColorMap)
-                await pushUpdateAwaiting(ActivityContent(state: state, staleDate: staleDate()))
-            } else if let currentActivity {
-                // App was relaunched — push a lightweight update to force widget re-render
+                await pushUpdateAwaiting(ActivityContent(state: state, staleDate: Self.staleDate(for: state)))
+            } else if let currentActivity, session.activeEntries.isEmpty,
+                      !currentActivity.content.state.hasRunOut() {
+                // Same content, pushed again so the phase label is redrawn at
+                // the current time.
                 var state = currentActivity.content.state
                 state.lastUpdated = .now
-                let stale = state.activeSubstances.map {
-                    $0.doseTimestamp.addingTimeInterval($0.totalMinutes * 60)
-                }.max()
-                await pushUpdateAwaiting(ActivityContent(state: state, staleDate: stale))
+                await pushUpdateAwaiting(ActivityContent(state: state, staleDate: Self.staleDate(for: state)))
             }
+            // A new activity can't be requested from the background, so an
+            // activity ActivityKit capped is left for the next foreground to replace.
+            endFinishedActivities(canReplace: false)
+            await awaitPendingEnds()
         }
 
         /// Asks for the refresh at the next phase boundary any active substance
         /// crosses (the session's end included), floored at two minutes. iOS
-        /// grants a suspended app only a handful of these a day, so each one is
-        /// aimed at the moment the display actually changes — and the one that
-        /// lands after the last dose runs out is what ends the activity while
-        /// the app is asleep.
+        /// grants a suspended app only a handful of these a day, and none at all
+        /// in Low Power Mode or after the user swipes the app away, so each one
+        /// is aimed at the moment the display actually changes. The one that
+        /// lands after the last dose runs out ends the activity while the app
+        /// is asleep; when none lands, the card has already collapsed to its
+        /// "Session complete" row at its stale date.
         func scheduleBackgroundRefresh() {
             let request = BGAppRefreshTaskRequest(identifier: Self.backgroundTaskIdentifier)
             request.earliestBeginDate = Date(timeIntervalSinceNow: max(2 * 60, nextChangeInterval()))
@@ -354,7 +389,142 @@ struct DoseSnapshot {
         private func pushEnd(_ content: ActivityContent<PiruActivityAttributes.ContentState>) {
             guard let currentActivity else { return }
             nonisolated(unsafe) let activity = currentActivity
-            Task { await activity.end(content, dismissalPolicy: .immediate) }
+            pendingEnds.append(Task { await activity.end(content, dismissalPolicy: .immediate) })
+        }
+
+        /// Returns once every end sent so far has landed.
+        private func awaitPendingEnds() async {
+            let ends = pendingEnds
+            pendingEnds.removeAll()
+            for end in ends {
+                await end.value
+            }
+        }
+
+        // MARK: - Finished Activities
+
+        /// What to do with one Live Activity that is on, or was on, the screen.
+        enum Disposition: Equatable {
+            /// Leave it as it is.
+            case keep
+            /// Take it off the screen now.
+            case end
+            /// Take it off the screen and put up a fresh one for the session.
+            case replace
+            /// Stop tracking it; the user already removed it.
+            case release
+        }
+
+        /// The part of `ActivityState` the decision reads.
+        enum Lifecycle {
+            /// `.active` or `.stale`: on screen and still updatable.
+            case running
+            /// On the Lock Screen with its content frozen.
+            case ended
+            /// Off the screen.
+            case dismissed
+            /// A state this build doesn't know.
+            case other
+
+            init(_ state: ActivityState) {
+                switch state {
+                case .active, .stale: self = .running
+                case .ended: self = .ended
+                case .dismissed: self = .dismissed
+                default: self = .other
+                }
+            }
+        }
+
+        /// Decide one activity's fate.
+        ///
+        /// - A running activity this manager holds stays until its content has
+        ///   run out with no session in memory to replace it. With a session
+        ///   in memory, pruning ends it instead; with content still running and
+        ///   no session, recovery has yet to run and will refresh it.
+        /// - Any other running activity is a leftover: the manager runs one at
+        ///   a time and ends each one it lets go of, so nothing updates it again.
+        /// - An ended activity's content is frozen. ActivityKit ends one at its
+        ///   eight-hour cap and leaves it on the Lock Screen for up to four
+        ///   more hours. One this manager held, with doses still running, is
+        ///   replaced when `canReplace` (a new activity can only be requested in
+        ///   the foreground); every other one comes off the screen.
+        /// - A held activity the user dismissed is let go when the user asks for
+        ///   the card again, so that start requests a fresh one rather than
+        ///   updating a card nobody can see.
+        static func disposition(
+            lifecycle: Lifecycle,
+            isHeld: Bool,
+            contentHasRunOut: Bool,
+            sessionIsEmpty: Bool,
+            canReplace: Bool,
+        ) -> Disposition {
+            switch lifecycle {
+            case .running:
+                guard isHeld else { return .end }
+                return sessionIsEmpty && contentHasRunOut ? .end : .keep
+            case .ended:
+                guard isHeld, !contentHasRunOut, !sessionIsEmpty else { return .end }
+                return canReplace ? .replace : .keep
+            case .dismissed:
+                return isHeld ? .release : .keep
+            case .other:
+                return .keep
+            }
+        }
+
+        /// Apply ``disposition(lifecycle:isHeld:contentHasRunOut:sessionIsEmpty:canReplace:)``
+        /// to every Piru activity ActivityKit still lists. Decisions and the
+        /// release of the held activity happen now; the ends are queued in
+        /// ``pendingEnds``.
+        ///
+        /// A held activity the user dismissed is let go only when
+        /// `releasingDismissed` (the Start button). Held, it keeps automatic
+        /// starts from putting the card straight back when a dose runs out or
+        /// a color changes.
+        ///
+        /// - Returns: whether the held activity was ended for a replacement,
+        ///   which the caller then requests.
+        @discardableResult
+        private func endFinishedActivities(
+            canReplace: Bool,
+            releasingDismissed: Bool = false,
+            now: Date = .now,
+        ) -> Bool {
+            let sessionIsEmpty = ActiveSessionManager.shared.activeEntries.isEmpty
+            var replaces = false
+            for activity in Activity<PiruActivityAttributes>.activities {
+                let isHeld = activity.id == currentActivity?.id
+                let disposition = Self.disposition(
+                    lifecycle: Lifecycle(activity.activityState),
+                    isHeld: isHeld,
+                    contentHasRunOut: activity.content.state.hasRunOut(at: now),
+                    sessionIsEmpty: sessionIsEmpty,
+                    canReplace: canReplace,
+                )
+                switch disposition {
+                case .keep:
+                    continue
+                case .release:
+                    if releasingDismissed { releaseCurrentActivity() }
+                    continue
+                case .replace:
+                    replaces = true
+                case .end:
+                    break
+                }
+                if isHeld { releaseCurrentActivity() }
+                nonisolated(unsafe) let ending = activity
+                pendingEnds.append(Task { await ending.end(nil, dismissalPolicy: .immediate) })
+            }
+            return replaces
+        }
+
+        /// Stop tracking the held activity and every update source aimed at it.
+        private func releaseCurrentActivity() {
+            stopUpdateTimer()
+            BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundTaskIdentifier)
+            currentActivity = nil
         }
 
         // MARK: - Private
@@ -380,20 +550,27 @@ struct DoseSnapshot {
 
         /// Seconds until the next phase boundary across every active substance, or
         /// ``maximumTick`` when nothing is pending.
+        ///
+        /// With no session in memory (the app launched into the background for
+        /// its refresh task) the held activity's content stands in for it, so
+        /// the next refresh is still aimed at that content's next boundary or end.
         private func nextChangeInterval() -> TimeInterval {
             let now = Date.now
-            let next = ActiveSessionManager.shared.activeEntries.flatMap { item -> [Date] in
-                guard let duration = item.duration else { return [] }
-                let start = item.snapshot.timestamp
-                let bounds = duration.phaseBoundaries
-                return [
-                    bounds.onsetEnd, bounds.comeupEnd, bounds.peakEnd,
-                    bounds.offsetEnd, bounds.afterglowEnd,
-                ].map { start.addingTimeInterval($0 * 60) }
+            let session = ActiveSessionManager.shared
+            let boundaries: [Date] = if session.activeEntries.isEmpty {
+                currentActivity?.content.state.activeSubstances.flatMap(\.phaseChangeDates) ?? []
+            } else {
+                session.activeEntries.flatMap { item -> [Date] in
+                    guard let duration = item.duration else { return [] }
+                    let start = item.snapshot.timestamp
+                    let bounds = duration.phaseBoundaries
+                    return [
+                        bounds.onsetEnd, bounds.comeupEnd, bounds.peakEnd,
+                        bounds.offsetEnd, bounds.afterglowEnd,
+                    ].map { start.addingTimeInterval($0 * 60) }
+                }
             }
-            .filter { $0 > now }
-            .min()
-            guard let next else { return Self.maximumTick }
+            guard let next = boundaries.filter({ $0 > now }).min() else { return Self.maximumTick }
             return next.timeIntervalSince(now)
         }
 
@@ -414,7 +591,7 @@ struct DoseSnapshot {
             }
             if currentActivity != nil {
                 let state = session.buildContentState(colorMap: session.cachedColorMap)
-                pushUpdate(ActivityContent(state: state, staleDate: staleDate()))
+                pushUpdate(ActivityContent(state: state, staleDate: Self.staleDate(for: state)))
             }
             // The tick is one-shot; re-arm it for the *next* boundary.
             startUpdateTimer()
@@ -426,7 +603,7 @@ struct DoseSnapshot {
             let session = ActiveSessionManager.shared
             let earliest = session.activeEntries.map(\.snapshot.timestamp).min() ?? .now
             let attributes = PiruActivityAttributes(startTime: earliest)
-            let content = ActivityContent(state: state, staleDate: staleDate())
+            let content = ActivityContent(state: state, staleDate: Self.staleDate(for: state))
 
             do {
                 currentActivity = try Activity.request(
@@ -447,49 +624,48 @@ struct DoseSnapshot {
         /// the view is redrawn on a content update, and once more when it goes stale.
         /// That single stale re-render is the only scheduled repaint available, so it
         /// is spent where the display actually changes — **the next phase boundary any
-        /// active substance crosses** — rather than on a flat five-minute tick that
+        /// substance in `state` crosses** — rather than on a flat five-minute tick that
         /// usually lands mid-phase and repaints nothing new.
         ///
         /// Bounded on both sides: never sooner than ``minimumStale`` (so a dose logged
         /// seconds before a boundary can't burn the budget on an instant repaint),
         /// never later than ``maximumStale`` (so a long quiet stretch still refreshes
-        /// eventually), and never past the session's own end.
-        private func staleDate() -> Date? {
-            let now = Date.now
-            let session = ActiveSessionManager.shared
-
-            let sessionEnd = session.activeEntries.compactMap { item -> Date? in
-                guard let duration = item.duration else { return nil }
-                return item.snapshot.timestamp.addingTimeInterval(duration.estimatedTotalMinutes * 60)
-            }.max()
-
-            // Every phase boundary still ahead of us, across every active substance.
-            let nextBoundary = session.activeEntries.flatMap { item -> [Date] in
-                guard let duration = item.duration else { return [] }
-                let start = item.snapshot.timestamp
-                let bounds = duration.phaseBoundaries
-                return [
-                    bounds.onsetEnd, bounds.comeupEnd, bounds.peakEnd,
-                    bounds.offsetEnd, bounds.afterglowEnd,
-                ].map { start.addingTimeInterval($0 * 60) }
-            }
-            .filter { $0 > now }
-            .min()
-
+        /// eventually), and never past the moment the last curve runs out. That last
+        /// repaint is the one that needs no app at all: the Lock Screen card
+        /// collapses to its "Session complete" row there, whether or not the app
+        /// wakes to end the activity.
+        ///
+        /// Read from the pushed state rather than the session, so it marks the
+        /// boundaries the card draws (zero-order and filled-in phases included)
+        /// and works for a repaint of the activity's own content with no session
+        /// in memory.
+        static func staleDate(
+            for state: PiruActivityAttributes.ContentState,
+            now: Date = .now,
+        ) -> Date? {
+            guard let end = state.endDate else { return nil }
+            let nextBoundary = state.activeSubstances
+                .flatMap(\.phaseChangeDates)
+                .map { $0.addingTimeInterval(Self.boundaryRepaintLag) }
+                .filter { $0 > now }
+                .min()
             let target = nextBoundary ?? now.addingTimeInterval(Self.maximumStale)
             let clamped = min(
                 max(target, now.addingTimeInterval(Self.minimumStale)),
                 now.addingTimeInterval(Self.maximumStale),
             )
-            guard let sessionEnd else { return clamped }
-            return min(clamped, sessionEnd)
+            return min(clamped, end.addingTimeInterval(Self.boundaryRepaintLag))
         }
 
-        /// Floor on ``staleDate`` — a boundary closer than this isn't worth a repaint.
-        private static let minimumStale: TimeInterval = 60
-        /// Ceiling on ``staleDate`` — the display should never claim freshness for
+        /// How long after a boundary its stale repaint is set. The view reads
+        /// the clock when it draws, so a repaint landing exactly on the
+        /// boundary could still draw the phase that is ending.
+        static let boundaryRepaintLag: TimeInterval = 1
+        /// Floor on ``staleDate(for:now:)`` — a boundary closer than this isn't worth a repaint.
+        static let minimumStale: TimeInterval = 60
+        /// Ceiling on ``staleDate(for:now:)`` — the display should never claim freshness for
         /// longer than this, however quiet the session.
-        private static let maximumStale: TimeInterval = 30 * 60
+        static let maximumStale: TimeInterval = 30 * 60
     }
 #else
     @MainActor
