@@ -147,4 +147,19 @@ struct SessionNotificationSchedulerTests {
         #expect(total == 300)
         #expect(unit == "mg")
     }
+
+    @Test
+    func `A gram dose on GHB's qualified gram ladder still alerts`() {
+        // GHB's ladder is in "g active GHB / sodium oxybate": a basis note on grams,
+        // not a unit a gram dose can't be read in. Two 2.5 g doses pass heavy (4 g).
+        let earlier = DoseEntry(
+            substance: "GHB", amount: 2.5, unit: "g", route: .oral,
+            timestamp: Date.now.addingTimeInterval(-1_800),
+        )
+        let (total, _, shouldAlert) = SessionNotificationScheduler.checkCumulativeDose(
+            substanceName: "GHB", newAmount: 2.5, unit: "g", route: .oral, existingEntries: [earlier],
+        )
+        #expect(total == 5)
+        #expect(shouldAlert)
+    }
 }

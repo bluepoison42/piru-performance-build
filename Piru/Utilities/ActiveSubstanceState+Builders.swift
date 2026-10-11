@@ -105,6 +105,7 @@ extension ActiveSubstanceState {
         let dose = substance.quantity(of: entry)
         let intensity = Self.computeDoseIntensity(dose: dose, ladder: ladder)
         let magnitude = Self.computeDoseMagnitude(dose: dose, ladder: ladder)
+        let isUnscaled = Self.heavyFraction(of: dose, on: ladder) == nil
         let weightKg = UserProfileStore.shared.effectiveWeightKg
         // Prefer the product envelope; else the form actually logged — a D-isomer
         // dose must not be drawn with the racemic curve the detail card wouldn't show.
@@ -124,8 +125,9 @@ extension ActiveSubstanceState {
                 category: substance.category,
                 doseIntensity: intensity,
                 doseMagnitude: magnitude,
-                heavyThresholdMagnitude: Self.heavyThresholdMagnitude(for: ladder?.range),
-                doseIsUnscaled: Self.heavyFraction(of: dose, on: ladder) == nil,
+                // No heavy band over a curve whose height says nothing about the dose.
+                heavyThresholdMagnitude: isUnscaled ? nil : Self.heavyThresholdMagnitude(for: ladder?.range),
+                doseIsUnscaled: isUnscaled,
                 tachyphylaxis: substance.category.acuteToleranceFactor,
                 weightKg: weightKg,
                 zeroOrderKinetics: SubstanceStore.shared.zeroOrderKinetics(

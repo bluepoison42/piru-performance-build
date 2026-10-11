@@ -75,16 +75,32 @@ nonisolated struct DoseLadder: Hashable {
         DoseQuantity(value, unit: unit)
     }
 
+    /// `dose` as a number on this ladder, or `nil` when the ladder's unit can't
+    /// express it.
+    ///
+    /// A ladder in a bare unit converts the dose into it. A ladder whose unit is a
+    /// mass with a basis note ("g active GHB", "mg THC") reads a dose written in
+    /// that same mass unit as is — the note names what was weighed, and a dose
+    /// logged in the same unit is taken to share it. It never converts across mass
+    /// units: 1 g of cannabis flower is not 1 000 mg THC.
+    func reading(of dose: DoseQuantity) -> Double? {
+        if let converted = dose.value(in: unit) { return converted }
+        guard case let .mass(mass) = dose, let basis = DoseQuantity.basisMassUnit(unit),
+              mass.unit == basis else { return nil }
+        return mass.value
+    }
+
     /// Where `dose` sits on this ladder, or `nil` when there is no ladder or the
     /// dose measures something the ladder's unit can't express.
     func level(of dose: DoseQuantity) -> DoseLevel? {
-        dose.value(in: unit).flatMap(range.level(for:))
+        reading(of: dose).flatMap(range.level(for:))
     }
 
     /// `dose ÷ reference`, with `reference` read in this ladder's unit; `nil` when
     /// the dose can't be expressed in it.
     func fraction(of dose: DoseQuantity, reference: Double) -> Double? {
-        dose.ratio(to: quantity(reference))
+        guard reference > 0 else { return nil }
+        return reading(of: dose).map { $0 / reference }
     }
 
     /// A dose as a multiple of the common dose (the common band's midpoint), or
@@ -98,7 +114,7 @@ nonisolated struct DoseLadder: Hashable {
         guard let common = range.common else { return nil }
         let midpoint = (common.lowerBound + common.upperBound) / 2
         guard midpoint > 0 else { return nil }
-        return dose.ratio(to: quantity(midpoint))
+        return reading(of: dose).map { $0 / midpoint }
     }
 
     /// How precisely a substance must be measured, derived from its average

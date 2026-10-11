@@ -260,5 +260,7 @@ struct PharmacologyParametersTests {
         #expect(reference("LSD") > 0 && reference("LSD") < 1, "LSD's heavy dose is a fraction of a milligram")
         #expect(reference("Kratom") >= 1_000, "kratom's heavy dose is grams")
         #expect(reference("Heroin") >= 10 && reference("Heroin") < 1_000)
+        // "g active GHB / sodium oxybate" is grams with a basis note.
+        #expect(reference("GHB") >= 1_000, "GHB's heavy dose is grams")
     }
 }

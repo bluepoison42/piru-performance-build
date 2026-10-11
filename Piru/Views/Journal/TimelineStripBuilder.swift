@@ -25,9 +25,9 @@ struct TimelineStripBuilder {
     /// Raw entries per substance (lowercased name, ascending) — the PK mode's
     /// input.
     private let entriesBySubstance: [String: [DoseEntry]]
-    /// PK mode's per-dose weight: the amount, read in the unit of its substance's
-    /// first measured dose so 500 mg and 1 g stack as 500 and 1 000. A dose with
-    /// no amount, or in a unit that can't be read in that one, weighs nothing.
+    /// PK mode's per-dose weight: the amount, read in the unit most of its
+    /// substance's doses share so 500 mg and 1 g stack as 500 and 1 000. A dose
+    /// with no amount, or in a unit that can't be read in that one, weighs nothing.
     private let pkDoseWeights: [PersistentIdentifier: Double]
     /// Sessions materialized by one fetch, keyed by identifier. `entry.session`
     /// hands back a fault, and reading its `id` fires a one-row fetch — one per
@@ -147,7 +147,7 @@ struct TimelineStripBuilder {
         if style.pkMode {
             for substanceEntries in bySubstance.values {
                 let quantities = substanceEntries.map(\.quantity)
-                guard let unitOf = quantities.lazy.compactMap(\.self).first else { continue }
+                guard let unitOf = DoseQuantity.reference(among: quantities.compactMap(\.self)) else { continue }
                 for (entry, dose) in zip(substanceEntries, quantities) {
                     weights[entry.persistentModelID] = dose?.value(inUnitOf: unitOf)
                 }
@@ -974,7 +974,9 @@ struct TimelineStripBuilder {
     /// stacked curve continuous where the reference changes.
     static func relativeWeights(states: [ActiveSubstanceState], lookback: TimeInterval) -> [Double] {
         guard !states.isEmpty else { return [] }
-        let usesAmount = states.contains(where: \.doseIsUnscaled)
+        // Raw amounts only when no dose can be read on a ladder; one unreadable
+        // dose must not put every other dose of the substance on its raw number.
+        let usesAmount = states.allSatisfy(\.doseIsUnscaled)
         let raw = states.map { usesAmount ? $0.amount : $0.doseMagnitude }
         let longest = states.map(\.totalMinutes).max() ?? 0
 

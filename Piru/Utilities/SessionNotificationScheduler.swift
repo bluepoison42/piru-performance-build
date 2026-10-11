@@ -500,7 +500,7 @@ enum SessionNotificationScheduler {
         let substance = SubstanceLibrary.lookup(substanceName)
         let newDose = substance?.quantity(newAmount, unit: unit) ?? DoseQuantity(newAmount, unit: unit)
         guard let substance, let ladder = substance.ladder(for: route),
-              let newInLadder = newDose.value(in: ladder.unit) else {
+              let newInLadder = ladder.reading(of: newDose) else {
             // No ladder, or a dose its unit can't express — no judgment. Report the
             // sum of the doses that share the new dose's unit, in the caller's unit.
             let raw = recentSame.compactMap { $0.quantity?.value(inUnitOf: newDose) }.reduce(newAmount, +)
@@ -509,7 +509,7 @@ enum SessionNotificationScheduler {
         let doseRange = ladder.range
         let routeUnit = ladder.unit
         let priorTotal = recentSame.reduce(0.0) { sum, entry in
-            sum + (substance.quantity(of: entry)?.value(in: routeUnit) ?? 0)
+            sum + (substance.quantity(of: entry).flatMap(ladder.reading(of:)) ?? 0)
         }
         let total = priorTotal + newInLadder
         guard newDoseIsCurrent, BaseReleaseForm.contains(releaseForm) else { return (total, routeUnit, false) }

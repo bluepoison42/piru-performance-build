@@ -223,5 +223,29 @@ struct DoseQuantityTests {
         #expect(InventoryMath.convert(2, from: "tabs", to: "g", unitStrengthMG: 36) == 0.072)
         #expect(InventoryMath.convert(72, from: "mg", to: "tabs") == nil)
         #expect(InventoryMath.convert(3, from: "caps", to: "caps") == 3)
+        // The strength is the stock's; a tab of something else is not one cap.
+        #expect(InventoryMath.convert(1, from: "tabs", to: "caps", unitStrengthMG: 36) == nil)
+    }
+
+    // MARK: - Qualified ladders
+
+    @Test
+    func `A qualified ladder reads a dose in its own mass unit, never across`() {
+        let ghb = DoseLadder(range: DoseRange(common: 1.5 ... 2.5, strong: 2.5 ... 4, heavy: 4), unit: "g active GHB / sodium oxybate")
+        #expect(ghb.level(of: DoseQuantity(5, unit: "g")) == .heavy)
+        #expect(ghb.level(of: DoseQuantity(5_000, unit: "mg")) == nil)
+        let cannabis = DoseLadder(range: DoseRange(common: 5 ... 15, heavy: 30), unit: "mg THC")
+        #expect(cannabis.level(of: DoseQuantity(10, unit: "mg")) == .common)
+        // A gram of flower is not 1 000 mg THC.
+        #expect(cannabis.level(of: DoseQuantity(1, unit: "g")) == nil)
+        #expect(DoseQuantity.basisMassUnit("mg/kg") == nil)
+        #expect(DoseQuantity.basisMassUnit("µg LSD base") == .micrograms)
+    }
+
+    @Test
+    func `A mixed list is summed in the family most of it shares`() {
+        let doses = [DoseQuantity(2, unit: "mL"), DoseQuantity(500, unit: "mg"), DoseQuantity(1, unit: "g")]
+        #expect(DoseQuantity.reference(among: doses)?.unitSymbol == "mg")
+        #expect(DoseQuantity.reference(among: []) == nil)
     }
 }

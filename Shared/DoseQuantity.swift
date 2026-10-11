@@ -114,6 +114,18 @@ nonisolated enum DoseQuantity: Hashable, Sendable {
         return with(value: value + addend)
     }
 
+    /// The quantity a mixed list is best summed in: the first one of the family
+    /// most of them share, the earliest family winning a tie. A lone mL dose ahead
+    /// of ten mg ones must not leave the mg doses out of the sum.
+    static func reference(among quantities: [DoseQuantity]) -> DoseQuantity? {
+        var counts: [Family: Int] = [:]
+        for quantity in quantities {
+            counts[quantity.family, default: 0] += 1
+        }
+        guard let most = counts.values.max() else { return nil }
+        return quantities.first { counts[$0.family] == most }
+    }
+
     /// The same unit carrying a different number.
     func with(value newValue: Double) -> DoseQuantity {
         switch self {
@@ -155,6 +167,15 @@ nonisolated enum DoseQuantity: Hashable, Sendable {
 
     static func massUnit(_ unit: String) -> UnitDoseMass? {
         massUnits[key(unit)]
+    }
+
+    /// The bare mass a qualified unit opens with — `g` for "g active GHB / sodium
+    /// oxybate", `mg` for "mg THC", `µg` for "µg LSD base" — or `nil` when the unit
+    /// is bare already or opens with something else ("mg/kg" is a rate).
+    static func basisMassUnit(_ unit: String) -> UnitDoseMass? {
+        let trimmed = unit.trimmingCharacters(in: .whitespaces)
+        guard let split = trimmed.firstIndex(where: { $0 == " " || $0 == "(" }) else { return nil }
+        return massUnit(String(trimmed[..<split]))
     }
 
     static func volumeUnit(_ unit: String) -> UnitVolume? {

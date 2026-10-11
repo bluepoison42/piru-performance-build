@@ -87,6 +87,12 @@ enum InventoryMath {
     /// (mg vs mL, IU, drops, a count with no strength) returns `nil` → that
     /// dose is skipped, never blocked.
     nonisolated static func convert(_ amount: Double, from: String, to: String, unitStrengthMG: Double? = nil) -> Double? {
+        // The strength is the stock's, and says nothing of a different piece: a
+        // tab is never deducted as a cap.
+        if isCountUnit(from), isCountUnit(to),
+           from.trimmingCharacters(in: .whitespaces).lowercased() != to.trimmingCharacters(in: .whitespaces).lowercased() {
+            return nil
+        }
         // With a strength, a tab or cap is a mass unit of its own (one 36 mg tab).
         let pieces = unitStrengthMG.map { strength in
             countUnits.map { UnitAlias(label: $0, amountPerUnit: strength, unit: "mg") }

@@ -11,7 +11,7 @@ struct DoseLevelIndicator: View {
     /// The dose read in the ladder's unit — `nil` when it can't be, so no marker
     /// is placed rather than a gram dose read off a milligram scale.
     private var currentDose: Double? {
-        dose?.value(in: ladder.unit)
+        dose.flatMap(ladder.reading(of:))
     }
 
     private var level: DoseLevel? {

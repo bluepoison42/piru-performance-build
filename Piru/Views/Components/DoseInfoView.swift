@@ -58,7 +58,7 @@ struct DoseInfoView: View {
                     }
                 }
 
-                elementalNote(unit: unit)
+                elementalNote(ladder: ladder)
 
                 switch ladder.dosingPrecision {
                 case .critical: VolumetricDosingDisclaimer()
@@ -73,13 +73,13 @@ struct DoseInfoView: View {
     /// Lithium…): "≈ N mg elemental" for the entered dose, else the percentage.
     /// Hidden when the selected salt has no known elemental fraction.
     @ViewBuilder
-    private func elementalNote(unit: String) -> some View {
+    private func elementalNote(ladder: DoseLadder) -> some View {
         if let fraction = substance.elementalFraction(for: route, saltForm: saltForm, isomer: isomer) {
             HStack(spacing: Spacing.sm) {
                 Image(systemName: "atom").imageScale(.small).accessibilityHidden(true)
-                if let amount = currentDose?.value(in: unit),
+                if let amount = currentDose.flatMap(ladder.reading(of:)),
                    let elemental = substance.elementalAmount(of: amount, for: route, saltForm: saltForm, isomer: isomer) {
-                    Text("≈ \(elemental.doseFormatted) \(unit) elemental", comment: "Elemental content of a salt dose")
+                    Text("≈ \(elemental.doseFormatted) \(ladder.unit) elemental", comment: "Elemental content of a salt dose")
                 } else {
                     elementalPercentCaption(fraction)
                 }

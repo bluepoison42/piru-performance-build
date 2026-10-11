@@ -911,7 +911,8 @@ struct SubstanceReadModel {
     /// tolerance gate (`dose ÷ reference`). Resolved from the substance's primary dose ladder: the
     /// **oral** route when it has one, else the first route that carries a usable range; within that
     /// route, `heavy ?? strong.upperBound ?? common.upperBound`, converted from the ladder's own unit
-    /// (LSD's 300 is µg, kratom's 8 is g). A ladder whose unit is not a mass yields no reference.
+    /// (LSD's 300 is µg, kratom's 8 is g; GHB's "g active GHB" reads as g, see
+    /// ``DoseLadder/reading(of:)``). A ladder whose unit is not a mass yields no reference.
     /// Returns `nil` when no ladder exists, so the deep gate stays closed (the conservative fallback).
     ///
     /// `nonisolated static` so both the cached instance path and the off-main batch resolve can call
@@ -954,7 +955,9 @@ struct SubstanceReadModel {
             return nil
         }
         func reference(_ row: LadderRow) -> Double? {
-            (row.heavy ?? row.strong ?? row.common).flatMap { DoseQuantity($0, unit: row.unit).milligrams }
+            guard let value = row.heavy ?? row.strong ?? row.common,
+                  let unit = DoseQuantity.massUnit(row.unit) ?? DoseQuantity.basisMassUnit(row.unit) else { return nil }
+            return Measurement(value: value, unit: unit).value(in: .milligrams)
         }
         /// Prefer the racemic form so a family's reference is the parent's, not an
         /// arbitrary enantiomer's; oral first, else the first route yielding a value.
