@@ -185,3 +185,38 @@ nonisolated struct ActiveSubstanceState: Codable, Hashable {
         offsetSpreadMinutes = try c.decodeIfPresent(Double.self, forKey: .offsetSpreadMinutes)
     }
 }
+
+// MARK: - Timing
+
+nonisolated extension ActiveSubstanceState {
+    /// When this dose's curve runs out: `doseTimestamp + totalMinutes`.
+    var endDate: Date {
+        doseTimestamp.addingTimeInterval(totalMinutes * 60)
+    }
+
+    /// Every instant the Live Activity's phase readout changes for this dose:
+    /// the boundaries `SessionTiming.nextTransition` counts down to, ending
+    /// with ``endDate``.
+    var phaseChangeDates: [Date] {
+        var minutes = [onsetEndMinutes, comeupEndMinutes, peakEndMinutes]
+        if afterglowEndMinutes != nil { minutes.append(offsetEndMinutes) }
+        minutes.append(totalMinutes)
+        return minutes.map { doseTimestamp.addingTimeInterval($0 * 60) }
+    }
+}
+
+#if os(iOS)
+    nonisolated extension PiruActivityAttributes.ContentState {
+        /// When the last curve in this state runs out, or `nil` for an empty state.
+        var endDate: Date? {
+            activeSubstances.map(\.endDate).max()
+        }
+
+        /// Whether every curve in this state has run out by `now`. An empty
+        /// state has nothing left to show, so it counts as run out.
+        func hasRunOut(at now: Date = .now) -> Bool {
+            guard let endDate else { return true }
+            return endDate <= now
+        }
+    }
+#endif

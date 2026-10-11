@@ -14,9 +14,14 @@ enum SessionTiming {
 
     /// Latest projected session end: `max(doseTimestamp + totalMinutes)`.
     static func latestEnd(_ state: PiruActivityAttributes.ContentState) -> Date {
-        state.activeSubstances.map { sub in
-            sub.doseTimestamp.addingTimeInterval(sub.totalMinutes * 60)
-        }.max() ?? state.lastUpdated.addingTimeInterval(3_600)
+        state.endDate ?? state.lastUpdated.addingTimeInterval(3_600)
+    }
+
+    /// The whole session, earliest dose to latest end, for a session that has
+    /// run its course.
+    static func span(_ state: PiruActivityAttributes.ContentState) -> Range<Date> {
+        let start = earliestDose(state)
+        return start ..< max(start, latestEnd(state))
     }
 
     /// Substance colors, falling back to the app's soft-pink accent when empty.
@@ -28,8 +33,7 @@ enum SessionTiming {
     /// The next phase boundary any active substance will cross, evaluated at
     /// `asOf` (defaulting to the real current time, **not** `state.lastUpdated`).
     /// `phase` is the phase being *entered* at `date`, tinted with that
-    /// substance's color. `nil` once every substance has fully run its course
-    /// (the app ends the activity around then anyway).
+    /// substance's color. `nil` once every substance has fully run its course.
     ///
     /// Evaluating at `lastUpdated` meant the phase label was frozen to whenever
     /// the app last pushed. Every render this view gets — a content update, the
@@ -308,11 +312,45 @@ struct LockScreenView: View {
         SessionTiming.earliestDose(state)
     }
 
+    /// Once every curve has run out the card collapses to one row, drawn at
+    /// the stale date the app sets on the last dose's end. That repaint needs
+    /// no app, so a card iOS leaves up until the app next wakes (or until
+    /// ActivityKit's own expiry) is one line rather than a finished graph
+    /// under a clock that keeps counting.
+    var body: some View {
+        Group {
+            if state.hasRunOut() {
+                CompletedSessionView(state: state)
+            } else {
+                liveCard
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        // Opaque black, not a translucent wash. A half-black tint lets the
+        // wallpaper through, so the card's actual lightness is whatever the user
+        // happens to have behind it — and this content is authored for a dark
+        // surface (hardcoded `.white` values, `.secondary` captions), so on a
+        // bright wallpaper it loses contrast. Black is also what the Dynamic
+        // Island always is and what survives the Always-On display's reduced
+        // luminance, so all three presentations read as one surface.
+        // (`containerBackground(.black, for: .widget)` was tried on top of this
+        // and is not worth carrying: the Lock Screen composites the card with
+        // vibrancy either way, so it rendered identically to the tint alone.
+        // A faint wallpaper seam across the card is the system's, not ours.)
+        .activityBackgroundTint(.black)
+        .activitySystemActionForegroundColor(.white)
+        // `.secondary` resolves to a *dark* gray in the light color scheme,
+        // which is invisible on black. The translucent tint used to hide this;
+        // an opaque one doesn't, so pin the scheme the content is drawn for.
+        .environment(\.colorScheme, .dark)
+    }
+
     /// Lock Screen Live Activities are capped at 160 pt tall. The content stack
     /// must stay comfortably under that or the system compresses spacing and
     /// padding to force-fit — which reads as "broken padding". Budget:
     /// graph 80 + timer row ~29 + spacing 8 + padding 24 ≈ 141.
-    var body: some View {
+    private var liveCard: some View {
         VStack(spacing: 8) {
             // Timeline graph — updates when Live Activity state is pushed.
             TimelineGraphView(
@@ -337,44 +375,43 @@ struct LockScreenView: View {
                     ElapsedTimerView(sessionStart: earliestDose)
                 }
                 Spacer(minLength: 12)
+                // The card collapses at the end, so a transition is always
+                // ahead here; the guard covers a render racing that instant.
                 if let transition = SessionTiming.nextTransition(state) {
                     NextPhaseView(transition: transition, style: .stacked)
-                } else {
-                    // Every curve has run out. The app ends the activity when it
-                    // next wakes; until then the card says so rather than
-                    // going silent on this side.
-                    HStack(spacing: 8) {
-                        Text("Session complete")
-                            .font(.caption2.weight(.medium))
-                            .foregroundStyle(.secondary)
-                        Image(systemName: DosePhaseGlyph.ended)
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(SessionTiming.colors(state).first ?? .white)
-                            .frame(width: 26, height: 26)
-                            .accessibilityHidden(true)
-                    }
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        // Opaque black, not a translucent wash. A half-black tint lets the
-        // wallpaper through, so the card's actual lightness is whatever the user
-        // happens to have behind it — and this content is authored for a dark
-        // surface (hardcoded `.white` values, `.secondary` captions), so on a
-        // bright wallpaper it loses contrast. Black is also what the Dynamic
-        // Island always is and what survives the Always-On display's reduced
-        // luminance, so all three presentations read as one surface.
-        // (`containerBackground(.black, for: .widget)` was tried on top of this
-        // and is not worth carrying: the Lock Screen composites the card with
-        // vibrancy either way, so it rendered identically to the tint alone.
-        // A faint wallpaper seam across the card is the system's, not ours.)
-        .activityBackgroundTint(.black)
-        .activitySystemActionForegroundColor(.white)
-        // `.secondary` resolves to a *dark* gray in the light color scheme,
-        // which is invisible on black. The translucent tint used to hide this;
-        // an opaque one doesn't, so pin the scheme the content is drawn for.
-        .environment(\.colorScheme, .dark)
+    }
+}
+
+/// The Lock Screen card for a session that has run its course: the full
+/// rings, "Session complete" over the session's length (fixed, where the live
+/// card's Elapsed counts up), and the ended glyph.
+struct CompletedSessionView: View {
+    let state: PiruActivityAttributes.ContentState
+
+    var body: some View {
+        HStack(spacing: 8) {
+            SessionRingsView(state: state)
+                .frame(width: 26, height: 26)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Session complete")
+                    .font(.caption2.weight(.medium))
+                    .foregroundStyle(.secondary)
+                Text(SessionTiming.span(state), format: .hoursMinutes)
+                    .font(.caption.monospacedDigit().weight(.semibold))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 12)
+            Image(systemName: DosePhaseGlyph.ended)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(SessionTiming.colors(state).first ?? .white)
+                .frame(width: 26, height: 26)
+                .accessibilityHidden(true)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -440,12 +477,21 @@ struct CompactLeadingView: View {
         HStack(spacing: 4) {
             SessionRingsView(state: context.state, lineWidth: 2.5)
                 .frame(width: CompactMetrics.iconSide, height: CompactMetrics.iconSide)
-            Text(.dateRange(startingAt: SessionTiming.earliestDose(context.state)), format: .hoursMinutes)
+            elapsed
                 .font(.caption.monospacedDigit().weight(.semibold))
                 .foregroundStyle(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: 50, alignment: .leading)
+        }
+    }
+
+    /// Counts up while the session runs, then holds at the session's length.
+    private var elapsed: Text {
+        if context.state.hasRunOut() {
+            Text(SessionTiming.span(context.state), format: .hoursMinutes)
+        } else {
+            Text(.dateRange(startingAt: SessionTiming.earliestDose(context.state)), format: .hoursMinutes)
         }
     }
 }
