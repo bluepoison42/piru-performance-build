@@ -31,7 +31,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
+        <!-- The launcher shortcut that writes a problem report (Skip/AndroidDiagnostics.kt). -->
+        <activity
+            android:name="piru.module.ReportProblemActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- Shares files as content:// URIs (Skip/AndroidDocuments.kt). -->
         <provider
             android:name="androidx.core.content.FileProvider"

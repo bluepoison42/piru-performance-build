@@ -18,6 +18,7 @@ import SwiftUI
                 await AppLaunch.finishLaunching(container: PiruAndroidLaunch.container)
                 PiruAndroidLaunch.finishedLaunching = true
             }
+            .modifier(ProblemReportPrompt())
     }
 }
 

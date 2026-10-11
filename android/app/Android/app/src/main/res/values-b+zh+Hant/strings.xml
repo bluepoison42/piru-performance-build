@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="report_shortcut_short">回報</string>
+    <string name="report_shortcut_long">回報問題</string>
+    <string name="report_failed">無法寫入報告。</string>
+</resources>

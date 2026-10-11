@@ -7954,6 +7954,51 @@ T = {
         "该密码短语无法打开此备份。请重试。",
         "該密碼短語無法打開此備份。請再試一次。",
     ),
+    # Android-only strings: Report a Problem (Android/Views/ReportProblem+Android.swift).
+    "Report a Problem": (
+        "报告问题",
+        "回報問題",
+    ),
+    "Create Report": (
+        "生成报告",
+        "產生報告",
+    ),
+    "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it.": (
+        "一个文件，包含应用和 Android 版本、手机型号、Piru 最近几次运行如何结束、崩溃记录以及 Piru 自身的日志。其中不含你日记里的任何内容，只有你发送时它才会离开手机。",
+        "一個檔案，包含應用程式和 Android 版本、手機型號、Piru 最近幾次執行如何結束、當機記錄以及 Piru 本身的日誌。其中不含你日記裡的任何內容，只有你傳送時它才會離開手機。",
+    ),
+    "#bug-reports on Discord": (
+        "Discord 上的 #bug-reports",
+        "Discord 上的 #bug-reports",
+    ),
+    "Open a GitHub Issue": (
+        "在 GitHub 上提交 issue",
+        "在 GitHub 上提交 issue",
+    ),
+    "How to Report a Problem": (
+        "如何报告问题",
+        "如何回報問題",
+    ),
+    "Where to Send It": (
+        "发送到哪里",
+        "傳送到哪裡",
+    ),
+    "Attach the file and say what you were doing when it went wrong.": (
+        "附上这个文件，并说明出问题时你在做什么。",
+        "附上這個檔案，並說明出問題時你在做什麼。",
+    ),
+    "The report could not be written.": (
+        "无法写入报告。",
+        "無法寫入報告。",
+    ),
+    "Piru Closed Unexpectedly": (
+        "Piru 意外关闭",
+        "Piru 意外關閉",
+    ),
+    "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes.": (
+        "一份报告有助于修复它。报告包含 Piru 如何关闭及其自身的日志，不含你日记里的任何内容，发送到哪里由你决定。",
+        "一份報告有助於修復它。報告包含 Piru 如何關閉及其本身的日誌，不含你日記裡的任何內容，傳送到哪裡由你決定。",
+    ),
 }
 
 # Widget translations
@@ -8258,6 +8303,17 @@ if __name__ == "__main__":
         "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase.",
         "The backup was merged with your journal.",
         "That passphrase didn't open the backup. Try again.",
+        "Report a Problem",
+        "Create Report",
+        "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it.",
+        "#bug-reports on Discord",
+        "Open a GitHub Issue",
+        "How to Report a Problem",
+        "Where to Send It",
+        "Attach the file and say what you were doing when it went wrong.",
+        "The report could not be written.",
+        "Piru Closed Unexpectedly",
+        "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes.",
         "Curve Scale",
         "Dose Strength",
         "Largest Dose, 7 Days",

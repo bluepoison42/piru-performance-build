@@ -40,6 +40,7 @@ open class AndroidAppMain: Application {
     override fun onCreate() {
         super.onCreate()
         logger.info("starting app")
+        AndroidDiagnostics.install(applicationContext)
         ProcessInfo.launch(applicationContext)
         AppDelegate.shared.onInit()
         AndroidPlatform.watchTimeZone(applicationContext)

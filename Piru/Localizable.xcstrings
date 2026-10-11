@@ -92691,6 +92691,248 @@
           }
         }
       }
+    },
+    "Report a Problem" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "报告问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回報問題"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informar de un problema"
+          }
+        }
+      }
+    },
+    "Create Report" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生成报告"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "產生報告"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear informe"
+          }
+        }
+      }
+    },
+    "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一个文件，包含应用和 Android 版本、手机型号、Piru 最近几次运行如何结束、崩溃记录以及 Piru 自身的日志。其中不含你日记里的任何内容，只有你发送时它才会离开手机。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一個檔案，包含應用程式和 Android 版本、手機型號、Piru 最近幾次執行如何結束、當機記錄以及 Piru 本身的日誌。其中不含你日記裡的任何內容，只有你傳送時它才會離開手機。"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo con las versiones de la app y de Android, el modelo del teléfono, cómo terminaron las últimas ejecuciones de Piru, los rastros de cualquier fallo y el registro propio de Piru. No contiene nada de tu diario y solo sale de tu teléfono si lo envías."
+          }
+        }
+      }
+    },
+    "#bug-reports on Discord" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord 上的 #bug-reports"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord 上的 #bug-reports"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#bug-reports en Discord"
+          }
+        }
+      }
+    },
+    "Open a GitHub Issue" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 GitHub 上提交 issue"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 GitHub 上提交 issue"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir un issue en GitHub"
+          }
+        }
+      }
+    },
+    "How to Report a Problem" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何报告问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何回報問題"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo informar de un problema"
+          }
+        }
+      }
+    },
+    "Where to Send It" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送到哪里"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送到哪裡"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dónde enviarlo"
+          }
+        }
+      }
+    },
+    "Attach the file and say what you were doing when it went wrong." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "附上这个文件，并说明出问题时你在做什么。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "附上這個檔案，並說明出問題時你在做什麼。"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjunta el archivo y cuenta qué estabas haciendo cuando falló."
+          }
+        }
+      }
+    },
+    "The report could not be written." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法写入报告。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法寫入報告。"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo escribir el informe."
+          }
+        }
+      }
+    },
+    "Piru Closed Unexpectedly" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 意外关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 意外關閉"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru se cerró inesperadamente"
+          }
+        }
+      }
+    },
+    "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一份报告有助于修复它。报告包含 Piru 如何关闭及其自身的日志，不含你日记里的任何内容，发送到哪里由你决定。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一份報告有助於修復它。報告包含 Piru 如何關閉及其本身的日誌，不含你日記裡的任何內容，傳送到哪裡由你決定。"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un informe ayuda a corregirlo. Contiene cómo se cerró Piru y su propio registro, nada de tu diario, y tú eliges adónde va."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

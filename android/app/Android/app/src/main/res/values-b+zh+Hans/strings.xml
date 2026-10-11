@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="report_shortcut_short">报告</string>
+    <string name="report_shortcut_long">报告问题</string>
+    <string name="report_failed">无法写入报告。</string>
+</resources>

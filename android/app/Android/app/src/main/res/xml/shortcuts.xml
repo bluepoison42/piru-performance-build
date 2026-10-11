@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press the launcher icon → Report a problem: writes the problem report and opens the
+     share chooser without starting the app's UI (Skip/AndroidDiagnostics.kt), so it works while
+     the app crashes as it launches. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="report-problem"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_report"
+        android:shortcutShortLabel="@string/report_shortcut_short"
+        android:shortcutLongLabel="@string/report_shortcut_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="glass.kagerou.piru"
+            android:targetClass="piru.module.ReportProblemActivity" />
+    </shortcut>
+</shortcuts>

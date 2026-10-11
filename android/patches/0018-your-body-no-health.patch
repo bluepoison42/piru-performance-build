@@ -1,0 +1,23 @@
+Android has no Apple Health: Your Body leaves out the Health sections, including the line saying Health is unavailable
+
+diff --git a/Piru/Views/Settings/YourBodyView.swift b/Piru/Views/Settings/YourBodyView.swift
+index c83e9e58..9e22b3b1 100644
+--- a/Piru/Views/Settings/YourBodyView.swift
++++ b/Piru/Views/Settings/YourBodyView.swift
+@@ -27,12 +27,16 @@ struct YourBodyView: View {
+         Form {
+             weightSection
+             metabolismSection
++            #if os(Android)
++                // Android has no Apple Health, and saying so is noise there.
++            #else
+             if vitals.isAvailable {
+                 if connectWouldPrompt == true { connectSection }
+                 overlaySection
+             } else {
+                 unavailableSection
+             }
++            #endif
+         }
+         .themedPage()
+         .navigationTitle("Your Body")
