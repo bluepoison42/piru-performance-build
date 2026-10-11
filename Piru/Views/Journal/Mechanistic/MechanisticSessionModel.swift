@@ -17,7 +17,7 @@ nonisolated enum MechanisticSessionModel {
     /// (dose marks get their color at the render site instead).
     struct DoseInput: Hashable {
         let name: String
-        let amount: Double
+        let amount: Double // milligrams, converted from the logged unit before simulation
         let route: RouteOfAdministration
         /// Hours since the session start (the engine's `t = 0`).
         let hours: Double
@@ -127,32 +127,7 @@ nonisolated enum MechanisticSessionModel {
     /// per-substance PK + binding (keyed by normalized name), resolved on the main
     /// actor by the caller and handed to this off-main compute.
     static func compute(doses: [DoseInput], pharmacology: [String: PharmacologyParameters], tMax: Double) -> Result? {
-        // Group by (substance, route): one agent per distinct substance-route,
-        // carrying all of its doses — different routes of the same drug become
-        // separate agents (different ka/kR), summed inside the simulation.
-        struct GroupKey: Hashable { let name: String; let route: RouteOfAdministration }
-        var groups: [GroupKey: [DoseInput]] = [:]
-        var order: [GroupKey] = []
-        for dose in doses {
-            let key = GroupKey(name: SubstanceModelDatabase.normalize(dose.name), route: dose.route)
-            if groups[key] == nil { order.append(key) }
-            groups[key, default: []].append(dose)
-        }
-
-        var agents: [EffectAgent] = []
-        for key in order {
-            guard let members = groups[key], let first = members.first,
-                  let params = modelParams(for: first.name, in: pharmacology)
-            else { continue }
-            let (kaMul, kR) = roaFactors(key.route)
-            let doseTuples = members.map { (t: $0.hours, amt: $0.amount / params.refUnit) }
-            agents.append(EffectAgent(
-                params: params,
-                doses: doseTuples,
-                ka: kaMul != 1 ? params.ka * kaMul : nil,
-                kR: kR,
-            ))
-        }
+        let agents = effectAgents(doses: doses, pharmacology: pharmacology)
         guard !agents.isEmpty else { return nil }
 
         let timeline = EffectEngine.simulate(EffectParams(), agents: agents, tMax: tMax)
@@ -202,6 +177,37 @@ nonisolated enum MechanisticSessionModel {
         contentSpan = min(max(contentSpan + 0.5, 1), tMax)
 
         return Result(timeline: timeline, ranges: ranges, contentSpan: contentSpan, activeLenses: activeLenses)
+    }
+
+    /// Build the exact agent inputs used by the simulation, including route and dose scaling.
+    static func effectAgents(doses: [DoseInput], pharmacology: [String: PharmacologyParameters]) -> [EffectAgent] {
+        // Group by (substance, route): one agent per distinct substance-route,
+        // carrying all of its doses — different routes of the same drug become
+        // separate agents (different ka/kR), summed inside the simulation.
+        struct GroupKey: Hashable { let name: String; let route: RouteOfAdministration }
+        var groups: [GroupKey: [DoseInput]] = [:]
+        var order: [GroupKey] = []
+        for dose in doses {
+            let key = GroupKey(name: SubstanceModelDatabase.normalize(dose.name), route: dose.route)
+            if groups[key] == nil { order.append(key) }
+            groups[key, default: []].append(dose)
+        }
+
+        var agents: [EffectAgent] = []
+        for key in order {
+            guard let members = groups[key], let first = members.first,
+                  let params = modelParams(for: first.name, in: pharmacology)
+            else { continue }
+            let (kaMul, kR) = roaFactors(key.route)
+            let doseTuples = members.map { (t: $0.hours, amt: $0.amount / params.refUnit) }
+            agents.append(EffectAgent(
+                params: params,
+                doses: doseTuples,
+                ka: kaMul != 1 ? params.ka * kaMul : nil,
+                kR: kR,
+            ))
+        }
+        return agents
     }
 }
 
