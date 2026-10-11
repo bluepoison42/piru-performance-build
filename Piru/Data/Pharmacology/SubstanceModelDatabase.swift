@@ -87,7 +87,7 @@ nonisolated enum SubstanceModelDatabase {
         "heroin": Overrides(ke: ln2 / 2.5, ka: 6.0, refUnit: 10, mu: 1.0, muEff: 0.97, resp: 1.4),
         "morphine": Overrides(refUnit: 30, mu: 1.0, muEff: 0.95, resp: 1.0),
         "oxycodone": Overrides(refUnit: 20, mu: 1.0, muEff: 0.92, resp: 0.9),
-        "kratom": Overrides(refUnit: 3, mu: 0.55, muEff: 0.5),
+        "kratom": Overrides(refUnit: 3_000, mu: 0.55, muEff: 0.5),
         // Sedatives / enhancers / antagonists — adjuncts (never trigger the view alone).
         "bromazepam": Overrides(refUnit: 6, gaba: 1.0),
         "ppap": Overrides(refUnit: 20, cae: 0.45),
