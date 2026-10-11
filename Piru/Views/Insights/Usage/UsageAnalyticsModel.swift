@@ -125,7 +125,7 @@ final class UsageAnalyticsModel {
         var substanceIndices: [String: Int] = [:]
         var substances: [UsageSubstanceRef] = []
         var resolvedSubstances: [String: Substance?] = [:]
-        var ladders: [LadderKey: Ladder?] = [:]
+        var ladders: [LadderKey: DoseLadder?] = [:]
 
         var snapshots: [UsageEntrySnapshot] = []
         snapshots.reserveCapacity(entries.count)
@@ -158,22 +158,25 @@ final class UsageAnalyticsModel {
                 substance: key, route: entry.route,
                 saltForm: entry.saltForm, isomer: entry.isomer, releaseForm: entry.releaseForm,
             )
-            var ladder: Ladder?
+            var ladder: DoseLadder?
             if let cached = ladders[ladderKey] {
                 ladder = cached
             } else {
-                ladder = Ladder(substance: substance, key: ladderKey)
+                ladder = substance?.tierLadder(
+                    for: entry.route, saltForm: entry.saltForm, isomer: entry.isomer, releaseForm: entry.releaseForm,
+                )
                 ladders[ladderKey] = ladder
             }
+            // An unknown dose is counted but has no tier and no common-dose
+            // multiple — a 0 would read as the lowest tier.
+            let dose = substance?.quantity(of: entry) ?? entry.quantity
 
             snapshots.append(UsageEntrySnapshot(
                 substanceIndex: substanceIndex,
                 categoryIndex: categoryIndex,
                 routeIndex: routeIndices[entry.route] ?? 0,
-                // An unknown dose is counted but has no tier and no common-dose
-                // multiple — a 0 would read as the lowest tier.
-                doseLevelIndex: entry.isUnknownDose ? nil : ladder?.levelIndex(for: entry.amount, unit: entry.unit),
-                commonDoses: entry.isUnknownDose ? nil : ladder?.commonDoses(for: entry.amount, unit: entry.unit),
+                doseLevelIndex: dose.flatMap { ladder?.level(of: $0) }.map(Self.index(of:)),
+                commonDoses: dose.flatMap { ladder?.commonDoses(of: $0) },
                 timestamp: entry.timestamp,
             ))
         }
@@ -191,80 +194,6 @@ final class UsageAnalyticsModel {
         let saltForm: String?
         let isomer: String?
         let releaseForm: String?
-    }
-
-    /// A resolved dose ladder plus the unit its numbers are stated in.
-    private struct Ladder {
-        let range: DoseRange
-        let unit: String
-
-        init?(substance: Substance?, key: LadderKey) {
-            guard let substance,
-                  let range = substance.tierLadder(
-                      for: key.route, saltForm: key.saltForm, isomer: key.isomer, releaseForm: key.releaseForm,
-                  ) else { return nil }
-            self.range = range
-            unit = substance.unit(for: key.route, saltForm: key.saltForm, isomer: key.isomer)
-        }
-
-        func levelIndex(for amount: Double, unit loggedUnit: String) -> Int? {
-            UsageAnalyticsModel.doseLevelIndex(
-                range: range, ladderUnit: unit, amount: amount, loggedUnit: loggedUnit,
-            )
-        }
-
-        func commonDoses(for amount: Double, unit loggedUnit: String) -> Double? {
-            UsageAnalyticsModel.commonDoses(
-                range: range, ladderUnit: unit, amount: amount, loggedUnit: loggedUnit,
-            )
-        }
-    }
-
-    // MARK: - Dose-level resolution
-
-    /// A dose's tier as an index into `DoseLevel.allCases`, or `nil` when it
-    /// cannot be placed.
-    ///
-    /// The unit check is the whole point of the fallback. A ladder written in mg
-    /// and a dose logged in mL are not comparable, and reading the bare number
-    /// across would file a 5 mL drink in the same tier as 5 mg of a
-    /// milligram-potent drug. `DoseUnit.convert` returns `nil` for anything that
-    /// isn't a bare mass unit — including qualified spellings like
-    /// "mg (freebase)", which state a basis rather than decorating one — so
-    /// those entries drop out of §4 and are counted in its "N of M" footnote
-    /// instead of being guessed at.
-    static func doseLevelIndex(
-        range: DoseRange,
-        ladderUnit: String,
-        amount: Double,
-        loggedUnit: String,
-    ) -> Int? {
-        guard let converted = DoseUnit.convert(amount, from: loggedUnit, to: ladderUnit),
-              let level = range.level(for: converted) else { return nil }
-        return index(of: level)
-    }
-
-    /// A dose as a multiple of the substance's common dose, or `nil` when it
-    /// can't be expressed that way.
-    ///
-    /// Two things have to hold, and both are the same honesty gate §4 already
-    /// applies: the ladder must state a `common` band (a threshold-only or
-    /// heavy-only ladder has no midpoint to divide by), and the logged unit must
-    /// convert to the ladder's — a mL drink against a mg ladder is not a fraction
-    /// of anything. When either fails the dose has no common-dose value and is
-    /// left out of the common-dose ranking rather than counted as zero, which
-    /// would read as "never taken" instead of "not measurable this way".
-    static func commonDoses(
-        range: DoseRange,
-        ladderUnit: String,
-        amount: Double,
-        loggedUnit: String,
-    ) -> Double? {
-        guard let common = range.common else { return nil }
-        let midpoint = (common.lowerBound + common.upperBound) / 2
-        guard midpoint > 0,
-              let converted = DoseUnit.convert(amount, from: loggedUnit, to: ladderUnit) else { return nil }
-        return converted / midpoint
     }
 
     /// `DoseLevel` → its position in `DoseLevel.allCases`. Written out rather

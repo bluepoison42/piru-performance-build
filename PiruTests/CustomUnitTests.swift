@@ -64,7 +64,7 @@ struct CustomUnitTests {
 
         #expect(sub.unitAliases.contains { $0.label == "capsule" })
         // Half a 100 mg capsule → 50 mg on caffeine's native oral unit.
-        #expect(sub.convert(amount: 0.5, from: "capsule", toRoute: .oral) == 50)
+        #expect(sub.inLadderUnit(0.5, from: "capsule", route: .oral) == 50)
     }
 
     @Test

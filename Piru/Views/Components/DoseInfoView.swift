@@ -7,17 +7,18 @@ struct DoseInfoView: View {
     var saltForm: String?
     /// Selected isomer code; `nil` (the default) selects the racemic ladder.
     var isomer: String?
-    let currentDose: Double?
+    let currentDose: DoseQuantity?
 
-    private var doseRange: DoseRange? {
-        substance.doseRange(for: route, saltForm: saltForm, isomer: isomer)
+    private var ladder: DoseLadder? {
+        substance.ladder(for: route, saltForm: saltForm, isomer: isomer)
     }
 
     var body: some View {
-        if let doseRange {
+        if let ladder {
+            let doseRange = ladder.range
+            let unit = ladder.unit
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                let unit = substance.unit(for: route, saltForm: saltForm, isomer: isomer)
-                DoseLevelIndicator(doseRange: doseRange, currentDose: currentDose, unit: unit)
+                DoseLevelIndicator(ladder: ladder, dose: currentDose)
 
                 Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
                     if let threshold = doseRange.threshold {
@@ -59,7 +60,7 @@ struct DoseInfoView: View {
 
                 elementalNote(unit: unit)
 
-                switch doseRange.dosingPrecision(unit: unit) {
+                switch ladder.dosingPrecision {
                 case .critical: VolumetricDosingDisclaimer()
                 case .recommended: PreciseScaleNote()
                 case .none: EmptyView()
@@ -76,7 +77,8 @@ struct DoseInfoView: View {
         if let fraction = substance.elementalFraction(for: route, saltForm: saltForm, isomer: isomer) {
             HStack(spacing: Spacing.sm) {
                 Image(systemName: "atom").imageScale(.small).accessibilityHidden(true)
-                if let currentDose, let elemental = substance.elementalAmount(of: currentDose, for: route, saltForm: saltForm, isomer: isomer) {
+                if let amount = currentDose?.value(in: unit),
+                   let elemental = substance.elementalAmount(of: amount, for: route, saltForm: saltForm, isomer: isomer) {
                     Text("≈ \(elemental.doseFormatted) \(unit) elemental", comment: "Elemental content of a salt dose")
                 } else {
                     elementalPercentCaption(fraction)
@@ -206,7 +208,7 @@ struct RouteDosingCard: View {
         if unit.localizedCaseInsensitiveContains("THC") {
             THCContentNote()
         } else {
-            switch doses.dosingPrecision(unit: unit) {
+            switch DoseLadder(range: doses, unit: unit).dosingPrecision {
             case .critical: VolumetricDosingDisclaimer()
             case .recommended: PreciseScaleNote()
             case .none: EmptyView()

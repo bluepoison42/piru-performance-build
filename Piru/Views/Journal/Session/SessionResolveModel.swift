@@ -110,13 +110,11 @@ enum SessionResolveModel {
             // estimate would inherit that. A dose whose form we decline to model
             // is left out rather than modelled wrong.
             guard !entry.namesUnmodeledForm else { return nil }
-            // No amount, no simulated dose.
-            guard !entry.isUnknownDose else { return nil }
-            // Match tolerance replay: units without a mass conversion cannot drive the model.
-            guard let amountMg = DoseUnit.convert(entry.amount, from: entry.unit, to: "mg") else { return nil }
+            // Only a known mass drives the model: no amount, or an mL / IU amount, is no simulated dose.
+            guard case let .mass(dose)? = entry.quantity else { return nil }
             return MechanisticSessionModel.DoseInput(
                 name: entry.substance,
-                amount: amountMg,
+                dose: dose,
                 route: entry.route,
                 hours: entry.timestamp.timeIntervalSince(startDate) / 3_600,
             )

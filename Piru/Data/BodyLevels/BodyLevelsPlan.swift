@@ -12,6 +12,15 @@ extension BodyLevelsManager {
             let displayName: String
             let color: Color
             let unit: String
+            /// The series' first dose; every later one is expressed in its unit.
+            let unitOf: DoseQuantity
+        }
+
+        /// A series is one substance in one unit family — a substance logged in
+        /// both mL and mg is two non-addable series. Mirrors ``ActiveSubstanceCalculator``.
+        private struct SeriesKey: Hashable {
+            let name: String
+            let family: DoseQuantity.Family
         }
 
         let dates: [Date]
@@ -35,7 +44,7 @@ extension BodyLevelsManager {
                 return result
             }
 
-            var seriesIndex: [String: Int] = [:]
+            var seriesIndex: [SeriesKey: Int] = [:]
             var meta: [SeriesMeta] = []
             var doses: [BodyLoadDose] = []
 
@@ -46,6 +55,7 @@ extension BodyLevelsManager {
                 // unmodeled release form without a per-product envelope has no
                 // honest absorption limb.
                 if substance?.modelsBodyLoad == false { continue }
+                guard let dose = substance?.quantity(of: entry) ?? entry.quantity else { continue }
                 let productDuration = entry.productDuration
                 // A depot administration keeps its slow depot half-life and no acute
                 // absorption limb (see PKResolver / ActiveSubstanceCalculator), so it
@@ -62,7 +72,7 @@ extension BodyLevelsManager {
                 let params = PKResolver.Params(halfLifeMinutes: halfLife, ke: ke, ka: ka)
 
                 let name = substance?.name ?? entry.substance
-                let key = "\(name)|\(unitFamily(entry.unit))"
+                let key = SeriesKey(name: name, family: dose.family)
                 let index: Int
                 if let existing = seriesIndex[key] {
                     index = existing
@@ -73,11 +83,12 @@ extension BodyLevelsManager {
                         displayName: CustomSubstanceStore.shared.displayName(for: name, fallback: substance?.displayTitle),
                         color: SubstancePalette.color(for: name, colorMap: colorMap),
                         unit: entry.unit,
+                        unitOf: dose,
                     ))
                 }
-                // Express in the series' established unit; a same-family conversion
-                // can't fail, and the fallback keeps scales from silently mixing.
-                let amount = DoseUnit.convert(entry.amount, from: entry.unit, to: meta[index].unit) ?? entry.amount
+                // Express in the series' established unit; the key's family
+                // guarantees the two convert.
+                guard let amount = dose.value(inUnitOf: meta[index].unitOf) else { continue }
                 doses.append(BodyLoadDose(
                     seriesIndex: index, amount: amount, timestamp: entry.timestamp,
                     ke: params.ke, ka: params.ka,
@@ -109,13 +120,6 @@ extension BodyLevelsManager {
             }
             series.sort { $0.peak > $1.peak }
             return BodyLoadTrail(dates: dates, series: series)
-        }
-
-        /// Group key must carry the unit family, not just the name — a substance
-        /// logged in both mL and mg is two non-addable series. Mirrors
-        /// ``ActiveSubstanceCalculator``.
-        private static func unitFamily(_ unit: String) -> String {
-            DoseUnit.convert(1, from: unit, to: "mg") == nil ? unit : "mass"
         }
 
         /// The ascending sample grid: the window `[start, now]` at a range-appropriate

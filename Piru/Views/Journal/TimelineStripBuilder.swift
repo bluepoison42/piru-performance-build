@@ -25,6 +25,10 @@ struct TimelineStripBuilder {
     /// Raw entries per substance (lowercased name, ascending) — the PK mode's
     /// input.
     private let entriesBySubstance: [String: [DoseEntry]]
+    /// PK mode's per-dose weight: the amount, read in the unit of its substance's
+    /// first measured dose so 500 mg and 1 g stack as 500 and 1 000. A dose with
+    /// no amount, or in a unit that can't be read in that one, weighs nothing.
+    private let pkDoseWeights: [PersistentIdentifier: Double]
     /// Sessions materialized by one fetch, keyed by identifier. `entry.session`
     /// hands back a fault, and reading its `id` fires a one-row fetch — one per
     /// session per build (508 in a launch trace). Resolving through this map
@@ -139,6 +143,17 @@ struct TimelineStripBuilder {
             bySubstance[k]?.sort { $0.timestamp < $1.timestamp }
         }
         entriesBySubstance = bySubstance
+        var weights: [PersistentIdentifier: Double] = [:]
+        if style.pkMode {
+            for substanceEntries in bySubstance.values {
+                let quantities = substanceEntries.map(\.quantity)
+                guard let unitOf = quantities.lazy.compactMap(\.self).first else { continue }
+                for (entry, dose) in zip(substanceEntries, quantities) {
+                    weights[entry.persistentModelID] = dose?.value(inUnitOf: unitOf)
+                }
+            }
+        }
+        pkDoseWeights = weights
 
         var sessions: [UUID: Session] = [:]
         for entry in entries {
@@ -927,9 +942,8 @@ struct TimelineStripBuilder {
         return peak
     }
 
-    /// PK mode's per-dose weight: the logged amount.
     private func doseWeight(_ entry: DoseEntry) -> Double {
-        entry.amount
+        pkDoseWeights[entry.persistentModelID] ?? 0
     }
 
     /// Stacked effect intensity for one substance at `t` — each dose's

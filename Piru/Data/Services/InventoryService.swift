@@ -87,15 +87,12 @@ enum InventoryMath {
     /// (mg vs mL, IU, drops, a count with no strength) returns `nil` → that
     /// dose is skipped, never blocked.
     nonisolated static func convert(_ amount: Double, from: String, to: String, unitStrengthMG: Double? = nil) -> Double? {
-        if let direct = DoseUnit.convert(amount, from: from, to: to) { return direct }
-        guard let unitStrengthMG, unitStrengthMG > 0 else { return nil }
-        if isCountUnit(to), let mg = DoseUnit.convert(amount, from: from, to: "mg") {
-            return mg / unitStrengthMG
-        }
-        if isCountUnit(from) {
-            return DoseUnit.convert(amount * unitStrengthMG, from: "mg", to: to)
-        }
-        return nil
+        // With a strength, a tab or cap is a mass unit of its own (one 36 mg tab).
+        let pieces = unitStrengthMG.map { strength in
+            countUnits.map { UnitAlias(label: $0, amountPerUnit: strength, unit: "mg") }
+        } ?? []
+        return DoseQuantity(amount, unit: from, aliases: pieces)
+            .value(inUnitOf: DoseQuantity(1, unit: to, aliases: pieces))
     }
 
     /// A `Sendable` snapshot of one consumption dose, so the stock replay can run

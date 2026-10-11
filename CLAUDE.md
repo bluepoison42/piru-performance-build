@@ -133,7 +133,7 @@ pipeline/fetch-db.sh --force    # re-download regardless
 
 ```
 Piru/
-├── Domain/          # value-type domain models (NOT SwiftData): Substance struct, DoseRange, DurationProfile, DoseUnit, JournalModel, PSID
+├── Domain/          # value-type domain models (NOT SwiftData): Substance struct, DoseRange + DoseLadder, DurationProfile, JournalModel, PSID
 ├── Views/           # SwiftUI views (ContentView has 4 tabs: Journal, Library, Tools, Insights)
 │   ├── Insights/    # Adherence, half-life calc, activity charts, usage stats
 │   └── Components/
@@ -199,6 +199,7 @@ pipeline/            # Python data pipeline that builds the bundled substance SQ
 - **Substance lookups go through the `SubstanceLibrary` façade** (`SubstanceLibrary.swift`), never raw `SubstanceStore.shared.lookup*` — the façade overlays `CustomSubstanceStore` user edits (duration overrides, relabels); bypassing it silently drops those overrides
 - **`SubstanceLibrary.lookup` is the default resolve; `resolveFull` is detail-screens-only.** `lookup` is a dict hit over the batch projection (name, category, routes, per-salt dose ladders, durations, half-life — enough for everything but a detail page). `resolveFull` loads the full per-field record at ~21 SQL per uncached substance, and `ensureAllLoaded()` never warms its cache — so it belongs only where mechanism/bindings/chemistry are shown. Any task that resolves substances must `await SubstanceStore.shared.ensureAllLoaded()` first: a cold `SubstanceStore.all` on the main actor **asserts in DEBUG** (the release fallback is a ~500 ms hang, which is why the assert exists).
 - **Background SwiftData work goes on `DatabaseActor`** (`Data/Persistence/DatabaseActor.swift`): annotate the function `@DatabaseActor`, take the `ModelContainer` as a parameter, make a fresh `ModelContext` inside. It reads committed store state — run it post-save (revision tick / change streams), never to observe in-flight main-context edits.
+- **Dose amounts carry their unit.** A stored `amount` + `unit` pair is parsed into a `DoseQuantity` (`Shared/DoseQuantity.swift`: `entry.quantity`, or `substance.quantity(of:)` to include the substance's alias units) before any arithmetic; a ladder is weighed only through `DoseLadder` (`substance.ladder(for:…)`, `tierLadder`, `scalingLadder`), which converts into the ladder's own unit and answers `nil` across families. Never divide, sum or compare a bare `entry.amount` against a ladder, a reference dose or another dose — and never `?? amount` a failed conversion: a dose that can't be expressed is unknown, not small. Masses are `Measurement<UnitDoseMass>` (milligram base, so µg/mg/g and alias units convert exactly and `0.08 g == 80 mg`); past that boundary engines take plain `Double`s with the unit in the name (`refDoseMg`, `amountMg`).
 - **Search**: Ranked cascade (exact → alias → prefix → contains → fuzzy via Levenshtein distance)
 - **Export**: PsyLog-compatible JSON format via `DataExportImport`; PDF reports with PK charts via `PDFReportGenerator`
 - **Shared code**: SwiftData models + formatting live in `Shared/` with multi-target membership (Piru, PiruWidget, PiruLiveActivityExtension)

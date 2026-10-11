@@ -179,7 +179,7 @@ struct EntryEditContent: View {
                     route: draft.route,
                     saltForm: draft.saltForm,
                     isomer: draft.isomer,
-                    currentDose: entry.namesUnmodeledForm ? nil : normalizedDraftAmount,
+                    currentDose: entry.namesUnmodeledForm ? nil : draftDose,
                 )
                 .padding(.vertical, Spacing.xs)
             }
@@ -209,19 +209,18 @@ struct EntryEditContent: View {
         substance?.byVolumeDosing
     }
 
-    /// Draft amount converted to the substance's native unit, for accurate level comparison.
-    private var normalizedDraftAmount: Double? {
-        guard !draft.isUnknownDose else { return nil }
-        guard let parsed = draft.parsedAmount, let sub = substance else { return draft.parsedAmount }
-        return sub.convert(amount: parsed, from: draft.unit, toRoute: draft.route, saltForm: draft.saltForm) ?? parsed
+    /// The draft's amount in the unit it is written in, aliases included.
+    private var draftDose: DoseQuantity? {
+        guard !draft.isUnknownDose, let amount = draft.parsedAmount, let substance else { return nil }
+        return substance.quantity(amount, unit: draft.unit)
     }
 
     /// The draft's tier. The release form is the committed entry's: the edit
     /// form doesn't change it.
     private var draftDoseLevel: DoseLevel? {
-        guard !draft.isUnknownDose, let amount = draft.parsedAmount, let substance else { return nil }
+        guard let draftDose, let substance else { return nil }
         return substance.doseLevel(
-            of: amount, unit: draft.unit,
+            of: draftDose,
             route: draft.route, saltForm: draft.saltForm, isomer: draft.isomer, releaseForm: entry.releaseForm,
         )
     }

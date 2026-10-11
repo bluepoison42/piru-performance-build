@@ -910,8 +910,9 @@ struct SubstanceReadModel {
     /// The substance's **reference "heavy" dose** in mg — the escalation denominator for the deep
     /// tolerance gate (`dose ÷ reference`). Resolved from the substance's primary dose ladder: the
     /// **oral** route when it has one, else the first route that carries a usable range; within that
-    /// route, `heavy ?? strong.upperBound ?? common.upperBound`. Returns `nil` when no ladder exists,
-    /// so the deep gate stays closed (the conservative fallback).
+    /// route, `heavy ?? strong.upperBound ?? common.upperBound`, converted from the ladder's own unit
+    /// (LSD's 300 is µg, kratom's 8 is g). A ladder whose unit is not a mass yields no reference.
+    /// Returns `nil` when no ladder exists, so the deep gate stays closed (the conservative fallback).
     ///
     /// `nonisolated static` so both the cached instance path and the off-main batch resolve can call
     /// it on their own connection. Source priority mirrors ``resolveRoutes(db:substanceIDs:order:)``
@@ -921,11 +922,12 @@ struct SubstanceReadModel {
         guard !order.isEmpty else { return nil }
         let enabledSourceListSQL = enabledSourceListSQL(order)
         let doseRank = fieldRankSQL(field: "doses", alias: "d", order: order, doseContextLast: true)
-        let rows: [(route: String, isomer: String?, common: Double?, strong: Double?, heavy: Double?)]
+        typealias LadderRow = (route: String, isomer: String?, unit: String, common: Double?, strong: Double?, heavy: Double?)
+        let rows: [LadderRow]
         do {
             rows = try queue.read { db in
                 try Row.fetchAll(db, sql: """
-                    SELECT route, isomer, common_upper, strong_upper, heavy
+                    SELECT route, isomer, unit, common_upper, strong_upper, heavy
                       FROM (
                         SELECT d.*, ROW_NUMBER() OVER (
                             PARTITION BY d.substance_id, d.route, d.salt_form, d.isomer
@@ -940,6 +942,7 @@ struct SubstanceReadModel {
                     (
                         route: $0["route"] ?? "",
                         isomer: $0["isomer"],
+                        unit: $0["unit"] ?? "",
                         common: $0["common_upper"],
                         strong: $0["strong_upper"],
                         heavy: $0["heavy"],
@@ -950,8 +953,8 @@ struct SubstanceReadModel {
             Logger.substanceStore.error("referenceDoseMg failed: \(error.localizedDescription, privacy: .public)")
             return nil
         }
-        func reference(_ row: (route: String, isomer: String?, common: Double?, strong: Double?, heavy: Double?)) -> Double? {
-            row.heavy ?? row.strong ?? row.common
+        func reference(_ row: LadderRow) -> Double? {
+            (row.heavy ?? row.strong ?? row.common).flatMap { DoseQuantity($0, unit: row.unit).milligrams }
         }
         /// Prefer the racemic form so a family's reference is the parent's, not an
         /// arbitrary enantiomer's; oral first, else the first route yielding a value.

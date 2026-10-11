@@ -16,7 +16,7 @@ struct CodableRange: Codable {
     }
 }
 
-struct DoseRange {
+nonisolated struct DoseRange {
     let threshold: Double?
     let light: ClosedRange<Double>?
     let common: ClosedRange<Double>?
@@ -50,7 +50,7 @@ struct DoseRange {
     /// `.sub` — so a custom substance logged with no dose data was labeled
     /// "sub-threshold", which is a claim about the dose rather than an absence
     /// of one, and the reader has no way to tell the two apart.
-    func level(for dose: Double) -> DoseLevel? {
+    fileprivate func level(for dose: Double) -> DoseLevel? {
         guard hasAnyValue else { return nil }
         if let heavy, dose >= heavy { return .heavy }
         if let strong, strong.contains(dose) || dose > strong.upperBound { return .strong }
@@ -58,6 +58,47 @@ struct DoseRange {
         if let light, light.contains(dose) || dose > light.upperBound { return .light }
         if let threshold, dose >= threshold { return .threshold }
         return .sub
+    }
+}
+
+/// A dose ladder together with the unit its numbers are written in.
+///
+/// The only way to weigh a dose against a ladder: every placement converts the
+/// dose into ``unit`` first and answers `nil` when it can't, so a gram dose is
+/// never read off a milligram ladder and an mL dose never off a gram one.
+nonisolated struct DoseLadder: Hashable {
+    let range: DoseRange
+    let unit: String
+
+    /// A number read off this ladder, as a quantity in its unit.
+    func quantity(_ value: Double) -> DoseQuantity {
+        DoseQuantity(value, unit: unit)
+    }
+
+    /// Where `dose` sits on this ladder, or `nil` when there is no ladder or the
+    /// dose measures something the ladder's unit can't express.
+    func level(of dose: DoseQuantity) -> DoseLevel? {
+        dose.value(in: unit).flatMap(range.level(for:))
+    }
+
+    /// `dose ÷ reference`, with `reference` read in this ladder's unit; `nil` when
+    /// the dose can't be expressed in it.
+    func fraction(of dose: DoseQuantity, reference: Double) -> Double? {
+        dose.ratio(to: quantity(reference))
+    }
+
+    /// A dose as a multiple of the common dose (the common band's midpoint), or
+    /// `nil` when it can't be expressed that way: the ladder states no common band
+    /// (a threshold-only or heavy-only ladder has no midpoint to divide by), or the
+    /// dose measures something the ladder's unit can't — a mL drink against a mg
+    /// ladder is not a fraction of anything. Callers leave such a dose out rather
+    /// than count it as zero, which would read as "never taken" instead of "not
+    /// measurable this way".
+    func commonDoses(of dose: DoseQuantity) -> Double? {
+        guard let common = range.common else { return nil }
+        let midpoint = (common.lowerBound + common.upperBound) / 2
+        guard midpoint > 0 else { return nil }
+        return dose.ratio(to: quantity(midpoint))
     }
 
     /// How precisely a substance must be measured, derived from its average
@@ -75,20 +116,20 @@ struct DoseRange {
     /// `< 1 mg` → `.critical` (true µg/sub-mg potency, e.g. fentanyl, nitazenes),
     /// `1–5 mg` → `.recommended` (precise scale advised, e.g. DOx psychedelics),
     /// otherwise `.none`.
-    func dosingPrecision(unit: String) -> DosingPrecision {
+    var dosingPrecision: DosingPrecision {
         var values: [Double] = []
-        if let threshold { values.append(threshold) }
-        if let light { values.append((light.lowerBound + light.upperBound) / 2) }
-        if let common { values.append((common.lowerBound + common.upperBound) / 2) }
-        if let strong { values.append((strong.lowerBound + strong.upperBound) / 2) }
-        if let heavy { values.append(heavy) }
+        if let threshold = range.threshold { values.append(threshold) }
+        if let light = range.light { values.append((light.lowerBound + light.upperBound) / 2) }
+        if let common = range.common { values.append((common.lowerBound + common.upperBound) / 2) }
+        if let strong = range.strong { values.append((strong.lowerBound + strong.upperBound) / 2) }
+        if let heavy = range.heavy { values.append(heavy) }
         guard !values.isEmpty else { return .none }
         let average = values.reduce(0, +) / Double(values.count)
-        // Only reason about potency when the unit is a convertible mass unit.
-        // Annotated/colloquial units ("g (leaf powder)", "mL", "IU") can't map
-        // to mg; treating the raw number as mg would wrongly flag gram-dosed
-        // botanicals (kratom leaf, mushrooms) as microgram-potent. Skip then.
-        guard let averageInMg = DoseUnit.convert(average, from: unit, to: "mg") else { return .none }
+        // Only reason about potency when the unit is a mass. Annotated or
+        // colloquial units ("g (leaf powder)", "mL", "IU") have no mg reading;
+        // taking the raw number as mg would flag gram-dosed botanicals (kratom
+        // leaf, mushrooms) as microgram-potent.
+        guard let averageInMg = quantity(average).milligrams else { return .none }
         if averageInMg < 1 { return .critical }
         if averageInMg < 5 { return .recommended }
         return .none

@@ -69,7 +69,7 @@ struct EffectCalibrationSolverTests {
     }
 
     // The calibrated monoamine set + typical clinical onset (h). Every shape check runs at the
-    // substance's own reference dose (`refUnit`, i.e. `amt ≈ 1`) — the engine's calibrated operating
+    // substance's own reference dose (`refDoseMg`, i.e. `amt ≈ 1`) — the engine's calibrated operating
     // point — so substances of different mg-potency are compared fairly and near where the curve is tuned.
     private struct Ref { let name: String; let onsetLoH: Double; let onsetHiH: Double }
     private let refs: [Ref] = [
@@ -107,7 +107,7 @@ struct EffectCalibrationSolverTests {
         var report = "\n=== Stage 2 · timing (onset = t at 20% of peak Feeling; anchored band from PW/TripSit) ===\n"
         for r in refs {
             let p = try #require(resolve(r.name))
-            let o = sim(p, p.refUnit)
+            let o = sim(p, p.refDoseMg)
             let feeling = o.eu
             // Reuptake blockers (MPH) barely produce euphoria; time the drive channel instead.
             let series = peak(feeling) > 0.05 ? feeling : o.drive
@@ -134,13 +134,13 @@ struct EffectCalibrationSolverTests {
         let crashThreshold = -0.30 // trough(Feeling) below this = a felt crash (de Wit acute tolerance)
 
         var report = "\n=== Stage 3 · deplete scan at each substance's reference dose (trough Feeling; * = crash) ===\n"
-        report += String(format: "deplete   amphetamine(%.0fmg)      mephedrone(%.0fmg)\n", amp.refUnit, meph.refUnit)
+        report += String(format: "deplete   amphetamine(%.0fmg)      mephedrone(%.0fmg)\n", amp.refDoseMg, meph.refDoseMg)
         let grid = stride(from: 0.0, through: 1.4, by: 0.1)
         var ampCrashOnset: Double? // smallest deplete at which amphetamine crashes
         var mephCrashOnset: Double? // smallest deplete at which mephedrone crashes
         for d in grid {
-            let ampTrough = trough(sim(amp, amp.refUnit, deplete: d).eu)
-            let mephTrough = trough(sim(meph, meph.refUnit, deplete: d).eu)
+            let ampTrough = trough(sim(amp, amp.refDoseMg, deplete: d).eu)
+            let mephTrough = trough(sim(meph, meph.refDoseMg, deplete: d).eu)
             if ampCrashOnset == nil, ampTrough < crashThreshold { ampCrashOnset = d }
             if mephCrashOnset == nil, mephTrough < crashThreshold { mephCrashOnset = d }
             report += String(
@@ -168,8 +168,8 @@ struct EffectCalibrationSolverTests {
         // crash boundary (it crashes), the cathinone's low depletion sits *below* it (it doesn't).
         #expect(amp.deplete == 1.0)
         #expect(meph.deplete < 0.3)
-        #expect(trough(sim(amp, amp.refUnit).eu) < crashThreshold, "amphetamine must crash at its fitted deplete")
-        #expect(trough(sim(meph, meph.refUnit).eu) > -0.10, "mephedrone must return calmly at its fitted deplete")
+        #expect(trough(sim(amp, amp.refDoseMg).eu) < crashThreshold, "amphetamine must crash at its fitted deplete")
+        #expect(trough(sim(meph, meph.refDoseMg).eu) > -0.10, "mephedrone must return calmly at its fitted deplete")
         // The boundary is real and well-separated: amphetamine crashes at a lower deplete than mephedrone
         // would need to, so the two classes are cleanly identified by this one constant.
         let ampOnset = try #require(ampCrashOnset)
@@ -182,7 +182,7 @@ struct EffectCalibrationSolverTests {
     func `Validation — the rate hypothesis: oral methylphenidate drives without euphoria`() throws {
         let mph = try #require(resolve("methylphenidate"))
         #expect(!mph.releaser)
-        let o = sim(mph, mph.refUnit)
+        let o = sim(mph, mph.refDoseMg)
         #expect(peak(o.eu) < 0.2, "MPH occupies DAT without a high (Volkow 2001 / Spencer 2006)")
         #expect(peak(o.drive) > 1, "…but it drives")
     }
@@ -190,7 +190,7 @@ struct EffectCalibrationSolverTests {
     @Test
     func `Validation — amphetamine cardiovascular (not respiratory) danger`() throws {
         let amp = try #require(resolve("amphetamine"))
-        let o = sim(amp, amp.refUnit)
+        let o = sim(amp, amp.refDoseMg)
         #expect(peak(o.dangerCV) > 0)
         #expect(peak(o.dangerResp) == 0)
     }
@@ -201,14 +201,14 @@ struct EffectCalibrationSolverTests {
         let two = try #require(resolve("2-MMC"))
         #expect(meph.wSERT > two.wSERT)
         // Matched magnitude (each at its own reference dose), so only the mix differs.
-        #expect(peak(sim(meph, meph.refUnit).content) > peak(sim(two, two.refUnit).content))
+        #expect(peak(sim(meph, meph.refDoseMg).content) > peak(sim(two, two.refDoseMg).content))
     }
 
     @Test
     func `Validation — the cathinones are euphoric without a crash`() throws {
         for name in ["3-MMC", "2-MMC", "mephedrone"] {
             let p = try #require(resolve(name))
-            let o = sim(p, p.refUnit)
+            let o = sim(p, p.refDoseMg)
             #expect(peak(o.eu) > 0.4, "\(name) should be clearly euphoric at its reference dose")
             #expect(trough(o.eu) > -0.10, "\(name) should return to baseline calmly")
         }

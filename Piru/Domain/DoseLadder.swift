@@ -24,18 +24,36 @@ enum BaseReleaseForm {
 /// pill, the edit readout, journal rows, the quick-log picker and tray, and the
 /// Insights tier breakdown.
 extension Substance {
-    /// The dose a fresh entry pre-fills with and steps from: the ladder's common floor,
-    /// else the nearest tier that exists. `nil` when no ladder describes this route,
-    /// form and unit.
+    /// The ladder for a route narrowed to a form, paired with that form's unit.
+    /// `nil` when the route has no ladder.
+    func ladder(for route: RouteOfAdministration, saltForm: String? = nil, isomer: String? = nil) -> DoseLadder? {
+        doseRange(for: route, saltForm: saltForm, isomer: isomer).map {
+            DoseLadder(range: $0, unit: unit(for: route, saltForm: saltForm, isomer: isomer))
+        }
+    }
+
+    /// The ladder that scales a dose of this substance on `route`: the route's own,
+    /// else the default route's, else any route that has one — each with its own
+    /// unit, so a fallback ladder is never read in the logged route's unit. Without
+    /// the fallback a dose on a route the library has no ladder for draws at full
+    /// height regardless of amount, collapsing light/common/heavy across the journal.
+    func scalingLadder(for route: RouteOfAdministration) -> DoseLadder? {
+        let candidates = [route, defaultRoute] + routes.map(\.route)
+        return candidates.lazy.compactMap { self.ladder(for: $0) }.first { $0.range.hasAnyValue }
+    }
+
+    /// The dose a fresh entry pre-fills with and steps from — the ladder's common
+    /// floor, else the nearest tier that exists — expressed in `unit`. `nil` when no
+    /// ladder describes this route and form, or its unit can't be expressed in `unit`.
     func referenceDose(route: RouteOfAdministration, unit: String, saltForm: String? = nil, isomer: String? = nil) -> Double? {
-        guard let doses = doseRange(for: route, saltForm: saltForm, isomer: isomer),
-              self.unit(for: route, saltForm: saltForm, isomer: isomer) == unit
-        else { return nil }
-        return doses.common?.lowerBound
+        guard let ladder = ladder(for: route, saltForm: saltForm, isomer: isomer) else { return nil }
+        let doses = ladder.range
+        let reference = doses.common?.lowerBound
             ?? doses.light?.upperBound
             ?? doses.strong?.lowerBound
             ?? doses.threshold
             ?? doses.heavy
+        return reference.flatMap { ladder.quantity($0).value(in: unit) }
     }
 
     /// The ladder a dose in this form is judged against, or `nil` when no ladder
@@ -50,27 +68,21 @@ extension Substance {
     /// no tier, exactly like a dose of unknown amount.
     func tierLadder(
         for route: RouteOfAdministration, saltForm: String?, isomer: String?, releaseForm: String?,
-    ) -> DoseRange? {
+    ) -> DoseLadder? {
         guard BaseReleaseForm.contains(releaseForm),
-              let range = doseRange(for: route, saltForm: saltForm, isomer: isomer),
-              range.hasAnyValue else { return nil }
-        return range
+              let ladder = ladder(for: route, saltForm: saltForm, isomer: isomer),
+              ladder.range.hasAnyValue else { return nil }
+        return ladder
     }
 
-    /// Where `amount` of this substance sits on its ``tierLadder(for:saltForm:isomer:releaseForm:)``,
-    /// converted to the ladder's unit first. `nil` when no ladder describes the dose.
+    /// Where `dose` of this substance sits on its ``tierLadder(for:saltForm:isomer:releaseForm:)``.
+    /// `nil` when no ladder describes the dose, or the dose's unit can't be
+    /// expressed in the ladder's.
     func doseLevel(
-        of amount: Double, unit: String,
+        of dose: DoseQuantity,
         route: RouteOfAdministration, saltForm: String?, isomer: String?, releaseForm: String?,
     ) -> DoseLevel? {
-        guard let range = tierLadder(for: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm) else {
-            return nil
-        }
-        let ladderUnit = self.unit(for: route, saltForm: saltForm, isomer: isomer)
-        let normalized = unit.caseInsensitiveCompare(ladderUnit) == .orderedSame
-            ? amount
-            : (convert(amount: amount, from: unit, toRoute: route, saltForm: saltForm) ?? amount)
-        return range.level(for: normalized)
+        tierLadder(for: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm)?.level(of: dose)
     }
 }
 
@@ -79,10 +91,9 @@ extension DoseEntry {
     /// a form no ladder describes. See ``Substance/tierLadder(for:saltForm:isomer:releaseForm:)``.
     @MainActor
     func doseLevel(on substance: Substance) -> DoseLevel? {
-        guard !isUnknownDose else { return nil }
+        guard let dose = substance.quantity(of: self) else { return nil }
         return substance.doseLevel(
-            of: amount, unit: unit,
-            route: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm,
+            of: dose, route: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm,
         )
     }
 }

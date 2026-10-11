@@ -494,22 +494,24 @@ enum SessionNotificationScheduler {
                 $0.timestamp >= windowStart && !$0.namesUnmodeledForm
         }
 
-        // Batch-cache resolve — `doseRange` is carried by the lightweight timeline
+        // Batch-cache resolve — the dose ladder is carried by the lightweight timeline
         // projection, so skip the heavy (~18-query + chem/mechanism decode) full
         // lookup. Runs once per logged dose in the deferred notification path.
-        guard let substance = SubstanceLibrary.lookup(substanceName),
-              let doseRange = substance.doseRange(for: route) else {
-            // No dose data — can't make a judgment, so report the plain sum in
-            // the caller's unit.
-            let raw = recentSame.reduce(0.0) { $0 + $1.amount } + newAmount
+        let substance = SubstanceLibrary.lookup(substanceName)
+        let newDose = substance?.quantity(newAmount, unit: unit) ?? DoseQuantity(newAmount, unit: unit)
+        guard let substance, let ladder = substance.ladder(for: route),
+              let newInLadder = newDose.value(in: ladder.unit) else {
+            // No ladder, or a dose its unit can't express — no judgment. Report the
+            // sum of the doses that share the new dose's unit, in the caller's unit.
+            let raw = recentSame.compactMap { $0.quantity?.value(inUnitOf: newDose) }.reduce(newAmount, +)
             return (raw, unit, false)
         }
-
-        let routeUnit = substance.unit(for: route)
+        let doseRange = ladder.range
+        let routeUnit = ladder.unit
         let priorTotal = recentSame.reduce(0.0) { sum, entry in
-            sum + (substance.convert(amount: entry.amount, from: entry.unit, toRoute: route) ?? 0)
+            sum + (substance.quantity(of: entry)?.value(in: routeUnit) ?? 0)
         }
-        let total = priorTotal + (substance.convert(amount: newAmount, from: unit, toRoute: route) ?? newAmount)
+        let total = priorTotal + newInLadder
         guard newDoseIsCurrent, BaseReleaseForm.contains(releaseForm) else { return (total, routeUnit, false) }
 
         // Alert if cumulative is at or above the heavy threshold
