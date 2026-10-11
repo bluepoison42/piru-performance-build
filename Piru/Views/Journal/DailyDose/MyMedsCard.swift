@@ -70,17 +70,24 @@ struct MyMedsCard: View {
 
     // MARK: Slot derivation
 
-    /// One checkable dose slot: a due med × one of its reminder times (or a
-    /// single "anytime" slot). Earliest slots absorb today's matched doses
-    /// first.
+    /// What today's occurrence row records for a slot.
     enum SlotState {
         case pending
         case taken
         case skipped
     }
 
+    /// One checkable dose slot: a due med × one of its reminder times (or a
+    /// single "anytime" slot). Earliest slots absorb today's matched doses
+    /// first.
+    ///
+    /// Holds a ``DailyMedSnapshot`` and the med's row identity, never the
+    /// `@Model`: the card keeps tapped slots across its interaction sheet, and
+    /// logging re-resolves the live med from the card's `@Query` by
+    /// ``itemID`` — a med deleted meanwhile is skipped instead of read.
     struct MedSlot: Identifiable {
-        let item: DailyDoseItem
+        let med: DailyMedSnapshot
+        let itemID: PersistentIdentifier
         let time: Int?
         let index: Int
         let state: SlotState
@@ -90,7 +97,7 @@ struct MyMedsCard: View {
         }
 
         var id: String {
-            item.substance + String(item.sortOrder) + "#" + String(index)
+            med.substance + String(med.sortOrder) + "#" + String(index)
         }
 
         var isDueNow: Bool {
@@ -139,9 +146,9 @@ struct MyMedsCard: View {
         if !slots.isEmpty {
             // The Supplements fold only pays for itself with 2+ quiet slots — a
             // single quiet med renders as a plain row rather than a one-item group.
-            let collapseQuiet = slots.count(where: \.item.isQuiet) >= 2
-            let loudSlots = collapseQuiet ? slots.filter { !$0.item.isQuiet } : slots
-            let quietSlots = collapseQuiet ? slots.filter(\.item.isQuiet) : []
+            let collapseQuiet = slots.count(where: \.med.isQuiet) >= 2
+            let loudSlots = collapseQuiet ? slots.filter { !$0.med.isQuiet } : slots
+            let quietSlots = collapseQuiet ? slots.filter(\.med.isQuiet) : []
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 header(slots: slots)
 
@@ -214,8 +221,8 @@ struct MyMedsCard: View {
     /// re-evaluate every other row's body.
     private func slotRow(_ slot: MedSlot, indented: Bool) -> some View {
         SlotRowView(
-            title: displayName(for: slot.item),
-            subtitle: "\(slot.item.amount.doseFormatted) \(slot.item.unit)",
+            title: slot.med.displayName,
+            subtitle: "\(slot.med.amount.doseFormatted) \(slot.med.unit)",
             timeText: slot.time.map(Self.timeText),
             slotState: slot.state,
             due: slot.isDueNow,
@@ -228,7 +235,7 @@ struct MyMedsCard: View {
                 }
             },
             onOpen: {
-                navigator.push(.medDetail(identityKey: slot.item.identityKey, sortOrder: slot.item.sortOrder))
+                navigator.push(.medDetail(identityKey: slot.med.identityKey, sortOrder: slot.med.sortOrder))
             },
         )
     }
@@ -261,12 +268,16 @@ struct MyMedsCard: View {
         var batch: [(entry: DoseEntry, substance: Substance?)] = []
 
         for slot in slots {
-            let item = slot.item
+            guard let item = liveItem(for: slot) else { continue }
             let entry = DoseEntry.medication(item, at: now)
             let matched = SubstanceLibrary.lookup(item.substance).flatMap {
                 $0.name.lowercased() == item.substance.lowercased() ? $0 : nil
             }
             batch.append((entry, matched))
+        }
+        guard !batch.isEmpty else {
+            model.clearPending()
+            return
         }
 
         // Meds pass no deferredBookkeeping: routine medications skip the
@@ -280,10 +291,10 @@ struct MyMedsCard: View {
     /// so an accidental tap-to-log is reversed by tapping the circle again —
     /// the whole-row log with no undo was the reported surprise.
     private func unlog(_ slot: MedSlot) {
-        let item = slot.item
-        guard let entry = todayEntries
-            .filter({ AdherenceCalculator.entryMatches(entry: $0, item: item) })
-            .max(by: { $0.timestamp < $1.timestamp })
+        guard let item = liveItem(for: slot),
+              let entry = todayEntries
+              .filter({ AdherenceCalculator.entryMatches(entry: $0, item: item) })
+              .max(by: { $0.timestamp < $1.timestamp })
         else { return }
 
         let id = entry.id
@@ -302,6 +313,11 @@ struct MyMedsCard: View {
 
     // MARK: Helpers
 
+    /// The slot's med as the store holds it now, or `nil` once it is deleted.
+    private func liveItem(for slot: MedSlot) -> DailyDoseItem? {
+        items.first { $0.persistentModelID == slot.itemID && !$0.isDeleted }
+    }
+
     private func displayName(for item: DailyDoseItem) -> String {
         item.productName ?? CustomSubstanceStore.shared.displayName(for: item.substance)
     }
@@ -318,7 +334,7 @@ struct MyMedsCard: View {
     /// The two-at-most facts under the rows, chosen by ``MyMedsInfo/select``.
     private func infoLines(slots: [MedSlot]) -> [MyMedsInfoLine] {
         let summaries = slots.map { slot in
-            MyMedsInfo.SlotSummary(name: displayName(for: slot.item), minutes: slot.time, pending: slot.state == .pending)
+            MyMedsInfo.SlotSummary(name: slot.med.displayName, minutes: slot.time, pending: slot.state == .pending)
         }
         let missed = yesterdayMissed.map { occurrence in
             let item = items.first { $0.substance.lowercased() == occurrence.substance.lowercased() }
