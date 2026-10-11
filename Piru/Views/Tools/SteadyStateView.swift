@@ -301,7 +301,7 @@ private struct SteadyStateChart: View {
     var body: some View {
         Canvas { context, size in
             let r = result
-            guard !r.curve.isEmpty else { return }
+            guard !r.curve.isEmpty, r.totalMinutes.isFinite, r.totalMinutes > 0 else { return }
 
             let leftPad: CGFloat = 40
             let rightPad: CGFloat = 12
@@ -374,19 +374,21 @@ private struct SteadyStateChart: View {
             let span = xMax / unitMinutes
             let stepUnits = niceStep(span, targetTicks: 5)
             let axisLabelWidth: CGFloat = 34
-            var tickValue = stepUnits
-            while tickValue * unitMinutes <= xMax {
+            // Ticks are counted rather than accumulated, so a step too small to
+            // move a huge running total can never stall the loop.
+            for index in 1 ... Constants.maxTicks {
+                let tickValue = Double(index) * stepUnits
+                guard tickValue * unitMinutes <= xMax else { break }
                 let tx = x(tickValue * unitMinutes)
                 if tx < leftPad + plotW - axisLabelWidth {
                     let label = tickValue < 10 && tickValue.truncatingRemainder(dividingBy: 1) != 0
                         ? String(format: "%.1f", tickValue)
-                        : String(Int(tickValue.rounded()))
+                        : String(format: "%.0f", tickValue)
                     let text = context.resolve(
                         Text(label).font(.system(size: 10, weight: .medium, design: .rounded)).foregroundStyle(Theme.secondaryLabel),
                     )
                     context.draw(text, at: CGPoint(x: tx, y: baseline + labelArea / 2 + 2), anchor: .center)
                 }
-                tickValue += stepUnits
             }
             let axisLabel = context.resolve(
                 Text(useDays ? "days" : "hours").font(.system(size: 10, weight: .semibold, design: .rounded)).foregroundStyle(Theme.secondaryLabel),
@@ -405,9 +407,15 @@ private struct SteadyStateChart: View {
         return Text(summary)
     }
 
-    /// A 1/2/5·10ⁿ step covering `span` in roughly `targetTicks` ticks.
+    private enum Constants {
+        /// Upper bound on x-axis ticks; ``niceStep(_:targetTicks:)`` aims for 5.
+        static let maxTicks = 20
+    }
+
+    /// A 1/2/5·10ⁿ step covering `span` in roughly `targetTicks` ticks; 1 for an
+    /// empty or non-finite span.
     private func niceStep(_ span: Double, targetTicks: Int) -> Double {
-        guard span > 0 else { return 1 }
+        guard span > 0, span.isFinite else { return 1 }
         let raw = span / Double(targetTicks)
         let magnitude = pow(10, floor(log10(raw)))
         let norm = raw / magnitude

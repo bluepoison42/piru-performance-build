@@ -22,6 +22,35 @@ struct SteadyStateModelTests {
         #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1_440, dose: 0) == nil)
     }
 
+    @Test
+    func `Out-of-range and non-finite inputs return nil`() {
+        // Large enough that the chart's axis ticks would pass Int.max.
+        #expect(make(halfLifeMinutes: 1e20 * 60, intervalMinutes: 1_440) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1e20 * 60) == nil)
+        #expect(make(halfLifeMinutes: .infinity, intervalMinutes: 1_440) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: .nan) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1e-6) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1_440, dose: .infinity) == nil)
+    }
+
+    @Test
+    func `Extremes inside the range stay finite`() throws {
+        let longest = try #require(make(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
+            intervalMinutes: SteadyStateModel.intervalRange.lowerBound,
+        ))
+        #expect(longest.totalMinutes.isFinite)
+        #expect(longest.totalMinutes / 1_440 < Double(Int.max))
+        #expect(longest.peakAmount.isFinite && longest.troughAmount.isFinite)
+
+        let sparsest = try #require(make(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.lowerBound,
+            intervalMinutes: SteadyStateModel.intervalRange.upperBound,
+        ))
+        #expect(sparsest.totalMinutes.isFinite)
+        #expect(sparsest.fluctuationPercent.isFinite)
+    }
+
     // MARK: - Accumulation ratio
 
     @Test
