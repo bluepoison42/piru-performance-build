@@ -628,6 +628,7 @@ struct Substance: Identifiable {
     func timelineDuration(
         for route: RouteOfAdministration, saltForm: String? = nil, isomer: String? = nil,
     ) -> DurationProfile? {
+        if isVitaminOrMineral { return nil }
         if let profile = resolveDuration(for: route, saltForm: saltForm, isomer: isomer),
            profile.estimatedTotalMinutes > 0,
            profile.estimatedTotalMinutes <= Self.maxAcuteTimelineMinutes {
@@ -647,15 +648,25 @@ struct Substance: Identifiable {
     /// remaining-% badge, In Your System, Body Levels, the summary's
     /// co-exposure pass, and the timeline's body-load curves.
     ///
-    /// Every class qualifies except a supplement with no acute effect profile
-    /// on any route — vitamins and minerals whose clearance runs over days to
-    /// weeks, where a readout like "clear in 5 months" is noise. A supplement
-    /// that does have one (melatonin, L-theanine) already draws an effect
-    /// curve, so it gets a body load from its half-life like any other dose.
-    /// The one predicate behind all five surfaces, so they cannot disagree.
+    /// Every class qualifies except vitamins, minerals, and any other
+    /// supplement with no acute effect profile on any route, whose clearance
+    /// runs over days to weeks and has nothing to feel, so a readout like
+    /// "clear in 5 months" is noise. A supplement that does have one
+    /// (melatonin, L-theanine) already draws an effect curve, so it gets a
+    /// body load from its half-life like any other dose. The one predicate
+    /// behind all five surfaces, so they cannot disagree.
     var modelsBodyLoad: Bool {
-        category != .supplement || timelineDuration(for: defaultRoute) != nil
+        !isVitaminOrMineral && (category != .supplement || timelineDuration(for: defaultRoute) != nil)
     }
+
+    /// Whether the catalog tags this substance a vitamin or a mineral. Neither
+    /// has an acute felt effect, so a dose of one draws no curve and gets no
+    /// body load, whatever duration rows the sources carry for it.
+    var isVitaminOrMineral: Bool {
+        tags.contains { Self.vitaminAndMineralTags.contains($0) }
+    }
+
+    private static let vitaminAndMineralTags: Set<String> = ["vitamin", "B-vitamin", "mineral", "essential-mineral"]
 
     /// A stand-in acute profile for routes that lack their own: the default
     /// route's profile when it's a sane acute curve, otherwise the shortest

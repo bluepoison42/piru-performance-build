@@ -32,6 +32,15 @@ struct BodyLoadEligibilityTests {
     }
 
     @Test
+    func `A vitamin with an acute duration row still draws nothing`() async throws {
+        let vitaminC = try await substance("Vitamin C")
+        #expect(vitaminC.isVitaminOrMineral)
+        #expect(vitaminC.timelineDuration(for: .oral) == nil)
+        #expect(!vitaminC.modelsBodyLoad)
+        #expect(try await !substance("Magnesium").modelsBodyLoad)
+    }
+
+    @Test
     func `Every other class qualifies whatever its data`() async throws {
         #expect(try await substance("Caffeine").modelsBodyLoad)
     }
