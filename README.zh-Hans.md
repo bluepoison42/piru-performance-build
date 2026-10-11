@@ -53,7 +53,7 @@
   需要 Android 9 或更高版本（64 位 ARM）。想自动获取更新，可以把本仓库添加到
   [Obtainium](https://github.com/ImranR98/Obtainium)，并按 `android-` 筛选发布版本。
 
-问题和错误报告请发到 [Discord](https://discord.gg/hbpMZhPSdx)。
+问题和错误报告请发到 [Discord](https://discord.gg/hbpMZhPSdx)。[如何报告错误](BUG-REPORTS.md)（英文）说明了该发到哪里，以及如何从手机上取得崩溃日志。
 
 ## 构建
 

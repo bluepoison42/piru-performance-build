@@ -55,7 +55,8 @@ The journal is stored on your device. No account, ads, or analytics.
   Android 9 or later (64-bit ARM). To get updates automatically, add this repository to
   [Obtainium](https://github.com/ImranR98/Obtainium) and filter releases by `android-`.
 
-Questions and bug reports go to the [Discord](https://discord.gg/hbpMZhPSdx).
+Questions and bug reports go to the [Discord](https://discord.gg/hbpMZhPSdx). [How to report a bug](BUG-REPORTS.md)
+covers where to send one and how to get the crash details from your phone.
 
 ## Building
 

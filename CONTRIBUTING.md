@@ -20,7 +20,8 @@ point of Piru is that every claim traces back to something real.
 
 ## Bugs
 
-Open an issue with the **Bug report** template. For anything involving a dose, a curve, a timer, an
+Open an issue with the **Bug report** template, or post in the Discord's #bug-reports;
+[BUG-REPORTS.md](BUG-REPORTS.md) explains both and how to get crash logs on each platform. For anything involving a dose, a curve, a timer, an
 interaction, or a notification, the single most useful thing you can attach is a **shared session**: in the
 app, **Share → Markdown** produces a clean, paste-able record of exactly what you logged and what Piru
 computed. Redact anything you'd rather not share.
