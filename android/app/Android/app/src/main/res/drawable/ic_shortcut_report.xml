@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launcher shortcut's icon: Material Symbols Rounded bug_report (Apache-2.0) in the accent. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_shortcut_report_background" />
+    <foreground android:drawable="@drawable/ic_shortcut_report_foreground" />
+</adaptive-icon>

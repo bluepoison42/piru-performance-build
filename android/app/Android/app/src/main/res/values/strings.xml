@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launcher shortcut's labels and its failure message (Skip/AndroidDiagnostics.kt). Android
+     reads shortcut labels from string resources, so these sit outside Localizable.xcstrings. -->
+<resources>
+    <string name="report_shortcut_short">Report</string>
+    <string name="report_shortcut_long">Report a problem</string>
+    <string name="report_failed">The report could not be written.</string>
+</resources>

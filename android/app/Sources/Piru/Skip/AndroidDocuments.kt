@@ -4,6 +4,7 @@
 // Results go back to Swift through the bridged AndroidDocumentResults.
 package piru.module
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
@@ -71,6 +72,12 @@ class AndroidDocuments {
         @JvmStatic
         fun shareFile(path: String, mimeType: String): Boolean {
             val activity = activity?.get() ?: return false
+            return shareFileFrom(activity, path, mimeType)
+        }
+
+        /// Sends a copy of the file at `path` through the share chooser opened from `activity`.
+        @JvmStatic
+        fun shareFileFrom(activity: Activity, path: String, mimeType: String): Boolean {
             return try {
                 val source = File(path)
                 val folder = File(activity.cacheDir, "share").apply { mkdirs() }
