@@ -127,6 +127,10 @@ struct RouteDosingCard: View {
     /// The route name as a card title. Off in the detail list (the section
     /// header and the route picker already name it); on in the share image.
     var showsTitle = true
+    /// The dosage row carrying the emphasis wash: the typical tier on the
+    /// substance page and share image, the dose's own tier on an entry (the
+    /// tier its strength chip names), `nil` for no row.
+    var emphasizedLevel: DoseLevel? = .common
 
     private var hasDosage: Bool {
         showsDoseLadder && (doses?.hasAnyValue ?? false)
@@ -165,19 +169,19 @@ struct RouteDosingCard: View {
             eyebrow("Dosage")
             VStack(spacing: 0) {
                 if let threshold = doses.threshold {
-                    levelRow("Threshold", value: "\(threshold.doseFormatted) \(unit)")
+                    levelRow("Threshold", value: "\(threshold.doseFormatted) \(unit)", emphasized: emphasizedLevel == .threshold)
                 }
                 if let light = doses.light {
-                    levelRow("Light", value: rangeText(light))
+                    levelRow("Light", value: rangeText(light), emphasized: emphasizedLevel == .light)
                 }
                 if let common = doses.common {
-                    levelRow("Common", value: rangeText(common), emphasized: true)
+                    levelRow("Common", value: rangeText(common), emphasized: emphasizedLevel == .common)
                 }
                 if let strong = doses.strong {
-                    levelRow("Strong", value: rangeText(strong))
+                    levelRow("Strong", value: rangeText(strong), emphasized: emphasizedLevel == .strong)
                 }
                 if let heavy = doses.heavy {
-                    levelRow("Heavy", value: "\(heavy.doseFormatted)+ \(unit)")
+                    levelRow("Heavy", value: "\(heavy.doseFormatted)+ \(unit)", emphasized: emphasizedLevel == .heavy)
                 }
             }
             if let elementalFraction {
@@ -256,7 +260,7 @@ struct RouteDosingCard: View {
     }
 
     /// A clean dose/duration row — no colored dot or bar (those read as noise).
-    /// `emphasized` highlights the typical value (Common dose, Total duration)
+    /// `emphasized` highlights one row (``emphasizedLevel``, Total duration)
     /// with weight and a faint accent wash that bleeds slightly past the content
     /// so the labels/values stay edge-aligned. Every row carries the same
     /// vertical padding so the emphasised one is no taller than its neighbours.

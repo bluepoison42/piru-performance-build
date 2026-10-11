@@ -41,9 +41,23 @@ nonisolated enum SteadyStateModel {
         let amount: Double
     }
 
-    /// `nil` when any input is non-positive.
+    /// Half-lives the model projects, in minutes: one minute to ten years.
+    /// The bounds keep every derived time (the curve's span, the dose count, the
+    /// chart's axis ticks) finite and inside `Int`, whatever a user types.
+    static let halfLifeRange: ClosedRange<Double> = 1 ... 10 * 365.25 * 1_440
+
+    /// Dosing intervals the model projects, in minutes: one minute to a year
+    /// (the longest real schedule is a once-yearly infusion).
+    static let intervalRange: ClosedRange<Double> = 1 ... 365.25 * 1_440
+
+    /// `nil` when the dose or a rate constant is non-positive or non-finite, or
+    /// the half-life or interval falls outside ``halfLifeRange`` / ``intervalRange``.
     static func compute(dose: Double, halfLifeMinutes: Double, intervalMinutes: Double, ke: Double, ka: Double) -> Result? {
-        guard dose > 0, halfLifeMinutes > 0, intervalMinutes > 0, ke > 0 else { return nil }
+        guard dose > 0, dose.isFinite,
+              halfLifeRange.contains(halfLifeMinutes),
+              intervalRange.contains(intervalMinutes),
+              ke > 0, ke.isFinite, !ka.isNaN
+        else { return nil }
 
         // Fraction-of-steady-state approach depends only on half-life:
         // 1 − 2^(−t/t½). 90% at 3.32·t½, 95% at 4.32·t½, ~97% at 5·t½.
@@ -55,7 +69,7 @@ nonisolated enum SteadyStateModel {
         // The cap bounds the O(samples × doses) accumulation: a near-zero typed
         // interval against a long half-life otherwise yields hundreds of
         // thousands of doses and a multi-second hang per keystroke.
-        let doseCount = min(Int(totalMinutes / intervalMinutes) + 1, 5_000)
+        let doseCount = Int(min(totalMinutes / intervalMinutes + 1, 5_000))
 
         /// Body content = Σ over already-taken doses of dose · fractionRemaining.
         func bodyContent(at t: Double) -> Double {
