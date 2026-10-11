@@ -208,4 +208,15 @@ struct SubstanceModelDatabaseTests {
         #expect(MechanisticSessionModel.effectAgents(doses: volumeDoses, pharmacology: pharmacology).isEmpty)
         #expect(MechanisticSessionModel.compute(doses: volumeDoses, pharmacology: pharmacology, tMax: 12) == nil)
     }
+
+    @Test
+    func `A curated reference dose is in mg even for a gram-dosed substance`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let start = Date(timeIntervalSince1970: 0)
+        let pharmacology = ["kratom": SubstanceStore.shared.pharmacologyParameters(forSubstanceName: "Kratom")]
+        let entry = DoseEntry(substance: "Kratom", amount: 3, unit: "g", route: .oral, timestamp: start)
+        let doses = SessionResolveModel.computeMechanisticDoses([entry], startDate: start)
+        let agent = try #require(MechanisticSessionModel.effectAgents(doses: doses, pharmacology: pharmacology).first)
+        #expect(agent.doses[0].amt == 1)
+    }
 }
