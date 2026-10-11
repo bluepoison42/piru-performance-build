@@ -13,7 +13,8 @@ final class MyMedsModel {
     private(set) var streak: Int?
     /// The warnings blocking `pendingSlots`, shown in the confirmation sheet.
     private(set) var interactionWarnings: [InteractionResult] = []
-    /// The slots a blocked tap wants to log once the sheet is cleared.
+    /// The slots a blocked tap wants to log once the sheet is cleared — value
+    /// snapshots, so a med deleted while the sheet is up is never read.
     private(set) var pendingSlots: [MyMedsCard.MedSlot] = []
 
     /// Today's checkable dose slots: every due, non-PRN med × one of its reminder
@@ -42,7 +43,8 @@ final class MyMedsModel {
                 default: .pending
                 }
                 slots.append(MyMedsCard.MedSlot(
-                    item: item,
+                    med: DailyMedSnapshot(item),
+                    itemID: item.persistentModelID,
                     time: slotMinutes,
                     index: index,
                     state: state,
@@ -64,7 +66,7 @@ final class MyMedsModel {
     ///
     /// See `LogMedicationsView.attemptLog`: only `.notable` and above may block.
     func mayLog(slots: [MyMedsCard.MedSlot], against recentEntries: [DoseEntry]) -> Bool {
-        let names = slots.map(\.item.substance)
+        let names = slots.map(\.med.substance)
         let active = InteractionChecker.activeEntries(from: recentEntries)
         let warnings = InteractionChecker.checkBatch(names, against: active).admitted(.notable)
         guard !warnings.isEmpty else { return true }

@@ -227,40 +227,6 @@ struct DoseChip: Identifiable, Equatable {
 
 // MARK: - Daily routine grouping
 
-/// The fields of one `DailyDoseItem` a My Meds pill reads and stages, copied
-/// out when the groups are built.
-///
-/// The pills render from a cache that outlives any single `@Query` result, so
-/// they must never hold the `@Model` itself: a med deleted (Manage Meds, a
-/// restore, a store reset) while the cache still references it traps in
-/// SwiftData's `getValue` the next time a pill reads one of its properties —
-/// and a pill that read the live model is re-evaluated by that very deletion,
-/// before any rebuild can replace the cache.
-struct DailyMedSnapshot: Equatable {
-    let substance: String
-    let productName: String?
-    let route: RouteOfAdministration
-    let amount: Double
-    let unit: String
-    let isBackgroundMed: Bool
-    let sortOrder: Int
-
-    init(_ item: DailyDoseItem) {
-        substance = item.substance
-        productName = item.productName
-        route = item.route
-        amount = item.amount
-        unit = item.unit
-        isBackgroundMed = item.isBackgroundMed
-        sortOrder = item.sortOrder
-    }
-
-    /// The name a pill or the dock label titles this med by.
-    var displayName: String {
-        productName ?? CustomSubstanceStore.shared.displayName(for: substance)
-    }
-}
-
 /// "Prescriptions" reconceived: pre-set daily drugs (meds, supplements,
 /// anything routine) as first-class cards whose item-chips stage into the
 /// same tray as everything else. Holds value snapshots only — see
