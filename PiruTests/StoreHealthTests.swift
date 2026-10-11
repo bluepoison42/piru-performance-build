@@ -153,6 +153,8 @@ struct StoreHealthTests {
         try seedStore(at: url, entries: 1)
         var config = Configuration()
         config.readonly = true
+        // The seeding container finishes closing asynchronously; wait as `StoreHealth.probe` does.
+        config.busyMode = .timeout(2)
         let queue = try DatabaseQueue(path: url.path, configuration: config)
         let tables = StoreRecovery.userDataTables
         #expect(tables == ["ZDOSEENTRY", "ZDAILYDOSEITEM", "ZFAVORITESUBSTANCE", "ZSUBSTANCECOLOR"])

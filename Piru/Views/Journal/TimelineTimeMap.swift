@@ -103,9 +103,14 @@ nonisolated struct TimelineTimeMap {
         // its live edge (every dose logged ahead of now) still gets a map. Only
         // a non-finite bound leaves `times` empty, and every lookup below
         // answers 0 for that rather than trapping.
+        // Finiteness is checked explicitly: `Date`'s `>=` is "not less than",
+        // so a NaN bound would otherwise admit every time.
         let lower = min(start, end)
         let upper = max(start, end)
-        let times = eventTimes.sorted().filter { $0 >= lower && $0 <= upper }
+        let boundsAreFinite = lower.timeIntervalSinceReferenceDate.isFinite && upper.timeIntervalSinceReferenceDate.isFinite
+        let times = boundsAreFinite
+            ? eventTimes.filter(\.timeIntervalSinceReferenceDate.isFinite).sorted().filter { $0 >= lower && $0 <= upper }
+            : []
 
         var heights: [CGFloat] = []
         heights.reserveCapacity(max(times.count - 1, 0))
