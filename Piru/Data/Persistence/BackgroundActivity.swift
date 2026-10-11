@@ -55,7 +55,8 @@ final nonisolated class BackgroundActivity: Sendable {
     /// with `expired == true` when the budget runs out. A refused request gets
     /// only the `expired == true` call.
     private func request(_ reason: String, answer: @escaping @Sendable (Bool) -> Void) {
-        #if canImport(Darwin)
+        // macOS never suspends the app, and the API is unavailable there.
+        #if canImport(Darwin) && !os(macOS)
             ProcessInfo.processInfo.performExpiringActivity(withReason: reason) { [self] expired in
                 let isFirstAnswer = answered.withLock { done in
                     defer { done = true }
