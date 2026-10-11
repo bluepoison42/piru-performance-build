@@ -245,6 +245,7 @@ struct SubstanceCardView: View, Equatable {
                         librarySubstance: group.librarySubstance,
                         productName: group.stageProductName,
                         saltForm: group.saltForm,
+                        focusesAmount: false,
                     )
                 }
             } label: {

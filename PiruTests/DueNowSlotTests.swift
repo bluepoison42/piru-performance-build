@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import Testing
 @testable import Piru
 
@@ -121,6 +122,55 @@ struct DueNowSlotTests {
         tray.stage(dailyItem: item, colorLookup: [:])
         #expect(group.isFullyStaged(in: tray.stagedCountsBySubstance()))
         #expect(group.unstaged(in: tray.stagedCountsBySubstance()).isEmpty)
+    }
+
+    // MARK: Deleted meds
+
+    private func makeContainer() throws -> ModelContainer {
+        try ModelContainer(
+            for: Schema(PiruSchema.models),
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none),
+        )
+    }
+
+    @Test
+    func `A cached pill survives its med being deleted and saved`() throws {
+        // The top crash: the pill read `DailyDoseItem.route` off a group cached
+        // before Manage Meds deleted the med, and SwiftData trapped. The group
+        // holds snapshots, so every read the pill makes stays on values.
+        let context = try ModelContext(makeContainer())
+        let item = med("Sertraline", times: [480])
+        context.insert(item)
+        try context.save()
+
+        let content = QuickLogContentModel()
+        let group = try #require(content.makeDailyGroups(dailyDoseItems: [item], routines: [], now: noon).first)
+
+        context.delete(item)
+        try context.save()
+
+        #expect(group.title == group.items[0].displayName)
+        #expect(group.isFullyStaged(in: DoseTrayModel().stagedCountsBySubstance()) == false)
+        #expect(group.unstaged(in: [:]).map(\.route) == [.oral])
+        #expect(group.due.map(\.item.substance) == ["Sertraline"])
+    }
+
+    @Test
+    func `Groups built from a stale list skip a med deleted since`() throws {
+        let context = try ModelContext(makeContainer())
+        let kept = med("Sertraline", times: [480])
+        let gone = med("Melatonin", times: [480], sortOrder: 1)
+        context.insert(kept)
+        context.insert(gone)
+        try context.save()
+        let stale = [kept, gone]
+
+        context.delete(gone)
+        #expect(gone.isDeleted)
+
+        let content = QuickLogContentModel()
+        let groups = content.makeDailyGroups(dailyDoseItems: stale, routines: [], now: noon)
+        #expect(groups.flatMap(\.items).map(\.substance) == ["Sertraline"])
     }
 
     @Test

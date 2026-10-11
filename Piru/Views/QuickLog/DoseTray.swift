@@ -509,6 +509,11 @@ final class DoseTrayModel {
     /// logs as Concerta — the tray derives the release form/isomer from it,
     /// same as search.
     func stage(dailyItem item: DailyDoseItem, colorLookup: [String: P3Color]) {
+        stage(dailyMed: DailyMedSnapshot(item), colorLookup: colorLookup)
+    }
+
+    /// Stage a daily-set med from the My Meds pills' value snapshot.
+    func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color]) {
         stage(
             substance: item.substance,
             route: item.route,
@@ -615,20 +620,26 @@ final class DoseTrayModel {
         )
     }
 
-    /// Open a staged row for editing on the user's behalf: expands it and asks
-    /// the editor to focus the amount field (see ``StagedDose/wantsAmountFocus``).
-    func openForEditing(_ id: UUID) {
-        if let index = staged.firstIndex(where: { $0.id == id }) {
+    /// Open a staged row for editing on the user's behalf: expands it and, with
+    /// `focusesAmount`, asks the editor to focus the amount field (see
+    /// ``StagedDose/wantsAmountFocus``).
+    func openForEditing(_ id: UUID, focusesAmount: Bool = true) {
+        if focusesAmount, let index = staged.firstIndex(where: { $0.id == id }) {
             staged[index].wantsAmountFocus = true
         }
         expandedItemIDs.insert(id)
     }
 
     /// Stage a draft (from search / the sliders pill) and open it for editing.
-    /// Prefilled with the library's common dose when one is known; the editor
-    /// focuses the amount field either way, since the user asked to type. A
-    /// draft for an already-staged substance opens that row instead of
-    /// duplicating it.
+    /// Prefilled with the library's common dose when one is known. A draft for
+    /// an already-staged substance opens that row instead of duplicating it.
+    ///
+    /// `focusesAmount` raises the keyboard on the amount field. Search keeps
+    /// it on, since the dock is already full height there. The cards behind the
+    /// dock pass `false`: the draft opens at the dock's half-height detent,
+    /// and a keyboard there makes UIKit expand the sheet to full height, only
+    /// to drop back to half the moment a −/+ tap puts the keyboard down. A
+    /// draft with no seeded amount still focuses (the editor's own rule).
     func stageDraft(
         substance: String,
         route: RouteOfAdministration,
@@ -637,6 +648,7 @@ final class DoseTrayModel {
         librarySubstance: Substance?,
         productName: String? = nil,
         saltForm: String? = nil,
+        focusesAmount: Bool = true,
     ) {
         // A by-volume substance (alcohol) must draft in its canonical unit —
         // the drink editor (By Volume / By Mass) gates on it, so a draft
@@ -645,7 +657,7 @@ final class DoseTrayModel {
         let unit = librarySubstance?.byVolumeDosing?.canonicalUnit ?? unit
         let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm)
         if let index = stagedIndex(identity: identity, route: route, unit: unit) {
-            openForEditing(staged[index].id)
+            openForEditing(staged[index].id, focusesAmount: focusesAmount)
             return
         }
         let saltForm = saltForm ?? librarySubstance?.saltForms(for: route).first
@@ -667,7 +679,7 @@ final class DoseTrayModel {
             tint: tint,
             librarySubstance: librarySubstance,
         )
-        draft.wantsAmountFocus = true
+        draft.wantsAmountFocus = focusesAmount
         staged.append(draft)
         expandedItemIDs.insert(draft.id)
         stageTick += 1
