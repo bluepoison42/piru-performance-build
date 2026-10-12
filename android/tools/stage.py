@@ -49,11 +49,11 @@ MATERIAL_SYMBOLS = "bd8cb85bd4bad964fe6918f79665bb40c3a8efef"
 # the original URL to the clone, so no manifest names the substitute. `skip` is patched to build
 # its tool from skipstone source, which is how skipstone's own patches reach the build.
 VENDORED = {
-    "GRDB.swift": ("https://github.com/groue/GRDB.swift.git", "v7.10.0", "7.10.0"),
-    "skip": ("https://github.com/skiptools/skip.git", "1.9.11", "1.9.11"),
-    "skipstone": ("https://github.com/skiptools/skipstone.git", "1.9.11", "1.9.11"),
-    "skip-fuse-ui": ("https://github.com/skiptools/skip-fuse-ui.git", "1.18.3", "1.18.3"),
-    "skip-ui": ("https://github.com/skiptools/skip-ui.git", "1.60.0", "1.60.0"),
+    "GRDB.swift": ("https://github.com/groue/GRDB.swift.git", "v7.11.1", "7.11.1"),
+    "skip": ("https://github.com/skiptools/skip.git", "1.9.13", "1.9.13"),
+    "skipstone": ("https://github.com/skiptools/skipstone.git", "1.9.13", "1.9.13"),
+    "skip-fuse-ui": ("https://github.com/skiptools/skip-fuse-ui.git", "1.19.0", "1.19.0"),
+    "skip-ui": ("https://github.com/skiptools/skip-ui.git", "1.62.0", "1.62.0"),
 }
 
 
@@ -655,6 +655,10 @@ def stage_vendored(tree: Path):
         bare = cache / f"{name}.git"
         if not bare.exists():
             run("git", "clone", "--bare", "--quiet", url, str(bare))
+        if run(
+            "git", "rev-parse", "--verify", "--quiet", f"refs/tags/{tag}", cwd=bare, check=False
+        ).returncode:
+            run("git", "fetch", "--quiet", "--tags", url, cwd=bare)
         clone = tree / "Vendor" / name
         if clone.exists():
             shutil.rmtree(clone)
