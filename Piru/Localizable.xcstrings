@@ -84535,6 +84535,50 @@
         }
       }
     },
+    "This half-life is out of range: projections take 1 minute to 10 years." : {
+      "localizations" : {
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个半衰期超出范围：可推算的范围是 1 分钟到 10 年。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個半衰期超出範圍：可推算的範圍是 1 分鐘到 10 年。"
+          }
+        }
+      }
+    },
+    "This interval is out of range: projections take 1 minute to 1 year." : {
+      "localizations" : {
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个用药间隔超出范围：可推算的范围是 1 分钟到 1 年。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個用藥間隔超出範圍：可推算的範圍是 1 分鐘到 1 年。"
+          }
+        }
+      }
+    },
     "This is an encrypted Piru backup. Import it from Tools → Data & Backup, which asks for its passphrase." : {
       "localizations" : {
         "es" : {
@@ -84728,6 +84772,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "這會用此副本中的 %@ 取代你目前的資料。取代前會先為目前資料建立快照，因此可以復原。之後請重新啟動 Piru 以載入。"
+          }
+        }
+      }
+    },
+    "This schedule takes more than %@ doses to settle, so it can't be projected." : {
+      "localizations" : {
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按这个方案，需要超过 %@ 剂才能达到稳态，因此无法推算。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按這個方案，需要超過 %@ 劑才能達到穩態，因此無法推算。"
           }
         }
       }

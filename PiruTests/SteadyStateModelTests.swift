@@ -57,6 +57,18 @@ struct SteadyStateModelTests {
         #expect(sparsest.fluctuationPercent.isFinite)
     }
 
+    @Test
+    func `A refused schedule names its reason`() {
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: 1e20 * 60, intervalMinutes: 1_440) == .halfLifeOutOfRange)
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: .nan, intervalMinutes: 1_440) == .halfLifeOutOfRange)
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: 1_440, intervalMinutes: 1e-6) == .intervalOutOfRange)
+        #expect(SteadyStateModel.refusal(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
+            intervalMinutes: 1_440,
+        ) == .tooManyDoses)
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: 1_440, intervalMinutes: 1_440) == nil)
+    }
+
     // MARK: - Accumulation ratio
 
     @Test

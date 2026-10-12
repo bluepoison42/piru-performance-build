@@ -7999,6 +7999,18 @@ T = {
         "一份报告有助于修复它。报告包含 Piru 如何关闭及其自身的日志，不含你日记里的任何内容，发送到哪里由你决定。",
         "一份報告有助於修復它。報告包含 Piru 如何關閉及其本身的日誌，不含你日記裡的任何內容，傳送到哪裡由你決定。",
     ),
+    "This half-life is out of range: projections take 1 minute to 10 years.": (
+        "这个半衰期超出范围：可推算的范围是 1 分钟到 10 年。",
+        "這個半衰期超出範圍：可推算的範圍是 1 分鐘到 10 年。",
+    ),
+    "This interval is out of range: projections take 1 minute to 1 year.": (
+        "这个用药间隔超出范围：可推算的范围是 1 分钟到 1 年。",
+        "這個用藥間隔超出範圍：可推算的範圍是 1 分鐘到 1 年。",
+    ),
+    "This schedule takes more than %@ doses to settle, so it can't be projected.": (
+        "按这个方案，需要超过 %@ 剂才能达到稳态，因此无法推算。",
+        "按這個方案，需要超過 %@ 劑才能達到穩態，因此無法推算。",
+    ),
 }
 
 # Widget translations
@@ -9144,6 +9156,9 @@ if __name__ == "__main__":
         "Open in TestFlight",
         "Your journal came with you",
         "Everything from the old Piru app is here: your journal, meds and settings. Once you've looked it over, you can delete the old app.",
+        "This half-life is out of range: projections take 1 minute to 10 years.",
+        "This interval is out of range: projections take 1 minute to 1 year.",
+        "This schedule takes more than %@ doses to settle, so it can't be projected.",
     }
 
     print("--- Piru main app catalog ---")

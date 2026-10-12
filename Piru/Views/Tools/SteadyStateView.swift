@@ -20,6 +20,8 @@ struct SteadyStateView: View {
                     SteadyStateNoDataCard(substanceName: inputs.selectedSubstance?.name) {
                         inputs.useCustomHalfLife = true
                     }
+                } else if let refusal = inputs.refusal {
+                    SteadyStateRefusalCard(refusal: refusal)
                 }
 
                 SteadyStateExplanationCard()
@@ -267,6 +269,37 @@ private struct SteadyStateNoDataCard: View {
         .padding()
         .frame(maxWidth: .infinity)
         .themeCard()
+    }
+}
+
+/// Takes the chart's place when the schedule as typed can't be projected,
+/// saying why in one line.
+private struct SteadyStateRefusalCard: View {
+    let refusal: SteadyStateModel.Refusal
+
+    var body: some View {
+        Label {
+            message
+                .font(.subheadline)
+                .foregroundStyle(Theme.secondaryLabel)
+        } icon: {
+            Image(systemName: "exclamationmark.circle")
+                .foregroundStyle(Theme.secondaryLabel)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .themeCard()
+    }
+
+    private var message: Text {
+        switch refusal {
+        case .halfLifeOutOfRange:
+            Text("This half-life is out of range: projections take 1 minute to 10 years.")
+        case .intervalOutOfRange:
+            Text("This interval is out of range: projections take 1 minute to 1 year.")
+        case .tooManyDoses:
+            Text("This schedule takes more than \(Int(SteadyStateModel.maximumDoses).formatted()) doses to settle, so it can't be projected.")
+        }
     }
 }
 

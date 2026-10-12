@@ -168,7 +168,7 @@ struct TimelineGraphRenderer {
     /// The drawable rectangle of the canvas, derived once from the view size so
     /// the `Canvas` closure, the pan/scrub gestures, and the callout overlay all
     /// map points ⇄ minutes through identical math.
-    struct GraphGeometry {
+    nonisolated struct GraphGeometry {
         let inset: CGFloat
         let top: CGFloat
         let width: CGFloat
@@ -264,7 +264,7 @@ struct TimelineGraphRenderer {
 
     /// Font sizes and stack metrics shared by the view, which draws the
     /// milestones, and the relative-hour row, which steps around them.
-    enum MilestoneMetrics {
+    nonisolated enum MilestoneMetrics {
         static let glyphSize: CGFloat = 9
         static let labelSize: CGFloat = 9
         static let spacing: CGFloat = 1
@@ -310,6 +310,37 @@ struct TimelineGraphRenderer {
             }
         }
         return placements
+    }
+
+    /// Where a milestone's clock time is centered: under its glyph, slid
+    /// sideways just enough to stay inside the plot when centering it there
+    /// would run past either edge. The glyph keeps its moment.
+    nonisolated static func milestoneLabelCenterX(_ x: CGFloat, labelWidth: CGFloat, geom: GraphGeometry) -> CGFloat {
+        let lowest = geom.inset + labelWidth / 2
+        let highest = geom.inset + geom.width - labelWidth / 2
+        guard lowest <= highest else { return geom.inset + geom.width / 2 }
+        return min(max(x, lowest), highest)
+    }
+
+    /// Each milestone's glyph-and-time stack as the view draws it, in canvas
+    /// points: what the Now rule breaks around and the relative-hour row
+    /// yields to.
+    func milestoneFrames(_ milestones: [MilestonePlacement], context: GraphicsContext, size: CGSize, geom: GraphGeometry) -> [CGRect] {
+        milestones.map { milestone in
+            let labelWidth = context.resolve(Text(verbatim: milestone.label).font(MilestoneMetrics.labelFont()))
+                .measure(in: size).width
+            let top = milestone.y - MilestoneMetrics.stackHeight / 2
+            let labelCenter = Self.milestoneLabelCenterX(milestone.x, labelWidth: labelWidth, geom: geom)
+            let label = CGRect(
+                x: labelCenter - labelWidth / 2, y: top,
+                width: labelWidth, height: MilestoneMetrics.stackHeight,
+            )
+            let glyph = CGRect(
+                x: milestone.x - MilestoneMetrics.glyphSize, y: top,
+                width: MilestoneMetrics.glyphSize * 2, height: MilestoneMetrics.stackHeight,
+            )
+            return label.union(glyph)
+        }
     }
 
     /// A dose's four modeled moments, in minutes from the dose.
@@ -513,6 +544,11 @@ struct TimelineGraphRenderer {
             context.stroke(origin, with: .color(.primary.opacity(0.28)), lineWidth: 1)
         }
 
+        let milestoneStacks = milestoneFrames(
+            milestonePlacements(geom: geom, visibleStart: vStart, visibleSpan: vSpan),
+            context: context, size: size, geom: geom,
+        )
+
         let nowMinutes = currentTime.timeIntervalSince(earliestDose) / 60
         let nowX = graphInset + CGFloat((nowMinutes - vStart) / vSpan) * graphWidth
         // Only while the session is live. Once every dose's effect window has
@@ -546,12 +582,18 @@ struct TimelineGraphRenderer {
                 }
             }
             if drawsNowRule {
+                // The rule breaks around each milestone stack, so it never
+                // strikes through a clock time it passes.
+                var ruleContext = context
+                for frame in milestoneStacks {
+                    ruleContext.clip(to: Path(frame.insetBy(dx: -2, dy: -1)), options: .inverse)
+                }
                 var nowLine = Path()
                 nowLine.move(to: CGPoint(x: nowX, y: graphTop))
                 // Extend through the companion vitals lane so the "you are here"
                 // rule is one continuous line across both curves and the HR band.
                 nowLine.addLine(to: CGPoint(x: nowX, y: indicatorBottom))
-                context.stroke(nowLine, with: .color(.primary.opacity(0.7)), lineWidth: 2.5)
+                ruleContext.stroke(nowLine, with: .color(.primary.opacity(0.7)), lineWidth: 2.5)
                 // A small dot centered on the baseline (the origin line), anchoring
                 // the rule to "now" on the time axis rather than floating at the top.
                 let capRadius: CGFloat = 3
@@ -781,7 +823,7 @@ struct TimelineGraphRenderer {
                 graphTop: graphTop,
                 dataSpan: viewport.totalSpan,
                 avoiding: markerSlots.map(\.x),
-                milestones: milestonePlacements(geom: geom, visibleStart: vStart, visibleSpan: vSpan),
+                milestoneFrames: milestoneStacks,
             )
         }
     }
@@ -1902,7 +1944,7 @@ struct TimelineGraphRenderer {
         graphTop _: CGFloat,
         dataSpan: Double,
         avoiding markerXs: [CGFloat] = [],
-        milestones: [MilestonePlacement] = [],
+        milestoneFrames: [CGRect] = [],
     ) {
         let graphWidth = size.width - inset * 2
         let labelY: CGFloat = 12
@@ -1916,18 +1958,9 @@ struct TimelineGraphRenderer {
         let maxHours = Int(ceil(dataSpan / 60))
         var lastLabelRight: CGFloat = -.infinity
         let minSpacing: CGFloat = 8
-        // A milestone riding a curve near the top reaches up into this row; the
-        // hour label yields to it, since the milestone already names the time.
-        let milestoneFrames = milestones.map { milestone in
-            let labelWidth = context.resolve(Text(verbatim: milestone.label).font(MilestoneMetrics.labelFont()))
-                .measure(in: size).width
-            return CGRect(
-                x: milestone.x - labelWidth / 2,
-                y: milestone.y - MilestoneMetrics.stackHeight / 2,
-                width: labelWidth,
-                height: MilestoneMetrics.stackHeight,
-            )
-        }
+        // A milestone riding a curve near the top reaches up into this row
+        // (`milestoneFrames`); the hour label yields to it, since the milestone
+        // already names the time.
 
         while hour <= maxHours {
             let minutePos = Double(hour) * 60
