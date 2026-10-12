@@ -3,7 +3,8 @@
 -keep class tools.skip.** { *; }
 -keep class kotlin.jvm.functions.** {*;}
 # Bridged throwing async calls return their coroutine Job, which Swift looks up by name over JNI
-# (skipstone 1.9.13; Skip's own project template carries this rule after 1.9.13).
+# (skipstone 1.9.13). From skiptools/skipstone#294 on (unreleased after 1.9.13), skipstone generates
+# this rule itself.
 -keep interface kotlinx.coroutines.Job { void cancel(java.util.concurrent.CancellationException); }
 -keep class com.sun.jna.** { *; }
 -dontwarn java.awt.**
