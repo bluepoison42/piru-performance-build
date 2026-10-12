@@ -1,0 +1,113 @@
+SubstanceSearchField's suggestions never appeared on Android (Steady State, Half-Life, Custom Units, Add Favorite): its lazy stack in a scroll view inside the page's scroll view lays out nothing, so the rows are a plain stack
+
+diff --git a/Piru/Views/Components/SubstanceSearchField.swift b/Piru/Views/Components/SubstanceSearchField.swift
+index f4600e31..8e185865 100644
+--- a/Piru/Views/Components/SubstanceSearchField.swift
++++ b/Piru/Views/Components/SubstanceSearchField.swift
+@@ -101,6 +101,98 @@ struct SubstanceSearchField: View {
+                     showResults = false
+                 }
+ 
++            #if os(Android)
++            if showResults {
++                // A lazy stack in a scroll view inside the page's own scroll view lays out
++                // nothing in SkipUI, so the twelve rows are a plain stack in the page.
++                VStack(alignment: .leading, spacing: 0) {
++                    ForEach(results.prefix(12)) { match in
++                        let substance = match.substance
++                        Button {
++                            suppressSearch = true
++                            text = keepsMatchedName ? match.displayName : substance.name
++                            showResults = false
++                            isFocused = false
++                            onSelect(substance, match.matchedAlias)
++                        } label: {
++                            HStack {
++                                VStack(alignment: .leading, spacing: Spacing.xxs) {
++                                    HStack(spacing: Spacing.xs) {
++                                        // Lead with the matched name — the brand
++                                        // the user typed ("Medikinet") when they
++                                        // searched one, else the display title —
++                                        // matching quick-log; the canonical name
++                                        // leads the subtitle so it stays clear.
++                                        Text(match.displayName)
++                                            .font(.body)
++                                            .foregroundStyle(.primary)
++                                        if favoriteNames.contains(substance.name.lowercased()) {
++                                            Image(systemName: "star.fill")
++                                                .font(.caption2)
++                                                .foregroundStyle(.yellow)
++                                                .accessibilityHidden(true)
++                                        }
++                                    }
++                                    if let secondary = secondaryNames(for: match) {
++                                        Text(secondary)
++                                            .captionSecondary()
++                                    }
++                                }
++                                Spacer()
++                                Text(substance.category.displayName)
++                                    .font(.caption2)
++                                    .padding(.horizontal, Spacing.sm)
++                                    .padding(.vertical, Spacing.xxs)
++                                    .background(.fill.secondary, in: skinChipShape())
++                            }
++                            .padding(.horizontal, Spacing.xl)
++                            .padding(.vertical, Spacing.md)
++                            .contentShape(Rectangle())
++                        }
++                        .buttonStyle(.plain)
++                        .accessibilityValue(favoriteNames.contains(substance.name.lowercased()) ? Text("Favorite") : Text(verbatim: ""))
++
++                        Divider().padding(.leading, Spacing.xl)
++                    }
++
++                    // Custom substance option
++                    if !text.isEmpty, !hasExactMatch {
++                        Button {
++                            showResults = false
++                            isFocused = false
++                            onCustom?()
++                        } label: {
++                            HStack {
++                                Image(systemName: "plus.circle.fill")
++                                    .foregroundStyle(Theme.accent)
++                                    .accessibilityHidden(true)
++                                VStack(alignment: .leading, spacing: Spacing.xxs) {
++                                    Text("Use \"\(text)\"")
++                                        .font(.body)
++                                        .foregroundStyle(.primary)
++                                    Text("Custom substance (no dose data)")
++                                        .captionSecondary()
++                                }
++                                Spacer()
++                                Text("Custom")
++                                    .font(.caption2)
++                                    .padding(.horizontal, Spacing.sm)
++                                    .padding(.vertical, Spacing.xxs)
++                                    .background(Theme.accent.opacity(Theme.Opacity.emphasis), in: skinChipShape())
++                                    .foregroundStyle(Theme.accent)
++                            }
++                            .padding(.horizontal, Spacing.xl)
++                            .padding(.vertical, Spacing.md)
++                            .contentShape(Rectangle())
++                        }
++                        .buttonStyle(.plain)
++                    }
++                }
++                .background(CardBackground())
++                .clipShape(RoundedRectangle(cornerRadius: Theme.CornerRadius.input))
++                .shadow(color: .black.opacity(Theme.Opacity.tint), radius: 4, y: 2)
++            }
++            #else
+             if showResults {
+                 ScrollView {
+                     LazyVStack(alignment: .leading, spacing: 0) {
+@@ -192,6 +284,7 @@ struct SubstanceSearchField: View {
+                 .clipShape(RoundedRectangle(cornerRadius: Theme.CornerRadius.input))
+                 .shadow(color: .black.opacity(Theme.Opacity.tint), radius: 4, y: 2)
+             }
++            #endif
+         }
+     }
+ }

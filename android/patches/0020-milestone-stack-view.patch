@@ -1,0 +1,43 @@
+SkipFuseUI hosts no custom Layout: on Android the timeline graph's milestone stack is a VStack positioned at its center
+
+diff --git a/Shared/TimelineGraphView.swift b/Shared/TimelineGraphView.swift
+index 4b8c1d1a..1323dd85 100644
+--- a/Shared/TimelineGraphView.swift
++++ b/Shared/TimelineGraphView.swift
+@@ -838,6 +838,31 @@ struct TimelineGraphView: View, Equatable {
+ /// time slides sideways when centering it would run past either edge of the
+ /// plot (``TimelineGraphRenderer/milestoneLabelCenterX(_:labelWidth:geom:)``,
+ /// the same math the canvas uses to break the Now rule around it).
++#if os(Android)
++    /// SkipFuseUI hosts no custom `Layout`: the glyph and time stack in a VStack centered on
++    /// (`x`, `y`), and the time stays centered under the glyph rather than sliding at the edges.
++    private struct MilestoneStackLayout<Content: View>: View {
++        let x: CGFloat
++        let y: CGFloat
++        let geom: TimelineGraphRenderer.GraphGeometry
++        let content: Content
++
++        init(x: CGFloat, y: CGFloat, geom: TimelineGraphRenderer.GraphGeometry, @ViewBuilder content: () -> Content) {
++            self.x = x
++            self.y = y
++            self.geom = geom
++            self.content = content()
++        }
++
++        var body: some View {
++            VStack(spacing: TimelineGraphRenderer.MilestoneMetrics.spacing) {
++                content
++            }
++            .fixedSize()
++            .position(x: x, y: y)
++        }
++    }
++#else
+ private struct MilestoneStackLayout: Layout {
+     let x: CGFloat
+     let y: CGFloat
+@@ -861,3 +886,4 @@ private struct MilestoneStackLayout: Layout {
+         )
+     }
+ }
++#endif
