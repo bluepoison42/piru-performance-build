@@ -177,6 +177,8 @@ enum SteadyStateProjectionBuilder {
         var name: String
         var route: RouteOfAdministration
         var unit: String
+        /// The group's first dose; every later one is expressed in its unit.
+        var unitOf: DoseQuantity
         var amounts: [Double] = []
         var timestamps: [Date] = []
     }
@@ -195,18 +197,22 @@ enum SteadyStateProjectionBuilder {
             return result
         }
 
-        for entry in entries where entry.timestamp >= cutoff && !entry.isUnknownDose {
+        for entry in entries where entry.timestamp >= cutoff {
             let substance = lookup(entry.substance)
+            guard let dose = substance?.quantity(of: entry) ?? entry.quantity else { continue }
             if entry.productDuration == nil, entry.namesUnmodeledForm { continue }
             let name = substance?.name ?? entry.substance
             let key = name.lowercased()
             if var group = groups[key] {
-                guard let amount = DoseUnit.convert(entry.amount, from: entry.unit, to: group.unit) else { continue }
+                guard let amount = dose.value(inUnitOf: group.unitOf) else { continue }
                 group.amounts.append(amount)
                 group.timestamps.append(entry.timestamp)
                 groups[key] = group
             } else {
-                groups[key] = Group(name: name, route: entry.route, unit: entry.unit, amounts: [entry.amount], timestamps: [entry.timestamp])
+                groups[key] = Group(
+                    name: name, route: entry.route, unit: entry.unit, unitOf: dose,
+                    amounts: [entry.amount], timestamps: [entry.timestamp],
+                )
             }
         }
 

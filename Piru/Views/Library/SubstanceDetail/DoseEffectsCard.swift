@@ -132,7 +132,7 @@ struct DoseEffectsCard: View {
         if unit.localizedCaseInsensitiveContains("THC") {
             THCContentNote()
         } else {
-            switch doses.dosingPrecision(unit: unit) {
+            switch DoseLadder(range: doses, unit: unit).dosingPrecision {
             case .critical: VolumetricDosingDisclaimer()
             case .recommended: PreciseScaleNote()
             case .none: EmptyView()

@@ -109,6 +109,8 @@ final class SubstanceDetailModel {
         var minDose: Double = 0
         var maxDose: Double = 0
         var mostCommon: Double = 0
+        /// The unit the three are read in — the newest measured dose's.
+        var unit: String?
     }
 
     /// Resolve every store-backed field for the substance at the current
@@ -235,8 +237,16 @@ final class SubstanceDetailModel {
             .filter(\.isWorthShowing)
     }
 
+    /// Read in the newest measured dose's unit. An unknown dose, or one in a unit
+    /// that can't be read in it (mL against mg), stays out — 1 g and 500 mg are
+    /// 1 000 and 500 mg, never "500–1".
     func rebuildHistoryStats(from entries: [DoseEntry]) {
-        let amounts = entries.map(\.amount)
+        let measured = entries.compactMap { entry in entry.quantity.map { (entry.unit, $0) } }
+        guard let (unit, unitOf) = measured.first else {
+            historyStats = HistoryStats()
+            return
+        }
+        let amounts = measured.compactMap { $0.1.value(inUnitOf: unitOf) }
         var freq: [Double: Int] = [:]
         for a in amounts {
             freq[a, default: 0] += 1
@@ -245,6 +255,7 @@ final class SubstanceDetailModel {
             minDose: amounts.min() ?? 0,
             maxDose: amounts.max() ?? 0,
             mostCommon: freq.max(by: { $0.value < $1.value })?.key ?? 0,
+            unit: unit,
         )
     }
 

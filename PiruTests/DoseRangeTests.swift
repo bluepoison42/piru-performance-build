@@ -15,69 +15,69 @@ struct DoseRangeTests {
 
     @Test
     func `Sub-threshold dose`() {
-        #expect(range.level(for: 5) == .sub)
+        #expect(range.mgLevel(for: 5) == .sub)
     }
 
     @Test
     func `Threshold dose`() {
-        #expect(range.level(for: 10) == .threshold)
+        #expect(range.mgLevel(for: 10) == .threshold)
     }
 
     @Test
     func `Light dose`() {
-        #expect(range.level(for: 20) == .light)
+        #expect(range.mgLevel(for: 20) == .light)
     }
 
     @Test
     func `Common dose`() {
-        #expect(range.level(for: 45) == .common)
+        #expect(range.mgLevel(for: 45) == .common)
     }
 
     @Test
     func `Strong dose`() {
-        #expect(range.level(for: 80) == .strong)
+        #expect(range.mgLevel(for: 80) == .strong)
     }
 
     @Test
     func `Heavy dose`() {
-        #expect(range.level(for: 120) == .heavy)
+        #expect(range.mgLevel(for: 120) == .heavy)
     }
 
     @Test
     func `Very heavy dose still classifies as heavy`() {
-        #expect(range.level(for: 250) == .heavy)
+        #expect(range.mgLevel(for: 250) == .heavy)
     }
 
     // MARK: - Boundary values
 
     @Test
     func `Exact threshold boundary`() {
-        #expect(range.level(for: 10) == .threshold)
+        #expect(range.mgLevel(for: 10) == .threshold)
     }
 
     @Test
     func `Exact heavy boundary`() {
-        #expect(range.level(for: 100) == .heavy)
+        #expect(range.mgLevel(for: 100) == .heavy)
     }
 
     @Test
     func `Well above heavy is still heavy`() {
-        #expect(range.level(for: 200) == .heavy)
+        #expect(range.mgLevel(for: 200) == .heavy)
     }
 
     @Test
     func `Just below threshold`() {
-        #expect(range.level(for: 9.9) == .sub)
+        #expect(range.mgLevel(for: 9.9) == .sub)
     }
 
     @Test
     func `Light lower bound`() {
-        #expect(range.level(for: 15) == .light)
+        #expect(range.mgLevel(for: 15) == .light)
     }
 
     @Test
     func `Light upper bound`() {
-        #expect(range.level(for: 30) == .common)
+        #expect(range.mgLevel(for: 30) == .common)
     }
 
     // MARK: - Edge cases
@@ -89,32 +89,32 @@ struct DoseRangeTests {
         // data "sub-threshold" — a claim about the dose, made from the absence
         // of one, and indistinguishable from a real sub-threshold reading.
         let empty = DoseRange(threshold: nil, light: nil, common: nil, strong: nil, heavy: nil)
-        #expect(empty.level(for: 1_000) == nil)
+        #expect(empty.mgLevel(for: 1_000) == nil)
     }
 
     @Test
     func `Only threshold set`() {
         let partial = DoseRange(threshold: 5, light: nil, common: nil, strong: nil, heavy: nil)
-        #expect(partial.level(for: 3) == .sub)
-        #expect(partial.level(for: 5) == .threshold)
-        #expect(partial.level(for: 100) == .threshold)
+        #expect(partial.mgLevel(for: 3) == .sub)
+        #expect(partial.mgLevel(for: 5) == .threshold)
+        #expect(partial.mgLevel(for: 100) == .threshold)
     }
 
     @Test
     func `Only heavy set`() {
         let partial = DoseRange(threshold: nil, light: nil, common: nil, strong: nil, heavy: 50)
-        #expect(partial.level(for: 30) == .sub)
-        #expect(partial.level(for: 50) == .heavy)
+        #expect(partial.mgLevel(for: 30) == .sub)
+        #expect(partial.mgLevel(for: 50) == .heavy)
     }
 
     @Test
     func `Zero dose`() {
-        #expect(range.level(for: 0) == .sub)
+        #expect(range.mgLevel(for: 0) == .sub)
     }
 
     @Test
     func `Negative dose`() {
-        #expect(range.level(for: -5) == .sub)
+        #expect(range.mgLevel(for: -5) == .sub)
     }
 }
 
@@ -132,5 +132,13 @@ struct DoseLevelTests {
     func `Raw values are display strings`() {
         #expect(DoseLevel.sub.rawValue == "Sub-threshold")
         #expect(DoseLevel.heavy.rawValue == "Heavy")
+    }
+}
+
+extension DoseRange {
+    /// Where `amount` sits on this range read as a milligram ladder — the tier
+    /// logic alone, through the one public placement path.
+    func mgLevel(for amount: Double) -> DoseLevel? {
+        DoseLadder(range: self, unit: "mg").level(of: DoseQuantity(amount, unit: "mg"))
     }
 }

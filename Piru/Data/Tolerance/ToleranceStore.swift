@@ -301,8 +301,7 @@ final class ToleranceStore {
     /// and the mapping can happen off the main actor.
     nonisolated struct DoseSnapshot: Sendable {
         let substance: String
-        let amount: Double
-        let unit: String
+        let dose: DoseQuantity
         let timestamp: Date
     }
 
@@ -310,8 +309,8 @@ final class ToleranceStore {
     /// unknown dose has no concentration to replay, so it is not in the log at
     /// all here — every entry point folds entries through this one function.
     private nonisolated static func snapshots(of entries: [DoseEntry]) -> [DoseSnapshot] {
-        entries.compactMap {
-            $0.isUnknownDose ? nil : DoseSnapshot(substance: $0.substance, amount: $0.amount, unit: $0.unit, timestamp: $0.timestamp)
+        entries.compactMap { entry in
+            entry.quantity.map { DoseSnapshot(substance: entry.substance, dose: $0, timestamp: entry.timestamp) }
         }
     }
 
@@ -343,7 +342,7 @@ final class ToleranceStore {
 
         // Sendable replay values + resolve each unique substance once (kills the per-dose N+1).
         let doses = entries.map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         // Resolve pharmacology off the main actor: the per-substance Kᵢ/PK/molar-mass reads run on
         // SubstanceStore's batch connection, not in a tight loop on main (the post-commit hang the
@@ -373,7 +372,7 @@ final class ToleranceStore {
     ) async -> [(date: Date, load: Double)] {
         let weightKg = UserProfileStore.shared.effectiveWeightKg
         let doses = Self.snapshots(of: entries).map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         let uniqueNames = Array(Set(doses.map(\.substance) + SubstanceStore.shared.classRepresentativeNames()))
         let params = await SubstanceStore.shared.pharmacologyParametersBatchOffMain(forNames: uniqueNames)
@@ -395,7 +394,7 @@ final class ToleranceStore {
         if signature == perSubstanceSignature { return }
 
         let doses = snapshots.map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         // Resolve pharmacology for every logged substance and the class representatives once (shared
         // across the per-substance replays, exactly as the joint recompute does).
@@ -543,8 +542,7 @@ final class ToleranceStore {
             count += 1
             var hasher = Hasher()
             hasher.combine(entry.substance)
-            hasher.combine(entry.amount)
-            hasher.combine(entry.unit)
+            hasher.combine(entry.dose)
             hasher.combine(entry.timestamp)
             combined ^= UInt64(bitPattern: Int64(hasher.finalize()))
         }
@@ -584,7 +582,7 @@ final class ToleranceStore {
         resolve: (String) -> PharmacologyParameters?,
     ) -> [ReceptorClasses.ReceptorClass: ClassTolerance] {
         let doses = snapshots(of: entries).map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         var params: [String: PharmacologyParameters] = [:]
         var resolved = Set<String>()

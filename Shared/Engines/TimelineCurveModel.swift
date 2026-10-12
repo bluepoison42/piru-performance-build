@@ -349,14 +349,12 @@ nonisolated enum TimelineCurveModel {
     /// returns `nil` so the caller falls back rather than mistaking mL for mg.
     nonisolated static func zeroOrderDoseMilligrams(amount: Double, unit: String) -> Double? {
         guard amount.isFinite, amount > 0 else { return nil }
-        switch unit.trimmingCharacters(in: .whitespaces).lowercased() {
-        case "g", "gram", "grams": return amount * 1_000
-        case "mg", "milligram", "milligrams": return amount
-        case "drink", "drinks", "unit", "units", "standard drink", "standard drinks":
-            return amount * ByVolumeDosing.usStandardDrinkGrams * 1_000
-        default: return nil
-        }
+        return DoseQuantity(amount, unit: unit, aliases: standardDrinkAliases).milligrams
     }
+
+    /// The spellings of a US standard drink this model reads as ethanol mass.
+    private nonisolated static let standardDrinkAliases = ["drink", "drinks", "unit", "units", "standard drink", "standard drinks"]
+        .map { UnitAlias(label: $0, amountPerUnit: ByVolumeDosing.usStandardDrinkGrams, unit: "g") }
 
     /// Subjective effect-strength curve in `[0, 1]`, built directly from the
     /// dose's duration phases rather than a plasma-concentration model. The graph

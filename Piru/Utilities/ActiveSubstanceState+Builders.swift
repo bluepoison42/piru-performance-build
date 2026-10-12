@@ -101,9 +101,11 @@ extension ActiveSubstanceState {
         // the form and we know we can't model it, so we say when it was taken and
         // stop there. This must precede both tiers; see `namesUnmodeledForm`.
         if productDuration == nil, entry.namesUnmodeledForm { return nil }
-        let doseRange = Self.resolveDoseRange(substance: substance, route: entry.route)
-        let intensity = Self.computeDoseIntensity(amount: entry.amount, doseRange: doseRange)
-        let magnitude = Self.computeDoseMagnitude(amount: entry.amount, doseRange: doseRange)
+        let ladder = substance.scalingLadder(for: entry.route)
+        let dose = substance.quantity(of: entry)
+        let intensity = Self.computeDoseIntensity(dose: dose, ladder: ladder)
+        let magnitude = Self.computeDoseMagnitude(dose: dose, ladder: ladder)
+        let isUnscaled = Self.heavyFraction(of: dose, on: ladder) == nil
         let weightKg = UserProfileStore.shared.effectiveWeightKg
         // Prefer the product envelope; else the form actually logged — a D-isomer
         // dose must not be drawn with the racemic curve the detail card wouldn't show.
@@ -123,8 +125,9 @@ extension ActiveSubstanceState {
                 category: substance.category,
                 doseIntensity: intensity,
                 doseMagnitude: magnitude,
-                heavyThresholdMagnitude: Self.heavyThresholdMagnitude(for: doseRange),
-                doseIsUnscaled: Self.heavyReference(for: doseRange) == nil,
+                // No heavy band over a curve whose height says nothing about the dose.
+                heavyThresholdMagnitude: isUnscaled ? nil : Self.heavyThresholdMagnitude(for: ladder?.range),
+                doseIsUnscaled: isUnscaled,
                 tachyphylaxis: substance.category.acuteToleranceFactor,
                 weightKg: weightKg,
                 zeroOrderKinetics: SubstanceStore.shared.zeroOrderKinetics(
@@ -176,24 +179,6 @@ extension ActiveSubstanceState {
         return (states, markers)
     }
 
-    /// Fall back to the substance's default route (then any populated route)
-    /// when the requested route has no DoseRange. Without this, a user logging
-    /// a non-default route (e.g. insufflated when the library only has oral
-    /// data) gets `doseIntensity = 1.0`, which makes every such dose render at
-    /// full graph height regardless of magnitude — collapsing the visual
-    /// distinction between light/common/heavy across the journal.
-    static func resolveDoseRange(substance: Substance, route: RouteOfAdministration) -> DoseRange? {
-        if let exact = substance.doseRange(for: route), hasAnyLevel(exact) { return exact }
-        if let def = substance.doseRange(for: substance.defaultRoute), hasAnyLevel(def) { return def }
-        return substance.routes.first { hasAnyLevel($0.doses) }?.doses
-    }
-
-    /// `true` when at least one dose-level bound is populated.
-    private static func hasAnyLevel(_ range: DoseRange) -> Bool {
-        range.threshold != nil || range.light != nil || range.common != nil
-            || range.strong != nil || range.heavy != nil
-    }
-
     /// Compute dose intensity (0.05...1.0) used to scale timeline curve heights.
     ///
     /// Uses `amount / heavy_threshold` directly — matches PsychonautWiki's
@@ -214,9 +199,8 @@ extension ActiveSubstanceState {
     /// than disappearing.
     static let minimumIntensity: Double = 0.05
 
-    static func computeDoseIntensity(amount: Double, doseRange: DoseRange?) -> Double {
-        guard let reference = heavyReference(for: doseRange) else { return unknownIntensity }
-        return min(1.0, max(minimumIntensity, amount / reference))
+    static func computeDoseIntensity(dose: DoseQuantity?, ladder: DoseLadder?) -> Double {
+        min(1.0, computeDoseMagnitude(dose: dose, ladder: ladder))
     }
 
     /// The **unclamped** dose magnitude — `amount / heavy_threshold` with no 1.0
@@ -226,9 +210,18 @@ extension ActiveSubstanceState {
     /// `4×20 mg ≡ 1×80 mg`. Still floored at ``minimumIntensity`` so a
     /// sub-threshold dose keeps a visible nub. Falls back to ``unknownIntensity``
     /// when no dose-range reference exists (mirrors ``computeDoseIntensity``).
-    static func computeDoseMagnitude(amount: Double, doseRange: DoseRange?) -> Double {
-        guard let reference = heavyReference(for: doseRange) else { return unknownIntensity }
-        return max(minimumIntensity, amount / reference)
+    static func computeDoseMagnitude(dose: DoseQuantity?, ladder: DoseLadder?) -> Double {
+        heavyFraction(of: dose, on: ladder).map { max(minimumIntensity, $0) } ?? unknownIntensity
+    }
+
+    /// `dose ÷ heavy reference`, or `nil` when the ladder has no reference or the
+    /// dose can't be expressed in the ladder's unit. A dose in a unit the ladder
+    /// can't read is *unknown*, never small: reading 0.02 g of heroin as 0.02 on a
+    /// mg ladder floors it to ``minimumIntensity``, which the interaction checker
+    /// takes as confidently trivial and suppresses the warning.
+    private static func heavyFraction(of dose: DoseQuantity?, on ladder: DoseLadder?) -> Double? {
+        guard let dose, let ladder, let reference = heavyReference(for: ladder.range) else { return nil }
+        return ladder.fraction(of: dose, reference: reference)
     }
 
     /// Where a **published** heavy bound sits on the magnitude scale, or `nil`

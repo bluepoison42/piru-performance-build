@@ -131,14 +131,10 @@ struct EntryReadContent: View {
             || name == "edible" || name == "edibles" || name == "delta-9-thc" || name == "δ9-thc"
     }
 
-    /// Grams of ethanol in this committed dose, when the unit is a mass.
+    /// Grams of ethanol in this committed dose, when it is a mass (a "drink" included).
     private var entryGramsEthanol: Double? {
-        guard isAlcoholEntry, !entry.isUnknownDose else { return nil }
-        switch entry.unit.trimmingCharacters(in: .whitespaces).lowercased() {
-        case "g", "gram", "grams": return entry.amount
-        case "mg", "milligram", "milligrams": return entry.amount / 1_000
-        default: return nil
-        }
+        guard isAlcoholEntry, case let .mass(mass)? = substance?.quantity(of: entry) ?? entry.quantity else { return nil }
+        return mass.value(in: .grams)
     }
 }
 

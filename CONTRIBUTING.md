@@ -103,7 +103,7 @@ PR, `swiftformat .` and `ruff format .` and confirm `swiftformat --lint .` print
 
 ## Layout
 
-- `Piru/Models/` — `Substance`, `DoseRange`, `DurationProfile`, `DoseUnit`, and the category enums.
+- `Piru/Models/` — `Substance`, `DoseRange` and `DoseLadder`, `DurationProfile`, and the category enums; `Shared/DoseQuantity.swift` holds the unit-bearing dose amount.
 - `Piru/Views/` — SwiftUI; the four tabs (Journal, Library, Tools, Insights), plus `Insights/` and `Components/`.
 - `Piru/Data/` — `SubstanceStore` (GRDB over the bundled SQLite, per-field source-priority resolution),
   `Interactions` (class-based severity rules), `StoreRecovery`, `BackupManager`.

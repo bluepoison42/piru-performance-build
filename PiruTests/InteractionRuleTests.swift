@@ -8,8 +8,10 @@ struct InteractionRuleTests {
         await SubstanceStore.shared.ensureAllLoaded()
     }
 
+    /// A dose in the substance's own unit: 20 of alcohol is 20 g, not a trivial 20 mg.
     private func makeEntry(substance: String, amount: Double = 10, timestamp: Date = .now) -> DoseEntry {
-        DoseEntry(substance: substance, amount: amount, route: .oral, timestamp: timestamp)
+        let unit = SubstanceLibrary.lookup(substance)?.defaultUnit ?? "mg"
+        return DoseEntry(substance: substance, amount: amount, unit: unit, route: .oral, timestamp: timestamp)
     }
 
     // MARK: - Drug Class Overrides

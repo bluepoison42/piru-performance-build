@@ -718,12 +718,15 @@ nonisolated enum PDFReportGenerator {
         let grouped = Dictionary(grouping: entries) { $0.substance }
         return grouped.map { name, entries in
             let sorted = entries.sorted { $0.timestamp < $1.timestamp }
-            // The average is over the doses that have a number; an unknown dose
-            // is counted but cannot be averaged.
-            let known = entries.filter { !$0.isUnknownDose }
-            let avgDose = known.isEmpty ? 0 : known.map(\.amount).reduce(0, +) / Double(known.count)
             let mostCommonUnit = Dictionary(grouping: entries, by: \.unit)
                 .max(by: { $0.value.count < $1.value.count })?.key ?? "mg"
+            // The average is over the doses that have a number, read in the unit it
+            // is labeled with; an unknown dose, or one in a unit that can't be read
+            // in that one (mL against mg), is counted but cannot be averaged.
+            let known = entries.filter { !$0.isUnknownDose }.compactMap {
+                DoseQuantity($0.amount, unit: $0.unit).value(in: mostCommonUnit)
+            }
+            let avgDose = known.isEmpty ? 0 : known.reduce(0, +) / Double(known.count)
             let mostCommonRoute = Dictionary(grouping: entries, by: \.route)
                 .max(by: { $0.value.count < $1.value.count })?.key ?? "Oral"
             return SubstanceStat(

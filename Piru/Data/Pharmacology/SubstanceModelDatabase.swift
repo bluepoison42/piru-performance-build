@@ -49,14 +49,14 @@ nonisolated enum SubstanceModelDatabase {
         // ships is wrong for the *felt* curve (prodrugs, enterohepatic drugs), or the DB has no PK at all.
         var ke: Double?
         var ka: Double?
-        /// Dose-magnitude anchor — the reference dose the concentration is normalized to (`amt = dose/refUnit`),
+        /// Dose-magnitude anchor — the reference dose the concentration is normalized to (`amt = dose/refDose`),
         /// not a PK constant. This is an **irreducible per-substance calibration scalar** for the
         /// DA-normalized engine: with one shared `Emax`/`Kd`, the mg dose that lands a substance at the
         /// engine's calibrated operating point (`amt ≈ 1`) is substance-specific and is *not* the DB dose
         /// ladder (e.g. 3-MMC calibrates at 80 mg though its heavy oral dose is ~350 mg). The DB
         /// `referenceDoseMg` is only the fallback for uncurated substances. It retires wholesale only under
         /// the full-molar concentration path, where dose→concentration is absolute via MW/Vd/F.
-        var refUnit: Double?
+        var refDose: Measurement<UnitDoseMass>?
         // Irreducible pharmacodynamics (no DB source).
         var deplete: Double?
         var koff: Double?
@@ -71,28 +71,28 @@ nonisolated enum SubstanceModelDatabase {
     /// Keyed by normalized canonical name. Aliases resolve through ``aliases`` first.
     private static let overrides: [String: Overrides] = [
         // Releaser stimulants — PK + weights from DB; only the depletion (crash) scalar is curated.
-        "amphetamine": Overrides(refUnit: 50, deplete: 1.0),
-        "mdma": Overrides(refUnit: 90, deplete: 0.10),
-        "3-mmc": Overrides(refUnit: 80, deplete: 0.12),
-        "2-mmc": Overrides(refUnit: 250, deplete: 0.12),
-        "mephedrone": Overrides(refUnit: 150, deplete: 0.12),
-        "4-fa": Overrides(refUnit: 120, deplete: 0.05),
+        "amphetamine": Overrides(refDose: .mg(50), deplete: 1.0),
+        "mdma": Overrides(refDose: .mg(90), deplete: 0.10),
+        "3-mmc": Overrides(refDose: .mg(80), deplete: 0.12),
+        "2-mmc": Overrides(refDose: .mg(250), deplete: 0.12),
+        "mephedrone": Overrides(refDose: .mg(150), deplete: 0.12),
+        "4-fa": Overrides(refDose: .mg(120), deplete: 0.05),
         // Reuptake-blocker stimulants — no depletion; curated DAT dissociation controls the plateau.
-        "methylphenidate": Overrides(refUnit: 60, deplete: 0, koff: 8.0),
-        "mdpv": Overrides(refUnit: 15, deplete: 0, koff: 3.0),
-        // No DB PK for 5-APB — refUnit + PD weights only; no sourced human PK exists.
-        "5-apb": Overrides(refUnit: 70, deplete: 0.08),
+        "methylphenidate": Overrides(refDose: .mg(60), deplete: 0, koff: 8.0),
+        "mdpv": Overrides(refDose: .mg(15), deplete: 0, koff: 3.0),
+        // No DB PK for 5-APB — refDose + PD weights only; no sourced human PK exists.
+        "5-apb": Overrides(refDose: .mg(70), deplete: 0.08),
         // Opioids — µ drive/efficacy/respiratory are curated; heroin's 3-min *plasma* half-life is the
         // prodrug, not the felt duration (6-MAM/morphine), so its ke is patched.
-        "heroin": Overrides(ke: ln2 / 2.5, ka: 6.0, refUnit: 10, mu: 1.0, muEff: 0.97, resp: 1.4),
-        "morphine": Overrides(refUnit: 30, mu: 1.0, muEff: 0.95, resp: 1.0),
-        "oxycodone": Overrides(refUnit: 20, mu: 1.0, muEff: 0.92, resp: 0.9),
-        "kratom": Overrides(refUnit: 3_000, mu: 0.55, muEff: 0.5),
+        "heroin": Overrides(ke: ln2 / 2.5, ka: 6.0, refDose: .mg(10), mu: 1.0, muEff: 0.97, resp: 1.4),
+        "morphine": Overrides(refDose: .mg(30), mu: 1.0, muEff: 0.95, resp: 1.0),
+        "oxycodone": Overrides(refDose: .mg(20), mu: 1.0, muEff: 0.92, resp: 0.9),
+        "kratom": Overrides(refDose: .g(3), mu: 0.55, muEff: 0.5),
         // Sedatives / enhancers / antagonists — adjuncts (never trigger the view alone).
-        "bromazepam": Overrides(refUnit: 6, gaba: 1.0),
-        "ppap": Overrides(refUnit: 20, cae: 0.45),
-        "bpap": Overrides(refUnit: 1, cae: 1.1),
-        "mirtazapine": Overrides(refUnit: 30, rec: ReceptorAffinities(h1: 0.03, a2: 0.6, c2C: 0.6, c2A: 0.9)),
+        "bromazepam": Overrides(refDose: .mg(6), gaba: 1.0),
+        "ppap": Overrides(refDose: .mg(20), cae: 0.45),
+        "bpap": Overrides(refDose: .mg(1), cae: 1.1),
+        "mirtazapine": Overrides(refDose: .mg(30), rec: ReceptorAffinities(h1: 0.03, a2: 0.6, c2C: 0.6, c2A: 0.9)),
     ]
 
     private static let aliases: [String: String] = [
@@ -252,14 +252,14 @@ nonisolated enum SubstanceModelDatabase {
 
         // Reference dose: curated anchor wins (preserves the calibrated magnitudes), else the DB's
         // heavy-dose ladder, else a neutral default.
-        let refUnit = ov?.refUnit ?? pharmacology?.referenceDoseMg ?? 50
+        let refDoseMg = ov?.refDose?.value(in: .milligrams) ?? pharmacology?.referenceDoseMg ?? 50
 
         let hasMechanism = wDAT > 0 || wNET > 0 || wSERT > 0
             || (ov?.mu ?? 0) > 0 || (ov?.gaba ?? 0) > 0 || (ov?.cae ?? 0) > 0 || ov?.rec != nil
         guard hasMechanism else { return nil } // inert (e.g. a supplement) ⇒ not modelable
 
         return SubstanceModelParams(
-            ke: ke, ka: ka, refUnit: refUnit,
+            ke: ke, ka: ka, refDoseMg: refDoseMg,
             wDAT: wDAT, wNET: wNET, wSERT: wSERT,
             deplete: ov?.deplete ?? (releaser ? 0.1 : 0),
             releaser: releaser,

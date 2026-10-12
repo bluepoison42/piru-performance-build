@@ -247,4 +247,20 @@ struct PharmacologyParametersTests {
             species: species, sourceSlug: "test", doi: nil, pmid: nil, notes: nil, confidence: confidence,
         )
     }
+
+    @Test
+    func `The reference dose is read in the ladder's own unit`() async {
+        // A reference read without its ladder's unit puts LSD's 300 µg at 300 mg
+        // and kratom's 8 g at 8 mg — the deep tolerance escalation a thousandfold
+        // off in each direction.
+        await SubstanceStore.shared.ensureAllLoaded()
+        func reference(_ name: String) -> Double {
+            SubstanceStore.shared.pharmacologyParameters(forSubstanceName: name).referenceDoseMg ?? .nan
+        }
+        #expect(reference("LSD") > 0 && reference("LSD") < 1, "LSD's heavy dose is a fraction of a milligram")
+        #expect(reference("Kratom") >= 1_000, "kratom's heavy dose is grams")
+        #expect(reference("Heroin") >= 10 && reference("Heroin") < 1_000)
+        // "g active GHB / sodium oxybate" is grams with a basis note.
+        #expect(reference("GHB") >= 1_000, "GHB's heavy dose is grams")
+    }
 }

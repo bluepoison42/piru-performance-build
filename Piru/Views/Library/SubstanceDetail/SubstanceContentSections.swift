@@ -76,7 +76,7 @@ struct HistorySection: View {
     var body: some View {
         let count = entries.count
         let stats = model.historyStats
-        let unit = entries.first?.unit ?? defaultUnit
+        let unit = stats.unit ?? defaultUnit
         let earliest = entries.last?.timestamp
         let latest = entries.first?.timestamp
 

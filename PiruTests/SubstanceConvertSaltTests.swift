@@ -2,12 +2,11 @@ import Foundation
 import Testing
 @testable import Piru
 
-/// Salt-aware unit conversion: `convert(amount:from:toRoute:saltForm:)` resolves
-/// the reference unit via the chosen salt's `unit`, while the route-only
-/// `convert(amount:from:toRoute:)` uses the route's default-salt unit. For a
-/// substance whose salts share a unit the two agree; they diverge only when a
-/// selected salt is denominated differently from the route default.
-@Suite("Substance.convert salt-awareness")
+/// Salt-aware ladder units: `ladder(for:saltForm:)` carries the chosen salt's
+/// `unit`, while a ladder with no salt carries the route's default-salt unit.
+/// For a substance whose salts share a unit the two agree; they diverge only
+/// when a selected salt is denominated differently from the route default.
+@Suite("Substance ladder salt-awareness")
 struct SubstanceConvertSaltTests {
     /// A multi-salt route where the default salt and another salt use DIFFERENT
     /// units: the route default (mirroring the first variant) is `mg`, while the
@@ -50,9 +49,9 @@ struct SubstanceConvertSaltTests {
     @Test
     func `salt overload converts against the salt's own unit`() {
         // Threonate is dosed in grams: 1 g entered as "g" stays 1 g.
-        #expect(mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral, saltForm: "Threonate") == 1)
+        #expect(mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral, saltForm: "Threonate") == 1)
         // Default-salt unit is mg, so the route-only path scales 1 g → 1000 mg.
-        #expect(mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral) == 1_000)
+        #expect(mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral) == 1_000)
     }
 
     @Test
@@ -61,8 +60,8 @@ struct SubstanceConvertSaltTests {
         // its own (IU) unit is an identity; the route-only path targets mg and,
         // unable to bridge IU↔mg, returns nil. This is the mis-conversion the
         // salt overload closes.
-        #expect(mixedUnitSubstance.convert(amount: 5, from: "IU", toRoute: .oral, saltForm: "Hormone") == 5)
-        #expect(mixedUnitSubstance.convert(amount: 5, from: "IU", toRoute: .oral) == nil)
+        #expect(mixedUnitSubstance.inLadderUnit(5, from: "IU", route: .oral, saltForm: "Hormone") == 5)
+        #expect(mixedUnitSubstance.inLadderUnit(5, from: "IU", route: .oral) == nil)
     }
 
     @Test
@@ -70,12 +69,12 @@ struct SubstanceConvertSaltTests {
         // nil salt and an unknown label both resolve the default (mg) unit, so
         // they match the route-only overload exactly.
         #expect(
-            mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral, saltForm: nil)
-                == mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral),
+            mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral, saltForm: nil)
+                == mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral),
         )
         #expect(
-            mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral, saltForm: "Sulfate")
-                == mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral),
+            mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral, saltForm: "Sulfate")
+                == mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral),
         )
     }
 
@@ -84,8 +83,8 @@ struct SubstanceConvertSaltTests {
         // The default salt ("Citrate") uses the same unit the route mirrors, so
         // naming it explicitly matches the route-only conversion.
         #expect(
-            mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral, saltForm: "Citrate")
-                == mixedUnitSubstance.convert(amount: 1, from: "g", toRoute: .oral),
+            mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral, saltForm: "Citrate")
+                == mixedUnitSubstance.inLadderUnit(1, from: "g", route: .oral),
         )
     }
 
@@ -96,14 +95,22 @@ struct SubstanceConvertSaltTests {
         // No salt dimension → the salt overload (any label) and the route-only
         // overload resolve the same unit and produce identical results.
         #expect(
-            caffeine.convert(amount: 1, from: "g", toRoute: .oral)
-                == caffeine.convert(amount: 1, from: "g", toRoute: .oral, saltForm: nil),
+            caffeine.inLadderUnit(1, from: "g", route: .oral)
+                == caffeine.inLadderUnit(1, from: "g", route: .oral, saltForm: nil),
         )
         #expect(
-            caffeine.convert(amount: 1, from: "g", toRoute: .oral, saltForm: "Anhydrous")
-                == caffeine.convert(amount: 1, from: "g", toRoute: .oral),
+            caffeine.inLadderUnit(1, from: "g", route: .oral, saltForm: "Anhydrous")
+                == caffeine.inLadderUnit(1, from: "g", route: .oral),
         )
         // And the value itself is correct: 1 g → 1000 mg.
-        #expect(caffeine.convert(amount: 1, from: "g", toRoute: .oral) == 1_000)
+        #expect(caffeine.inLadderUnit(1, from: "g", route: .oral) == 1_000)
+    }
+}
+
+extension Substance {
+    /// `amount` written in `unit`, read in the unit of the route's ladder for
+    /// `saltForm` — the number tiering and the cumulative alert compare.
+    func inLadderUnit(_ amount: Double, from unit: String, route: RouteOfAdministration, saltForm: String? = nil) -> Double? {
+        ladder(for: route, saltForm: saltForm).flatMap { quantity(amount, unit: unit).value(in: $0.unit) }
     }
 }

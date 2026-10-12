@@ -66,7 +66,7 @@ enum SummaryStatsResolver {
             }
 
             // An unknown dose is a dose taken with no exposure to sum.
-            let doseMg = entry.isUnknownDose ? nil : DoseUnit.convert(entry.amount, from: entry.unit, to: "mg")
+            let doseMg = entry.quantity?.milligrams
             let exposure = entry.isUnknownDose ? nil : exposureValue(
                 currency: meta.currency, substance: meta.substance, entry: entry,
                 doseMg: doseMg, opioids: opioids, benzos: benzos,
@@ -116,11 +116,8 @@ enum SummaryStatsResolver {
             // A common dose is a point on the base-form ladder; an extended-release
             // dose isn't a multiple of it (see `Substance.tierLadder`).
             guard let substance, BaseReleaseForm.contains(entry.releaseForm) else { return nil }
-            let route = entry.route
-            let range = substance.doseRange(for: route) ?? substance.doseRange(for: substance.defaultRoute) ?? substance.routes.first?.doses
-            guard let range else { return nil }
-            let ladderUnit = substance.unit(for: route)
-            return UsageAnalyticsModel.commonDoses(range: range, ladderUnit: ladderUnit, amount: entry.amount, loggedUnit: entry.unit)
+            guard let dose = substance.quantity(of: entry) else { return nil }
+            return substance.scalingLadder(for: entry.route)?.commonDoses(of: dose)
         case .milligrams:
             return doseMg
         }

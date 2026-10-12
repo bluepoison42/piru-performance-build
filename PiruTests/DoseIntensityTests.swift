@@ -27,7 +27,9 @@ struct DoseIntensityTests {
     )
 
     private func intensity(_ amount: Double, _ range: DoseRange) -> Double {
-        ActiveSubstanceState.computeDoseIntensity(amount: amount, doseRange: range)
+        ActiveSubstanceState.computeDoseIntensity(
+            dose: DoseQuantity(amount, unit: "mg"), ladder: DoseLadder(range: range, unit: "mg"),
+        )
     }
 
     // MARK: - The user-requested behaviors (PsychonautWiki visual style)
@@ -86,9 +88,31 @@ struct DoseIntensityTests {
 
     @Test
     func `Nil dose range returns neutral mid-common, not full height`() {
-        let result = ActiveSubstanceState.computeDoseIntensity(amount: 100, doseRange: nil)
+        let result = ActiveSubstanceState.computeDoseIntensity(dose: DoseQuantity(100, unit: "mg"), ladder: nil)
         #expect(result >= 0.50)
         #expect(result <= 0.70)
+    }
+
+    @Test
+    func `A dose in another mass unit scales the same as in the ladder's`() {
+        let ladder = DoseLadder(range: dxmLike, unit: "mg")
+        let inGrams = ActiveSubstanceState.computeDoseMagnitude(dose: DoseQuantity(0.15, unit: "g"), ladder: ladder)
+        let inMilligrams = ActiveSubstanceState.computeDoseMagnitude(dose: DoseQuantity(150, unit: "mg"), ladder: ladder)
+        #expect(inGrams == inMilligrams)
+    }
+
+    @Test
+    func `A dose the ladder's unit can't read is unknown, never trivial`() {
+        // Read across units, 5 mL on a gram ladder is 5 g, and 0.02 g on a mg
+        // ladder is 0.02 mg — which floors at the trivial magnitude and lets the
+        // interaction checker suppress a real warning.
+        let grams = DoseLadder(range: alcoholLike, unit: "g")
+        let magnitude = ActiveSubstanceState.computeDoseMagnitude(dose: DoseQuantity(5, unit: "mL"), ladder: grams)
+        #expect(magnitude == ActiveSubstanceState.unknownIntensity)
+        let heroin = DoseLadder(range: DoseRange(common: 10 ... 20, strong: 20 ... 50, heavy: 50), unit: "mg")
+        let small = ActiveSubstanceState.computeDoseMagnitude(dose: DoseQuantity(0.02, unit: "g"), ladder: heroin)
+        #expect(small > ActiveSubstanceState.minimumIntensity)
+        #expect(abs(small - 0.4) < 1e-12)
     }
 
     // MARK: - Partial-data fallbacks
