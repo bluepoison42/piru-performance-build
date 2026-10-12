@@ -3291,28 +3291,6 @@ ES = {
     "≈ %@ MME": "≈ %@ MME",
     "≈%@ %@ active · %@ ago": "≈%@ %@ activo · hace %@",
     "≈%@ %@ active · %@ ago · %@ left": "≈%@ %@ activo · hace %@ · quedan %@",
-}
-
-# Spain only: the few strings Spain must see differently — today the iOS Settings
-# app, which is "Ajustes" in Spain and "Configuración" elsewhere. translate_catalog.py
-# writes the es-ES column as ES overlaid with this, because iOS does not fall back
-# per key from es-ES to es.
-ES_ES = {
-    "Ask Again sends another reminder if a dose isn't logged — “Default” uses the intervals in Notification Settings.": "“Volver a preguntar” envía otro recordatorio si una dosis no se registra — “Predeterminado” usa los intervalos de los ajustes de notificaciones.",
-    "Backups, export & import are under Tools › Data & Backup; preferences are under Settings.": "Las copias de seguridad, la exportación y la importación están en Herramientas › Datos y copia de seguridad; las preferencias, en Ajustes.",
-    "Check-in notifications are off in Settings, so none of these will arrive.": "Las notificaciones de seguimiento están desactivadas en Ajustes, así que ninguna de estas llegará.",
-    "Choose what Piru may send. Everything stays adjustable in Settings, switch by switch.": "Elige lo que Piru puede enviar. Todo se puede cambiar en Ajustes, interruptor por interruptor.",
-    "Details are in Settings under About Piru.": "Los detalles están en Ajustes, en Acerca de Piru.",
-    "Enable camera access in Settings to scan medication labels.": "Permite el acceso a la cámara en Ajustes para escanear etiquetas de medicamentos.",
-    "Location access is off. Turn it on in Settings to use your current location.": "El acceso a la ubicación está desactivado. Actívalo en Ajustes para usar tu ubicación actual.",
-    "Notification Settings": "Ajustes de notificaciones",
-    "Notifications are turned off in Settings. Alerts below can't be delivered until they're allowed again.": "Las notificaciones están desactivadas en Ajustes. Las alertas de abajo no podrán entregarse hasta que vuelvas a permitirlas.",
-    "Open Settings": "Abrir Ajustes",
-    "Piru can keep it simple or go deep into the pharmacology. Change this anytime in Settings.": "Piru puede mantenerlo simple o profundizar en la farmacología. Cámbialo cuando quieras en Ajustes.",
-    "Settings": "Ajustes",
-    "Shows your heart rate and blood pressure on each session's timeline. If something didn't connect — blood pressure especially, which iOS doesn't always prompt for — open **Settings ▸ Privacy & Security ▸ Health ▸ Piru** and turn it on there.": "Muestra tu frecuencia cardíaca y tu presión arterial en la línea de tiempo de cada sesión. Si algo no se conectó — sobre todo la presión arterial, que iOS no siempre pide — abre **Ajustes ▸ Privacidad y seguridad ▸ Salud ▸ Piru** y actívalo ahí.",
-    "Turn on location access in Settings to use your current location.": "Activa el acceso a la ubicación en Ajustes para usar tu ubicación actual.",
-    # Quick-log meal chip
     "^[%lld dose](inflect: true)": "^[%lld dosis](inflect: true)",
     "^[%lld staged dose](inflect: true)": "^[%lld dosis preparada](inflect: true)",
     "Shows the staged doses": "Muestra las dosis preparadas",
@@ -3371,4 +3349,26 @@ ES_ES = {
     "This half-life is out of range: projections take 1 minute to 10 years.": "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años.",
     "This interval is out of range: projections take 1 minute to 1 year.": "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año.",
     "This schedule takes more than %@ doses to settle, so it can't be projected.": "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar.",
+}
+
+# Spain only: the few strings Spain must see differently — today the iOS Settings
+# app, which is "Ajustes" in Spain and "Configuración" elsewhere. translate_catalog.py
+# writes the es-ES column as ES overlaid with this, because iOS does not fall back
+# per key from es-ES to es.
+ES_ES = {
+    "Ask Again sends another reminder if a dose isn't logged — “Default” uses the intervals in Notification Settings.": "“Volver a preguntar” envía otro recordatorio si una dosis no se registra — “Predeterminado” usa los intervalos de los ajustes de notificaciones.",
+    "Backups, export & import are under Tools › Data & Backup; preferences are under Settings.": "Las copias de seguridad, la exportación y la importación están en Herramientas › Datos y copia de seguridad; las preferencias, en Ajustes.",
+    "Check-in notifications are off in Settings, so none of these will arrive.": "Las notificaciones de seguimiento están desactivadas en Ajustes, así que ninguna de estas llegará.",
+    "Choose what Piru may send. Everything stays adjustable in Settings, switch by switch.": "Elige lo que Piru puede enviar. Todo se puede cambiar en Ajustes, interruptor por interruptor.",
+    "Details are in Settings under About Piru.": "Los detalles están en Ajustes, en Acerca de Piru.",
+    "Enable camera access in Settings to scan medication labels.": "Permite el acceso a la cámara en Ajustes para escanear etiquetas de medicamentos.",
+    "Location access is off. Turn it on in Settings to use your current location.": "El acceso a la ubicación está desactivado. Actívalo en Ajustes para usar tu ubicación actual.",
+    "Notification Settings": "Ajustes de notificaciones",
+    "Notifications are turned off in Settings. Alerts below can't be delivered until they're allowed again.": "Las notificaciones están desactivadas en Ajustes. Las alertas de abajo no podrán entregarse hasta que vuelvas a permitirlas.",
+    "Open Settings": "Abrir Ajustes",
+    "Piru can keep it simple or go deep into the pharmacology. Change this anytime in Settings.": "Piru puede mantenerlo simple o profundizar en la farmacología. Cámbialo cuando quieras en Ajustes.",
+    "Settings": "Ajustes",
+    "Shows your heart rate and blood pressure on each session's timeline. If something didn't connect — blood pressure especially, which iOS doesn't always prompt for — open **Settings ▸ Privacy & Security ▸ Health ▸ Piru** and turn it on there.": "Muestra tu frecuencia cardíaca y tu presión arterial en la línea de tiempo de cada sesión. Si algo no se conectó — sobre todo la presión arterial, que iOS no siempre pide — abre **Ajustes ▸ Privacidad y seguridad ▸ Salud ▸ Piru** y actívalo ahí.",
+    "Turn on location access in Settings to use your current location.": "Activa el acceso a la ubicación en Ajustes para usar tu ubicación actual.",
+    # Quick-log meal chip
 }

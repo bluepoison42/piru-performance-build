@@ -554,6 +554,12 @@
     "#bug-reports on Discord" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#bug-reports en Discord"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1957,6 +1963,12 @@
     },
     "%@ Custom" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Personalizado"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6906,6 +6918,12 @@
     },
     "^[%lld dose](inflect: true)" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld dosis](inflect: true)"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7153,6 +7171,12 @@
     },
     "^[%lld staged dose](inflect: true)" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld dosis preparada](inflect: true)"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9536,6 +9560,12 @@
     },
     "A meal delays **%@** by %@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una comida retrasa el inicio de **%@** %@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9558,6 +9588,12 @@
     },
     "A meal delays ^[%lld dose](inflect: true) by up to ~%@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una comida retrasa ^[%lld dosis](inflect: true) hasta ~%@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10116,6 +10152,12 @@
     "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un informe ayuda a corregirlo. Contiene cómo se cerró Piru y su propio registro, nada de tu diario, y tú eliges adónde va."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10250,6 +10292,12 @@
     },
     "A snack delays **%@** by %@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un tentempié retrasa el inicio de **%@** %@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10272,6 +10320,12 @@
     },
     "A snack delays ^[%lld dose](inflect: true) by up to ~%@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un tentempié retrasa ^[%lld dosis](inflect: true) hasta ~%@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10350,6 +10404,12 @@
     },
     "A typical delay for oral doses. No food study has measured **%@** itself." : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un retraso típico para dosis orales. Ningún estudio sobre comida ha medido **%@** en concreto."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17048,6 +17108,12 @@
     "Attach the file and say what you were doing when it went wrong." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjunta el archivo y cuenta qué estabas haciendo cuando falló."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17436,6 +17502,12 @@
     "Back Up Now" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia ahora"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17459,6 +17531,12 @@
     "Back Up to a Folder…" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia en una carpeta…"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17538,6 +17616,12 @@
     "Backup Found" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia encontrada"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19810,6 +19894,12 @@
     "BoringSSL, part of Foundation's networking on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BoringSSL, parte de las funciones de red de Foundation en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22536,6 +22626,12 @@
     "Choose Another Folder…" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir otra carpeta…"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -24641,6 +24737,12 @@
     "commonmark-java. Copyright © Robin Stocker." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "commonmark-java. Copyright © Robin Stocker."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26347,6 +26449,12 @@
     "Create Report" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear informe"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26790,6 +26898,12 @@
     "curl, part of Foundation's networking on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "curl, parte de las funciones de red de Foundation en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -34045,6 +34159,12 @@
     },
     "Empty stomach" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estómago vacío"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37618,6 +37738,12 @@
     },
     "Fasted" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En ayunas"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38428,6 +38554,12 @@
     "Folder" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpeta"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38478,6 +38610,12 @@
     },
     "Food" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38500,6 +38638,12 @@
     },
     "Food doesn't delay **%@**" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La comida no retrasa **%@**"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38522,6 +38666,12 @@
     },
     "Food doesn't delay these doses" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La comida no retrasa estas dosis"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -39305,6 +39455,12 @@
     },
     "Full meal" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida completa"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -42875,6 +43031,12 @@
     "How to Report a Problem" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo informar de un problema"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43431,6 +43593,12 @@
     "ICU, the Unicode data behind dates, numbers and text on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ICU, los datos Unicode detrás de fechas, números y texto en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46693,6 +46861,12 @@
     "Kotlin, AndroidX, Jetpack Compose, Coil, Material Symbols, swift-crypto, swift-asn1, swift-jni and swift-android-native." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kotlin, AndroidX, Jetpack Compose, Coil, Material Symbols, swift-crypto, swift-asn1, swift-jni y swift-android-native."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -47923,6 +48097,12 @@
     },
     "Light snack" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo ligero"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50396,6 +50576,12 @@
     },
     "Meal" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -58824,6 +59010,12 @@
     "Nothing to Share" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada que compartir"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -59885,6 +60077,12 @@
     "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo con las versiones de la app y de Android, el modelo del teléfono, cómo terminaron las últimas ejecuciones de Piru, los rastros de cualquier fallo y el registro propio de Piru. No contiene nada de tu diario y solo sale de tu teléfono si lo envías."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -60050,6 +60248,12 @@
     "Open a GitHub Issue" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir un issue en GitHub"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -62987,6 +63191,12 @@
     "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca se conecta a internet. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -63402,6 +63612,12 @@
     "Piru can no longer reach this folder. Choose it again to keep backing up." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru ya no puede acceder a esta carpeta. Vuelve a elegirla para seguir haciendo copias."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -63509,6 +63725,12 @@
     "Piru Closed Unexpectedly" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru se cerró inesperadamente"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -69533,6 +69755,12 @@
     "Report a Problem" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informar de un problema"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -71830,6 +72058,12 @@
     "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guarda cada vez que sales de la app, cifrada con tu frase de contraseña. Al desactivarla, la última copia se queda en la carpeta."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -75840,6 +76074,12 @@
     },
     "Shows the staged doses" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra las dosis preparadas"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -76457,6 +76697,12 @@
     "Skip, which runs Piru's Swift code on Android. Piru's changes to it are in android/vendor in its repository." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip, que ejecuta el código Swift de Piru en Android. Los cambios de Piru están en android/vendor de su repositorio."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -76900,6 +77146,12 @@
     },
     "Snack" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ligero"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -79474,6 +79726,12 @@
     },
     "Stomach" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estómago"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -79496,6 +79754,12 @@
     },
     "Stomach: %@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estómago: %@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -82438,6 +82702,12 @@
     "That passphrase didn't open the backup. Try again." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esa frase de contraseña no abrió la copia. Inténtalo de nuevo."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -82601,6 +82871,12 @@
     "The backup folder could not be reached." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo acceder a la carpeta de la copia de seguridad."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -82624,6 +82900,12 @@
     "The backup was merged with your journal." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La copia se fusionó con tu diario."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -82984,6 +83266,12 @@
     "The file picker could not be opened." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el selector de archivos."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -83091,6 +83379,12 @@
     "The folder picker could not be opened." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el selector de carpetas."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -83627,6 +83921,12 @@
     "The report could not be written." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo escribir el informe."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -83791,6 +84091,12 @@
     "The Swift runtime, Foundation and Dispatch, which run Piru on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El entorno de ejecución de Swift, Foundation y Dispatch, que ejecutan Piru en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -84515,6 +84821,12 @@
     "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta carpeta ya contiene una copia de seguridad de Piru. Escribe su frase de contraseña para fusionarla con tu diario; las copias siguientes usarán la misma frase."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -84537,6 +84849,12 @@
     },
     "This half-life is out of range: projections take 1 minute to 10 years." : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -84559,6 +84877,12 @@
     },
     "This interval is out of range: projections take 1 minute to 1 year." : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -84778,6 +85102,12 @@
     },
     "This schedule takes more than %@ doses to settle, so it can't be projected." : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -86969,6 +87299,12 @@
     "Turn Off Folder Backup" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar la copia en carpeta"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -87159,6 +87495,12 @@
     },
     "Typical estimate" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estimación típica"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -90657,6 +90999,12 @@
     "Where to Send It" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dónde enviarlo"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
