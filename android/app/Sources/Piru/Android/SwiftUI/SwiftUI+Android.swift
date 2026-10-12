@@ -187,7 +187,8 @@ extension Text {
 }
 
 extension Font {
-    func androidMonospacedDigit() -> Font { self }
+    /// Nonisolated as SwiftUI's `Font.monospacedDigit()` is: renderers build fonts off the main actor.
+    nonisolated func androidMonospacedDigit() -> Font { self }
 }
 
 extension Image {
