@@ -286,6 +286,12 @@ struct DeepLinkTests {
     }
 
     @Test
+    func `piru://quicklog reads dotted route abbreviations`() {
+        #expect(decode("piru://quicklog?substance=Testosterone&route=i.m.")?.sheet
+            == .quickLog(routine: nil, prefillSubstance: "Testosterone", prefillRoute: .intramuscular))
+    }
+
+    @Test
     func `quickLog with a route round-trips through encode`() {
         let snap = NavigatorSnapshot(
             selectedTab: .journal,
@@ -337,6 +343,21 @@ struct DeepLinkTests {
     func `the host and path match case-insensitively`() {
         let link = webLink("https://Kagerou.Glass/Piru/Log?substance=mdma")
         #expect(link == DosewikiLink(action: .log, slug: "mdma", route: nil))
+    }
+
+    @Test
+    func `the log link reads dose.wiki's i.m. route tab`() {
+        let link = webLink("https://kagerou.glass/piru/log?substance=testosterone-cypionate&route=i.m.")
+        #expect(link == DosewikiLink(action: .log, slug: "testosterone-cypionate", route: .intramuscular))
+    }
+
+    /// dose.wiki route tabs that name no single route: the link stages the
+    /// substance on its default route rather than as "Other".
+    @Test(arguments: ["injection", "iv%2Fim", "oral%20%26%20intranasal", "medical", "non-medical", "nonmedical", "ocular"])
+    func `a log link with a route Piru does not know stages no route`(route: String) {
+        let link = webLink("https://kagerou.glass/piru/log?substance=mdma&route=\(route)")
+        #expect(link == DosewikiLink(action: .log, slug: "mdma", route: nil))
+        #expect(link?.outcome(substanceName: "MDMA")?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA"))
     }
 
     @Test

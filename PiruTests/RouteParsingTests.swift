@@ -32,14 +32,14 @@ struct RouteParsingTests {
 
     // MARK: - IV variants
 
-    @Test(arguments: ["intravenous", "iv"])
+    @Test(arguments: ["intravenous", "iv", "i.v.", "I.V."])
     func `Parses IV variants`(input: String) {
         #expect(RouteOfAdministration.from(string: input) == .intravenous)
     }
 
     // MARK: - IM variants
 
-    @Test(arguments: ["intramuscular", "im"])
+    @Test(arguments: ["intramuscular", "im", "i.m.", "I.M."])
     func `Parses IM variants`(input: String) {
         #expect(RouteOfAdministration.from(string: input) == .intramuscular)
     }
@@ -74,6 +74,12 @@ struct RouteParsingTests {
     func `Unknown string maps to other`() {
         #expect(RouteOfAdministration.from(string: "unknown") == .other)
         #expect(RouteOfAdministration.from(string: "") == .other)
+    }
+
+    /// dose.wiki route tabs that name no single route stay unrecognized.
+    @Test(arguments: ["injection", "iv/im", "oral & intranasal", "medical", "non-medical", "nonmedical"])
+    func `Ambiguous route names map to other`(input: String) {
+        #expect(RouteOfAdministration.from(string: input) == .other)
     }
 
     @Test
