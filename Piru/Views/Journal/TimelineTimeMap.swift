@@ -60,6 +60,14 @@ nonisolated struct TimelineTimeMap {
         max(240, 240 * ppm)
     }
 
+    /// Cap on one empty segment with compression off: three days at the
+    /// uniform scale. Shorter spans keep that scale exactly; a longer empty run
+    /// (a dose dated years ahead or behind) would otherwise make a strip
+    /// millions of points tall, which hangs the main thread laying it out.
+    static func uncompressedRunCap(pointsPerMinute ppm: CGFloat) -> CGFloat {
+        3 * 1_440 * ppm
+    }
+
     /// - Parameters:
     ///   - start: the strip's oldest moment.
     ///   - end: the strip's newest moment (the live edge).
@@ -79,8 +87,9 @@ nonisolated struct TimelineTimeMap {
         pointsPerMinute ppm: CGFloat,
         compressGaps: Bool,
     ) {
-        let gapCap: CGFloat = compressGaps ? Self.gapCap(pointsPerMinute: ppm) : .infinity
-        let futureCap: CGFloat = compressGaps ? Self.futureCap(pointsPerMinute: ppm) : .infinity
+        let uncompressedCap = Self.uncompressedRunCap(pointsPerMinute: ppm)
+        let gapCap: CGFloat = compressGaps ? Self.gapCap(pointsPerMinute: ppm) : uncompressedCap
+        let futureCap: CGFloat = compressGaps ? Self.futureCap(pointsPerMinute: ppm) : uncompressedCap
         let active = Self.merged(activeIntervals)
 
         var eventTimes: Set<Date> = [start, end, now]

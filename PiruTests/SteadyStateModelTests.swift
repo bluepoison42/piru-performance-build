@@ -35,9 +35,15 @@ struct SteadyStateModelTests {
 
     @Test
     func `Extremes inside the range stay finite`() throws {
+        // Ten-year half-life dosed daily: ~22,000 doses to settle, past the cap.
+        #expect(make(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
+            intervalMinutes: 1_440,
+        ) == nil)
+
         let longest = try #require(make(
             halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
-            intervalMinutes: SteadyStateModel.intervalRange.lowerBound,
+            intervalMinutes: 30 * 1_440,
         ))
         #expect(longest.totalMinutes.isFinite)
         #expect(longest.totalMinutes / 1_440 < Double(Int.max))

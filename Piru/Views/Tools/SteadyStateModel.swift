@@ -50,8 +50,12 @@ nonisolated enum SteadyStateModel {
     /// (the longest real schedule is a once-yearly infusion).
     static let intervalRange: ClosedRange<Double> = 1 ... 365.25 * 1_440
 
-    /// `nil` when the dose or a rate constant is non-positive or non-finite, or
-    /// the half-life or interval falls outside ``halfLifeRange`` / ``intervalRange``.
+    /// Most doses one projection sums; see ``compute(dose:halfLifeMinutes:intervalMinutes:ke:ka:)``.
+    static let maximumDoses: Double = 5_000
+
+    /// `nil` when the dose or a rate constant is non-positive or non-finite, the
+    /// half-life or interval falls outside ``halfLifeRange`` / ``intervalRange``,
+    /// or the schedule needs more than ``maximumDoses`` doses to settle.
     static func compute(dose: Double, halfLifeMinutes: Double, intervalMinutes: Double, ke: Double, ka: Double) -> Result? {
         guard dose > 0, dose.isFinite,
               halfLifeRange.contains(halfLifeMinutes),
@@ -68,8 +72,12 @@ nonisolated enum SteadyStateModel {
         let totalMinutes = max(time97 * 1.2, intervalMinutes * 6, intervalMinutes + 1)
         // The cap bounds the O(samples × doses) accumulation: a near-zero typed
         // interval against a long half-life otherwise yields hundreds of
-        // thousands of doses and a multi-second hang per keystroke.
-        let doseCount = Int(min(totalMinutes / intervalMinutes + 1, 5_000))
+        // thousands of doses and a multi-second hang per keystroke. A schedule
+        // that needs more doses than the cap to settle gets no projection,
+        // since a truncated sum would report a plateau it never reached.
+        let scheduledDoses = totalMinutes / intervalMinutes + 1
+        guard scheduledDoses <= Self.maximumDoses else { return nil }
+        let doseCount = Int(scheduledDoses)
 
         /// Body content = Σ over already-taken doses of dose · fractionRemaining.
         func bodyContent(at t: Double) -> Double {

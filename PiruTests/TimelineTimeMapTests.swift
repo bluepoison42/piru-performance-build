@@ -103,6 +103,25 @@ struct TimelineTimeMapTests {
         #expect(abs(map.height(from: dose, to: now) - 2 * 1_440 * ppm) < 0.5)
     }
 
+    @Test
+    func `Compression off shortens an empty run longer than three days`() {
+        let past = now.addingTimeInterval(-86_400)
+        let farFuture = now.addingTimeInterval(730 * 86_400)
+        let start = past.addingTimeInterval(-minutes(5))
+        let map = TimelineTimeMap(
+            start: start,
+            end: farFuture,
+            now: now,
+            slices: [.init(bottomTime: start, topTime: farFuture, breakAbove: false, minimumHeight: 0)],
+            anchors: [past, farFuture],
+            activeIntervals: [],
+            pointsPerMinute: ppm,
+            compressGaps: false,
+        )
+        #expect(map.height(from: now, to: farFuture) <= TimelineTimeMap.uncompressedRunCap(pointsPerMinute: ppm) + 0.5)
+        #expect(map.totalHeight < 5 * 1_440 * ppm)
+    }
+
     // MARK: - Breaks
 
     @Test

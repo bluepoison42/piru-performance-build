@@ -126,17 +126,11 @@
         }
 
         @Test
-        func `Stale lands just past the next phase boundary`() throws {
-            // Dosed 20 min ago: the next boundary is come-up's end at +20 min.
-            let stale = try #require(Manager.staleDate(for: state(minutesAgo: 20), now: now))
-            #expect(stale == now.addingTimeInterval(20 * 60 + Manager.boundaryRepaintLag))
-        }
-
-        @Test
-        func `In the last phase, stale lands just past the curve's end, where the card collapses`() throws {
-            // Dosed 230 min ago with a 240 min curve: the end is 10 min out.
-            let content = state(minutesAgo: 230)
-            let stale = try #require(Manager.staleDate(for: content, now: now))
+        func `Stale lands just past the curve's end even with phase boundaries ahead`() throws {
+            // Dosed 20 min ago: come-up ends at +20 min, but a suspended app gets one
+            // repaint, and it has to be the collapse at the end.
+            let content = state(minutesAgo: 20)
+            let stale = try #require(Manager.staleDate(for: content))
             let end = try #require(content.endDate)
             #expect(stale == end.addingTimeInterval(Manager.boundaryRepaintLag))
             #expect(content.hasRunOut(at: stale))
@@ -144,26 +138,17 @@
         }
 
         @Test
-        func `The end is never pushed back by the minimum repaint interval`() throws {
-            // The end is 20 s out, inside the 60 s floor; the collapse still lands there.
-            let content = state(minutesAgo: 240 - 20.0 / 60)
-            let stale = try #require(Manager.staleDate(for: content, now: now))
-            #expect(stale < now.addingTimeInterval(Manager.minimumStale))
+        func `A long curve still goes stale at its end`() throws {
+            let content = state(minutesAgo: 130, totalMinutes: 600)
+            let stale = try #require(Manager.staleDate(for: content))
             #expect(content.hasRunOut(at: stale))
-        }
-
-        @Test
-        func `A long quiet phase still goes stale within the ceiling`() throws {
-            // Dosed 130 min ago with a 600 min curve: the next boundary is 470 min out.
-            let stale = try #require(Manager.staleDate(for: state(minutesAgo: 130, totalMinutes: 600), now: now))
-            #expect(stale == now.addingTimeInterval(Manager.maximumStale))
         }
 
         @Test
         func `An empty state has run out and sets no stale date`() {
             let empty = PiruActivityAttributes.ContentState(activeSubstances: [], lastUpdated: now)
             #expect(empty.hasRunOut(at: now))
-            #expect(Manager.staleDate(for: empty, now: now) == nil)
+            #expect(Manager.staleDate(for: empty) == nil)
         }
     }
 #endif

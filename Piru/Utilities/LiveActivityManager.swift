@@ -191,7 +191,7 @@ struct DoseSnapshot {
 
         /// Re-arm every update source for an activity that is already on the
         /// Lock Screen: a fresh push (so the phase label and the countdown's
-        /// target boundary are current, and ``staleDate(for:now:)`` is measured from
+        /// target boundary are current, and ``staleDate(for:)`` is measured from
         /// now), the foreground tick, and the background refresh.
         ///
         /// Called on cold launch after session recovery and whenever the app
@@ -622,50 +622,25 @@ struct DoseSnapshot {
         ///
         /// ActivityKit gives an app no way to schedule an arbitrary future re-render:
         /// the view is redrawn on a content update, and once more when it goes stale.
-        /// That single stale re-render is the only scheduled repaint available, so it
-        /// is spent where the display actually changes — **the next phase boundary any
-        /// substance in `state` crosses** — rather than on a flat five-minute tick that
-        /// usually lands mid-phase and repaints nothing new.
+        /// That single stale re-render is the only repaint that happens while the app
+        /// is suspended, so it is spent on **the moment the last curve runs out**: the
+        /// Lock Screen card collapses to its "Session complete" row there, whether or
+        /// not the app wakes to end the activity. Phase boundaries before the end are
+        /// repainted by the app's own pushes (the foreground tick and the background
+        /// refresh); spending the stale repaint on one of them leaves a suspended
+        /// app's card showing the finished graph forever.
         ///
-        /// Bounded on both sides: never sooner than ``minimumStale`` (so a dose logged
-        /// seconds before a boundary can't burn the budget on an instant repaint),
-        /// never later than ``maximumStale`` (so a long quiet stretch still refreshes
-        /// eventually), and never past the moment the last curve runs out. That last
-        /// repaint is the one that needs no app at all: the Lock Screen card
-        /// collapses to its "Session complete" row there, whether or not the app
-        /// wakes to end the activity.
-        ///
-        /// Read from the pushed state rather than the session, so it marks the
-        /// boundaries the card draws (zero-order and filled-in phases included)
-        /// and works for a repaint of the activity's own content with no session
-        /// in memory.
-        static func staleDate(
-            for state: PiruActivityAttributes.ContentState,
-            now: Date = .now,
-        ) -> Date? {
-            guard let end = state.endDate else { return nil }
-            let nextBoundary = state.activeSubstances
-                .flatMap(\.phaseChangeDates)
-                .map { $0.addingTimeInterval(Self.boundaryRepaintLag) }
-                .filter { $0 > now }
-                .min()
-            let target = nextBoundary ?? now.addingTimeInterval(Self.maximumStale)
-            let clamped = min(
-                max(target, now.addingTimeInterval(Self.minimumStale)),
-                now.addingTimeInterval(Self.maximumStale),
-            )
-            return min(clamped, end.addingTimeInterval(Self.boundaryRepaintLag))
+        /// Read from the pushed state rather than the session, so it marks the end
+        /// the card draws (zero-order and filled-in phases included) and works for a
+        /// repaint of the activity's own content with no session in memory.
+        static func staleDate(for state: PiruActivityAttributes.ContentState) -> Date? {
+            state.endDate?.addingTimeInterval(boundaryRepaintLag)
         }
 
-        /// How long after a boundary its stale repaint is set. The view reads
-        /// the clock when it draws, so a repaint landing exactly on the
-        /// boundary could still draw the phase that is ending.
+        /// How long after the end the stale repaint is set. The view reads the
+        /// clock when it draws, so a repaint landing exactly on the end could
+        /// still draw the last phase.
         static let boundaryRepaintLag: TimeInterval = 1
-        /// Floor on ``staleDate(for:now:)`` — a boundary closer than this isn't worth a repaint.
-        static let minimumStale: TimeInterval = 60
-        /// Ceiling on ``staleDate(for:now:)`` — the display should never claim freshness for
-        /// longer than this, however quiet the session.
-        static let maximumStale: TimeInterval = 30 * 60
     }
 #else
     @MainActor
