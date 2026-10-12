@@ -227,13 +227,13 @@ index 1483e42..6a3ec72 100644
      }
      // Collect buttons and message text
 diff --git a/Sources/SkipUI/SkipUI/System/Focus.swift b/Sources/SkipUI/SkipUI/System/Focus.swift
-index 0a3dace..399fb0c 100644
+index 3b7cf2c..3a405f7 100644
 --- a/Sources/SkipUI/SkipUI/System/Focus.swift
 +++ b/Sources/SkipUI/SkipUI/System/Focus.swift
-@@ -37,7 +37,10 @@ extension View {
-                         }
-                     }
+@@ -43,7 +43,10 @@ extension View {
+                     failedFocusRequests.value = 0
                  }
+             }
 -            if value == binding.wrappedValue {
 +            // A field in a hidden tab neither takes focus nor keeps it, as a field leaves the
 +            // responder chain when its tab is switched away on iOS.
@@ -242,7 +242,7 @@ index 0a3dace..399fb0c 100644
                  // A text field focused in its first frame has no text layout yet, and Compose
                  // throws from requestFocus (offset out of bounds). Counting the failure in state
                  // this view reads recomposes it on the next frame, after layout, which requests
-@@ -53,7 +56,7 @@ extension View {
+@@ -59,7 +62,7 @@ extension View {
                  SideEffect {
                      // Recheck ownership after other focus effects have run: in a transfer from
                      // this field to another composed before it, the other's request has landed.

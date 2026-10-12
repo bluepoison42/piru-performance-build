@@ -1,7 +1,7 @@
-A field focused in its first frame has no text layout yet and requestFocus throws; catch it and retry on the next frame, up to ten frames in a row (the fix proposed upstream).
+A field focused in its first frame has no text layout yet and requestFocus throws; catch it and retry on the next frame, up to ten frames in a row, resetting while the field isn't the focus target (the fix proposed upstream).
 
 diff --git a/Sources/SkipUI/SkipUI/System/Focus.swift b/Sources/SkipUI/SkipUI/System/Focus.swift
-index 7c26a5c..e695d32 100644
+index 7c26a5c..a195133 100644
 --- a/Sources/SkipUI/SkipUI/System/Focus.swift
 +++ b/Sources/SkipUI/SkipUI/System/Focus.swift
 @@ -9,6 +9,11 @@ import androidx.compose.ui.focus.FocusRequester
@@ -24,9 +24,16 @@ index 7c26a5c..e695d32 100644
              var context = context
              context.modifier = context.modifier
                  .focusRequester(focusRequester)
-@@ -32,6 +38,12 @@ extension View {
+@@ -31,7 +37,19 @@ extension View {
+                         }
                      }
                  }
++            if value != binding.wrappedValue {
++                // Reset while this view isn't the focus target, so the next request gets every retry.
++                SideEffect {
++                    failedFocusRequests.value = 0
++                }
++            }
              if value == binding.wrappedValue {
 +                // A text field focused in its first frame has no text layout yet, and Compose
 +                // throws from requestFocus (offset out of bounds). Counting the failure in state
@@ -37,3 +44,55 @@ index 7c26a5c..e695d32 100644
                  SideEffect {
                      if !isFocused.value {
                          focusRequester.requestFocus()
+diff --git a/Tests/SkipUITests/FocusTests.swift b/Tests/SkipUITests/FocusTests.swift
+new file mode 100644
+index 0000000..da69394
+--- /dev/null
++++ b/Tests/SkipUITests/FocusTests.swift
+@@ -0,0 +1,46 @@
++// Copyright 2026 Skip
++// SPDX-License-Identifier: MPL-2.0
++import SwiftUI
++import XCTest
++
++#if SKIP
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.saveable.Saver
++import androidx.compose.runtime.saveable.rememberSaveable
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.test.assertIsFocused
++import androidx.compose.ui.test.junit4.createComposeRule
++import androidx.compose.ui.test.onNodeWithTag
++#endif
++
++final class FocusTests: SkipUITestCase {
++    // SKIP INSERT: @get:org.junit.Rule val composeRule = createComposeRule()
++
++    /// A field whose FocusState is set as it appears takes focus.
++    func testFieldFocusedOnAppearTakesFocus() throws {
++        #if !SKIP
++        throw XCTSkip("Android-only")
++        #else
++        composeRule.setContent {
++            FocusOnAppearTestView().Compose()
++        }
++        composeRule.waitForIdle()
++        composeRule.onNodeWithTag("field").assertIsFocused()
++        #endif
++    }
++}
++
++struct FocusOnAppearTestView: View {
++    @State var text = ""
++    @FocusState var isFocused: Bool
++
++    var body: some View {
++        TextField("Name", text: $text)
++            .focused($isFocused)
++            .accessibilityIdentifier("field")
++            .onAppear { isFocused = true }
++    }
++}
