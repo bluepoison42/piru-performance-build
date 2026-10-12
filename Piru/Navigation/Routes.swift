@@ -343,7 +343,8 @@ nonisolated enum InsightGroup: String, Hashable, Codable, CaseIterable, Identifi
 /// (e.g. confirmation dialogs) are still better off staying as in-place
 /// sheets owned by the view.
 nonisolated enum SheetRoute: Hashable, Identifiable, Codable {
-    /// App-level
+    // App-level
+
     /// `routine` pre-stages that routine's items into the tray on open —
     /// the landing state for a routine-reminder notification tap.
     ///

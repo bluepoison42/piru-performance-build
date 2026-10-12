@@ -31,8 +31,9 @@ struct SubstanceLibraryTests {
     @Test
     func `a slug the catalog does not record falls back to the name search`() async {
         await SubstanceStore.shared.ensureAllLoaded()
-        #expect(SubstanceStore.shared.canonicalName(forDosewikiSlug: "ibuprofen") == nil)
-        #expect(SubstanceLibrary.name(forDosewikiSlug: "ibuprofen") == "Ibuprofen")
+        // No dose.wiki slug contains a space, so this one can only resolve by name.
+        #expect(SubstanceStore.shared.canonicalName(forDosewikiSlug: "psilocybin mushrooms") == nil)
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "psilocybin mushrooms") == "Psilocybin mushrooms")
         #expect(SubstanceLibrary.name(forDosewikiSlug: "not-a-substance") == nil)
     }
 

@@ -339,6 +339,25 @@ struct DeepLinkTests {
         #expect(link == DosewikiLink(action: .log, slug: "mdma", route: nil))
     }
 
+    @Test
+    func `a repeated substance parameter keeps its first value`() {
+        let link = webLink("https://kagerou.glass/piru/log?substance=mdma&substance=ketamine&route=oral&route=smoked")
+        #expect(link == DosewikiLink(action: .log, slug: "mdma", route: .oral))
+    }
+
+    @Test
+    func `an empty substance parameter names no substance`() {
+        #expect(webLink("https://kagerou.glass/piru/log?substance=&route=oral") == DosewikiLink(action: .log, slug: nil, route: .oral))
+        #expect(webLink("https://kagerou.glass/piru/log?substance=%20") == DosewikiLink(action: .log, slug: nil, route: nil))
+        #expect(webLink("https://kagerou.glass/piru/open?substance=") == nil)
+    }
+
+    @Test
+    func `a trailing slash after the action is the same link`() {
+        #expect(webLink("https://kagerou.glass/piru/log/?substance=mdma") == DosewikiLink(action: .log, slug: "mdma", route: nil))
+        #expect(webLink("https://kagerou.glass/piru/open/?substance=mdma") == DosewikiLink(action: .open, slug: "mdma", route: nil))
+    }
+
     @Test(arguments: [
         "https://kagerou.glass/piru/other?x=1",
         "https://kagerou.glass/piru/logs?substance=mdma",
