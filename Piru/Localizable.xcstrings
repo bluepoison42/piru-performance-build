@@ -60217,6 +60217,34 @@
         }
       }
     },
+    "Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開"
+          }
+        }
+      }
+    },
     "Open %@ page" : {
       "localizations" : {
         "es" : {
@@ -73487,6 +73515,62 @@
         }
       }
     },
+    "Send to dose.wiki" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a dose.wiki"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a dose.wiki"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送到 dose.wiki"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送到 dose.wiki"
+          }
+        }
+      }
+    },
+    "Send to dose.wiki?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Enviar a dose.wiki?"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Enviar a dose.wiki?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送到 dose.wiki？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送到 dose.wiki？"
+          }
+        }
+      }
+    },
     "Sensory" : {
       "comment" : "Effect domain",
       "localizations" : {
@@ -77477,6 +77561,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "有些效應會減弱，有些不會"
+          }
+        }
+      }
+    },
+    "Some long notes were shortened or left out to fit." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas notas largas se acortaron u omitieron para que quepan."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas notas largas se acortaron u omitieron para que quepan."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分较长的记录已被缩短或省略，以便放得下。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分較長的紀錄已被縮短或省略，以便放得下。"
           }
         }
       }
@@ -85040,6 +85152,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "本月依從性日曆"
+          }
+        }
+      }
+    },
+    "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto abre el formulario de relatos de viaje de dose.wiki con esta sesión ya rellenada. Nada sale de tu dispositivo hasta que lo envíes allí."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto abre el formulario de relatos de viaje de dose.wiki con esta sesión ya rellenada. Nada sale de tu dispositivo hasta que lo envíes allí."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会打开 dose.wiki 的体验报告表单，并填好这个场次的内容。在你于那里提交之前，什么都不会发送。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這會打開 dose.wiki 的體驗報告表單，並填好這個場次的內容。在你於那裡提交之前，什麼都不會傳送。"
           }
         }
       }

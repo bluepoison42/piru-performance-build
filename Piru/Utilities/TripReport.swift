@@ -42,7 +42,11 @@ struct TripReport {
 
         /// The column order the modeled-course table prints, so every row lines
         /// up even when a dose has no onset phase to state.
-        static let reportLabels = ["kicks in", "peak begins", "starts wearing off", "effects end"]
+        static let reportLabels = ["kicks in", peakBegins, wearingOff, "effects end"]
+
+        /// The boundaries that open and close a dose's peak window.
+        static let peakBegins = "peak begins"
+        static let wearingOff = "starts wearing off"
     }
 
     struct Note: Identifiable {
@@ -145,8 +149,8 @@ struct TripReport {
         func at(_ minutes: Double) -> Date { entry.timestamp.addingTimeInterval(minutes * 60) }
         var rows = [
             Phase(label: "kicks in", at: at(state.onsetEndMinutes)),
-            Phase(label: "peak begins", at: at(state.comeupEndMinutes)),
-            Phase(label: "starts wearing off", at: at(state.peakEndMinutes)),
+            Phase(label: Phase.peakBegins, at: at(state.comeupEndMinutes)),
+            Phase(label: Phase.wearingOff, at: at(state.peakEndMinutes)),
             Phase(label: "effects end", at: at(max(state.offsetEndMinutes, state.totalMinutes))),
         ]
         // A profile with no onset phase puts "kicks in" on the dose itself,

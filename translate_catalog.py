@@ -8012,6 +8012,18 @@ T = {
         "按这个方案，需要超过 %@ 剂才能达到稳态，因此无法推算。",
         "按這個方案，需要超過 %@ 劑才能達到穩態，因此無法推算。",
     ),
+    # Trip report → dose.wiki's report form
+    "Send to dose.wiki": ("发送到 dose.wiki", "傳送到 dose.wiki"),
+    "Send to dose.wiki?": ("发送到 dose.wiki？", "傳送到 dose.wiki？"),
+    "Open": ("打开", "打開"),
+    "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.": (
+        "这会打开 dose.wiki 的体验报告表单，并填好这个场次的内容。在你于那里提交之前，什么都不会发送。",
+        "這會打開 dose.wiki 的體驗報告表單，並填好這個場次的內容。在你於那裡提交之前，什麼都不會傳送。",
+    ),
+    "Some long notes were shortened or left out to fit.": (
+        "部分较长的记录已被缩短或省略，以便放得下。",
+        "部分較長的紀錄已被縮短或省略，以便放得下。",
+    ),
 }
 
 # Widget translations
@@ -9161,6 +9173,11 @@ if __name__ == "__main__":
         "This interval is out of range: projections take 1 minute to 1 year.",
         "This schedule takes more than %@ doses to settle, so it can't be projected.",
         "Unstages this group’s meds",
+        "Send to dose.wiki",
+        "Send to dose.wiki?",
+        "Open",
+        "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.",
+        "Some long notes were shortened or left out to fit.",
     }
 
     print("--- Piru main app catalog ---")
