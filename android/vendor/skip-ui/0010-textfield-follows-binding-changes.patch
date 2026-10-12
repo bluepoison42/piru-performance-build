@@ -1,0 +1,39 @@
+diff --git a/Sources/SkipUI/SkipUI/Text/TextField.swift b/Sources/SkipUI/SkipUI/Text/TextField.swift
+--- a/Sources/SkipUI/SkipUI/Text/TextField.swift
++++ b/Sources/SkipUI/SkipUI/Text/TextField.swift
+@@ -14,6 +14,7 @@
+ import androidx.compose.material3.OutlinedTextFieldDefaults
+ import androidx.compose.material3.TextFieldColors
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.SideEffect
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Modifier
+@@ -91,14 +92,26 @@
+         let currentSelection = selection?.wrappedValue?.asComposeTextRange()
+         let defaultTextFieldValue = TextFieldValue(text: currentText, selection: TextRange(currentText.count))
+         let textFieldValue = remember { mutableStateOf(defaultTextFieldValue) }
++        // The binding's text as of the last composition. A binding that formats a value
++        // (`TextField(value:format:)`) still reads "7" while "7." or an emptied field is on screen,
++        // so the field follows the binding only when the binding's own text changes.
++        let lastBindingText = remember { mutableStateOf(currentText) }
+         var currentTextFieldValue = textFieldValue.value
+         
+         // If the text has been updated externally, use the default value for the current text,
+         // which also places the cursor at the end. This mimics SwiftUI behavior for external modifications,
+         // such as when applying formatting to the user input.
+-        if currentTextFieldValue.text != currentText {
++        let isExternalChange = currentTextFieldValue.text != currentText && lastBindingText.value != currentText
++        if isExternalChange {
+             currentTextFieldValue = defaultTextFieldValue
+         }
++        SideEffect {
++            lastBindingText.value = currentText
++            // Kept, so a recomposition that sees the same binding text does not bring back the old text.
++            if isExternalChange {
++                textFieldValue.value = defaultTextFieldValue
++            }
++        }
+         
+         // If the selection has been updated externally, update just the selection value.
+         if let currentSelection, currentTextFieldValue.selection != currentSelection {

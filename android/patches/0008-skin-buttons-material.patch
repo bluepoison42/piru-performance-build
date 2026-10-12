@@ -1,18 +1,20 @@
 SkinChrome: SkinFuseUI bridges only its own button styles, so on Android a skin button is Material's filled (prominent) or outlined (neutral) button in the skin's tint.
 
 diff --git a/Piru/Views/Components/SkinChrome.swift b/Piru/Views/Components/SkinChrome.swift
-index 205d1197..42475160 100644
+index 205d1197..719293d4 100644
 --- a/Piru/Views/Components/SkinChrome.swift
 +++ b/Piru/Views/Components/SkinChrome.swift
-@@ -19,14 +19,24 @@ extension View {
+@@ -19,14 +19,26 @@ extension View {
      /// `.buttonStyle(.glass)` at every standalone action.
      @ViewBuilder
      func skinButtonStyle(_ prominence: SkinButtonProminence) -> some View {
 +        #if os(Android)
 +            // Compose hosts only its own button styles, so a skin's treatment is Material's
-+            // filled or outlined button, tinted by the skin's accent.
++            // filled or outlined button, tinted by the skin's accent. The filled one names the
++            // accent itself: inside a toolbar the inherited tint is the bar's foreground, which
++            // fills the button with the color of its own glyph.
 +            switch prominence {
-+            case .prominent: buttonStyle(.borderedProminent)
++            case .prominent: buttonStyle(.borderedProminent).tint(Theme.accent)
 +            case .neutral: buttonStyle(.bordered)
 +            }
 +        #else
@@ -29,7 +31,7 @@ index 205d1197..42475160 100644
      @ViewBuilder
      private func surfaceButtonStyle(_ prominence: SkinButtonProminence, surface: SkinSurface) -> some View {
          switch surface {
-@@ -53,6 +63,7 @@ extension View {
+@@ -53,6 +65,7 @@ extension View {
              buttonStyle(NeonButtonStyle(prominence: prominence, stroke: stroke, glow: glow))
          }
      }

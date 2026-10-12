@@ -1,16 +1,18 @@
 diff --git a/Sources/SkipSwiftUI/Text/TextField.swift b/Sources/SkipSwiftUI/Text/TextField.swift
 --- a/Sources/SkipSwiftUI/Text/TextField.swift
 +++ b/Sources/SkipSwiftUI/Text/TextField.swift
-@@ -41,8 +41,13 @@
+@@ -41,8 +41,15 @@
  
      private static func text<F>(from value: Binding<F.FormatInput>, format: F) -> Binding<String> where F : ParseableFormatStyle, F.FormatOutput == String {
          let getText: (F.FormatInput) -> String = { format.format($0) }
 -        let setText: (String) -> F.FormatInput = { try! format.parseStrategy.parse($0) }
 -        return Binding<String>(get: { getText(value.wrappedValue) }, set: { value.wrappedValue = setText($0) })
-+        // Text that does not parse, such as an emptied field or a lone ".", keeps the last value,
-+        // as SwiftUI does; a `try!` here kills the app on the first keystroke that clears the field.
++        // As in SwiftUI, text that does not parse (an emptied field, a lone ".") keeps the last
++        // value, and the field keeps the text as typed (skip-ui patch 0010); a `try!` here kills
++        // the app on the first keystroke that clears the field. Only a different value is written
++        // back, so typing "7." after "7" re-renders nothing.
 +        return Binding<String>(get: { getText(value.wrappedValue) }, set: { text in
-+            if let input = try? format.parseStrategy.parse(text) {
++            if let input = try? format.parseStrategy.parse(text), getText(input) != getText(value.wrappedValue) {
 +                value.wrappedValue = input
 +            }
 +        })
