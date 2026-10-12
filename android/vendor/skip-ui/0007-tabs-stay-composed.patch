@@ -227,10 +227,10 @@ index 1483e42..6a3ec72 100644
      }
      // Collect buttons and message text
 diff --git a/Sources/SkipUI/SkipUI/System/Focus.swift b/Sources/SkipUI/SkipUI/System/Focus.swift
-index 5b47518..c777b80 100644
+index 0a3dace..399fb0c 100644
 --- a/Sources/SkipUI/SkipUI/System/Focus.swift
 +++ b/Sources/SkipUI/SkipUI/System/Focus.swift
-@@ -31,7 +31,10 @@ extension View {
+@@ -37,7 +37,10 @@ extension View {
                          }
                      }
                  }
@@ -240,9 +240,9 @@ index 5b47518..c777b80 100644
 +            let isTabActive = LocalTabContentIsActive.current
 +            if value == binding.wrappedValue && isTabActive {
                  // A text field focused in its first frame has no text layout yet, and Compose
-                 // throws from requestFocus (offset out of bounds). The request repeats on every
-                 // recomposition, so the next one, after layout, lands it.
-@@ -45,7 +48,7 @@ extension View {
+                 // throws from requestFocus (offset out of bounds). Counting the failure in state
+                 // this view reads recomposes it on the next frame, after layout, which requests
+@@ -53,7 +56,7 @@ extension View {
                  SideEffect {
                      // Recheck ownership after other focus effects have run: in a transfer from
                      // this field to another composed before it, the other's request has landed.

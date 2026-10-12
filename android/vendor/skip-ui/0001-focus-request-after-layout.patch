@@ -1,15 +1,39 @@
+A field focused in its first frame has no text layout yet and requestFocus throws; catch it and retry on the next frame, up to ten frames in a row (the fix proposed upstream).
+
 diff --git a/Sources/SkipUI/SkipUI/System/Focus.swift b/Sources/SkipUI/SkipUI/System/Focus.swift
-index 7c26a5c..76ba024 100644
+index 7c26a5c..e695d32 100644
 --- a/Sources/SkipUI/SkipUI/System/Focus.swift
 +++ b/Sources/SkipUI/SkipUI/System/Focus.swift
-@@ -32,6 +32,10 @@ extension View {
+@@ -9,6 +9,11 @@ import androidx.compose.ui.focus.FocusRequester
+ import androidx.compose.ui.platform.LocalFocusManager
+ #endif
+ 
++#if SKIP
++/// How many frames in a row a failed focus request is retried.
++let maxFocusRequestRetries = 10
++#endif
++
+ extension View {
+     public func focused<Value>(_ binding: Binding<Value>, equals value: Value) -> any View {
+         #if SKIP
+@@ -16,6 +21,7 @@ extension View {
+             let focusRequester = remember { FocusRequester() }
+             let focusManager = LocalFocusManager.current
+             let isFocused = remember { mutableStateOf(false) }
++            let failedFocusRequests = remember { mutableStateOf(0) }
+             var context = context
+             context.modifier = context.modifier
+                 .focusRequester(focusRequester)
+@@ -32,6 +38,12 @@ extension View {
                      }
                  }
              if value == binding.wrappedValue {
 +                // A text field focused in its first frame has no text layout yet, and Compose
-+                // throws from requestFocus (offset out of bounds). The request repeats on every
-+                // recomposition, so the next one, after layout, lands it.
-+                // SKIP REPLACE: SideEffect { if (!isFocused.value) { try { focusRequester.requestFocus() } catch (_: IllegalArgumentException) { } } }
++                // throws from requestFocus (offset out of bounds). Counting the failure in state
++                // this view reads recomposes it on the next frame, after layout, which requests
++                // focus again.
++                let _ = failedFocusRequests.value
++                // SKIP REPLACE: SideEffect { if (!isFocused.value) { try { focusRequester.requestFocus(); failedFocusRequests.value = 0 } catch (_: IllegalArgumentException) { if (failedFocusRequests.value < maxFocusRequestRetries) { failedFocusRequests.value += 1 } } } }
                  SideEffect {
                      if !isFocused.value {
                          focusRequester.requestFocus()
