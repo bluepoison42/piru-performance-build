@@ -32,7 +32,7 @@
 
 ---
 
-一款 iPhone 和 Android 上的剂量日志与笔记本，附带离线参考资料库。
+一款 iPhone、Android 和 Mac 上的剂量日志与笔记本，配有 Apple Watch 伴侣应用和离线参考资料库。
 
 - **日志。** 记下你摄入了什么、在什么时候、多少。片剂规格、每日服药安排和提醒都排在当天的时间线旁；
   时间线上的曲线是估算。
@@ -47,6 +47,8 @@
 ## 获取 Piru
 
 - **iPhone。** 在 [TestFlight](https://kagerou.glass/get/piru/ios?from=readme) 上免费获取，需要 iOS 26 或更高版本。
+- **Apple Watch。** 随 iPhone 版一起提供：轻点收藏或最近用过的物质即可记录，用数码表冠调整剂量，
+  还可以把复杂功能放在表盘上。需要 watchOS 26 或更高版本。
 - **Mac。** [下载磁盘映像](https://kagerou.glass/get/piru/mac?from=readme)：免费，已签名并公证，需要 macOS 26 或更高版本，
   支持 Apple 芯片和 Intel。
 - **Android。** [下载最新的 APK](https://kagerou.glass/get/piru/android?from=readme)。所有 Android 版本都发布在 [Releases 页面](https://github.com/kageroumado/piru/releases?q=android&expanded=true)，是已签名的 APK，
