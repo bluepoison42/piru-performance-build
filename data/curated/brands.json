@@ -25,7 +25,7 @@
     { "parent": "Bupropion", "brand": "Wellbutrin" },
     { "parent": "Fluoxetine", "brand": "Prozac" },
     { "parent": "Sertraline", "brand": "Zoloft" },
-    { "parent": "Citalopram", "brand": "Lexapro" },
+    { "parent": "Citalopram", "brand": "Celexa" },
     { "parent": "Venlafaxine", "brand": "Effexor" },
     { "parent": "Duloxetine", "brand": "Cymbalta" },
     { "parent": "Quetiapine", "brand": "Seroquel" },
