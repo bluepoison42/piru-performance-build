@@ -1143,6 +1143,18 @@ final class SubstanceStore {
         return byName ?? byAlias
     }
 
+    /// The substance's dose.wiki page slug, for a name or alias, or `nil` when it
+    /// does not resolve or dose.wiki has no page for it. One column read, so a
+    /// caller that needs only the slug skips the ~21-query full resolve.
+    func dosewikiSlug(forNameOrAlias name: String) -> String? {
+        guard let id = substanceID(forNameOrAlias: name) else { return nil }
+        let slug = try? substancesDB.read { db in
+            try String.fetchOne(db, sql: "SELECT dosewiki_slug FROM substances WHERE id = ?", arguments: [id])
+        }
+        guard let slug, !slug.isEmpty else { return nil }
+        return slug
+    }
+
     /// A substance owning `key` as an alias that actually carries data, when the
     /// first-wins ``aliasIndex`` entry is a stub. `nil` when every owner is a stub
     /// (then the stub is the honest answer).

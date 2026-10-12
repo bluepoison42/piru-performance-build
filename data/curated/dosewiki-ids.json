@@ -1004,8 +1004,10 @@
     "substance_uid": "HYWLMSUAZVDUFW"
   },
   "psilocybin-mushrooms": {
-    "name": "Psilocybin",
-    "substance_uid": "QVDSEJDULKLHCG"
+    "name": "Psilocybin mushrooms",
+    "substance_uid": "7BIMCTXPBJZGRY",
+    "skip_chemistry": true,
+    "note": "Fungi (Psilocybe spp.). The structural seed matched Psilocybin because dose.wiki's identification block carries the prodrug's IUPAC name and SMILES, but the article is about the mushrooms: its oral ladder is grams of dried P. cubensis (\"Values refer to dried P. cubensis mushrooms\"), so it belongs on Piru's Psilocybin mushrooms row, not on the pure molecule dosed in milligrams. dose.wiki has no separate psilocybin article, so the Psilocybin row carries no dose.wiki mapping. Same shape as the kratom entry. Not yet reported upstream."
   },
   "pyrazolam": {
     "name": "Pyrazolam",

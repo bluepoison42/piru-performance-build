@@ -143,6 +143,12 @@ enum SubstanceLibrary {
         SubstanceStore.shared.substanceUID(forNameOrAlias: nameOrAlias)
     }
 
+    /// The dose.wiki page slug for a library substance named or aliased
+    /// `nameOrAlias`; `nil` for a custom-only substance or one dose.wiki lacks.
+    static func dosewikiSlug(for nameOrAlias: String) -> String? {
+        SubstanceStore.shared.dosewikiSlug(forNameOrAlias: nameOrAlias)
+    }
+
     /// The PSID of the default form a name or alias resolves to.
     static func defaultPSID(for nameOrAlias: String) -> String? {
         SubstanceStore.shared.defaultPSID(forNameOrAlias: nameOrAlias)

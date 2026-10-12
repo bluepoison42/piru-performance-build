@@ -185,8 +185,15 @@ struct SessionShareSheet: View {
         artifactCard(icon: "quote.opening", title: "Trip Report", subtitle: "Markdown — notes with T+ offsets", previewHeight: 120) {
             markdownPreview(tripReport)
         } actions: {
-            actionButton(copyLabel(.tripReport), icon: copyIcon(.tripReport)) { copyTripReport() }.disabled(tripReport == nil)
-            actionButton("Share", icon: "square.and.arrow.up", prominent: true) { shareTripReport() }.disabled(tripReport == nil)
+            VStack(spacing: Spacing.md) {
+                HStack(spacing: Spacing.md) {
+                    actionButton(copyLabel(.tripReport), icon: copyIcon(.tripReport)) { copyTripReport() }.disabled(tripReport == nil)
+                    actionButton("Share", icon: "square.and.arrow.up", prominent: true) { shareTripReport() }.disabled(tripReport == nil)
+                }
+                if let session {
+                    DoseWikiSendButton(session: session)
+                }
+            }
         }
     }
 
