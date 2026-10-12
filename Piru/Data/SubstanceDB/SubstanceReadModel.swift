@@ -21,6 +21,32 @@ nonisolated enum ContentLanguage: String {
         self == .zhHans || self == .zhHant
     }
 
+    /// Whether a reader of this UI language can read every letter of `text`:
+    /// Latin, and the Greek of chemical prefixes ("β-keto-amphetamine"), in every
+    /// language; Han ideographs only in Chinese. Digits, punctuation and other
+    /// non-letters belong to every script. Cyrillic, kana, Hangul and the like
+    /// belong to no UI language the app ships.
+    func writesScript(of text: String) -> Bool {
+        text.unicodeScalars.allSatisfy { scalar in
+            !scalar.properties.isAlphabetic
+                || Self.isLatinOrGreek(scalar)
+                || (isChinese && scalar.properties.isIdeographic)
+        }
+    }
+
+    private static func isLatinOrGreek(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.value {
+        case 0x0000 ... 0x03FF, // Basic Latin through Greek and Coptic (with IPA and combining marks)
+             0x1E00 ... 0x1FFF, // Latin Extended Additional, Greek Extended
+             0x2C60 ... 0x2C7F, // Latin Extended-C
+             0xA720 ... 0xA7FF, // Latin Extended-D
+             0xFF21 ... 0xFF3A, 0xFF41 ... 0xFF5A: // fullwidth Latin letters
+            true
+        default:
+            false
+        }
+    }
+
     /// Derive from the app's preferred localization (follows a per-app language
     /// override, not just the device language). Computed once per process —
     /// `preferredLocalizations` allocates on every call, this sat on the
@@ -1055,6 +1081,24 @@ struct SubstanceReadModel {
                     aliasesByID[sid, default: []].append(row["alias"])
                 }
 
+                // Curated popular aliases — the only aliases a row's secondary
+                // line may show (`Substance.secondaryLine`), and search results
+                // are served from this batch. Probed per DB: a fixture database
+                // may predate the column.
+                var popularAliasesByID: [Int64: [String]] = [:]
+                let substanceColumns = try Row.fetchAll(db, sql: "PRAGMA table_info(substances)")
+                    .compactMap { $0["name"] as String? }
+                if substanceColumns.contains("popular_aliases") {
+                    for row in try Row.fetchAll(
+                        db, sql: "SELECT id, popular_aliases FROM substances WHERE popular_aliases IS NOT NULL",
+                    ) {
+                        guard let raw: String = row["popular_aliases"],
+                              let list = try? JSONDecoder().decode([String].self, from: Data(raw.utf8)),
+                              !list.isEmpty else { continue }
+                        popularAliasesByID[row["id"]] = list
+                    }
+                }
+
                 // Category — priority-resolved, with the non-informative "Other"
                 // sunk below any specific category (mirrors `resolvedCategory`).
                 let categoryRows = try Row.fetchAll(db, sql: """
@@ -1198,6 +1242,7 @@ struct SubstanceReadModel {
                         molarMass: molarMassByID[sid],
                         smiles: smilesByID[sid],
                         iupacName: iupacNameByID[sid],
+                        popularAliases: popularAliasesByID[sid] ?? [],
                     )
                 }
             }

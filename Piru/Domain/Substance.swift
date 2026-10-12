@@ -130,10 +130,11 @@ struct Substance: Identifiable {
     /// ``Physicochemical``.
     let physicochemical: Physicochemical?
     /// Hand-curated, ordered common street/brand names shown in the detail
-    /// header (≤~4). Distinct from ``aliases`` (the full, unordered search
-    /// index): this is the short editorial "also known as" set for popular
-    /// substances only. Detail-only; empty when not curated — never
-    /// auto-derived from `aliases`.
+    /// header (≤~4) and on row secondary lines (``secondaryLine(under:matchedAlias:language:)``).
+    /// Distinct from ``aliases`` (the full, unordered search index): this is the
+    /// short editorial "also known as" set for popular substances only. Loaded
+    /// in the batch projection too; empty when not curated — never auto-derived
+    /// from `aliases`.
     let popularAliases: [String]
     /// Curated evidence-checked corrections to common claims (the "Common
     /// misconceptions" section). Popular-substances-only; empty for the long
@@ -328,15 +329,44 @@ struct Substance: Identifiable {
         s.filter(\.isUppercase).count * 10 + (s.contains("-") ? 1 : 0)
     }
 
-    /// Secondary line for rows: the canonical (expanded) name when a relabel,
-    /// curated title or language name replaces it, otherwise the cleaned
-    /// aliases (up to 3).
+    /// Secondary line for a row titled ``displayTitle`` — the Library's rows.
     var displaySubtitle: String? {
-        if displayName != nil || LocalizedSubstanceName.resolve(canonicalName: name) != nil,
-           name != displayTitle { return name }
-        let cleaned = displayAliases
-        guard !cleaned.isEmpty else { return nil }
-        return cleaned.prefix(3).joined(separator: ", ")
+        secondaryLine(under: displayTitle)
+    }
+
+    /// The one rule for the line under a substance row's title, shared by every
+    /// list and search picker so a substance reads the same everywhere.
+    ///
+    /// In order, up to three, skipping whatever `shown` (the row's title) says:
+    /// the display title; the canonical name when a relabel, curated title or
+    /// language name replaces it; the alias the user's query named; the curated
+    /// `popularAliases` this UI language can read. The raw alias list never
+    /// appears — it is search recall, full of chemical synonyms and other-language
+    /// names, and the detail page's identity section is where it is listed.
+    ///
+    /// `matchedAlias` skips the script check: a user who typed 咖啡因 in an
+    /// English UI named it themselves.
+    func secondaryLine(
+        under shown: String,
+        matchedAlias: String? = nil,
+        language: ContentLanguage = .current,
+    ) -> String? {
+        // A regional spelling ("Paracetamol") is the reader's own word for the
+        // same name, so the canonical "Acetaminophen" never rides under it.
+        let replacesCanonical = displayName != nil || LocalizedSubstanceName.resolve(canonicalName: name) != nil
+        var candidates = [displayTitle]
+        if replacesCanonical { candidates.append(name) }
+        if let matchedAlias { candidates.append(matchedAlias) }
+        candidates += popularAliases.filter { language.writesScript(of: $0) }
+
+        var seen: Set = [Substance.aliasKey(shown)]
+        var names: [String] = []
+        for candidate in candidates {
+            let key = Substance.aliasKey(candidate)
+            guard !key.isEmpty, seen.insert(key).inserted else { continue }
+            names.append(candidate)
+        }
+        return names.isEmpty ? nil : names.prefix(3).joined(separator: ", ")
     }
 
     /// External chemistry reference, preferring an exact PubChem CID, then an

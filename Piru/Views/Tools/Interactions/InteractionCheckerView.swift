@@ -283,8 +283,8 @@ struct InteractionCheckerView: View {
                             Text(substance.name)
                                 .font(.body)
                                 .foregroundStyle(.primary)
-                            if !substance.aliases.isEmpty {
-                                Text(substance.aliases.prefix(3).joined(separator: ", "))
+                            if let secondary = substance.secondaryLine(under: substance.name) {
+                                Text(secondary)
                                     .captionSecondary()
                             }
                         }

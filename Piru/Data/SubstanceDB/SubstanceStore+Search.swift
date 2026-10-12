@@ -21,9 +21,16 @@ struct SubstanceMatch: Identifiable {
     }
 
     /// What to title this hit: the user's word when they named one, else the
-    /// catalog's. The subtitle side is the caller's business.
+    /// catalog's.
     var displayName: String {
         matchedAlias ?? substance.displayTitle
+    }
+
+    /// The line under ``displayName`` — the shared row rule
+    /// (``Substance/secondaryLine(under:matchedAlias:language:)``), so a brand
+    /// row reads "Concerta" over "Methylphenidate".
+    func secondaryLine(language: ContentLanguage = .current) -> String? {
+        substance.secondaryLine(under: displayName, matchedAlias: matchedAlias, language: language)
     }
 }
 

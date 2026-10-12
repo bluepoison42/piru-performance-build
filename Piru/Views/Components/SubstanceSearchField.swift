@@ -39,24 +39,6 @@ struct SubstanceSearchField: View {
         }
     }
 
-    /// Canonical name + aliases for the subtitle, dropping whichever entry the row
-    /// title already shows (the matched brand, e.g. "Medikinet", or the display
-    /// title) and leading with the canonical name so a brand row reads "Medikinet"
-    /// over "Methylphenidate, Ritalin, …".
-    private func secondaryNames(for match: SubstanceMatch) -> String? {
-        let shown = match.displayName.lowercased()
-        let candidates = [match.substance.displayTitle, match.substance.name] + match.substance.aliases
-        var seen = Set<String>()
-        var names: [String] = []
-        for name in candidates {
-            let key = name.lowercased()
-            guard key != shown, !seen.contains(key) else { continue }
-            seen.insert(key)
-            names.append(name)
-        }
-        return names.isEmpty ? nil : names.prefix(3).joined(separator: ", ")
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             TextField("Substance name", text: $text)
@@ -131,7 +113,7 @@ struct SubstanceSearchField: View {
                                                     .accessibilityHidden(true)
                                             }
                                         }
-                                        if let secondary = secondaryNames(for: match) {
+                                        if let secondary = match.secondaryLine() {
                                             Text(secondary)
                                                 .captionSecondary()
                                         }
