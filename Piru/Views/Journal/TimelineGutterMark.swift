@@ -153,13 +153,23 @@ struct TimelineDayHeader: View {
                         .timelineGutterFont(.dayPrimary)
                         .foregroundStyle(isToday ? .primary : Theme.secondaryLabel)
                 }
-                Text(date.formatted(.dateTime.month(.abbreviated).day()))
+                Text(Self.dateText(date))
                     .timelineGutterFont(.daySecondary)
                     .foregroundStyle(Theme.secondaryLabel)
             }
             .padding(.leading, isToday ? TimelineGutterMarkMetrics.dotLeadingPadding : 0)
         }
         .accessibilityElement(children: .combine)
+    }
+
+    /// Month and day, plus the year when it isn't the current one, in the
+    /// locale's own order ("Oct 11, 2028", "2028年10月11日").
+    static func dateText(_ date: Date, now: Date = .now, calendar: Calendar = .autoupdatingCurrent, locale: Locale = .autoupdatingCurrent) -> String {
+        var style = Date.FormatStyle(locale: locale, calendar: calendar).month(.abbreviated).day()
+        if calendar.component(.year, from: date) != calendar.component(.year, from: now) {
+            style = style.year()
+        }
+        return date.formatted(style)
     }
 
     private var primaryText: String {

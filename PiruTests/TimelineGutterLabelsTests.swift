@@ -1,4 +1,5 @@
 import CoreGraphics
+import Foundation
 import Testing
 @testable import Piru
 
@@ -79,5 +80,30 @@ struct TimelineGutterLabelsTests {
         #expect(!TimelineGutterLabels.hourLabelFits(y: 50, doseYs: [], nowY: nil, reservedTop: 44))
         #expect(!TimelineGutterLabels.hourLabelFits(y: 60, doseYs: [], nowY: nil, reservedTop: 44))
         #expect(TimelineGutterLabels.hourLabelFits(y: 61, doseYs: [], nowY: nil, reservedTop: 44))
+    }
+}
+
+@Suite("TimelineDayHeader")
+struct TimelineDayHeaderTests {
+    private let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        return calendar
+    }()
+
+    private func date(_ year: Int, _ month: Int, _ day: Int) -> Date {
+        calendar.date(from: DateComponents(year: year, month: month, day: day, hour: 12))!
+    }
+
+    @Test
+    func `The date line carries the year only when it isn't this year's`() {
+        let english = Locale(identifier: "en_US")
+        let now = date(2026, 10, 12)
+        let thisYear = TimelineDayHeader.dateText(date(2026, 10, 11), now: now, calendar: calendar, locale: english)
+        #expect(!thisYear.contains("2026"))
+        let ahead = TimelineDayHeader.dateText(date(2028, 10, 11), now: now, calendar: calendar, locale: english)
+        #expect(ahead.contains("2028"))
+        let behind = TimelineDayHeader.dateText(date(2025, 12, 31), now: now, calendar: calendar, locale: english)
+        #expect(behind.contains("2025"))
     }
 }

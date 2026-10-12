@@ -801,7 +801,7 @@ struct TimelineGraphView: View, Equatable {
     private func milestoneGlyphs(geom: TimelineGraphRenderer.GraphGeometry) -> some View {
         let placements = renderer.milestonePlacements(geom: geom, visibleStart: visibleStart, visibleSpan: visibleSpan)
         ForEach(placements) { milestone in
-            VStack(spacing: TimelineGraphRenderer.MilestoneMetrics.spacing) {
+            MilestoneStackLayout(x: milestone.x, y: milestone.y, geom: geom) {
                 Image(systemName: milestone.symbol)
                     .font(.system(size: TimelineGraphRenderer.MilestoneMetrics.glyphSize, weight: .semibold))
                     .foregroundStyle(milestone.color)
@@ -809,8 +809,7 @@ struct TimelineGraphView: View, Equatable {
                     .font(TimelineGraphRenderer.MilestoneMetrics.labelFont())
                     .foregroundStyle(.secondary)
             }
-            .fixedSize()
-            .position(x: milestone.x, y: milestone.y)
+            .allowsHitTesting(false)
             .accessibilityHidden(true)
         }
     }
@@ -831,5 +830,34 @@ struct TimelineGraphView: View, Equatable {
             r.draw(in: context, size: size, geom: r.geometry(for: size), viewport: viewport)
         }
         .clipped()
+    }
+}
+
+/// One milestone: its glyph centered on its moment, its clock time under it.
+/// The stack is centered on (`x`, `y`) in the graph's coordinates, and the
+/// time slides sideways when centering it would run past either edge of the
+/// plot (``TimelineGraphRenderer/milestoneLabelCenterX(_:labelWidth:geom:)``,
+/// the same math the canvas uses to break the Now rule around it).
+private struct MilestoneStackLayout: Layout {
+    let x: CGFloat
+    let y: CGFloat
+    let geom: TimelineGraphRenderer.GraphGeometry
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews _: Subviews, cache _: inout ()) -> CGSize {
+        proposal.replacingUnspecifiedDimensions()
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal _: ProposedViewSize, subviews: Subviews, cache _: inout ()) {
+        guard subviews.count == 2 else { return }
+        let glyph = subviews[0].sizeThatFits(.unspecified)
+        let label = subviews[1].sizeThatFits(.unspecified)
+        let spacing = TimelineGraphRenderer.MilestoneMetrics.spacing
+        let top = bounds.minY + y - (glyph.height + spacing + label.height) / 2
+        subviews[0].place(at: CGPoint(x: bounds.minX + x, y: top), anchor: .top, proposal: .unspecified)
+        let labelX = TimelineGraphRenderer.milestoneLabelCenterX(x, labelWidth: label.width, geom: geom)
+        subviews[1].place(
+            at: CGPoint(x: bounds.minX + labelX, y: top + glyph.height + spacing),
+            anchor: .top, proposal: .unspecified,
+        )
     }
 }

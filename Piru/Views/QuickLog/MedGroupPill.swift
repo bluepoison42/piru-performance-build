@@ -145,7 +145,7 @@ struct MedGroupPill: View {
             if allStaged { return Text("Staged") }
             let due = group.dueSlotMinutes.map { String(localized: "Due at \(Self.timeText($0))") } ?? String(localized: "Due now")
             guard count > 1 else { return Text(due) }
-            let items = String(localized: "^[\(count) item](inflect: true)")
+            let items = String(inflecting: "^[\(count) item](inflect: true)")
             let value = "\(due), \(items)"
             return Text(value)
         }

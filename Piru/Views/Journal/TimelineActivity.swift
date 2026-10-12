@@ -10,7 +10,7 @@ import Foundation
 ///
 /// Three questions, deliberately answered by three functions — they are not
 /// interchangeable:
-/// - **Framing** (how far past now the strip runs): ``pkActivityEnds(entries:)``
+/// - **Framing** (how far past now the strip runs): ``pkActivityIntervals(entries:)``
 ///   / the effect end from ``TimelineWindowEvaluator/activityInterval(of:)``.
 ///   The whole tail, so no live curve is clipped off the top.
 /// - **Compression** (which spans stay at the uniform scale): ``activeSpans(states:)``
@@ -131,13 +131,13 @@ enum TimelineActivity {
         return spans
     }
 
-    /// Body-load mode's activity end per dose: six half-lives, the same cutoff
-    /// ``TimelineStripBuilder/computeRemainingFractions(entries:)`` treats as
-    /// cleared. Doses that draw no body-load curve (not ``Substance/modelsBodyLoad``, no half-life)
-    /// contribute nothing.
-    static func pkActivityEnds(entries: [DoseEntry]) -> [Date] {
+    /// Body-load mode's activity per dose: from the dose to six half-lives
+    /// after it, the same cutoff ``TimelineStripBuilder/computeRemainingFractions(entries:)``
+    /// treats as cleared. Doses that draw no body-load curve (not
+    /// ``Substance/modelsBodyLoad``, no half-life) contribute nothing.
+    static func pkActivityIntervals(entries: [DoseEntry]) -> [DateInterval] {
         var substanceCache: [String: Substance?] = [:]
-        var ends: [Date] = []
+        var intervals: [DateInterval] = []
         for entry in entries {
             let key = entry.substance.lowercased()
             let substance: Substance?
@@ -149,9 +149,9 @@ enum TimelineActivity {
             }
             if substance?.modelsBodyLoad == false { continue }
             guard let halfLife = PKResolver.halfLifeMinutes(substance: substance) else { continue }
-            ends.append(entry.timestamp.addingTimeInterval(halfLife * 6 * 60))
+            intervals.append(DateInterval(start: entry.timestamp, duration: max(0, halfLife * 6 * 60)))
         }
-        return ends
+        return intervals
     }
 
     /// PK mode: a substance's rate constants; `nil` for substances that draw

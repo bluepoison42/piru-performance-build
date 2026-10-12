@@ -3368,4 +3368,7 @@ ES_ES = {
     "The report could not be written.": "No se pudo escribir el informe.",
     "Piru Closed Unexpectedly": "Piru se cerró inesperadamente",
     "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes.": "Un informe ayuda a corregirlo. Contiene cómo se cerró Piru y su propio registro, nada de tu diario, y tú eliges adónde va.",
+    "This half-life is out of range: projections take 1 minute to 10 years.": "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años.",
+    "This interval is out of range: projections take 1 minute to 1 year.": "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año.",
+    "This schedule takes more than %@ doses to settle, so it can't be projected.": "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar.",
 }

@@ -240,17 +240,37 @@ struct TimelineTimeMapTests {
         // No curve, dose two hours ahead: the edge follows the dose, so the
         // strip's oldest moment always lies below it.
         let ahead = now.addingTimeInterval(minutes(120))
-        let end = TimelineStripBuilder.stripEnd(now: now, modeledEnds: [], newestDose: ahead)
+        let end = TimelineStripBuilder.stripEnd(now: now, modeledCurves: [], newestDose: ahead)
         #expect(end > ahead.addingTimeInterval(-minutes(5)))
         // A dose two days ahead with a curve: the one-day future cap yields to it.
         let farAhead = now.addingTimeInterval(2 * 86_400)
         let farEnd = TimelineStripBuilder.stripEnd(
-            now: now, modeledEnds: [farAhead.addingTimeInterval(minutes(240))], newestDose: farAhead,
+            now: now,
+            modeledCurves: [DateInterval(start: farAhead, duration: minutes(240))],
+            newestDose: farAhead,
         )
         #expect(farEnd > farAhead)
         // A past log keeps the usual edge: ten minutes past now.
-        let pastEnd = TimelineStripBuilder.stripEnd(now: now, modeledEnds: [], newestDose: now.addingTimeInterval(-minutes(60)))
+        let pastEnd = TimelineStripBuilder.stripEnd(now: now, modeledCurves: [], newestDose: now.addingTimeInterval(-minutes(60)))
         #expect(pastEnd == now.addingTimeInterval(minutes(10)))
+    }
+
+    @Test @MainActor
+    func `A dose days ahead holds the edge open to its curve's end`() {
+        // Dosed three days ahead, a six-hour curve: the whole curve is on the
+        // strip, plus the usual margin.
+        let ahead = now.addingTimeInterval(3 * 86_400)
+        let curve = DateInterval(start: ahead, duration: minutes(360))
+        let end = TimelineStripBuilder.stripEnd(now: now, modeledCurves: [curve], newestDose: ahead)
+        #expect(end == curve.end.addingTimeInterval(minutes(30)))
+        // A week-long body-load tail from that dose stops a day past the dose.
+        let tail = DateInterval(start: ahead, duration: 7 * 86_400)
+        let tailEnd = TimelineStripBuilder.stripEnd(now: now, modeledCurves: [tail], newestDose: ahead)
+        #expect(tailEnd == ahead.addingTimeInterval(86_400))
+        // A dose already taken keeps the one-day cap past now.
+        let taken = DateInterval(start: now.addingTimeInterval(-minutes(60)), duration: 7 * 86_400)
+        let takenEnd = TimelineStripBuilder.stripEnd(now: now, modeledCurves: [taken], newestDose: taken.start)
+        #expect(takenEnd == now.addingTimeInterval(86_400))
     }
 
     @Test

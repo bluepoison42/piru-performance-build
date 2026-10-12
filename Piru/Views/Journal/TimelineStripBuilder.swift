@@ -178,12 +178,12 @@ struct TimelineStripBuilder {
         // windows, or six half-lives in body-load mode.
         let globalStart = byDay[oldestDay]!.map(\.timestamp).min()!.addingTimeInterval(-5 * 60)
         let currentTime = now
-        let modeledEnds: [Date] = style.pkMode
-            ? TimelineActivity.pkActivityEnds(entries: entries)
-            : states.map { $0.doseTimestamp.addingTimeInterval($0.totalMinutes * 60) }
+        let modeledCurves: [DateInterval] = style.pkMode
+            ? TimelineActivity.pkActivityIntervals(entries: entries)
+            : states.map { DateInterval(start: $0.doseTimestamp, duration: max(0, $0.totalMinutes * 60)) }
         let globalEnd = Self.stripEnd(
             now: currentTime,
-            modeledEnds: modeledEnds,
+            modeledCurves: modeledCurves,
             newestDose: entries.map(\.timestamp).max()!,
         )
 
@@ -268,19 +268,27 @@ struct TimelineStripBuilder {
     }
 
     /// The strip's live edge: past now by at least ``minimumFutureSeconds``,
-    /// out to the last still-running curve's end plus ``futureMarginSeconds``
-    /// (capped at ``maximumFutureSeconds`` past now), and never short of the
-    /// newest dose — a dose logged ahead of now is on the strip like any
-    /// other, and the strip's oldest moment (five minutes before the oldest
-    /// dose) always lies below its live edge.
-    static func stripEnd(now: Date, modeledEnds: [Date], newestDose: Date) -> Date {
-        let curvesEnd = modeledEnds.filter { $0 > now }.max()
+    /// out to the last still-running curve's end plus ``futureMarginSeconds``,
+    /// and never short of the newest dose — a dose logged ahead of now is on
+    /// the strip like any other, and the strip's oldest moment (five minutes
+    /// before the oldest dose) always lies below its live edge.
+    ///
+    /// A curve reaches at most ``maximumFutureSeconds`` past the later of its
+    /// dose and now: a dose already taken holds the edge a day past now at
+    /// most, and a dose logged days ahead still draws its whole curve.
+    static func stripEnd(now: Date, modeledCurves: [DateInterval], newestDose: Date) -> Date {
+        let curvesEnd = modeledCurves
+            .filter { $0.end > now }
+            .map { curve in
+                min(
+                    curve.end.addingTimeInterval(futureMarginSeconds),
+                    max(curve.start, now).addingTimeInterval(maximumFutureSeconds),
+                )
+            }
+            .max()
         return max(
             now.addingTimeInterval(minimumFutureSeconds),
-            min(
-                (curvesEnd ?? .distantPast).addingTimeInterval(futureMarginSeconds),
-                now.addingTimeInterval(maximumFutureSeconds),
-            ),
+            curvesEnd ?? .distantPast,
             newestDose.addingTimeInterval(minimumFutureSeconds),
         )
     }
@@ -290,7 +298,8 @@ struct TimelineStripBuilder {
     private static let minimumFutureSeconds: TimeInterval = 10 * 60
     /// Breathing room past the last curve's modeled end.
     private static let futureMarginSeconds: TimeInterval = 30 * 60
-    /// Ceiling on the future extent, whatever is still active.
+    /// Ceiling on how far past its dose (or now, for a dose already taken) a
+    /// curve holds the live edge open, whatever is still active.
     private static let maximumFutureSeconds: TimeInterval = 24 * 3_600
 
     /// Room a slice's cards need so they never spill into the next day:
