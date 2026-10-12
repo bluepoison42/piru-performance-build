@@ -16,6 +16,27 @@ struct SubstanceLibraryTests {
         #expect(categories.count > 5)
     }
 
+    // MARK: - dose.wiki slugs
+
+    @Test
+    func `a dose.wiki slug resolves through the catalog's slug column`() async {
+        await SubstanceStore.shared.ensureAllLoaded()
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "mdma") == "MDMA")
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "MDMA") == "MDMA")
+        // dose.wiki's article is the mushrooms; Piru records it on Psilocybin,
+        // where reading the slug as a name would land on "Psilocybin mushrooms".
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "psilocybin-mushrooms") == "Psilocybin")
+    }
+
+    @Test
+    func `a slug the catalog does not record falls back to the name search`() async {
+        await SubstanceStore.shared.ensureAllLoaded()
+        // No dose.wiki slug contains a space, so this one can only resolve by name.
+        #expect(SubstanceStore.shared.canonicalName(forDosewikiSlug: "psilocybin mushrooms") == nil)
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "psilocybin mushrooms") == "Psilocybin mushrooms")
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "not-a-substance") == nil)
+    }
+
     // MARK: - search()
 
     @Test

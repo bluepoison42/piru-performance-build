@@ -7,6 +7,7 @@ import skip.ui.*
 
 import android.Manifest
 import android.app.Application
+import android.content.Intent
 import android.graphics.Color as AndroidColor
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -55,8 +56,22 @@ open class MainActivity: AppCompatActivity {
     constructor() {
     }
 
+    /// Set when this instance only hands its intent to the task's root and finishes, so it skips
+    /// the app's lifecycle callbacks.
+    private var isForwarding = false
+
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!isTaskRoot) {
+            forwardToTaskRoot()
+            return
+        }
+        // A link is read from the activity's intent at first composition (SkipUI's onOpenURL), and
+        // a task keeps the intent that started it. Recreated after the process was killed, or
+        // relaunched from Recents, the activity would get that link again and replay it.
+        if (savedInstanceState != null || (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
+            setIntent(Intent(this, MainActivity::class.java).setAction(Intent.ACTION_MAIN))
+        }
         logger.info("starting activity")
         UIApplication.launch(this)
         AndroidDocuments.register(this)
@@ -85,6 +100,35 @@ open class MainActivity: AppCompatActivity {
         //ActivityCompat.requestPermissions(self, permissions.toTypedArray(), requestTag)
     }
 
+    /// The single-top launch mode keeps the system picker that Import, Export and the backup folder
+    /// open above this activity when the launcher icon is tapped again (single-task would clear it).
+    /// The cost is a second instance whenever the root is not on top of the task: a link while a
+    /// picker is open, the launcher icon on a task a link started, or a link launched into another
+    /// app's task. That instance never builds a UI. A link goes on to the root, clearing what is
+    /// above it; anything else just finishes, which shows the task as it was.
+    private fun forwardToTaskRoot() {
+        isForwarding = true
+        val link = intent.takeIf { it.action == Intent.ACTION_VIEW && it.data != null }
+        // finish() first: a CLEAR_TOP start resolves to the topmost instance that is not finishing,
+        // which must be the root rather than this one.
+        finish()
+        if (link != null) {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, link.data, this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+        }
+    }
+
+    /// A link to the running activity. It is also set as the activity's intent, because a link can
+    /// arrive before the first composition has registered SkipUI's listener: the system delivers
+    /// pending intents to an activity recreated after its process was killed before it resumes.
+    /// onOpenURL handles it once either way and then clears the intent.
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
     override fun onStart() {
         logger.info("onStart")
         super.onStart()
@@ -107,12 +151,12 @@ open class MainActivity: AppCompatActivity {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppDelegate.shared.onDestroy()
+        if (!isForwarding) AppDelegate.shared.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        AppDelegate.shared.onLowMemory()
+        if (!isForwarding) AppDelegate.shared.onLowMemory()
     }
 
     override fun onRestart() {

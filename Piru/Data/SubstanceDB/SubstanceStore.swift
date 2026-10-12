@@ -1102,6 +1102,14 @@ final class SubstanceStore {
         return resolveSubstance(id: id, canonicalName: nameOrAlias)
     }
 
+    /// The canonical name of the substance a dose.wiki article slug names.
+    ///
+    /// **Raw library value** — bypasses the custom overlay; app code resolves
+    /// through ``SubstanceLibrary/name(forDosewikiSlug:)``.
+    func canonicalName(forDosewikiSlug slug: String) -> String? {
+        reader.canonicalName(dosewikiSlug: slug)
+    }
+
     /// Resolve a substance *name or alias* to its library id, mirroring
     /// ``lookupByNameOrAlias(_:)``'s canonical-then-alias precedence.
     ///

@@ -104,7 +104,7 @@ struct AppSourcesTests {
         #expect(AppSources.dosewikiURL(slug: "") == nil)
         #expect(
             AppSources.dosewikiURL(slug: "4-meo-butyrfentanyl")?.absoluteString
-                == "https://dose.wiki/4-meo-butyrfentanyl",
+                == "https://dose.wiki/4-meo-butyrfentanyl?from=piru",
         )
     }
 }

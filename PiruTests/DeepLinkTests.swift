@@ -271,6 +271,135 @@ struct DeepLinkTests {
         #expect(outcome?.path == [.session(id: id)])
     }
 
+    // MARK: - Quick log route
+
+    @Test
+    func `piru://quicklog?route= stages the substance on that route`() {
+        let outcome = decode("piru://quicklog?substance=MDMA&route=insufflated")
+        #expect(outcome?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA", prefillRoute: .insufflation))
+    }
+
+    @Test
+    func `an unknown quick-log route falls back to the substance's default`() {
+        let outcome = decode("piru://quicklog?substance=MDMA&route=ocular")
+        #expect(outcome?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA"))
+    }
+
+    @Test
+    func `piru://quicklog reads dotted route abbreviations`() {
+        #expect(decode("piru://quicklog?substance=Testosterone&route=i.m.")?.sheet
+            == .quickLog(routine: nil, prefillSubstance: "Testosterone", prefillRoute: .intramuscular))
+    }
+
+    @Test
+    func `quickLog with a route round-trips through encode`() {
+        let snap = NavigatorSnapshot(
+            selectedTab: .journal,
+            sheetStack: [.quickLog(routine: nil, prefillSubstance: "MDMA", prefillRoute: .oral)],
+        )
+        let url = DeepLink.encode(snap)
+        #expect(url?.absoluteString == "piru://quicklog?substance=MDMA&route=oral")
+        #expect(url.flatMap(DeepLink.decode)?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA", prefillRoute: .oral))
+    }
+
+    // MARK: - Web links (kagerou.glass, from dose.wiki)
+
+    private func webLink(_ string: String) -> DosewikiLink? {
+        guard let url = URL(string: string) else {
+            Issue.record("Invalid URL: \(string)")
+            return nil
+        }
+        return DeepLink.decodeWebLink(url)
+    }
+
+    @Test
+    func `the log link carries the dose.wiki slug and route`() {
+        let link = webLink("https://kagerou.glass/piru/log?substance=psilocybin-mushrooms&route=oral&from=dosewiki")
+        #expect(link == DosewikiLink(action: .log, slug: "psilocybin-mushrooms", route: .oral))
+    }
+
+    @Test
+    func `a resolved log link lands where the matching piru link does`() {
+        let link = webLink("https://kagerou.glass/piru/log?substance=mdma&route=smoked")
+        #expect(link?.outcome(substanceName: "MDMA") == decode("piru://quicklog?substance=MDMA&route=smoked"))
+    }
+
+    @Test
+    func `a log link whose slug names nothing still opens Quick Log, empty`() {
+        let empty = DeepLinkOutcome(sheet: .quickLog(routine: nil))
+        #expect(webLink("https://kagerou.glass/piru/log?substance=not-a-substance&route=oral")?.outcome(substanceName: nil) == empty)
+        #expect(webLink("https://kagerou.glass/piru/log")?.outcome(substanceName: nil) == empty)
+    }
+
+    @Test
+    func `the open link lands where piru://substance does`() {
+        let link = webLink("https://kagerou.glass/piru/open?substance=mdma")
+        #expect(link == DosewikiLink(action: .open, slug: "mdma", route: nil))
+        #expect(link?.outcome(substanceName: "MDMA") == decode("piru://substance/MDMA"))
+        #expect(link?.outcome(substanceName: nil) == nil)
+    }
+
+    @Test
+    func `the host and path match case-insensitively`() {
+        let link = webLink("https://Kagerou.Glass/Piru/Log?substance=mdma")
+        #expect(link == DosewikiLink(action: .log, slug: "mdma", route: nil))
+    }
+
+    @Test
+    func `the log link reads dose.wiki's i.m. route tab`() {
+        let link = webLink("https://kagerou.glass/piru/log?substance=testosterone-cypionate&route=i.m.")
+        #expect(link == DosewikiLink(action: .log, slug: "testosterone-cypionate", route: .intramuscular))
+    }
+
+    /// dose.wiki route tabs that name no single route: the link stages the
+    /// substance on its default route rather than as "Other".
+    @Test(arguments: ["injection", "iv%2Fim", "oral%20%26%20intranasal", "medical", "non-medical", "nonmedical", "ocular"])
+    func `a log link with a route Piru does not know stages no route`(route: String) {
+        let link = webLink("https://kagerou.glass/piru/log?substance=mdma&route=\(route)")
+        #expect(link == DosewikiLink(action: .log, slug: "mdma", route: nil))
+        #expect(link?.outcome(substanceName: "MDMA")?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA"))
+    }
+
+    @Test
+    func `a repeated substance parameter keeps its first value`() {
+        let link = webLink("https://kagerou.glass/piru/log?substance=mdma&substance=ketamine&route=oral&route=smoked")
+        #expect(link == DosewikiLink(action: .log, slug: "mdma", route: .oral))
+    }
+
+    @Test
+    func `an empty substance parameter names no substance`() {
+        #expect(webLink("https://kagerou.glass/piru/log?substance=&route=oral") == DosewikiLink(action: .log, slug: nil, route: .oral))
+        #expect(webLink("https://kagerou.glass/piru/log?substance=%20") == DosewikiLink(action: .log, slug: nil, route: nil))
+        #expect(webLink("https://kagerou.glass/piru/open?substance=") == nil)
+    }
+
+    @Test
+    func `a trailing slash after the action is the same link`() {
+        #expect(webLink("https://kagerou.glass/piru/log/?substance=mdma") == DosewikiLink(action: .log, slug: "mdma", route: nil))
+        #expect(webLink("https://kagerou.glass/piru/open/?substance=mdma") == DosewikiLink(action: .open, slug: "mdma", route: nil))
+    }
+
+    @Test(arguments: [
+        "https://kagerou.glass/piru/other?x=1",
+        "https://kagerou.glass/piru/logs?substance=mdma",
+        "https://kagerou.glass/piru/log/extra?substance=mdma",
+        "https://kagerou.glass/piru/",
+        "https://kagerou.glass/piru/open",
+        "https://kagerou.glass/get/piru/android",
+        "http://kagerou.glass/piru/log?substance=mdma",
+        "https://dose.wiki/piru/log?substance=mdma",
+        "https://example.kagerou.glass/piru/log?substance=mdma",
+        "piru://quicklog?substance=MDMA",
+    ])
+    func `any other link is not a web link`(url: String) {
+        #expect(webLink(url) == nil)
+    }
+
+    @Test
+    func `a web link is not a piru link`() {
+        #expect(decode("https://kagerou.glass/piru/log?substance=mdma") == nil)
+    }
+
     // MARK: - Substance push routes
 
     @Test

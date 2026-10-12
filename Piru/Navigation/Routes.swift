@@ -348,6 +348,7 @@ nonisolated enum InsightGroup: String, Hashable, Codable, CaseIterable, Identifi
 /// sheets owned by the view.
 nonisolated enum SheetRoute: Hashable, Identifiable, Codable {
     // App-level
+
     /// `routine` pre-stages that routine's items into the tray on open —
     /// the landing state for a routine-reminder notification tap.
     ///
@@ -359,7 +360,16 @@ nonisolated enum SheetRoute: Hashable, Identifiable, Codable {
     /// `prefillDose` stages that substance as a complete dose (strength read
     /// off a scanned box, with the brand it was sold under) instead of an
     /// empty editor — the box scanner's "Log This" hand-off.
-    case quickLog(routine: String?, prefillSubstance: String? = nil, prefillDose: DosePrefill? = nil)
+    ///
+    /// `prefillRoute` stages `prefillSubstance` on that route instead of the
+    /// substance's default — the route tab a reader had open on dose.wiki when
+    /// they followed its "Log in Piru" link.
+    case quickLog(
+        routine: String?,
+        prefillSubstance: String? = nil,
+        prefillDose: DosePrefill? = nil,
+        prefillRoute: RouteOfAdministration? = nil,
+    )
     case settings
     case skins
     case help

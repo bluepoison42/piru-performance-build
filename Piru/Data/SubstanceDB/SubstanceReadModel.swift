@@ -438,6 +438,22 @@ struct SubstanceReadModel {
         }
     }
 
+    // MARK: - External identifiers
+
+    /// The canonical name of the substance whose dose.wiki article has `slug`
+    /// (`mdma`, `psilocybin-mushrooms`), from the `dosewiki_slug` the build
+    /// records for each substance dose.wiki covers. Case-insensitive; `nil`
+    /// when no substance carries the slug, or the opened DB predates the column.
+    func canonicalName(dosewikiSlug slug: String) -> String? {
+        try? db.read { db in
+            try String.fetchOne(
+                db,
+                sql: "SELECT canonical_name FROM substances WHERE dosewiki_slug = ? COLLATE NOCASE ORDER BY id LIMIT 1",
+                arguments: [slug],
+            )
+        }
+    }
+
     // MARK: - Per-field resolvers
 
     private func resolvedCategory(db: Database, substanceID: Int64) throws -> SubstanceCategory? {

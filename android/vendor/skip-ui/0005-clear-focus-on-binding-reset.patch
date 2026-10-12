@@ -1,42 +1,18 @@
-A cleared focus binding releases the actual Compose focus target. Recheck ownership inside the effect so a focus transfer preserves its new target.
+Clearing a focus binding releases Compose focus in a SideEffect; recheck ownership inside the effect, so a transfer to a field composed earlier keeps its new target.
 
 diff --git a/Sources/SkipUI/SkipUI/System/Focus.swift b/Sources/SkipUI/SkipUI/System/Focus.swift
+index 76ba024..5b47518 100644
 --- a/Sources/SkipUI/SkipUI/System/Focus.swift
 +++ b/Sources/SkipUI/SkipUI/System/Focus.swift
-@@ -2,9 +2,11 @@
- // SPDX-License-Identifier: MPL-2.0
- #if !SKIP_BRIDGE
- #if SKIP
-+import androidx.compose.runtime.mutableStateOf
- import androidx.compose.runtime.remember
- import androidx.compose.runtime.SideEffect
- import androidx.compose.ui.focus.FocusRequester
-+import androidx.compose.ui.platform.LocalFocusManager
- #endif
- 
- extension View {
-@@ -12,10 +14,13 @@
-         #if SKIP
-         return ModifiedContent(content: self, modifier: RenderModifier { renderable, context in
-             let focusRequester = remember { FocusRequester() }
-+            let focusManager = LocalFocusManager.current
-+            let hasFocus = remember { mutableStateOf(false) }
-             var context = context
-             context.modifier = context.modifier
-                 .focusRequester(focusRequester)
-                 .onFocusChanged {
-+                    hasFocus.value = $0.hasFocus
-                     if $0.hasFocus {
-                         binding.wrappedValue = value
-                     } else if binding.wrappedValue == value {
-@@ -32,6 +37,13 @@
-                 // recomposition, so the next one, after layout, lands it.
-                 // SKIP REPLACE: SideEffect { try { focusRequester.requestFocus() } catch (_: IllegalArgumentException) { } }
-                 SideEffect { focusRequester.requestFocus() }
-+            } else if hasFocus.value {
+@@ -42,7 +42,13 @@ extension View {
+                     }
+                 }
+             } else if isFocused.value {
+-                SideEffect { focusManager.clearFocus() }
 +                SideEffect {
-+                    // Recheck ownership after other focus effects have run.
-+                    if value != binding.wrappedValue && hasFocus.value {
++                    // Recheck ownership after other focus effects have run: in a transfer from
++                    // this field to another composed before it, the other's request has landed.
++                    if value != binding.wrappedValue && isFocused.value {
 +                        focusManager.clearFocus()
 +                    }
 +                }
