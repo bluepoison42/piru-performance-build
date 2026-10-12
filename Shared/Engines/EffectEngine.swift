@@ -21,7 +21,7 @@ nonisolated struct SubstanceModelParams: Equatable {
     // PK
     var ke: Double // elimination rate (1/h)
     var ka: Double // absorption rate (1/h)
-    var refUnit: Double // reference / "common" dose in the substance's native unit
+    var refDoseMg: Double // reference / "common" dose, mg
     // transporter release-or-inhibition weights (∝ 1/EC50, DA-normalized)
     var wDAT: Double
     var wNET: Double
@@ -40,7 +40,7 @@ nonisolated struct SubstanceModelParams: Equatable {
     init(
         ke: Double,
         ka: Double,
-        refUnit: Double,
+        refDoseMg: Double,
         wDAT: Double = 0,
         wNET: Double = 0,
         wSERT: Double = 0,
@@ -54,7 +54,7 @@ nonisolated struct SubstanceModelParams: Equatable {
         resp: Double = 0,
         rec: ReceptorAffinities? = nil,
     ) {
-        self.ke = ke; self.ka = ka; self.refUnit = refUnit
+        self.ke = ke; self.ka = ka; self.refDoseMg = refDoseMg
         self.wDAT = wDAT; self.wNET = wNET; self.wSERT = wSERT
         self.deplete = deplete; self.releaser = releaser; self.koff = koff
         self.mu = mu; self.muEff = muEff; self.gaba = gaba; self.cae = cae
@@ -104,7 +104,7 @@ nonisolated struct EffectParams {
 
 // MARK: - Session input
 
-/// One substance-instance in a session: its params, its doses (time h, amount = mg/refUnit), and ROA.
+/// One substance-instance in a session: its params, its doses (time h, amount = mg/refDoseMg), and ROA.
 nonisolated struct EffectAgent {
     var params: SubstanceModelParams
     var doses: [(t: Double, amt: Double)]
@@ -120,8 +120,8 @@ nonisolated struct EffectAgent {
     ) {
         self.params = params; self.doses = doses; self.ka = ka; self.kR = kR; self.nAbs = nAbs
     }
-    /// Convenience: one substance dosed `doseMg` at each time in `at`. Folds `amt = doseMg/refUnit`
-    /// (the JS `u`) into each dose, so concentration = Σ (mg/refUnit)·kernel — matching `simulate`.
+    /// Convenience: one substance dosed `doseMg` at each time in `at`. Folds `amt = doseMg/refDoseMg`
+    /// (the JS `u`) into each dose, so concentration = Σ (mg/refDoseMg)·kernel — matching `simulate`.
     init(
         params: SubstanceModelParams,
         doseMg: Double,
@@ -131,9 +131,9 @@ nonisolated struct EffectAgent {
         nAbs: Double? = nil,
     ) {
         self.params = params
-        // A non-positive refUnit is a data error; an empty dose list keeps the
+        // A non-positive refDoseMg is a data error; an empty dose list keeps the
         // timeline flat instead of letting doseMg/0 spread NaN through every array.
-        self.doses = params.refUnit > 0 ? times.map { (t: $0, amt: doseMg / params.refUnit) } : []
+        self.doses = params.refDoseMg > 0 ? times.map { (t: $0, amt: doseMg / params.refDoseMg) } : []
         self.ka = ka; self.kR = kR; self.nAbs = nAbs
     }
 }

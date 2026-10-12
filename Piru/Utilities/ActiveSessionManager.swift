@@ -329,12 +329,9 @@ final class ActiveSessionManager {
         return activeEntries.compactMap { item in
             let tint = colorMap[item.snapshot.substance.lowercased()] ?? item.tint
             let substance = SubstanceLibrary.lookup(item.snapshot.substance)
-            let doseRange = substance.flatMap {
-                ActiveSubstanceState.resolveDoseRange(substance: $0, route: item.snapshot.route)
-            }
             let intensity = ActiveSubstanceState.computeDoseIntensity(
-                amount: item.snapshot.amount,
-                doseRange: doseRange,
+                dose: substance?.quantity(item.snapshot.amount, unit: item.snapshot.unit),
+                ladder: substance?.scalingLadder(for: item.snapshot.route),
             )
             return ActiveSubstanceState(
                 // The snapshot's resolved title (the brand as logged), never the

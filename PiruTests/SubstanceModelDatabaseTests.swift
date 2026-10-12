@@ -88,7 +88,7 @@ struct SubstanceModelDatabaseTests {
         #expect(twoMMC.ke == meph.ke && twoMMC.ka == meph.ka) // identical borrowed PK
         #expect(meph.wSERT > twoMMC.wSERT) // mephedrone's tighter SERT EC₅₀ ⇒ higher weight
         // Compare at each one's own reference dose (amt ≈ 1) so magnitude is matched and only the mix differs.
-        #expect((sim(meph, meph.refUnit).content.max() ?? 0) > (sim(twoMMC, twoMMC.refUnit).content.max() ?? 0))
+        #expect((sim(meph, meph.refDoseMg).content.max() ?? 0) > (sim(twoMMC, twoMMC.refDoseMg).content.max() ?? 0))
     }
 
     @Test
@@ -104,7 +104,7 @@ struct SubstanceModelDatabaseTests {
     func `Aliases resolve to the same canonical params`() throws {
         let a = try #require(params("Adderall"))
         let b = try #require(params("amphetamine"))
-        #expect(a.deplete == b.deplete && a.releaser == b.releaser && a.refUnit == b.refUnit)
+        #expect(a.deplete == b.deplete && a.releaser == b.releaser && a.refDoseMg == b.refDoseMg)
     }
 
     @Test
@@ -162,7 +162,7 @@ struct SubstanceModelDatabaseTests {
     @Test
     func `The view gates on a calibrated substance, not any modelable stimulant`() {
         func supports(_ names: [String]) -> Bool {
-            let doses = names.map { MechanisticSessionModel.DoseInput(name: $0, amount: 50, route: .oral, hours: 0) }
+            let doses = names.map { MechanisticSessionModel.DoseInput(name: $0, dose: .mg(50), route: .oral, hours: 0) }
             var pharm: [String: PharmacologyParameters] = [:]
             for name in names {
                 pharm[SubstanceModelDatabase.normalize(name)] = SubstanceStore.shared.pharmacologyParameters(forSubstanceName: name)

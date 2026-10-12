@@ -7,7 +7,7 @@ import SwiftUI
 /// needs. Pure/off-main compute, memoized like `TimelineModelCache`.
 ///
 /// Ports the driver in the `app-timeline` prototype (`gen-app.mjs`): route →
-/// (`ka` multiplier, redistribution `kR`), `amt = dose / refUnit`, session-wide
+/// (`ka` multiplier, redistribution `kR`), `amt = dose / refDoseMg`, session-wide
 /// axis ranges so scrolling never rescales the curve.
 nonisolated enum MechanisticSessionModel {
     /// One dose, reduced to the Sendable facts the engine needs. Built on the
@@ -17,7 +17,7 @@ nonisolated enum MechanisticSessionModel {
     /// (dose marks get their color at the render site instead).
     struct DoseInput: Hashable {
         let name: String
-        let amount: Double // milligrams, converted from the logged unit before simulation
+        let dose: Measurement<UnitDoseMass>
         let route: RouteOfAdministration
         /// Hours since the session start (the engine's `t = 0`).
         let hours: Double
@@ -199,7 +199,7 @@ nonisolated enum MechanisticSessionModel {
                   let params = modelParams(for: first.name, in: pharmacology)
             else { continue }
             let (kaMul, kR) = roaFactors(key.route)
-            let doseTuples = members.map { (t: $0.hours, amt: $0.amount / params.refUnit) }
+            let doseTuples = members.map { (t: $0.hours, amt: $0.dose.value(in: .milligrams) / params.refDoseMg) }
             agents.append(EffectAgent(
                 params: params,
                 doses: doseTuples,

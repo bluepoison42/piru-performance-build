@@ -299,7 +299,7 @@ nonisolated enum CombinedDepression {
 
     @MainActor
     private static func resolveContributor(for entry: DoseEntry, weightKg: Double) -> ResolvedContributor? {
-        let doseMg = DoseUnit.convert(entry.amount, from: entry.unit, to: "mg")
+        let doseMg = entry.quantity?.milligrams
         let params = SubstanceStore.shared.pharmacologyParameters(forSubstanceName: entry.substance)
 
         // Occupancy path: the most-potent engaged target that is itself a depressant mechanism, when

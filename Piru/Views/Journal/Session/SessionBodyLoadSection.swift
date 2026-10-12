@@ -191,6 +191,8 @@ struct SessionBodyLoadModel {
             var name: String
             var total = 0.0
             var unit: String
+            /// The group's first dose; every later one is summed in its unit.
+            var unitOf: DoseQuantity
             var count = 0
             /// Every `productName` the group's doses were logged under — the
             /// user's own word for the substance (a brand, or a Chinese alias
@@ -198,25 +200,30 @@ struct SessionBodyLoadModel {
             /// name", so a mixed group can't be titled by one product.
             var products: Set<String> = []
         }
-        var groups: [String: Group] = [:]
-        for entry in entries where !entry.isUnknownDose {
-            let canonical = SubstanceLibrary.lookup(entry.substance)?.name ?? entry.substance
-            let key = canonical.lowercased()
+        // One substance in one unit family — the calculator's own keying, so a
+        // substance logged in both g and mL is two rows, each in its own unit,
+        // never 500 mg + 1 g read as 501 or an mL remainder labeled in grams.
+        struct GroupKey: Hashable {
+            let name: String
+            let family: DoseQuantity.Family
+        }
+        var groups: [GroupKey: Group] = [:]
+        for entry in entries {
+            let substance = SubstanceLibrary.lookup(entry.substance)
+            guard let dose = substance?.quantity(of: entry) ?? entry.quantity else { continue }
+            let canonical = substance?.name ?? entry.substance
+            let key = GroupKey(name: canonical.lowercased(), family: dose.family)
             let product = entry.productName?.trimmingCharacters(in: .whitespaces) ?? ""
             if var group = groups[key] {
-                // Convert into the unit this group already established rather
-                // than adding raw magnitudes — 500 mg + 1 g is 1500 mg, not 501
-                // of anything. An inconvertible unit (mL, IU) can't be summed at
-                // all, so it contributes its count but not its amount.
-                if let amount = DoseUnit.convert(entry.amount, from: entry.unit, to: group.unit) {
-                    group.total += amount
-                }
+                // The key's family guarantees the two convert.
+                guard let amount = dose.value(inUnitOf: group.unitOf) else { continue }
+                group.total += amount
                 group.count += 1
                 group.products.insert(product)
                 groups[key] = group
             } else {
                 groups[key] = Group(
-                    name: canonical, total: entry.amount, unit: entry.unit,
+                    name: canonical, total: entry.amount, unit: entry.unit, unitOf: dose,
                     count: 1, products: [product],
                 )
             }
@@ -246,9 +253,11 @@ struct SessionBodyLoadModel {
         }
 
         var model = SessionBodyLoadModel()
-        var covered = Set<String>()
+        var covered = Set<GroupKey>()
         for active in ActiveSubstanceCalculator.compute(from: entries, colorMap: colorMap) {
-            let key = active.name.lowercased()
+            let activeTotal = SubstanceLibrary.lookup(active.name)?.quantity(active.totalRemaining, unit: active.unit)
+                ?? DoseQuantity(active.totalRemaining, unit: active.unit)
+            let key = GroupKey(name: active.name.lowercased(), family: activeTotal.family)
             covered.insert(key)
             let group = groups[key]
             // Group values below the display threshold without asserting complete clearance.
@@ -267,8 +276,7 @@ struct SessionBodyLoadModel {
                 // units when the session's first dose was skipped. Convert into
                 // the displayed one.
                 let unit = group?.unit ?? active.unit
-                let remaining = DoseUnit.convert(active.totalRemaining, from: active.unit, to: unit)
-                    ?? active.totalRemaining
+                let remaining = group.flatMap { activeTotal.value(inUnitOf: $0.unitOf) } ?? active.totalRemaining
                 model.active.append(Active(
                     active: active,
                     displayName: title(canonical: active.name, products: group?.products),

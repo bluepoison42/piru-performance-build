@@ -222,7 +222,7 @@ struct StagedDose: Identifiable, Equatable {
     var doseLevel: DoseLevel? {
         guard !isUnknownAmount, let librarySubstance, librarySubstance.displayClass.showsDoseLadder else { return nil }
         return librarySubstance.doseLevel(
-            of: totalAmount, unit: unit,
+            of: librarySubstance.quantity(totalAmount, unit: unit),
             route: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm,
         )
     }

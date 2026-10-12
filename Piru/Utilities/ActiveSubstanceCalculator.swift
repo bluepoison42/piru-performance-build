@@ -65,14 +65,15 @@ enum ActiveSubstanceCalculator {
             return hl
         }
 
-        var grouped: [String: (name: String, unit: String, halfLife: Double, doses: [ActiveSubstance.DoseInfo], totalDosed: Double, totalRemaining: Double)] = [:]
-        /// Group key must carry the unit family, not just the name. Two doses of
-        /// the same substance in µg/mg/g are one group (converted into whichever
-        /// unit arrived first); a dose in mL or IU is a *different* quantity and
-        /// gets its own group rather than being summed into a mass total.
-        func unitFamily(_ unit: String) -> String {
-            DoseUnit.convert(1, from: unit, to: "mg") == nil ? unit : "mass"
+        // The group key carries the unit family, not just the name. Two doses of
+        // the same substance in µg/mg/g are one group (converted into whichever
+        // unit arrived first); a dose in mL or IU is a *different* quantity and
+        // gets its own group rather than being summed into a mass total.
+        struct GroupKey: Hashable {
+            let name: String
+            let family: DoseQuantity.Family
         }
+        var grouped: [GroupKey: (name: String, unit: String, unitOf: DoseQuantity, halfLife: Double, doses: [ActiveSubstance.DoseInfo], totalDosed: Double, totalRemaining: Double)] = [:]
 
         for entry in entries {
             let substance = cachedLookup(entry.substance)
@@ -93,7 +94,7 @@ enum ActiveSubstanceCalculator {
             // release, so its dose contributes a body-load estimate with the right
             // absorption limb — unlike a bare unmodeled form, which we still skip.
             // No amount, no body load: 0 remaining of 0 dosed is not a fraction.
-            if entry.isUnknownDose { continue }
+            guard let dose = substance?.quantity(of: entry) ?? entry.quantity else { continue }
             let productDuration = entry.productDuration
             let isDepot = PKResolver.isDepot(entry: entry)
             // A depot bypasses the unmodeled-form skip (it has no acute form to model,
@@ -120,14 +121,13 @@ enum ActiveSubstanceCalculator {
             guard fraction > 0.03 else { continue }
 
             let name = substance?.name ?? entry.substance
-            let key = "\(name)|\(unitFamily(entry.unit))"
+            let key = GroupKey(name: name, family: dose.family)
 
             if var existing = grouped[key] {
-                // Express this dose in the group's established unit. Same family
-                // by construction, so the conversion cannot fail; the fallback
-                // keeps it honest rather than silently mixing scales.
-                let amount = DoseUnit.convert(entry.amount, from: entry.unit, to: existing.unit) ?? entry.amount
-                let converted = DoseUnit.convert(remaining, from: entry.unit, to: existing.unit) ?? remaining
+                // Express this dose in the group's established unit; the key's
+                // family guarantees the two convert.
+                guard let amount = dose.value(inUnitOf: existing.unitOf) else { continue }
+                let converted = amount * fraction
                 existing.doses.append(ActiveSubstance.DoseInfo(
                     amount: amount,
                     remaining: converted,
@@ -143,6 +143,7 @@ enum ActiveSubstanceCalculator {
                     // library's `defaultUnit` instead printed "7.2 mg" under two
                     // 3.6 g doses of gabapentin — right number, wrong suffix.
                     unit: entry.unit,
+                    unitOf: dose,
                     halfLife: halfLife,
                     doses: [ActiveSubstance.DoseInfo(
                         amount: entry.amount,

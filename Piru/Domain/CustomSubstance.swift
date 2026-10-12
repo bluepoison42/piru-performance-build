@@ -204,6 +204,7 @@ extension Substance {
             iupacName: iupacName,
             physicochemical: physicochemical,
             popularAliases: popularAliases,
+            curatedBrands: curatedBrands,
             misconceptions: misconceptions,
         )
         // A fresh Substance, so the façade-stamped custom units would be lost on a

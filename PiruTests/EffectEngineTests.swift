@@ -13,14 +13,14 @@ struct EffectEngineTests {
 
     /// Port of the JS `DRUG` table — the calibrated reference substances.
     private static let drug: [String: SubstanceModelParams] = [
-        "amp": .init(ke: LN2 / 10.0, ka: 2.0, refUnit: 50, wDAT: 1.0, wNET: 1.8, wSERT: 0.0, deplete: 1.0, releaser: true),
-        "mph": .init(ke: LN2 / 3.0, ka: 1.2, refUnit: 60, wDAT: 1.0, wNET: 0.9, wSERT: 0.0, deplete: 0.0, releaser: false, koff: 8.0),
-        "mmc3": .init(ke: LN2 / 2.0, ka: 5.0, refUnit: 80, wDAT: 1.0, wNET: 1.7, wSERT: 0.32, deplete: 0.12, releaser: true),
-        "mdma": .init(ke: LN2 / 7.0, ka: 2.0, refUnit: 90, wDAT: 0.6, wNET: 1.2, wSERT: 2.8, deplete: 0.10, releaser: true),
-        "mdpv": .init(ke: LN2 / 2.0, ka: 2.0, refUnit: 15, wDAT: 1.0, wNET: 0.9, wSERT: 0.02, deplete: 0.0, releaser: false, koff: 3.0),
-        "bpap": .init(ke: LN2 / 5.0, ka: 1.5, refUnit: 1, releaser: false, cae: 1.1),
-        "mirtaz": .init(ke: LN2 / 24.0, ka: 1.2, refUnit: 30, releaser: false, rec: .init(h1: 0.03, a2: 0.6, c2C: 0.6, c2A: 0.9)),
-        "heroin": .init(ke: LN2 / 2.5, ka: 6.0, refUnit: 10, releaser: false, mu: 1.0, muEff: 0.97, resp: 1.4),
+        "amp": .init(ke: LN2 / 10.0, ka: 2.0, refDoseMg: 50, wDAT: 1.0, wNET: 1.8, wSERT: 0.0, deplete: 1.0, releaser: true),
+        "mph": .init(ke: LN2 / 3.0, ka: 1.2, refDoseMg: 60, wDAT: 1.0, wNET: 0.9, wSERT: 0.0, deplete: 0.0, releaser: false, koff: 8.0),
+        "mmc3": .init(ke: LN2 / 2.0, ka: 5.0, refDoseMg: 80, wDAT: 1.0, wNET: 1.7, wSERT: 0.32, deplete: 0.12, releaser: true),
+        "mdma": .init(ke: LN2 / 7.0, ka: 2.0, refDoseMg: 90, wDAT: 0.6, wNET: 1.2, wSERT: 2.8, deplete: 0.10, releaser: true),
+        "mdpv": .init(ke: LN2 / 2.0, ka: 2.0, refDoseMg: 15, wDAT: 1.0, wNET: 0.9, wSERT: 0.02, deplete: 0.0, releaser: false, koff: 3.0),
+        "bpap": .init(ke: LN2 / 5.0, ka: 1.5, refDoseMg: 1, releaser: false, cae: 1.1),
+        "mirtaz": .init(ke: LN2 / 24.0, ka: 1.2, refDoseMg: 30, releaser: false, rec: .init(h1: 0.03, a2: 0.6, c2C: 0.6, c2A: 0.9)),
+        "heroin": .init(ke: LN2 / 2.5, ka: 6.0, refDoseMg: 10, releaser: false, mu: 1.0, muEff: 0.97, resp: 1.4),
     ]
     private static let roa: [String: (Double, Double)] = ["oral": (1, 0), "snort": (3.5, 2.5), "smoke": (10, 6), "rectal": (3, 1.5)]
     private let params = EffectParams()
@@ -113,10 +113,10 @@ struct EffectEngineTests {
 
     @Test
     func `Single-agent reduces to the same math regardless of construction`() throws {
-        // amt = doseMg/refUnit folded into the dose == the explicit-doses form
+        // amt = doseMg/refDoseMg folded into the dose == the explicit-doses form
         let dg = try #require(Self.drug["amp"])
         let a = EffectEngine.simulate(params, agents: [EffectAgent(params: dg, doseMg: 50)], tMax: 12)
-        let b = EffectEngine.simulate(params, agents: [EffectAgent(params: dg, doses: [(t: 0, amt: 50 / dg.refUnit)])], tMax: 12)
+        let b = EffectEngine.simulate(params, agents: [EffectAgent(params: dg, doses: [(t: 0, amt: 50 / dg.refDoseMg)])], tMax: 12)
         #expect(peak(a.eu) == peak(b.eu))
     }
 

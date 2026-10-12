@@ -94,8 +94,38 @@ struct DoseDurationSection: View {
     /// The dialed dose, published up from the card so the Log button can name it.
     /// The branded formulation whose duration envelope redraws the curve, or `nil`
     /// for the substance's own default curve. Card-local: it answers "how long does
-    /// Concerta run?" in the moment and resets to the default next visit.
+    /// Concerta run?" in the moment and resets to the default next visit — or to
+    /// the brand the page was opened on (a search for "Concerta").
     @State private var selectedBrandProduct: String?
+
+    init(
+        routes: RouteResolution,
+        routeSelection: Binding<RouteOfAdministration>,
+        saltSelection: Binding<String?>,
+        isomerSelection: Binding<String?>,
+        provenance: SubstanceStore.SubstanceProvenance?,
+        initialBrand: String? = nil,
+    ) {
+        self.routes = routes
+        _routeSelection = routeSelection
+        _saltSelection = saltSelection
+        _isomerSelection = isomerSelection
+        self.provenance = provenance
+        _selectedBrandProduct = State(
+            initialValue: Self.preselectedBrand(initialBrand, substanceUID: routes.substance.substanceUID),
+        )
+    }
+
+    /// The Branded formulations row to open on for `brand`: the catalog's own
+    /// spelling, matched case-insensitively so a hand-typed deep link still
+    /// lands. `nil` (the default curve) for a brand with no authored duration,
+    /// which has no row to select.
+    static func preselectedBrand(_ brand: String?, substanceUID: String?) -> String? {
+        guard let brand, let substanceUID else { return nil }
+        return SubstanceLibrary.brandProducts(forUID: substanceUID)
+            .first { $0.name.caseInsensitiveCompare(brand) == .orderedSame }
+            .flatMap { SubstanceLibrary.productDuration(for: $0.name) != nil ? $0.name : nil }
+    }
 
     private var substance: Substance {
         routes.substance

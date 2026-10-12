@@ -402,7 +402,7 @@ private struct SearchSurface: View {
                 }
             }
             .onChange(of: navigator.path(for: .search)) { _, newPath in
-                guard wasSearching, case let .substance(name) = newPath.last else { return }
+                guard wasSearching, case let .substance(name, _) = newPath.last else { return }
                 SearchHistoryStore.shared.record(name)
                 wasSearching = false
             }
