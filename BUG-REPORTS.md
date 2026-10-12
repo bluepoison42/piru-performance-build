@@ -54,7 +54,7 @@ crash → right-click → *Reveal in Finder*, and attach that `.ips` file. The f
 Android doesn't send crash reports to app developers on its own, so the details have to come from
 your phone.
 
-- **Settings → Report a problem** (alpha 4 and later). Piru collects why the app last closed or
+- **Settings → Report a problem** (version 1.1 and later). Piru collects why the app last closed or
   crashed, its own recent log, and your phone model and Android version into one file, then opens
   the share menu so you can send it on Discord or attach it to an issue. Do this right after the
   crash, before reinstalling or clearing the app's data. The file contains no journal entries and

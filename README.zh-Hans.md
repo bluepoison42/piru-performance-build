@@ -16,7 +16,7 @@
 
 <a href="https://kagerou.glass/get/piru/ios?from=readme"><img src=".github/download-iphone.zh-Hans.svg" alt="在 TestFlight 上获取 iPhone 版 Piru" width="270" height="60"></a>
 <a href="https://kagerou.glass/get/piru/mac?from=readme"><img src=".github/download-mac.zh-Hans.svg" alt="下载 Mac 版 Piru" width="270" height="60"></a>
-<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.zh-Hans.svg" alt="下载 Android 版 Piru" width="270" height="60"></a><br><sub>免费 · iPhone：TestFlight 测试版 · Mac：已签名并公证的磁盘映像 · Android：已签名的 alpha 版 APK</sub>
+<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.zh-Hans.svg" alt="下载 Android 版 Piru" width="270" height="60"></a><br><sub>免费 · iPhone：TestFlight 测试版 · Mac：已签名并公证的磁盘映像 · Android：已签名的 APK</sub>
 
 <table>
   <tr>
@@ -49,7 +49,7 @@
 - **iPhone。** 在 [TestFlight](https://kagerou.glass/get/piru/ios?from=readme) 上免费获取，需要 iOS 26 或更高版本。
 - **Mac。** [下载磁盘映像](https://kagerou.glass/get/piru/mac?from=readme)：免费，已签名并公证，需要 macOS 26 或更高版本，
   支持 Apple 芯片和 Intel。
-- **Android。** [下载最新的 alpha 版 APK](https://kagerou.glass/get/piru/android?from=readme)。所有 alpha 版本都发布在 [Releases 页面](https://github.com/kageroumado/piru/releases?q=android&expanded=true)，是已签名的 APK，
+- **Android。** [下载最新的 APK](https://kagerou.glass/get/piru/android?from=readme)。所有 Android 版本都发布在 [Releases 页面](https://github.com/kageroumado/piru/releases?q=android&expanded=true)，是已签名的 APK，
   需要 Android 9 或更高版本（64 位 ARM）。想自动获取更新，可以把本仓库添加到
   [Obtainium](https://github.com/ImranR98/Obtainium)，并按 `android-` 筛选发布版本。
 

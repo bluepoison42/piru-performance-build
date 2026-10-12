@@ -16,7 +16,7 @@
 
 <a href="https://kagerou.glass/get/piru/ios?from=readme"><img src=".github/download-iphone.svg" alt="Get Piru for iPhone on TestFlight" width="270" height="60"></a>
 <a href="https://kagerou.glass/get/piru/mac?from=readme"><img src=".github/download-mac.svg" alt="Download Piru for Mac" width="270" height="60"></a>
-<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.svg" alt="Download Piru for Android" width="270" height="60"></a><br><sub>Free · iPhone: TestFlight beta · Mac: signed, notarized disk image · Android: signed alpha APK</sub>
+<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.svg" alt="Download Piru for Android" width="270" height="60"></a><br><sub>Free · iPhone: TestFlight beta · Mac: signed, notarized disk image · Android: signed APK</sub>
 
 <table>
   <tr>
@@ -51,7 +51,7 @@ The journal is stored on your device. No account, ads, or analytics.
 - **iPhone.** Free on [TestFlight](https://kagerou.glass/get/piru/ios?from=readme), for iOS 26 or later.
 - **Mac.** [Download the disk image](https://kagerou.glass/get/piru/mac?from=readme): free, signed and notarized, for
   macOS 26 or later on Apple silicon or Intel.
-- **Android.** [Download the latest alpha APK](https://kagerou.glass/get/piru/android?from=readme). Every alpha build is on the [releases page](https://github.com/kageroumado/piru/releases?q=android&expanded=true), as signed APKs for
+- **Android.** [Download the latest APK](https://kagerou.glass/get/piru/android?from=readme). Every Android build is on the [releases page](https://github.com/kageroumado/piru/releases?q=android&expanded=true), as signed APKs for
   Android 9 or later (64-bit ARM). To get updates automatically, add this repository to
   [Obtainium](https://github.com/ImranR98/Obtainium) and filter releases by `android-`.
 
