@@ -65,6 +65,6 @@ struct LocalizedSubstanceNameTests {
         #expect(hit.matchedAlias == "Ketamina")
         let amitriptyline = try #require(SubstanceLibrary.lookup("Amitriptyline"))
         #expect(!amitriptyline.aliases.contains("Amitriptilina"))
-        #expect(amitriptyline.displaySubtitle?.contains("Amitriptilina") != true)
+        #expect(amitriptyline.secondaryLine(under: amitriptyline.displayTitle)?.contains("Amitriptilina") != true)
     }
 }

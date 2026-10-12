@@ -44,8 +44,10 @@ import Foundation
 ///   `benzoEquivalence`, `pharma`, `calculator`, `volumetric`, `recovery`,
 ///   `interactions`, `inventory`).
 /// - `piru://session/<uuid>` → Journal tab, push that session's detail.
-/// - `piru://substance/<name>` → Library tab, push that substance's detail
-///   (percent-encode spaces, e.g. `piru://substance/Psilocybin%20mushrooms`).
+/// - `piru://substance/<name>[?brand=<product>]` → Library tab, push that
+///   substance's detail (percent-encode spaces, e.g.
+///   `piru://substance/Psilocybin%20mushrooms`); `brand` preselects that product
+///   in the page's Branded formulations picker.
 ///
 /// The encoder always emits a single URL describing the *top* of the modal
 /// stack (or just the tab when no modal is presented). Multi-level stacks
@@ -225,7 +227,7 @@ nonisolated enum DeepLink {
             let name = nameSegments.joined(separator: "/")
             guard !name.isEmpty else { return nil }
             let route: PushRoute = dataSection.map { .substanceData(name: name, section: $0) }
-                ?? .substance(name: name)
+                ?? .substance(name: name, brand: query["brand"])
             return DeepLinkOutcome(
                 tab: overrideTab ?? .library,
                 path: [route],
@@ -290,12 +292,13 @@ nonisolated enum DeepLink {
             if let tab, tab != .insights {
                 components.queryItems = [URLQueryItem(name: "tab", value: tab.rawValue)]
             }
-        case let .substance(name):
+        case let .substance(name, brand):
             components.host = "substance"
             components.path = "/\(name)"
-            if let tab, tab != .library {
-                components.queryItems = [URLQueryItem(name: "tab", value: tab.rawValue)]
-            }
+            var items: [URLQueryItem] = []
+            if let brand { items.append(URLQueryItem(name: "brand", value: brand)) }
+            if let tab, tab != .library { items.append(URLQueryItem(name: "tab", value: tab.rawValue)) }
+            if !items.isEmpty { components.queryItems = items }
         case let .substanceData(name, section):
             components.host = "substance"
             components.path = "/\(name)/data/\(section.rawValue)"

@@ -70,6 +70,22 @@ struct SubstanceSecondaryLineTests {
     }
 
     @Test
+    func `Hand-picked flagship brands count as curated`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let hit = try #require(SubstanceLibrary.searchMatches("Lisdexamfetamine", limit: 5).first)
+        #expect(hit.substance.curatedBrands == ["Vyvanse"])
+        #expect(hit.secondaryLine(language: .en) == "Vyvanse")
+
+        // A curated brand that is also a popular alias is listed once.
+        let mph = try #require(SubstanceLibrary.searchMatches("Methylphenidate", limit: 5).first)
+        #expect(mph.secondaryLine(language: .en) == "Ritalin, Concerta")
+
+        // The full record carries them too.
+        let full = try #require(SubstanceLibrary.resolveFull("Lisdexamfetamine"))
+        #expect(full.curatedBrands == ["Vyvanse"])
+    }
+
+    @Test
     func `Search hits carry curated popular aliases from the batch projection`() async throws {
         await SubstanceStore.shared.ensureAllLoaded()
         let hit = try #require(SubstanceLibrary.searchMatches("MDMA", limit: 5).first)

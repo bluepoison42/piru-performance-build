@@ -32,6 +32,15 @@ struct SubstanceMatch: Identifiable {
     func secondaryLine(language: ContentLanguage = .current) -> String? {
         substance.secondaryLine(under: displayName, matchedAlias: matchedAlias, language: language)
     }
+
+    /// The matched alias when it names one of the substance's branded products
+    /// ("Concerta"), in the catalog's spelling — what opening this hit's detail
+    /// page preselects. `nil` for any other alias (a synonym, a language name).
+    var matchedBrand: String? {
+        guard let matchedAlias, let uid = substance.substanceUID else { return nil }
+        return SubstanceLibrary.brandProducts(forUID: uid)
+            .first { $0.name.caseInsensitiveCompare(matchedAlias) == .orderedSame }?.name
+    }
 }
 
 extension SubstanceStore {

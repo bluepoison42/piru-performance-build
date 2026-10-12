@@ -59,8 +59,14 @@ struct SubstanceDetailView: View {
     /// reads as slightly eager rather than wrong.
     private static let titleHandoffOffset: CGFloat = 44
 
-    init(substance: Substance) {
+    /// The product the page opened on (a search for "Concerta"), preselected in
+    /// the Branded formulations picker. Ignored when the substance has no such
+    /// branded duration.
+    private let initialBrand: String?
+
+    init(substance: Substance, brand: String? = nil) {
         _baseSubstance = State(initialValue: substance)
+        initialBrand = brand
         let name = substance.name
         _historyEntries = Query(
             filter: #Predicate<DoseEntry> { entry in
@@ -195,6 +201,7 @@ struct SubstanceDetailView: View {
                 routeSelection: routeSelection,
                 saltSelection: saltSelection,
                 isomerSelection: isomerSelection,
+                initialBrand: initialBrand,
                 historyEntries: historyEntries,
                 inventoryItems: inventoryItems,
                 selectedSaltForm: selectedSaltForm,

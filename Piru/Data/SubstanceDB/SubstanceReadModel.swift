@@ -370,6 +370,7 @@ struct SubstanceReadModel {
                 // Brand names first, flagship brands ahead of form brands, then
                 // alphabetical — see the batch path (D.1.7 + brand_rank).
                 let aliases = try String.fetchAll(db, sql: "SELECT alias FROM aliases WHERE substance_id = ? ORDER BY COALESCE(brand_rank, 9), alias", arguments: [id])
+                let curatedBrands = try Self.curatedBrands(db, substanceID: id)[id] ?? []
                 let peptideProfile = try resolvedPeptideProfile(db: db, substanceID: id)
                 let references = try resolvedReferences(db: db, substanceID: id)
 
@@ -425,6 +426,7 @@ struct SubstanceReadModel {
                     iupacName: iupacName,
                     physicochemical: physicochemical.hasAnyValue ? physicochemical : nil,
                     popularAliases: popularAliases,
+                    curatedBrands: curatedBrands,
                     misconceptions: misconceptions,
                     combinations: combinations,
                     waterHeat: waterHeat,
@@ -994,6 +996,25 @@ struct SubstanceReadModel {
 
     // MARK: - Batch resolution
 
+    /// Hand-picked flagship brands (`aliases.brand_rank = 0`, from `brands.json`)
+    /// by substance id, alphabetical — one substance's when `substanceID` is
+    /// given. Empty on a database that predates the `brand_rank` column.
+    nonisolated static func curatedBrands(_ db: Database, substanceID: Int64? = nil) throws -> [Int64: [String]] {
+        let columns = try Row.fetchAll(db, sql: "PRAGMA table_info(aliases)").compactMap { $0["name"] as String? }
+        guard columns.contains("brand_rank") else { return [:] }
+        let filter = substanceID == nil ? "" : " AND substance_id = ?"
+        let arguments: StatementArguments = substanceID.map { [$0] } ?? []
+        var out: [Int64: [String]] = [:]
+        for row in try Row.fetchAll(
+            db,
+            sql: "SELECT substance_id, alias FROM aliases WHERE brand_rank = 0\(filter) ORDER BY alias",
+            arguments: arguments,
+        ) {
+            out[row["substance_id"], default: []].append(row["alias"])
+        }
+        return out
+    }
+
     /// Batch-load every substance with ~12 SQL queries instead of ~21k
     /// (12 per-substance × 1785). Uses `ROW_NUMBER() OVER (PARTITION BY …)`
     /// to pick the highest-priority source per (substance, field) in a
@@ -1098,6 +1119,7 @@ struct SubstanceReadModel {
                         popularAliasesByID[row["id"]] = list
                     }
                 }
+                let curatedBrandsByID = try Self.curatedBrands(db)
 
                 // Category — priority-resolved, with the non-informative "Other"
                 // sunk below any specific category (mirrors `resolvedCategory`).
@@ -1243,6 +1265,7 @@ struct SubstanceReadModel {
                         smiles: smilesByID[sid],
                         iupacName: iupacNameByID[sid],
                         popularAliases: popularAliasesByID[sid] ?? [],
+                        curatedBrands: curatedBrandsByID[sid] ?? [],
                     )
                 }
             }

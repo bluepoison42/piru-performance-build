@@ -26,7 +26,7 @@ struct Substance: Identifiable {
     /// Optional human-facing title override (e.g. "2,5-DMBZP" for the compound
     /// whose canonical `name` is "1-(2,5-Dimethoxybenzyl) piperazine"). When set,
     /// the UI shows this as the primary title and demotes `name` to the subtitle.
-    /// `name` stays canonical for search/dedup/logging. See `displayTitle`/`displaySubtitle`.
+    /// `name` stays canonical for search/dedup/logging. See `displayTitle`/`secondaryLine(under:matchedAlias:language:)`.
     let displayName: String?
     let aliases: [String]
     /// User-defined per-substance units ("1 capsule = 30 mg"), stamped on by the
@@ -136,6 +136,11 @@ struct Substance: Identifiable {
     /// in the batch projection too; empty when not curated — never auto-derived
     /// from `aliases`.
     let popularAliases: [String]
+    /// The hand-picked flagship brands (`brands.json`, `aliases.brand_rank = 0`):
+    /// Vyvanse for Lisdexamfetamine, Ritalin for Methylphenidate. Curated like
+    /// ``popularAliases``, so row secondary lines show them too. Empty on a
+    /// database that predates brand ranks.
+    let curatedBrands: [String]
     /// Curated evidence-checked corrections to common claims (the "Common
     /// misconceptions" section). Popular-substances-only; empty for the long
     /// tail. Detail-only. See ``MythBust``.
@@ -186,6 +191,7 @@ struct Substance: Identifiable {
         iupacName: String? = nil,
         physicochemical: Physicochemical? = nil,
         popularAliases: [String] = [],
+        curatedBrands: [String] = [],
         misconceptions: [MythBust] = [],
         combinations: [Combination] = [],
         waterHeat: WaterHeatGuidance? = nil,
@@ -227,6 +233,7 @@ struct Substance: Identifiable {
         self.iupacName = iupacName
         self.physicochemical = physicochemical
         self.popularAliases = popularAliases
+        self.curatedBrands = curatedBrands
         self.misconceptions = misconceptions
         self.combinations = combinations
         self.waterHeat = waterHeat
@@ -329,18 +336,13 @@ struct Substance: Identifiable {
         s.filter(\.isUppercase).count * 10 + (s.contains("-") ? 1 : 0)
     }
 
-    /// Secondary line for a row titled ``displayTitle`` — the Library's rows.
-    var displaySubtitle: String? {
-        secondaryLine(under: displayTitle)
-    }
-
     /// The one rule for the line under a substance row's title, shared by every
     /// list and search picker so a substance reads the same everywhere.
     ///
     /// In order, up to three, skipping whatever `shown` (the row's title) says:
     /// the display title; the canonical name when a relabel, curated title or
     /// language name replaces it; the alias the user's query named; the curated
-    /// `popularAliases` this UI language can read. The raw alias list never
+    /// `popularAliases` and `curatedBrands` this UI language can read. The raw alias list never
     /// appears — it is search recall, full of chemical synonyms and other-language
     /// names, and the detail page's identity section is where it is listed.
     ///
@@ -357,7 +359,7 @@ struct Substance: Identifiable {
         var candidates = [displayTitle]
         if replacesCanonical { candidates.append(name) }
         if let matchedAlias { candidates.append(matchedAlias) }
-        candidates += popularAliases.filter { language.writesScript(of: $0) }
+        candidates += (popularAliases + curatedBrands).filter { language.writesScript(of: $0) }
 
         var seen: Set = [Substance.aliasKey(shown)]
         var names: [String] = []
@@ -807,6 +809,7 @@ extension Substance: Codable {
         iupacName = nil
         physicochemical = nil
         popularAliases = []
+        curatedBrands = []
         misconceptions = []
         combinations = []
         waterHeat = nil
