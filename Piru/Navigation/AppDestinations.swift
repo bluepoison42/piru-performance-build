@@ -64,7 +64,7 @@ struct PushRouteView: View {
                 .navigationTitle("Timeline")
                 .inlineNavigationTitle()
 
-        case let .substance(name):
+        case let .substance(name, brand):
             // Push a **lightweight shell** (the warm batch projection's hot
             // fields) so the detail header + dose card render instantly off the
             // push; `SubstanceDetailView` then resolves the heavy detail-only
@@ -80,9 +80,9 @@ struct PushRouteView: View {
             // fallback is deliberately avoided: some aliases are polluted
             // ("magnesium" → Salicylic acid), so it would mis-resolve.
             if let shell = SubstanceLibrary.shell(name) {
-                SubstanceDetailView(substance: shell)
+                SubstanceDetailView(substance: shell, brand: brand)
             } else if let substance = SubstanceLibrary.resolveFull(name) {
-                SubstanceDetailView(substance: substance)
+                SubstanceDetailView(substance: substance, brand: brand)
             } else {
                 ContentUnavailableView(
                     "Substance Not Found",

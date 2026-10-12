@@ -9,7 +9,7 @@ struct InteractionCheckerView: View {
     @State private var results: [InteractionResult] = []
     @State private var combinationMetabolites: [CombinationMetabolite.Formation] = []
     @State private var searchText = ""
-    @State private var searchResults: [Substance] = []
+    @State private var searchResults: [SubstanceMatch] = []
     @State private var showSearchResults = false
     @State private var searchTrigger = 0
     @FocusState private var isSearchFocused: Bool
@@ -51,7 +51,7 @@ struct InteractionCheckerView: View {
 
     private var hasExactMatch: Bool {
         let q = searchText.lowercased()
-        return searchResults.contains { $0.name.lowercased() == q || $0.aliases.contains { $0.lowercased() == q } }
+        return searchResults.contains { $0.substance.name.lowercased() == q || $0.substance.aliases.contains { $0.lowercased() == q } }
     }
 
     var body: some View {
@@ -106,14 +106,14 @@ struct InteractionCheckerView: View {
                         guard searchTrigger > 0 else { return }
                         try? await Task.sleep(for: .milliseconds(150))
                         guard !Task.isCancelled, !searchText.isEmpty else { return }
-                        let results = await SubstanceLibrary.searchAsync(searchText, limit: 8)
+                        let results = await SubstanceLibrary.searchMatchesAsync(searchText, limit: 8)
                         guard !Task.isCancelled else { return }
                         searchResults = results
                         showSearchResults = true
                     }
                     .onSubmit {
                         if let first = searchResults.first {
-                            addSubstance(first.name)
+                            addSubstance(first.substance.name)
                         } else if !searchText.isEmpty {
                             addSubstance(searchText)
                         }
@@ -267,24 +267,26 @@ struct InteractionCheckerView: View {
 
     private var searchDropdown: some View {
         let selectedLower = Set(selected.map { $0.lowercased() })
-        let shown = Array(searchResults.filter { !selectedLower.contains($0.name.lowercased()) }.prefix(6))
+        let shown = Array(searchResults.filter { !selectedLower.contains($0.substance.name.lowercased()) }.prefix(6))
         let showCustom = !searchText.isEmpty && !hasExactMatch
 
         return VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(shown.enumerated()), id: \.element.id) { index, substance in
+            ForEach(Array(shown.enumerated()), id: \.element.id) { index, match in
+                let substance = match.substance
                 if index > 0 {
                     Divider().padding(.leading, Spacing.xxl)
                 }
                 Button {
+                    // The molecule is what interacts; the brand only titles the row.
                     addSubstance(substance.name)
                 } label: {
                     HStack {
                         VStack(alignment: .leading, spacing: Spacing.xxs) {
-                            Text(substance.name)
+                            Text(match.displayName)
                                 .font(.body)
                                 .foregroundStyle(.primary)
-                            if !substance.aliases.isEmpty {
-                                Text(substance.aliases.prefix(3).joined(separator: ", "))
+                            if let secondary = match.secondaryLine() {
+                                Text(secondary)
                                     .captionSecondary()
                             }
                         }

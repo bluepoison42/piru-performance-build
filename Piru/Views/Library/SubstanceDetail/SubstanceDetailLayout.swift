@@ -25,6 +25,8 @@ struct SubstanceDetailLayout: View {
     let routeSelection: Binding<RouteOfAdministration>
     let saltSelection: Binding<String?>
     let isomerSelection: Binding<String?>
+    /// The product the page opened on, preselected in Branded formulations.
+    let initialBrand: String?
     let historyEntries: [DoseEntry]
     let inventoryItems: [InventoryItem]
     let selectedSaltForm: String?
@@ -61,6 +63,7 @@ struct SubstanceDetailLayout: View {
                 saltSelection: saltSelection,
                 isomerSelection: isomerSelection,
                 provenance: model.provenance,
+                initialBrand: initialBrand,
             )
         }
 

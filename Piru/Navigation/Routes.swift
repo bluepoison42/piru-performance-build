@@ -195,7 +195,11 @@ nonisolated enum PushRoute: Hashable, Codable {
     case entry(timestamp: Date, id: UUID?)
     case comedownGuide
     case timeline
-    case substance(name: String)
+    /// A substance's detail page. `brand` preselects that product in the page's
+    /// Branded formulations picker — a search for "Concerta" lands on
+    /// Methylphenidate with Concerta's curve drawn. The synthesized `Codable`
+    /// decodes a missing `brand` key as `nil`, so old snapshots keep decoding.
+    case substance(name: String, brand: String? = nil)
     case libraryCategory(SubstanceCategory)
     /// Substances flagged with a metadata tag (the Library's Common card).
     case libraryTag(String)

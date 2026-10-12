@@ -21,6 +21,32 @@ nonisolated enum ContentLanguage: String {
         self == .zhHans || self == .zhHant
     }
 
+    /// Whether a reader of this UI language can read every letter of `text`:
+    /// Latin, and the Greek of chemical prefixes ("β-keto-amphetamine"), in every
+    /// language; Han ideographs only in Chinese. Digits, punctuation and other
+    /// non-letters belong to every script. Cyrillic, kana, Hangul and the like
+    /// belong to no UI language the app ships.
+    func writesScript(of text: String) -> Bool {
+        text.unicodeScalars.allSatisfy { scalar in
+            !scalar.properties.isAlphabetic
+                || Self.isLatinOrGreek(scalar)
+                || (isChinese && scalar.properties.isIdeographic)
+        }
+    }
+
+    private static func isLatinOrGreek(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.value {
+        case 0x0000 ... 0x03FF, // Basic Latin through Greek and Coptic (with IPA and combining marks)
+             0x1E00 ... 0x1FFF, // Latin Extended Additional, Greek Extended
+             0x2C60 ... 0x2C7F, // Latin Extended-C
+             0xA720 ... 0xA7FF, // Latin Extended-D
+             0xFF21 ... 0xFF3A, 0xFF41 ... 0xFF5A: // fullwidth Latin letters
+            true
+        default:
+            false
+        }
+    }
+
     /// Derive from the app's preferred localization (follows a per-app language
     /// override, not just the device language). Computed once per process —
     /// `preferredLocalizations` allocates on every call, this sat on the
@@ -344,6 +370,7 @@ struct SubstanceReadModel {
                 // Brand names first, flagship brands ahead of form brands, then
                 // alphabetical — see the batch path (D.1.7 + brand_rank).
                 let aliases = try String.fetchAll(db, sql: "SELECT alias FROM aliases WHERE substance_id = ? ORDER BY COALESCE(brand_rank, 9), alias", arguments: [id])
+                let curatedBrands = try Self.curatedBrands(db, substanceID: id)[id] ?? []
                 let peptideProfile = try resolvedPeptideProfile(db: db, substanceID: id)
                 let references = try resolvedReferences(db: db, substanceID: id)
 
@@ -399,6 +426,7 @@ struct SubstanceReadModel {
                     iupacName: iupacName,
                     physicochemical: physicochemical.hasAnyValue ? physicochemical : nil,
                     popularAliases: popularAliases,
+                    curatedBrands: curatedBrands,
                     misconceptions: misconceptions,
                     combinations: combinations,
                     waterHeat: waterHeat,
@@ -968,6 +996,25 @@ struct SubstanceReadModel {
 
     // MARK: - Batch resolution
 
+    /// Hand-picked flagship brands (`aliases.brand_rank = 0`, from `brands.json`)
+    /// by substance id, alphabetical — one substance's when `substanceID` is
+    /// given. Empty on a database that predates the `brand_rank` column.
+    nonisolated static func curatedBrands(_ db: Database, substanceID: Int64? = nil) throws -> [Int64: [String]] {
+        let columns = try Row.fetchAll(db, sql: "PRAGMA table_info(aliases)").compactMap { $0["name"] as String? }
+        guard columns.contains("brand_rank") else { return [:] }
+        let filter = substanceID == nil ? "" : " AND substance_id = ?"
+        let arguments: StatementArguments = substanceID.map { [$0] } ?? []
+        var out: [Int64: [String]] = [:]
+        for row in try Row.fetchAll(
+            db,
+            sql: "SELECT substance_id, alias FROM aliases WHERE brand_rank = 0\(filter) ORDER BY alias",
+            arguments: arguments,
+        ) {
+            out[row["substance_id"], default: []].append(row["alias"])
+        }
+        return out
+    }
+
     /// Batch-load every substance with ~12 SQL queries instead of ~21k
     /// (12 per-substance × 1785). Uses `ROW_NUMBER() OVER (PARTITION BY …)`
     /// to pick the highest-priority source per (substance, field) in a
@@ -1054,6 +1101,25 @@ struct SubstanceReadModel {
                     let sid: Int64 = row["substance_id"]
                     aliasesByID[sid, default: []].append(row["alias"])
                 }
+
+                // Curated popular aliases — the only aliases a row's secondary
+                // line may show (`Substance.secondaryLine`), and search results
+                // are served from this batch. Probed per DB: a fixture database
+                // may predate the column.
+                var popularAliasesByID: [Int64: [String]] = [:]
+                let substanceColumns = try Row.fetchAll(db, sql: "PRAGMA table_info(substances)")
+                    .compactMap { $0["name"] as String? }
+                if substanceColumns.contains("popular_aliases") {
+                    for row in try Row.fetchAll(
+                        db, sql: "SELECT id, popular_aliases FROM substances WHERE popular_aliases IS NOT NULL",
+                    ) {
+                        guard let raw: String = row["popular_aliases"],
+                              let list = try? JSONDecoder().decode([String].self, from: Data(raw.utf8)),
+                              !list.isEmpty else { continue }
+                        popularAliasesByID[row["id"]] = list
+                    }
+                }
+                let curatedBrandsByID = try Self.curatedBrands(db)
 
                 // Category — priority-resolved, with the non-informative "Other"
                 // sunk below any specific category (mirrors `resolvedCategory`).
@@ -1198,6 +1264,8 @@ struct SubstanceReadModel {
                         molarMass: molarMassByID[sid],
                         smiles: smilesByID[sid],
                         iupacName: iupacNameByID[sid],
+                        popularAliases: popularAliasesByID[sid] ?? [],
+                        curatedBrands: curatedBrandsByID[sid] ?? [],
                     )
                 }
             }

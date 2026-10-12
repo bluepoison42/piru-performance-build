@@ -4,7 +4,7 @@ diff --git a/Piru/Views/Components/SubstanceSearchField.swift b/Piru/Views/Compo
 index f4600e31..8e185865 100644
 --- a/Piru/Views/Components/SubstanceSearchField.swift
 +++ b/Piru/Views/Components/SubstanceSearchField.swift
-@@ -101,6 +101,98 @@ struct SubstanceSearchField: View {
+@@ -83,6 +83,98 @@ struct SubstanceSearchField: View {
                      showResults = false
                  }
  
@@ -40,7 +40,7 @@ index f4600e31..8e185865 100644
 +                                                .accessibilityHidden(true)
 +                                        }
 +                                    }
-+                                    if let secondary = secondaryNames(for: match) {
++                                    if let secondary = match.secondaryLine() {
 +                                        Text(secondary)
 +                                            .captionSecondary()
 +                                    }
@@ -103,7 +103,7 @@ index f4600e31..8e185865 100644
              if showResults {
                  ScrollView {
                      LazyVStack(alignment: .leading, spacing: 0) {
-@@ -192,6 +284,7 @@ struct SubstanceSearchField: View {
+@@ -174,6 +266,7 @@ struct SubstanceSearchField: View {
                  .clipShape(RoundedRectangle(cornerRadius: Theme.CornerRadius.input))
                  .shadow(color: .black.opacity(Theme.Opacity.tint), radius: 4, y: 2)
              }
