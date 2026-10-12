@@ -6000,6 +6000,7 @@ T = {
     "Still need your %@ supplements?": ("还需要服用 %@ 的补剂吗？", "還需要服用 %@ 的補劑嗎？"),
     "%@ supplements (%lld)": ("%@ 补剂（%lld）", "%@ 補劑（%lld）"),
     "Stages this group’s meds": ("将该组用药加入暂存", "將該組用藥加入暫存"),
+    "Unstages this group’s meds": ("将该组用药移出暂存", "將該組用藥移出暫存"),
     "Take All": ("全部服用", "全部服用"),
     "Not taken yet": ("尚未服用", "尚未服用"),
     "Collapses the list": ("折叠列表", "摺疊列表"),
@@ -9159,6 +9160,7 @@ if __name__ == "__main__":
         "This half-life is out of range: projections take 1 minute to 10 years.",
         "This interval is out of range: projections take 1 minute to 1 year.",
         "This schedule takes more than %@ doses to settle, so it can't be projected.",
+        "Unstages this group’s meds",
     }
 
     print("--- Piru main app catalog ---")

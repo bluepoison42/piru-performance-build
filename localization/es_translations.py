@@ -2730,6 +2730,7 @@ ES = {
     "Staged": "En cola",
     "Staged %@": "En cola: %@",
     "Stages this group’s meds": "Pone en cola los medicamentos de este grupo",
+    "Unstages this group’s meds": "Quita de la cola los medicamentos de este grupo",
     "Standard": "Estándar",
     "Star a substance to keep it here": "Marca una sustancia con estrella para tenerla aquí",
     "Star a substance to keep it in your quick-log favorites.": "Marca una sustancia con estrella para tenerla en tus favoritos del Registro rápido.",

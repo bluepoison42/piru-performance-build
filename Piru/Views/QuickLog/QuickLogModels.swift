@@ -251,27 +251,6 @@ struct DailyCategoryGroup: Identifiable {
     var dueSlotMinutes: Int? {
         due.compactMap(\.slotMinutes).min()
     }
-
-    /// Staged count of one member, read off the tray's per-identity snapshot
-    /// under the identity ``DoseTrayModel/stage(dailyMed:colorLookup:)``
-    /// files it under: a med the catalog resolves keys by uid, one it cannot
-    /// by bare name. The two are disjoint, so checking both never false-matches.
-    static func stagedQuantity(of item: DailyMedSnapshot, in staged: [String: StagedChipCounts]) -> Int {
-        let library = SubstanceLibrary.lookup(item.substance.lowercased())
-        let resolved = DoseTrayModel.stagedIdentity(substance: item.substance, productName: item.productName, librarySubstance: library, route: item.route)
-        let nameOnly = DoseTrayModel.stagedIdentity(substance: item.substance, productName: item.productName, librarySubstance: nil, route: item.route)
-        let counts = staged[resolved] ?? staged[nameOnly] ?? .empty
-        return counts.count(route: item.route, amount: item.amount, unit: item.unit)
-    }
-
-    /// Members not yet in the tray — what one tap on the pill stages.
-    func unstaged(in staged: [String: StagedChipCounts]) -> [DailyMedSnapshot] {
-        items.filter { Self.stagedQuantity(of: $0, in: staged) == 0 }
-    }
-
-    func isFullyStaged(in staged: [String: StagedChipCounts]) -> Bool {
-        unstaged(in: staged).isEmpty
-    }
 }
 
 /// One uncovered med slot that is due right now — the "what should I take

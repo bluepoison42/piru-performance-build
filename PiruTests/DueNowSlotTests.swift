@@ -114,14 +114,12 @@ struct DueNowSlotTests {
         #expect(group.isDue)
 
         let tray = DoseTrayModel()
-        #expect(group.isFullyStaged(in: tray.stagedCountsBySubstance()) == false)
-        #expect(group.unstaged(in: tray.stagedCountsBySubstance()).count == 1)
+        #expect(!tray.isPillStaged(group.id))
 
-        // The same path the pill's tap takes; the snapshot keys by the
-        // resolved identity, which is what the pill must read it back under.
-        tray.stage(dailyItem: item, colorLookup: [:])
-        #expect(group.isFullyStaged(in: tray.stagedCountsBySubstance()))
-        #expect(group.unstaged(in: tray.stagedCountsBySubstance()).isEmpty)
+        // The pill's own tap; it reads its state back from what it staged.
+        tray.togglePill(group.id, meds: group.items, colorLookup: [:])
+        #expect(tray.isPillStaged(group.id))
+        #expect(tray.staged.count == 1)
     }
 
     // MARK: Deleted meds
@@ -150,9 +148,11 @@ struct DueNowSlotTests {
         try context.save()
 
         #expect(group.title == group.items[0].displayName)
-        #expect(group.isFullyStaged(in: DoseTrayModel().stagedCountsBySubstance()) == false)
-        #expect(group.unstaged(in: [:]).map(\.route) == [.oral])
+        #expect(group.items.map(\.route) == [.oral])
         #expect(group.due.map(\.item.substance) == ["Sertraline"])
+        let tray = DoseTrayModel()
+        tray.togglePill(group.id, meds: group.items, colorLookup: [:])
+        #expect(tray.isPillStaged(group.id))
     }
 
     @Test
