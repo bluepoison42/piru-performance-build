@@ -23,9 +23,8 @@ struct SubstanceLibraryTests {
         await SubstanceStore.shared.ensureAllLoaded()
         #expect(SubstanceLibrary.name(forDosewikiSlug: "mdma") == "MDMA")
         #expect(SubstanceLibrary.name(forDosewikiSlug: "MDMA") == "MDMA")
-        // dose.wiki's article is the mushrooms; Piru records it on Psilocybin,
-        // where reading the slug as a name would land on "Psilocybin mushrooms".
-        #expect(SubstanceLibrary.name(forDosewikiSlug: "psilocybin-mushrooms") == "Psilocybin")
+        // dose.wiki's article is the mushrooms, and the slug column records it on that row.
+        #expect(SubstanceLibrary.name(forDosewikiSlug: "psilocybin-mushrooms") == "Psilocybin mushrooms")
     }
 
     @Test
