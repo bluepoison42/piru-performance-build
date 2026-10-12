@@ -32,6 +32,18 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- dose.wiki's links: kagerou.glass/piru/log (the "Log in Piru" pill) and /piru/open (the
+                 header chip), App Links verified against kagerou.glass/.well-known/assetlinks.json.
+                 Unverified, Android hands every tap to the browser. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="kagerou.glass" />
+                <data android:pathPrefix="/piru/log" />
+                <data android:pathPrefix="/piru/open" />
+            </intent-filter>
             <!-- piru:// links (DeepLink.swift), read by ContentView's onOpenURL. singleTask hands a
                  link to the running activity through onNewIntent instead of starting a second one. -->
             <intent-filter>
