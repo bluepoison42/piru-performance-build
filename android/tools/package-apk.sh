@@ -1,7 +1,8 @@
 #!/bin/zsh
 # Packages the Android Swift that build-app.sh compiled into an APK (PIRU_CONFIG=release for
 # the release APK, debug otherwise), and installs it on the running emulator when one is
-# attached. Prints the APK path.
+# attached. Prints the APK path. PIRU_UNSIGNED=1 leaves a release APK unsigned, for a build
+# host without the release key; sign it with sign-apk.sh where the key is.
 set -e
 TOOLS="${0:A:h}"
 . "$TOOLS/env.sh"
@@ -27,7 +28,10 @@ LOG="$PIRU_ANDROID/build/gradle.log"
 SKIP_BRIDGE_ANDROID_BUILD_DISABLED=1 SKIP_BRIDGE_ROBOLECTRIC_BUILD_DISABLED=1 \
     gradle "assemble${(C)${PIRU_CONFIG:-debug}}" --console=plain > "$LOG" 2>&1 || { grep -E '^e: |What went wrong' -A4 "$LOG" | head -40; exit 1; }
 OUT="$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/$CONFIG"
-if [[ $CONFIG == release ]]; then
+if [[ $CONFIG == release && -n "${PIRU_UNSIGNED:-}" ]]; then
+    echo "$OUT/app-release-unsigned.apk"
+    exit 0
+elif [[ $CONFIG == release ]]; then
     APK="$OUT/app-release.apk"
     "$TOOLS/sign-apk.sh" "$OUT/app-release-unsigned.apk" "$APK"
 else
