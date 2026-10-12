@@ -143,6 +143,10 @@ struct DoseWikiReportDraftTests {
         #expect(SubstanceLibrary.dosewikiSlug(for: "MDMA") == "mdma")
         #expect(SubstanceLibrary.dosewikiSlug(for: "Lysergic Acid Diethylamide") == "lsd")
         #expect(SubstanceLibrary.dosewikiSlug(for: "Not A Substance 123") == nil)
+        // dose.wiki's mushroom article doses grams of dried mushroom: it is the
+        // mushrooms row's page, and the pure molecule has none.
+        #expect(SubstanceLibrary.dosewikiSlug(for: "Psilocybin mushrooms") == "psilocybin-mushrooms")
+        #expect(SubstanceLibrary.dosewikiSlug(for: "Psilocybin") == nil)
     }
 
     @Test
@@ -179,7 +183,18 @@ struct DoseWikiReportDraftTests {
         let checkIn = note(
             90, "warm", kind: .checkIn, shulgin: 2, mood: 2, heartRate: 84, descriptors: [euphoria],
         )
-        #expect(DoseWikiReportDraft.description(for: checkIn) == "Check-in · ++ · mood +2 · ♥ 84\nwarm\neuphoria")
+        #expect(DoseWikiReportDraft.description(for: checkIn) == "Check-in · ++ · mood +2\nwarm\neuphoria")
+    }
+
+    @Test
+    func `A check-in's heart rate never reaches the public draft`() throws {
+        let draft = DoseWikiReportDraft(report: report(
+            doses: [dose("MDMA")], notes: [note(90, "racing a bit", kind: .checkIn, mood: 1, heartRate: 112)],
+        ))
+        let raw = try #require(String(data: draft.json, encoding: .utf8))
+        #expect(!raw.contains("♥"))
+        #expect(!raw.contains("112"))
+        #expect(draft.payload.timeline?.peak?.first?.description == "Check-in · mood +1\nracing a bit")
     }
 
     @Test

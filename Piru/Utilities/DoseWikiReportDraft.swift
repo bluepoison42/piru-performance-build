@@ -202,16 +202,18 @@ struct DoseWikiReportDraft {
         return String(format: "T%@%d:%02d", sign, totalMinutes / 60, totalMinutes % 60)
     }
 
-    /// A note as plain text, carrying what the Markdown report shows: a first
-    /// line with the check-in marker and the structured ratings
-    /// (`Check-in · ++ · mood +2 · ♥ 84`), then the note's text, then its
-    /// descriptors.
+    /// A note as plain text: a first line with the check-in marker and the
+    /// structured ratings (`Check-in · ++ · mood +2`), then the note's text,
+    /// then its descriptors.
+    ///
+    /// No heart rate or any other Health reading: a dose.wiki report is public,
+    /// where the Markdown export is the user's own to hand on.
     static func description(for note: TripReport.Note) -> String {
         var header: [String] = []
         if note.kind == .checkIn { header.append("Check-in") }
         let structure = TripReport.structureLine(
             shulgin: note.shulgin, mood: note.mood, energy: note.energy,
-            social: note.social, worked: note.worked, heartRate: note.heartRate,
+            social: note.social, worked: note.worked, heartRate: nil,
         )
         if !structure.isEmpty { header.append(structure) }
 
