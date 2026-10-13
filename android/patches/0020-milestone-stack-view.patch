@@ -1,42 +1,58 @@
-SkipFuseUI hosts no custom Layout: on Android the timeline graph's milestone stack is a VStack positioned at its center
+SkipFuseUI hosts no custom Layout: on Android the timeline graph's milestone stack is a VStack positioned at its center, its time offset inside the plot by its measured width
 
 diff --git a/Shared/TimelineGraphView.swift b/Shared/TimelineGraphView.swift
-index 4b8c1d1a..1323dd85 100644
+index 4b8c1d1a..d1d78b0b 100644
 --- a/Shared/TimelineGraphView.swift
 +++ b/Shared/TimelineGraphView.swift
-@@ -838,6 +838,31 @@ struct TimelineGraphView: View, Equatable {
+@@ -838,6 +838,47 @@ struct TimelineGraphView: View, Equatable {
  /// time slides sideways when centering it would run past either edge of the
  /// plot (``TimelineGraphRenderer/milestoneLabelCenterX(_:labelWidth:geom:)``,
  /// the same math the canvas uses to break the Now rule around it).
 +#if os(Android)
 +    /// SkipFuseUI hosts no custom `Layout`: the glyph and time stack in a VStack centered on
-+    /// (`x`, `y`), and the time stays centered under the glyph rather than sliding at the edges.
-+    private struct MilestoneStackLayout<Content: View>: View {
++    /// (`x`, `y`), and the time is offset by the same clamp, applied to the width Compose
++    /// measured for it. Until that first measurement the time sits centered under the glyph.
++    private struct MilestoneStackLayout<Glyph: View, Time: View>: View {
 +        let x: CGFloat
 +        let y: CGFloat
 +        let geom: TimelineGraphRenderer.GraphGeometry
-+        let content: Content
++        let glyph: Glyph
++        let time: Time
++        @State private var timeWidth: CGFloat = 0
 +
-+        init(x: CGFloat, y: CGFloat, geom: TimelineGraphRenderer.GraphGeometry, @ViewBuilder content: () -> Content) {
++        init(x: CGFloat, y: CGFloat, geom: TimelineGraphRenderer.GraphGeometry, @MilestoneStackBuilder content: () -> (Glyph, Time)) {
 +            self.x = x
 +            self.y = y
 +            self.geom = geom
-+            self.content = content()
++            let parts = content()
++            glyph = parts.0
++            time = parts.1
 +        }
 +
 +        var body: some View {
 +            VStack(spacing: TimelineGraphRenderer.MilestoneMetrics.spacing) {
-+                content
++                glyph
++                time
++                    .onGeometryChange(for: CGFloat.self, of: \.size.width) { timeWidth = $0 }
++                    .offset(x: TimelineGraphRenderer.milestoneLabelCenterX(x, labelWidth: timeWidth, geom: geom) - x)
 +            }
 +            .fixedSize()
 +            .position(x: x, y: y)
++        }
++    }
++
++    /// The stack's two parts, glyph then time, kept apart so the time can move on its own.
++    @resultBuilder
++    private enum MilestoneStackBuilder {
++        static func buildBlock<Glyph: View, Time: View>(_ glyph: Glyph, _ time: Time) -> (Glyph, Time) {
++            (glyph, time)
 +        }
 +    }
 +#else
  private struct MilestoneStackLayout: Layout {
      let x: CGFloat
      let y: CGFloat
-@@ -861,3 +886,4 @@ private struct MilestoneStackLayout: Layout {
+@@ -861,3 +902,4 @@ private struct MilestoneStackLayout: Layout {
          )
      }
  }
