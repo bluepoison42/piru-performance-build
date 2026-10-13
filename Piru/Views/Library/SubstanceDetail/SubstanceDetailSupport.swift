@@ -170,8 +170,17 @@ struct SourceAttributionRow: View {
 
     /// Set here rather than by each card, so the footer sits the same distance
     /// below its content everywhere. Pairs with the ~20pt the enclosing section
-    /// already leaves beneath it.
-    private static let topGap: CGFloat = 12
+    /// already leaves beneath it. A line that continues the source list (the
+    /// compare link) uses it too, so every line in the list keeps one rhythm.
+    static let topGap: CGFloat = 12
+
+    /// The gap between the book glyph and the label. A line that sits on the
+    /// label column composes ``SourceAttributionGlyph`` and this gap rather
+    /// than hardcoding an inset, so it tracks the glyph at every text size.
+    static let glyphSpacing: CGFloat = Spacing.sm
+
+    /// The vertical padding around one line's content.
+    static let lineVerticalPadding: CGFloat = Spacing.xxs
 
     private var displayName: String {
         SubstanceStore.shared.sourceDisplayName(forSlug: slug)
@@ -205,10 +214,8 @@ struct SourceAttributionRow: View {
     /// verify against the original. The accent source name is the tappable cue,
     /// same as everywhere else in the app.
     private var rowContent: some View {
-        HStack(spacing: Spacing.sm) {
-            Image(systemName: "book.closed")
-                .font(.caption2)
-                .foregroundStyle(Theme.secondaryLabel)
+        HStack(spacing: Self.glyphSpacing) {
+            SourceAttributionGlyph()
             Text(label)
                 .font(.caption2)
                 .foregroundStyle(Theme.secondaryLabel)
@@ -220,10 +227,21 @@ struct SourceAttributionRow: View {
                 .foregroundStyle(Theme.accent)
             Spacer()
         }
-        .padding(.vertical, Spacing.xxs)
+        .padding(.vertical, Self.lineVerticalPadding)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("\(String(localized: label)), source: \(displayName)"))
+    }
+}
+
+/// The book glyph that leads a ``SourceAttributionRow``. A line that belongs to
+/// the source list but names no source places it `.hidden()`, which keeps its
+/// text on the label column at every Dynamic Type size.
+struct SourceAttributionGlyph: View {
+    var body: some View {
+        Image(systemName: "book.closed")
+            .font(.caption2)
+            .foregroundStyle(Theme.secondaryLabel)
     }
 }
 
