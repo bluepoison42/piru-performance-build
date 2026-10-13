@@ -1,0 +1,20 @@
+The quick log Edit sheet opens full height on Android: SkipUI draws one detent, taken from the set in its unordered iteration, so the sheet opened at half or full height by launch; at half height the keyboard leaves Add Favorite's search field and its results no room
+
+diff --git a/Piru/Views/QuickLog/QuickLogEditSheet.swift b/Piru/Views/QuickLog/QuickLogEditSheet.swift
+index 16461c3d..dff93e48 100644
+--- a/Piru/Views/QuickLog/QuickLogEditSheet.swift
++++ b/Piru/Views/QuickLog/QuickLogEditSheet.swift
+@@ -91,7 +91,13 @@ struct QuickLogEditSheet: View {
+                 }
+             }
+         }
++        #if os(Android)
++            // SkipUI draws a sheet at a single detent, picked from the set in its unordered
++            // iteration; at half height the keyboard leaves Add Favorite's field no room.
++            .presentationDetents([.large])
++        #else
+         .presentationDetents([.medium, .large])
++        #endif
+     }
+ 
+     // MARK: Meds
