@@ -1,13 +1,13 @@
 Android has no TestFlight crash reports: Settings gets a Report a Problem row that writes a diagnostics file and opens the share chooser (Android/Views/ReportProblem+Android.swift)
 
 diff --git a/Piru/Views/Settings/SettingsView.swift b/Piru/Views/Settings/SettingsView.swift
-index a3e195eb..358849b9 100644
+index 1dbd441b..fa0230c0 100644
 --- a/Piru/Views/Settings/SettingsView.swift
 +++ b/Piru/Views/Settings/SettingsView.swift
-@@ -11,6 +11,9 @@ struct SettingsView: View {
-                     SubstanceNamesSection()
+@@ -12,6 +12,9 @@ struct SettingsView: View {
                  }
                  ScreensSection()
+                 DiscordSection()
 +                #if os(Android)
 +                    ReportProblemSection()
 +                #endif

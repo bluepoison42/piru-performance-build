@@ -3330,7 +3330,7 @@ ES = {
     "Choose Another Folder…": "Elegir otra carpeta…",
     "Turn Off Folder Backup": "Desactivar la copia en carpeta",
     "Back Up to a Folder…": "Hacer copia en una carpeta…",
-    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here.": "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca se conecta a internet. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta.",
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.": "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca la envía a ninguna parte. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta.",
     "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.": "Se guarda cada vez que sales de la app, cifrada con tu frase de contraseña. Al desactivarla, la última copia se queda en la carpeta.",
     "Backup Found": "Copia encontrada",
     "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase.": "Esta carpeta ya contiene una copia de seguridad de Piru. Escribe su frase de contraseña para fusionarla con tu diario; las copias siguientes usarán la misma frase.",
@@ -3355,6 +3355,13 @@ ES = {
     "Open": "Abrir",
     "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.": "Esto abre el formulario de relatos de viaje de dose.wiki con esta sesión ya rellenada. Nada sale de tu dispositivo hasta que lo envíes allí.",
     "Some long notes were shortened or left out to fit.": "Algunas notas largas se acortaron u omitieron para que quepan.",
+    "Discord": "Discord",
+    "Get help with the app or send your suggestions on our Discord server.": "Pide ayuda con la app o envía tus sugerencias en nuestro servidor de Discord.",
+    "Piru %@ is available": "Piru %@ está disponible",
+    "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.": "Está en GitHub, de donde viene Piru, e instalarla sobre esta versión conserva tu diario.",
+    "Download": "Descargar",
+    "Check for Updates": "Buscar actualizaciones",
+    "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.": "Una vez al día, Piru le pregunta a GitHub cuál es la versión más reciente. No se envía nada sobre ti ni sobre tu diario.",
 }
 
 # Spain only: the few strings Spain must see differently — today the iOS Settings

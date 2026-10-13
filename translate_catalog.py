@@ -7931,9 +7931,9 @@ T = {
         "备份到文件夹…",
         "備份到資料夾…",
     ),
-    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here.": (
-        "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不联网。在新手机上恢复时，在这里选择同一个文件夹即可。",
-        "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不連網。在新手機上還原時，在這裡選擇同一個資料夾即可。",
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.": (
+        "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不把它发送到任何地方。在新手机上恢复时，在这里选择同一个文件夹即可。",
+        "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不把它傳送到任何地方。在新手機上還原時，在這裡選擇同一個資料夾即可。",
     ),
     "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.": (
         "每次你离开应用时保存，并用你的密码短语加密。关闭后，最后一份备份会留在文件夹中。",
@@ -8023,6 +8023,36 @@ T = {
     "Some long notes were shortened or left out to fit.": (
         "部分较长的记录已被缩短或省略，以便放得下。",
         "部分較長的紀錄已被縮短或省略，以便放得下。",
+    ),
+    # Settings: the Discord row (Views/Settings/DiscordSection.swift); Android's update check
+    # (android/app/Sources/Piru/Android/Views/AppUpdate+Android.swift).
+    "Discord": (
+        "Discord",
+        "Discord",
+    ),
+    "Get help with the app or send your suggestions on our Discord server.": (
+        "在我们的 Discord 服务器上获取应用帮助，或提出你的建议。",
+        "在我們的 Discord 伺服器上取得應用程式協助，或提出你的建議。",
+    ),
+    "Piru %@ is available": (
+        "Piru %@ 已推出",
+        "Piru %@ 已推出",
+    ),
+    "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.": (
+        "新版本在 GitHub 上，也就是 Piru 的来源；直接安装在当前版本之上会保留你的日记。",
+        "新版本在 GitHub 上，也就是 Piru 的來源；直接安裝在目前版本之上會保留你的日記。",
+    ),
+    "Download": (
+        "下载",
+        "下載",
+    ),
+    "Check for Updates": (
+        "检查更新",
+        "檢查更新",
+    ),
+    "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.": (
+        "Piru 每天向 GitHub 查询一次最新版本。不会发送任何关于你或你日记的信息。",
+        "Piru 每天向 GitHub 查詢一次最新版本。不會傳送任何關於你或你日記的資訊。",
     ),
 }
 
@@ -8322,7 +8352,7 @@ if __name__ == "__main__":
         "Choose Another Folder…",
         "Turn Off Folder Backup",
         "Back Up to a Folder…",
-        "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here.",
+        "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.",
         "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.",
         "Backup Found",
         "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase.",
@@ -9178,6 +9208,13 @@ if __name__ == "__main__":
         "Open",
         "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.",
         "Some long notes were shortened or left out to fit.",
+        "Discord",
+        "Get help with the app or send your suggestions on our Discord server.",
+        "Piru %@ is available",
+        "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.",
+        "Download",
+        "Check for Updates",
+        "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.",
     }
 
     print("--- Piru main app catalog ---")

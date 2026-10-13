@@ -327,7 +327,7 @@ struct FolderBackupSection: View {
             Text("Backup")
         } footer: {
             if manager.folder == nil {
-                Text("Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here.")
+                Text("Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.")
             } else {
                 Text("Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.")
             }
