@@ -223,3 +223,16 @@ struct WikiDurationChart: Decodable {
         }
     }
 }
+
+/// Source links in the substance.wiki data are third-party strings, so only a web
+/// address becomes a tappable link; any other scheme (`piru:`, `tel:`, a custom app
+/// scheme) would hand the tap to whatever claims it.
+enum WikiSourceLink {
+    static func url(_ string: String) -> URL? {
+        guard let url = URL(string: string),
+              let scheme = url.scheme?.lowercased(), scheme == "https" || scheme == "http",
+              url.host?.isEmpty == false
+        else { return nil }
+        return url
+    }
+}

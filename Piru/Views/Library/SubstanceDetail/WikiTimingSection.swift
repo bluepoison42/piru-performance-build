@@ -136,7 +136,7 @@ struct WikiTimingSection: View {
                 }
             }
             ForEach(chart.sources ?? []) { source in
-                if let url = URL(string: source.url) {
+                if let url = WikiSourceLink.url(source.url) {
                     Link(destination: url) { Text(verbatim: source.title) }.font(.caption)
                 }
             }
@@ -214,10 +214,10 @@ struct WikiTimingSection: View {
                 if let text = timingText[key] { Text(verbatim: text).captionSecondary() }
             }
             Text(verbatim: study.source.locator).captionSecondary()
-            if let url = URL(string: study.source.articleUrl) {
+            if let url = WikiSourceLink.url(study.source.articleUrl) {
                 Link("Study article", destination: url).font(.caption)
             }
-            if let url = URL(string: study.source.tableUrl) {
+            if let url = WikiSourceLink.url(study.source.tableUrl) {
                 Link("Study data table", destination: url).font(.caption)
             }
         }

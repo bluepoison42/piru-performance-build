@@ -149,4 +149,14 @@ struct WikiTimingRecordTests {
         #expect(result.curve == nil)
         #expect(result.formulation == "Fictional tablet")
     }
+
+    @Test
+    func `Only a web address from the source data becomes a link`() {
+        #expect(WikiSourceLink.url("https://doi.org/10.1038/s41386-020-00883-6") != nil)
+        #expect(WikiSourceLink.url("http://example.org/a") != nil)
+        #expect(WikiSourceLink.url("piru://quicklog?substance=x") == nil)
+        #expect(WikiSourceLink.url("tel:123") == nil)
+        #expect(WikiSourceLink.url("javascript:alert(1)") == nil)
+        #expect(WikiSourceLink.url("https:///nohost") == nil)
+    }
 }
