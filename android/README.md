@@ -162,7 +162,8 @@ two contexts.
   leaves the device. Automatic backup, iOS's iCloud backup on Android, writes a
   passphrase-sealed `.piruenc` into a folder the user picks through the Storage Access
   Framework (`app/Sources/Piru/Android/Backup/`). A cloud folder is uploaded by its
-  provider's app, so the manifest still drops the network permission.
+  provider's app. The one connection Piru opens is the daily update check, which asks GitHub
+  for the newest release, sends nothing about the user, and turns off in Settings.
 - **Migration.** Import accepts every format iOS does, including PsychonautWiki Journal's
   (PsyLog), through the Storage Access Framework.
 
