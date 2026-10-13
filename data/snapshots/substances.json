@@ -37626,10 +37626,20 @@
     "name": "Kratom",
     "display_name": "",
     "aliases": [
+      "Biak",
+      "Biak-Biak",
+      "Ithang",
+      "Kakuam",
       "Ketum",
+      "Krathom",
       "Kratum",
+      "Madat",
+      "Maeng Da",
+      "Mambog",
       "Mitragyna Speciosa",
-      "biak",
+      "Mitragynine speciosa",
+      "Thang",
+      "Thom",
       "กระท่อม",
       "卡痛",
       "卡痛叶",
@@ -44584,21 +44594,9 @@
     "display_name": "",
     "aliases": [
       "9-methoxycorynantheidine",
-      "Biak",
-      "Biak-Biak",
-      "Ithang",
-      "Kakuam",
-      "Ketum",
-      "Krathom",
       "MG",
       "MIT",
-      "Madat",
-      "Maeng Da",
-      "Mambog",
-      "Mitragynine speciosa",
-      "SK&F 12711",
-      "Thang",
-      "Thom"
+      "SK&F 12711"
     ],
     "category": "Opioid",
     "display_class": "recreational",
@@ -53041,14 +53039,6 @@
     "aliases": [
       "4-PO-DMT",
       "4-磷酰氧基-N,N-二甲基色胺",
-      "Boomers",
-      "Magic Mushrooms",
-      "Magic Truffles",
-      "Mushies",
-      "Psilocybe",
-      "Psychedelic Mushrooms",
-      "Shrooms",
-      "Teonanacatl",
       "indocybin",
       "psilocin phosphate ester",
       "psilocybine",
@@ -53098,10 +53088,16 @@
     "display_name": "",
     "aliases": [
       "4-PO-DMT",
+      "Boomers",
       "Magic Mushrooms",
+      "Magic Truffles",
+      "Mushies",
       "Mushrooms",
+      "Psilocybe",
       "Psilocybe cubensis",
+      "Psychedelic Mushrooms",
       "Shrooms",
+      "Teonanacatl",
       "mushroom",
       "psylocybin",
       "古巴裸盖菇"
@@ -61707,12 +61703,12 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "10.1093/ijnp/pyaf077",
+      "Current and novel dual orexin receptor antagonists for the treatment of insomnia: the emergence of vornorexant",
       "PMDA review report (審査報告書), Vorzzz (ボルズィ錠) 2.5/5/10 mg, Taisho, 2025, Table 22",
-      "https://doi.org/10.1007/s00213-022-06089-6",
-      "https://doi.org/10.1093/sleep/zsaf291",
-      "https://doi.org/10.1111/pcn.13888",
-      "https://doi.org/10.1007/s00213-026-07095-8"
+      "Effects of TS-142, a novel dual orexin receptor antagonist, on sleep in patients with insomnia: a randomized, double-blind, placebo-controlled phase 2 study",
+      "Efficacy and safety of vornorexant in Japanese patients with insomnia: a randomized, placebo-controlled phase 3 pivotal study",
+      "Driving performance in the morning after bedtime vornorexant administration: A randomized clinical trial using a driving simulator",
+      "Comparison of next-morning residual effects by bedtime administration of vornorexant and zopiclone in healthy older participants: postural stability, neuropsychological functions, and subjective sleepiness in a randomized clinical study"
     ],
     "data_gaps": [
       "mechanism_of_action"
@@ -62435,7 +62431,8 @@
       "sublingual"
     ],
     "routes_with_dose": [
-      "oral"
+      "oral",
+      "sublingual"
     ],
     "has_dose_data": true,
     "has_duration_data": true,

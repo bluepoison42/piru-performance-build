@@ -7,17 +7,18 @@ struct DoseInfoView: View {
     var saltForm: String?
     /// Selected isomer code; `nil` (the default) selects the racemic ladder.
     var isomer: String?
-    let currentDose: Double?
+    let currentDose: DoseQuantity?
 
-    private var doseRange: DoseRange? {
-        substance.doseRange(for: route, saltForm: saltForm, isomer: isomer)
+    private var ladder: DoseLadder? {
+        substance.ladder(for: route, saltForm: saltForm, isomer: isomer)
     }
 
     var body: some View {
-        if let doseRange {
+        if let ladder {
+            let doseRange = ladder.range
+            let unit = ladder.unit
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                let unit = substance.unit(for: route, saltForm: saltForm, isomer: isomer)
-                DoseLevelIndicator(doseRange: doseRange, currentDose: currentDose, unit: unit)
+                DoseLevelIndicator(ladder: ladder, dose: currentDose)
 
                 Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
                     if let threshold = doseRange.threshold {
@@ -57,9 +58,9 @@ struct DoseInfoView: View {
                     }
                 }
 
-                elementalNote(unit: unit)
+                elementalNote(ladder: ladder)
 
-                switch doseRange.dosingPrecision(unit: unit) {
+                switch ladder.dosingPrecision {
                 case .critical: VolumetricDosingDisclaimer()
                 case .recommended: PreciseScaleNote()
                 case .none: EmptyView()
@@ -72,12 +73,13 @@ struct DoseInfoView: View {
     /// Lithium…): "≈ N mg elemental" for the entered dose, else the percentage.
     /// Hidden when the selected salt has no known elemental fraction.
     @ViewBuilder
-    private func elementalNote(unit: String) -> some View {
+    private func elementalNote(ladder: DoseLadder) -> some View {
         if let fraction = substance.elementalFraction(for: route, saltForm: saltForm, isomer: isomer) {
             HStack(spacing: Spacing.sm) {
                 Image(systemName: "atom").imageScale(.small).accessibilityHidden(true)
-                if let currentDose, let elemental = substance.elementalAmount(of: currentDose, for: route, saltForm: saltForm, isomer: isomer) {
-                    Text("≈ \(elemental.doseFormatted) \(unit) elemental", comment: "Elemental content of a salt dose")
+                if let amount = currentDose.flatMap(ladder.reading(of:)),
+                   let elemental = substance.elementalAmount(of: amount, for: route, saltForm: saltForm, isomer: isomer) {
+                    Text("≈ \(elemental.doseFormatted) \(ladder.unit) elemental", comment: "Elemental content of a salt dose")
                 } else {
                     elementalPercentCaption(fraction)
                 }
@@ -127,6 +129,10 @@ struct RouteDosingCard: View {
     /// The route name as a card title. Off in the detail list (the section
     /// header and the route picker already name it); on in the share image.
     var showsTitle = true
+    /// The dosage row carrying the emphasis wash: the typical tier on the
+    /// substance page and share image, the dose's own tier on an entry (the
+    /// tier its strength chip names), `nil` for no row.
+    var emphasizedLevel: DoseLevel? = .common
 
     private var hasDosage: Bool {
         showsDoseLadder && (doses?.hasAnyValue ?? false)
@@ -165,19 +171,19 @@ struct RouteDosingCard: View {
             eyebrow("Dosage")
             VStack(spacing: 0) {
                 if let threshold = doses.threshold {
-                    levelRow("Threshold", value: "\(threshold.doseFormatted) \(unit)")
+                    levelRow("Threshold", value: "\(threshold.doseFormatted) \(unit)", emphasized: emphasizedLevel == .threshold)
                 }
                 if let light = doses.light {
-                    levelRow("Light", value: rangeText(light))
+                    levelRow("Light", value: rangeText(light), emphasized: emphasizedLevel == .light)
                 }
                 if let common = doses.common {
-                    levelRow("Common", value: rangeText(common), emphasized: true)
+                    levelRow("Common", value: rangeText(common), emphasized: emphasizedLevel == .common)
                 }
                 if let strong = doses.strong {
-                    levelRow("Strong", value: rangeText(strong))
+                    levelRow("Strong", value: rangeText(strong), emphasized: emphasizedLevel == .strong)
                 }
                 if let heavy = doses.heavy {
-                    levelRow("Heavy", value: "\(heavy.doseFormatted)+ \(unit)")
+                    levelRow("Heavy", value: "\(heavy.doseFormatted)+ \(unit)", emphasized: emphasizedLevel == .heavy)
                 }
             }
             if let elementalFraction {
@@ -202,7 +208,7 @@ struct RouteDosingCard: View {
         if unit.localizedCaseInsensitiveContains("THC") {
             THCContentNote()
         } else {
-            switch doses.dosingPrecision(unit: unit) {
+            switch DoseLadder(range: doses, unit: unit).dosingPrecision {
             case .critical: VolumetricDosingDisclaimer()
             case .recommended: PreciseScaleNote()
             case .none: EmptyView()
@@ -256,7 +262,7 @@ struct RouteDosingCard: View {
     }
 
     /// A clean dose/duration row — no colored dot or bar (those read as noise).
-    /// `emphasized` highlights the typical value (Common dose, Total duration)
+    /// `emphasized` highlights one row (``emphasizedLevel``, Total duration)
     /// with weight and a faint accent wash that bleeds slightly past the content
     /// so the labels/values stay edge-aligned. Every row carries the same
     /// vertical padding so the emphasised one is no taller than its neighbours.

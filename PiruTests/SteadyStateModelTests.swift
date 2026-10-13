@@ -22,6 +22,53 @@ struct SteadyStateModelTests {
         #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1_440, dose: 0) == nil)
     }
 
+    @Test
+    func `Out-of-range and non-finite inputs return nil`() {
+        // Large enough that the chart's axis ticks would pass Int.max.
+        #expect(make(halfLifeMinutes: 1e20 * 60, intervalMinutes: 1_440) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1e20 * 60) == nil)
+        #expect(make(halfLifeMinutes: .infinity, intervalMinutes: 1_440) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: .nan) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1e-6) == nil)
+        #expect(make(halfLifeMinutes: 1_440, intervalMinutes: 1_440, dose: .infinity) == nil)
+    }
+
+    @Test
+    func `Extremes inside the range stay finite`() throws {
+        // Ten-year half-life dosed daily: ~22,000 doses to settle, past the cap.
+        #expect(make(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
+            intervalMinutes: 1_440,
+        ) == nil)
+
+        let longest = try #require(make(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
+            intervalMinutes: 30 * 1_440,
+        ))
+        #expect(longest.totalMinutes.isFinite)
+        #expect(longest.totalMinutes / 1_440 < Double(Int.max))
+        #expect(longest.peakAmount.isFinite && longest.troughAmount.isFinite)
+
+        let sparsest = try #require(make(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.lowerBound,
+            intervalMinutes: SteadyStateModel.intervalRange.upperBound,
+        ))
+        #expect(sparsest.totalMinutes.isFinite)
+        #expect(sparsest.fluctuationPercent.isFinite)
+    }
+
+    @Test
+    func `A refused schedule names its reason`() {
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: 1e20 * 60, intervalMinutes: 1_440) == .halfLifeOutOfRange)
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: .nan, intervalMinutes: 1_440) == .halfLifeOutOfRange)
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: 1_440, intervalMinutes: 1e-6) == .intervalOutOfRange)
+        #expect(SteadyStateModel.refusal(
+            halfLifeMinutes: SteadyStateModel.halfLifeRange.upperBound,
+            intervalMinutes: 1_440,
+        ) == .tooManyDoses)
+        #expect(SteadyStateModel.refusal(halfLifeMinutes: 1_440, intervalMinutes: 1_440) == nil)
+    }
+
     // MARK: - Accumulation ratio
 
     @Test

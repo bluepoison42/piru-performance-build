@@ -88,7 +88,7 @@ struct SubstanceModelDatabaseTests {
         #expect(twoMMC.ke == meph.ke && twoMMC.ka == meph.ka) // identical borrowed PK
         #expect(meph.wSERT > twoMMC.wSERT) // mephedrone's tighter SERT EC₅₀ ⇒ higher weight
         // Compare at each one's own reference dose (amt ≈ 1) so magnitude is matched and only the mix differs.
-        #expect((sim(meph, meph.refUnit).content.max() ?? 0) > (sim(twoMMC, twoMMC.refUnit).content.max() ?? 0))
+        #expect((sim(meph, meph.refDoseMg).content.max() ?? 0) > (sim(twoMMC, twoMMC.refDoseMg).content.max() ?? 0))
     }
 
     @Test
@@ -104,7 +104,7 @@ struct SubstanceModelDatabaseTests {
     func `Aliases resolve to the same canonical params`() throws {
         let a = try #require(params("Adderall"))
         let b = try #require(params("amphetamine"))
-        #expect(a.deplete == b.deplete && a.releaser == b.releaser && a.refUnit == b.refUnit)
+        #expect(a.deplete == b.deplete && a.releaser == b.releaser && a.refDoseMg == b.refDoseMg)
     }
 
     @Test
@@ -162,7 +162,7 @@ struct SubstanceModelDatabaseTests {
     @Test
     func `The view gates on a calibrated substance, not any modelable stimulant`() {
         func supports(_ names: [String]) -> Bool {
-            let doses = names.map { MechanisticSessionModel.DoseInput(name: $0, amount: 50, route: .oral, hours: 0) }
+            let doses = names.map { MechanisticSessionModel.DoseInput(name: $0, dose: .mg(50), route: .oral, hours: 0) }
             var pharm: [String: PharmacologyParameters] = [:]
             for name in names {
                 pharm[SubstanceModelDatabase.normalize(name)] = SubstanceStore.shared.pharmacologyParameters(forSubstanceName: name)
@@ -175,5 +175,48 @@ struct SubstanceModelDatabaseTests {
         // A calibrated substance anywhere in the session flips it on; the rest shape the curves.
         #expect(supports(["amphetamine"]))
         #expect(supports(["methamphetamine", "3-MMC"]))
+    }
+
+    @Test
+    func `Effect Estimates converts logged mass units and omits volume doses`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let start = Date(timeIntervalSince1970: 0)
+        let pharmacology = ["3-mmc": SubstanceStore.shared.pharmacologyParameters(forSubstanceName: "3-MMC")]
+
+        func modeled(_ amount: Double, unit: String) throws -> (agent: EffectAgent, feeling: [Double]) {
+            let entry = DoseEntry(substance: "3-MMC", amount: amount, unit: unit, route: .oral, timestamp: start)
+            let doses = SessionResolveModel.computeMechanisticDoses([entry], startDate: start)
+            let agent = try #require(MechanisticSessionModel.effectAgents(doses: doses, pharmacology: pharmacology).first)
+            let result = try #require(MechanisticSessionModel.compute(doses: doses, pharmacology: pharmacology, tMax: 12))
+            return (agent, result.timeline.eu)
+        }
+
+        let mg = try modeled(80, unit: "mg")
+        let grams = try modeled(0.08, unit: "g")
+        let micrograms = try modeled(80_000, unit: "µg")
+        for candidate in [grams, micrograms] {
+            #expect(candidate.agent.doses.count == 1)
+            #expect(candidate.agent.doses[0].t == mg.agent.doses[0].t)
+            #expect(candidate.agent.doses[0].amt == mg.agent.doses[0].amt)
+            #expect(candidate.feeling == mg.feeling)
+        }
+        #expect(mg.agent.doses[0].amt == 1)
+
+        let volume = DoseEntry(substance: "3-MMC", amount: 80, unit: "mL", route: .oral, timestamp: start)
+        let volumeDoses = SessionResolveModel.computeMechanisticDoses([volume], startDate: start)
+        #expect(volumeDoses.isEmpty)
+        #expect(MechanisticSessionModel.effectAgents(doses: volumeDoses, pharmacology: pharmacology).isEmpty)
+        #expect(MechanisticSessionModel.compute(doses: volumeDoses, pharmacology: pharmacology, tMax: 12) == nil)
+    }
+
+    @Test
+    func `A curated reference dose is in mg even for a gram-dosed substance`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let start = Date(timeIntervalSince1970: 0)
+        let pharmacology = ["kratom": SubstanceStore.shared.pharmacologyParameters(forSubstanceName: "Kratom")]
+        let entry = DoseEntry(substance: "Kratom", amount: 3, unit: "g", route: .oral, timestamp: start)
+        let doses = SessionResolveModel.computeMechanisticDoses([entry], startDate: start)
+        let agent = try #require(MechanisticSessionModel.effectAgents(doses: doses, pharmacology: pharmacology).first)
+        #expect(agent.doses[0].amt == 1)
     }
 }

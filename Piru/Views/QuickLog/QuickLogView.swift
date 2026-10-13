@@ -25,6 +25,8 @@ struct QuickLogSheet: View {
     var prefillSubstance: String?
     /// A complete dose for `prefillSubstance` — the box scanner's hand-off.
     var prefillDose: DosePrefill?
+    /// The route to stage `prefillSubstance` on, in place of its default.
+    var prefillRoute: RouteOfAdministration?
 
     /// Days of dose history the quick-log surfaces treat as "recent". Must
     /// exceed the longest plausible "still-active PK badge" horizon: a dose
@@ -40,7 +42,13 @@ struct QuickLogSheet: View {
     @State private var cutoff = Date.now.addingTimeInterval(-recentWindowDays * 86_400)
 
     var body: some View {
-        QuickLogView(prestagedRoutine: prestagedRoutine, prefillSubstance: prefillSubstance, prefillDose: prefillDose, historyCutoff: cutoff)
+        QuickLogView(
+            prestagedRoutine: prestagedRoutine,
+            prefillSubstance: prefillSubstance,
+            prefillDose: prefillDose,
+            prefillRoute: prefillRoute,
+            historyCutoff: cutoff,
+        )
     }
 }
 
@@ -57,6 +65,9 @@ struct QuickLogView: View {
     /// With `prefillSubstance`, stage it as this complete dose rather than an
     /// empty draft.
     var prefillDose: DosePrefill?
+    /// With `prefillSubstance`, stage it on this route rather than the
+    /// substance's default (`piru://quicklog?route=`, dose.wiki's route tab).
+    var prefillRoute: RouteOfAdministration?
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.appNavigator) private var navigator
@@ -114,10 +125,17 @@ struct QuickLogView: View {
     /// reference-typed model drops the view's stored surface to a few flags.
     @State private var content = QuickLogContentModel()
 
-    init(prestagedRoutine: String? = nil, prefillSubstance: String? = nil, prefillDose: DosePrefill? = nil, historyCutoff: Date) {
+    init(
+        prestagedRoutine: String? = nil,
+        prefillSubstance: String? = nil,
+        prefillDose: DosePrefill? = nil,
+        prefillRoute: RouteOfAdministration? = nil,
+        historyCutoff: Date,
+    ) {
         self.prestagedRoutine = prestagedRoutine
         self.prefillSubstance = prefillSubstance
         self.prefillDose = prefillDose
+        self.prefillRoute = prefillRoute
         // The windowed @Query closes over the init parameter — see QuickLogSheet
         // for the cutoff's meaning.
         _allEntries = Query(
@@ -341,12 +359,23 @@ struct QuickLogView: View {
 
     /// Cheap change-signature for the group pills' inputs (tiny N), used to
     /// invalidate `cachedDailyGroups` on an in-place edit from the My Meds
-    /// hub. Times/quiet/PRN all move a med between groups, so they key it.
-    private var routineSignature: [String] {
+    /// hub. Every field the groups copy or group by keys it, since the pills
+    /// read value snapshots rather than the live models. The row identity
+    /// keys it too, so a med deleted and re-inserted with identical fields (a
+    /// restore, an import) still rebuilds the cache off the new rows.
+    private var routineSignature: [RoutineSignatureRow] {
         dailyDoseItems.map { item in
             let times = item.reminderTimesMinutes.map(String.init).joined(separator: ",")
-            return "i:\(item.substance)|\(times)|\(item.isQuiet)|\(item.isAsNeeded)|\(item.sortOrder)"
+            let days = item.frequencyDays.map(String.init).joined(separator: ",")
+            let dose = "\(item.substance)|\(item.productName ?? "")|\(item.route.rawValue)|\(item.amount)|\(item.unit)|\(item.isBackgroundMed)"
+            let schedule = "\(times)|\(item.isQuiet)|\(item.isAsNeeded)|\(item.maxPerDay ?? -1)|\(item.frequencyRaw)|\(days)|\(item.startDate.timeIntervalSinceReferenceDate)"
+            return RoutineSignatureRow(id: item.persistentModelID, fields: "\(dose)|\(schedule)|\(item.sortOrder)")
         }
+    }
+
+    private struct RoutineSignatureRow: Equatable {
+        let id: PersistentIdentifier
+        let fields: String
     }
 
     private func stagedQuantity(_ item: DailyDoseItem) -> Int {
@@ -378,7 +407,8 @@ struct QuickLogView: View {
     /// to enter rather than on the card list. No-op for an unknown name.
     private func stagePrefill(named name: String) {
         guard let substance = SubstanceLibrary.resolveFull(name) else { return }
-        let route = substance.defaultRoute
+        let route = prefillRoute ?? substance.defaultRoute
+        let unit = substance.routes.first { $0.route == route }?.unit ?? substance.defaultUnit
         if let prefillDose {
             withAnimation(.snappy) {
                 tray.stage(
@@ -397,7 +427,7 @@ struct QuickLogView: View {
             tray.stageDraft(
                 substance: substance.name,
                 route: route,
-                unit: substance.defaultUnit,
+                unit: unit,
                 tint: content.cachedColorLookup[substance.name.lowercased()],
                 librarySubstance: substance,
             )

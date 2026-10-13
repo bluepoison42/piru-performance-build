@@ -22,7 +22,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Compat"),
-        .package(url: "https://github.com/groue/GRDB.swift.git", exact: "7.10.0"),
+        .package(url: "https://github.com/groue/GRDB.swift.git", exact: "7.11.1"),
     ],
     targets: [
         // Named `Piru` so module-qualified names (`Piru.SourceFacet`) resolve as they do in the app.

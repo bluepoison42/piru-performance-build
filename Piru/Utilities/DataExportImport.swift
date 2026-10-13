@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+import WidgetKit
 
 // MARK: - Millisecond Timestamps
 
@@ -83,6 +84,8 @@ enum DataExportImport {
         /// present) and the old (`customSubstances` present, no `exportSource`)
         /// shapes; ``importPsyLog`` decodes both leniently.
         case psyLog
+        /// A DrugsPRO journal export (`v`, `e`, `u`).
+        case drugsPro
         /// Piru's own early `doseEntries` backup format.
         case legacy
     }
@@ -107,6 +110,7 @@ enum DataExportImport {
         }
         if object["experiences"] != nil { return .psyLog }
         if object["doseEntries"] != nil { return .legacy }
+        if isDrugsPro(object) { return .drugsPro }
         if object["sealed"] != nil, object["kind"] != nil { throw ImportFileError.encrypted }
         throw ImportFileError.unrecognized
     }
@@ -125,6 +129,8 @@ enum DataExportImport {
             }
         case .psyLog:
             _ = try JSONDecoder().decode(PsyLogFile.self, from: data)
+        case .drugsPro:
+            _ = try JSONDecoder().decode(DrugsProFile.self, from: data)
         case .legacy:
             try validateLegacy(data: data)
         }
@@ -133,7 +139,8 @@ enum DataExportImport {
     /// Routes the file to the importer ``classify(_:)`` names. A native file
     /// the decoder rejects surfaces as ``ImportFileError/malformedNative`` so
     /// the alert can say which app wrote it. `mode` is `.replace` only when the
-    /// caller has just emptied the store for this import.
+    /// caller has just emptied the store for this import. Saves the context and
+    /// emits the dose-log change tick itself, so a caller adds neither.
     @MainActor
     static func importJSON(
         data: Data,
@@ -152,10 +159,12 @@ enum DataExportImport {
             }
         case .psyLog:
             try importPsyLog(data: data, context: context, customStore: customStore)
+        case .drugsPro:
+            try importDrugsPro(data: data, context: context)
         case .legacy:
             try importLegacy(data: data, context: context)
         }
-        // Cluster any session-less imports (PsyLog/legacy) into sessions. The
+        // Cluster any session-less imports (PsyLog/DrugsPRO/legacy) into sessions. The
         // native importer assigns its own sessions, so this is a no-op for it.
         SessionService.assignUnassignedDoses(in: context)
 
@@ -173,8 +182,14 @@ enum DataExportImport {
             applySettings(fileSettings, mode: mode, to: settings)
         }
 
-        // One debounced tick wakes the tolerance cache after a bulk import (the burst coalesces).
+        // Commit, then signal — the order every dose write follows. The tick wakes
+        // readers of the committed store (tolerance, body levels, launch caches,
+        // which fetch on `DatabaseActor`) and keys the Insights models' memos, so
+        // sent before the commit it lets them cache the pre-import log under the
+        // post-import revision, and nothing re-signals when autosave lands.
+        try context.save()
         DoseLogService.shared.changed()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     /// Re-reads everything an import can change that a live singleton holds in

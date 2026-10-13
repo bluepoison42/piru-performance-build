@@ -6038,6 +6038,7 @@ T = {
     "Still need your %@ supplements?": ("还需要服用 %@ 的补剂吗？", "還需要服用 %@ 的補劑嗎？"),
     "%@ supplements (%lld)": ("%@ 补剂（%lld）", "%@ 補劑（%lld）"),
     "Stages this group’s meds": ("将该组用药加入暂存", "將該組用藥加入暫存"),
+    "Unstages this group’s meds": ("将该组用药移出暂存", "將該組用藥移出暫存"),
     "Take All": ("全部服用", "全部服用"),
     "Not taken yet": ("尚未服用", "尚未服用"),
     "Collapses the list": ("折叠列表", "摺疊列表"),
@@ -6241,9 +6242,9 @@ T = {
         "這是加密的 Piru 備份。請在「工具 → 資料與備份」中匯入，屆時會要求輸入其密碼短語。",
     ),
     "Import…": ("导入…", "匯入…"),
-    "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog-format export — or start with a clean slate.": (
-        "已经在记录了？导入 Piru 备份（加密或未加密均可）或 PsyLog 格式的导出文件——或者从头开始。",
-        "已經在記錄了？匯入 Piru 備份（加密或未加密皆可）或 PsyLog 格式的匯出檔案——或者從頭開始。",
+    "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog or DrugsPRO export — or start with a clean slate.": (
+        "已经在记录了？导入 Piru 备份（加密或未加密均可）、PsyLog 或 DrugsPRO 的导出文件——或者从头开始。",
+        "已經在記錄了？匯入 Piru 備份（加密或未加密皆可）、PsyLog 或 DrugsPRO 的匯出檔案——或者從頭開始。",
     ),
     "This backup is encrypted. Enter the passphrase it was made with.": (
         "此备份已加密。请输入创建它时使用的密码短语。",
@@ -6277,9 +6278,9 @@ T = {
         "%lld 片 · 约剩 %lld 天",
         "%lld 錠 · 約剩 %lld 天",
     ),
-    "A Piru or PsychonautWiki file, or an encrypted backup": (
-        "Piru 或 PsychonautWiki 文件，或加密备份",
-        "Piru 或 PsychonautWiki 檔案，或加密備份",
+    "A Piru, PsychonautWiki, or DrugsPRO file, or an encrypted backup": (
+        "Piru、PsychonautWiki 或 DrugsPRO 文件，或加密备份",
+        "Piru、PsychonautWiki 或 DrugsPRO 檔案，或加密備份",
     ),
     "This file uses export format %lld, which this version of Piru can't read yet. Update Piru, then import it.": (
         "此文件使用导出格式 %lld，当前版本的 Piru 还无法读取。请更新 Piru 后再导入。",
@@ -7935,6 +7936,162 @@ T = {
         "commonmark-java。版权所有 © Robin Stocker。",
         "commonmark-java。版權所有 © Robin Stocker。",
     ),
+    # Android-only strings: folder backup (Android/Backup/FolderBackup+Android.swift).
+    "The folder picker could not be opened.": (
+        "无法打开文件夹选择器。",
+        "無法開啟資料夾選擇器。",
+    ),
+    "The backup folder could not be reached.": (
+        "无法访问备份文件夹。",
+        "無法存取備份資料夾。",
+    ),
+    "Folder": (
+        "文件夹",
+        "資料夾",
+    ),
+    "Back Up Now": (
+        "立即备份",
+        "立即備份",
+    ),
+    "Piru can no longer reach this folder. Choose it again to keep backing up.": (
+        "Piru 已无法访问此文件夹。请重新选择它以继续备份。",
+        "Piru 已無法存取此資料夾。請重新選擇它以繼續備份。",
+    ),
+    "Choose Another Folder…": (
+        "选择其他文件夹…",
+        "選擇其他資料夾…",
+    ),
+    "Turn Off Folder Backup": (
+        "关闭文件夹备份",
+        "關閉資料夾備份",
+    ),
+    "Back Up to a Folder…": (
+        "备份到文件夹…",
+        "備份到資料夾…",
+    ),
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.": (
+        "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不把它发送到任何地方。在新手机上恢复时，在这里选择同一个文件夹即可。",
+        "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不把它傳送到任何地方。在新手機上還原時，在這裡選擇同一個資料夾即可。",
+    ),
+    "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.": (
+        "每次你离开应用时保存，并用你的密码短语加密。关闭后，最后一份备份会留在文件夹中。",
+        "每次你離開應用程式時儲存，並以你的密碼短語加密。關閉後，最後一份備份會留在資料夾中。",
+    ),
+    "Backup Found": (
+        "找到备份",
+        "找到備份",
+    ),
+    "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase.": (
+        "此文件夹中已有一份 Piru 备份。输入它的密码短语即可将其与你的日记合并；之后的备份也会使用同一密码短语。",
+        "此資料夾中已有一份 Piru 備份。輸入它的密碼短語即可將其與你的日記合併；之後的備份也會使用同一密碼短語。",
+    ),
+    "The backup was merged with your journal.": (
+        "备份已与你的日记合并。",
+        "備份已與你的日記合併。",
+    ),
+    "That passphrase didn't open the backup. Try again.": (
+        "该密码短语无法打开此备份。请重试。",
+        "該密碼短語無法打開此備份。請再試一次。",
+    ),
+    # Android-only strings: Report a Problem (Android/Views/ReportProblem+Android.swift).
+    "Report a Problem": (
+        "报告问题",
+        "回報問題",
+    ),
+    "Create Report": (
+        "生成报告",
+        "產生報告",
+    ),
+    "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it.": (
+        "一个文件，包含应用和 Android 版本、手机型号、Piru 最近几次运行如何结束、崩溃记录以及 Piru 自身的日志。其中不含你日记里的任何内容，只有你发送时它才会离开手机。",
+        "一個檔案，包含應用程式和 Android 版本、手機型號、Piru 最近幾次執行如何結束、當機記錄以及 Piru 本身的日誌。其中不含你日記裡的任何內容，只有你傳送時它才會離開手機。",
+    ),
+    "#bug-reports on Discord": (
+        "Discord 上的 #bug-reports",
+        "Discord 上的 #bug-reports",
+    ),
+    "Open a GitHub Issue": (
+        "在 GitHub 上提交 issue",
+        "在 GitHub 上提交 issue",
+    ),
+    "How to Report a Problem": (
+        "如何报告问题",
+        "如何回報問題",
+    ),
+    "Where to Send It": (
+        "发送到哪里",
+        "傳送到哪裡",
+    ),
+    "Attach the file and say what you were doing when it went wrong.": (
+        "附上这个文件，并说明出问题时你在做什么。",
+        "附上這個檔案，並說明出問題時你在做什麼。",
+    ),
+    "The report could not be written.": (
+        "无法写入报告。",
+        "無法寫入報告。",
+    ),
+    "Piru Closed Unexpectedly": (
+        "Piru 意外关闭",
+        "Piru 意外關閉",
+    ),
+    "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes.": (
+        "一份报告有助于修复它。报告包含 Piru 如何关闭及其自身的日志，不含你日记里的任何内容，发送到哪里由你决定。",
+        "一份報告有助於修復它。報告包含 Piru 如何關閉及其本身的日誌，不含你日記裡的任何內容，傳送到哪裡由你決定。",
+    ),
+    "This half-life is out of range: projections take 1 minute to 10 years.": (
+        "这个半衰期超出范围：可推算的范围是 1 分钟到 10 年。",
+        "這個半衰期超出範圍：可推算的範圍是 1 分鐘到 10 年。",
+    ),
+    "This interval is out of range: projections take 1 minute to 1 year.": (
+        "这个用药间隔超出范围：可推算的范围是 1 分钟到 1 年。",
+        "這個用藥間隔超出範圍：可推算的範圍是 1 分鐘到 1 年。",
+    ),
+    "This schedule takes more than %@ doses to settle, so it can't be projected.": (
+        "按这个方案，需要超过 %@ 剂才能达到稳态，因此无法推算。",
+        "按這個方案，需要超過 %@ 劑才能達到穩態，因此無法推算。",
+    ),
+    # Trip report → dose.wiki's report form
+    "Send to dose.wiki": ("发送到 dose.wiki", "傳送到 dose.wiki"),
+    "Send to dose.wiki?": ("发送到 dose.wiki？", "傳送到 dose.wiki？"),
+    "Open": ("打开", "打開"),
+    "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.": (
+        "这会在 dose.wiki 打开体验报告表单，并填好这个场次的内容。你在那里提交之前，什么都不会发送。",
+        "這會在 dose.wiki 打開體驗報告表單，並填好這個場次的內容。你在那裡送出之前，什麼都不會傳送。",
+    ),
+    "Some long notes were shortened or left out to fit.": (
+        "部分较长的记录已被缩短或省略，以便放得下。",
+        "部分較長的紀錄已被縮短或省略，以便放得下。",
+    ),
+    # Settings: the Discord row (Views/Settings/DiscordSection.swift); Android's update check
+    # (android/app/Sources/Piru/Android/Views/AppUpdate+Android.swift).
+    "Discord": (
+        "Discord",
+        "Discord",
+    ),
+    "Get help with the app or send your suggestions on our Discord server.": (
+        "在我们的 Discord 服务器上获取应用帮助，或提出你的建议。",
+        "在我們的 Discord 伺服器上取得應用程式協助，或提出你的建議。",
+    ),
+    "Piru %@ is available": (
+        "Piru %@ 已推出",
+        "Piru %@ 已推出",
+    ),
+    "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.": (
+        "新版本在 GitHub 上，也就是 Piru 的来源；直接安装在当前版本之上会保留你的日记。",
+        "新版本在 GitHub 上，也就是 Piru 的來源；直接安裝在目前版本之上會保留你的日記。",
+    ),
+    "Download": (
+        "下载",
+        "下載",
+    ),
+    "Check for Updates": (
+        "检查更新",
+        "檢查更新",
+    ),
+    "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.": (
+        "Piru 每天向 GitHub 查询一次最新版本。不会发送任何关于你或你日记的信息。",
+        "Piru 每天向 GitHub 查詢一次最新版本。不會傳送任何關於你或你日記的資訊。",
+    ),
 }
 
 # Widget translations
@@ -8225,6 +8382,31 @@ if __name__ == "__main__":
         "curl, part of Foundation's networking on Android.",
         "BoringSSL, part of Foundation's networking on Android.",
         "commonmark-java. Copyright © Robin Stocker.",
+        "The folder picker could not be opened.",
+        "The backup folder could not be reached.",
+        "Folder",
+        "Back Up Now",
+        "Piru can no longer reach this folder. Choose it again to keep backing up.",
+        "Choose Another Folder…",
+        "Turn Off Folder Backup",
+        "Back Up to a Folder…",
+        "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.",
+        "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.",
+        "Backup Found",
+        "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase.",
+        "The backup was merged with your journal.",
+        "That passphrase didn't open the backup. Try again.",
+        "Report a Problem",
+        "Create Report",
+        "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it.",
+        "#bug-reports on Discord",
+        "Open a GitHub Issue",
+        "How to Report a Problem",
+        "Where to Send It",
+        "Attach the file and say what you were doing when it went wrong.",
+        "The report could not be written.",
+        "Piru Closed Unexpectedly",
+        "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes.",
         "Curve Scale",
         "Dose Strength",
         "Largest Dose, 7 Days",
@@ -9023,7 +9205,7 @@ if __name__ == "__main__":
         "This file isn't a Piru export or a PsychonautWiki journal.",
         "This is an encrypted Piru backup. Import it from Tools → Data & Backup, which asks for its passphrase.",
         "Import…",
-        "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog-format export — or start with a clean slate.",
+        "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog or DrugsPRO export — or start with a clean slate.",
         "This backup is encrypted. Enter the passphrase it was made with.",
         "Unlock",
         "Encrypted backup",
@@ -9032,7 +9214,7 @@ if __name__ == "__main__":
         "Add what you have on hand, or scan the box. Every dose you log comes off it, with days left and a heads-up before you run out.",
         "Dose logged · 1 tab taken off",
         "%lld tabs · about %lld days left",
-        "A Piru or PsychonautWiki file, or an encrypted backup",
+        "A Piru, PsychonautWiki, or DrugsPRO file, or an encrypted backup",
         "This file uses export format %lld, which this version of Piru can't read yet. Update Piru, then import it.",
         "%@ The file was written by %@.",
         # b53 feedback batches (2026-09-17)
@@ -9055,6 +9237,22 @@ if __name__ == "__main__":
         "Open in TestFlight",
         "Your journal came with you",
         "Everything from the old Piru app is here: your journal, meds and settings. Once you've looked it over, you can delete the old app.",
+        "This half-life is out of range: projections take 1 minute to 10 years.",
+        "This interval is out of range: projections take 1 minute to 1 year.",
+        "This schedule takes more than %@ doses to settle, so it can't be projected.",
+        "Unstages this group’s meds",
+        "Send to dose.wiki",
+        "Send to dose.wiki?",
+        "Open",
+        "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.",
+        "Some long notes were shortened or left out to fit.",
+        "Discord",
+        "Get help with the app or send your suggestions on our Discord server.",
+        "Piru %@ is available",
+        "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.",
+        "Download",
+        "Check for Updates",
+        "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.",
     }
 
     NEW_KEYS.update(

@@ -43,15 +43,15 @@ struct EmptyDoseLadderTests {
         // of data, and indistinguishable from a real sub-threshold reading.
         let empty = DoseRange(threshold: nil, light: nil, common: nil, strong: nil, heavy: nil)
         #expect(!empty.hasAnyValue)
-        #expect(empty.level(for: 0) == nil)
-        #expect(empty.level(for: 500) == nil)
+        #expect(empty.mgLevel(for: 0) == nil)
+        #expect(empty.mgLevel(for: 500) == nil)
     }
 
     @Test
     func `A ladder with any tier still places a dose`() {
         let ladder = DoseRange(threshold: 5, light: 10 ... 20, common: nil, strong: nil, heavy: nil)
-        #expect(ladder.level(for: 1) == .sub)
-        #expect(ladder.level(for: 6) == .threshold)
-        #expect(ladder.level(for: 15) == .light)
+        #expect(ladder.mgLevel(for: 1) == .sub)
+        #expect(ladder.mgLevel(for: 6) == .threshold)
+        #expect(ladder.mgLevel(for: 15) == .light)
     }
 }

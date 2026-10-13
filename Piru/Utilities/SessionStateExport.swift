@@ -342,10 +342,20 @@ extension SessionStateExport {
             return EliminationGroup(id: name.lowercased(), name: name, doseCount: entries.count, model: .unknown, curve: [], unit: entries.first?.unit ?? "mg", horizonMinutes: 1, groupStart: earliest)
         }
         let ke = PKModel.ke(fromHalfLifeMinutes: halfLife)
-        let doses = entries.map { entry in
-            FirstOrderDose(offsetMinutes: offset(entry), amount: entry.amount, ke: ke, ka: resolveKa(substance: substance, route: entry.route, ke: ke))
+        // Summed in the unit most doses share — 500 mg + 1 g is 1 500 mg, not 501
+        // of anything. A dose in another unit family (mL against mg) can't join
+        // the total and is left out of the curve.
+        let quantified = entries.compactMap { entry in (substance?.quantity(of: entry) ?? entry.quantity).map { (entry, $0) } }
+        guard let unitOf = DoseQuantity.reference(among: quantified.map(\.1)),
+              let first = quantified.first(where: { $0.1.family == unitOf.family })?.0 else {
+            return EliminationGroup(id: name.lowercased(), name: name, doseCount: entries.count, model: .unknown, curve: [], unit: entries.first?.unit ?? "mg", horizonMinutes: 1, groupStart: earliest)
         }
-        return firstOrderGroup(name: name, halfLife: halfLife, doses: doses, unit: entries.first?.unit ?? "mg", groupStart: earliest, doseCount: entries.count, now: now)
+        let doses = quantified.compactMap { entry, dose in
+            dose.value(inUnitOf: unitOf).map {
+                FirstOrderDose(offsetMinutes: offset(entry), amount: $0, ke: ke, ka: resolveKa(substance: substance, route: entry.route, ke: ke))
+            }
+        }
+        return firstOrderGroup(name: name, halfLife: halfLife, doses: doses, unit: first.unit, groupStart: earliest, doseCount: entries.count, now: now)
     }
 
     private static func firstOrderGroup(name: String, halfLife: Double, doses: [FirstOrderDose], unit: String, groupStart: Date, doseCount: Int, now: Date) -> EliminationGroup {

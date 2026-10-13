@@ -15,9 +15,11 @@ struct InteractionRelevanceGatingTests {
         route: RouteOfAdministration = .oral,
         hoursAgo: Double = 0,
     ) -> DoseEntry {
+        // In the substance's own unit: 5 of kratom is 5 g, not a trivial 5 mg.
         DoseEntry(
             substance: name,
             amount: amount,
+            unit: SubstanceLibrary.lookup(name)?.defaultUnit ?? "mg",
             route: route,
             timestamp: Date.now.addingTimeInterval(-hoursAgo * 3_600),
         )
@@ -120,5 +122,19 @@ struct InteractionRelevanceGatingTests {
         let explore = InteractionChecker.checkBatch(["Alprazolam"], against: active, policy: .explore)
         #expect(warn.isEmpty, "Warn mode hides the faded pair")
         #expect(!explore.isEmpty, "Explore mode surfaces every possible interaction")
+    }
+
+    @Test
+    func `A dose logged in grams is weighed as grams, never as trivial milligrams`() {
+        // Read as 0.02 mg on heroin's mg ladder, 0.02 g floors at the trivial
+        // magnitude and the opioid + benzo warning is suppressed.
+        let grams = InteractionChecker.checkBatch(["Alprazolam"], against: [heroin(0.02, "g")], policy: .warn)
+        let milligrams = InteractionChecker.checkBatch(["Alprazolam"], against: [heroin(20, "mg")], policy: .warn)
+        #expect(grams.contains { $0.severity == .dangerous })
+        #expect(grams.map(\.severity) == milligrams.map(\.severity))
+    }
+
+    private func heroin(_ amount: Double, _ unit: String) -> DoseEntry {
+        DoseEntry(substance: "Heroin", amount: amount, unit: unit, route: .insufflation, timestamp: .now)
     }
 }

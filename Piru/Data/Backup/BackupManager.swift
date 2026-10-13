@@ -200,8 +200,6 @@ final class BackupManager {
             CustomSubstanceStore.shared.resetAfterDeletion()
             try DataExportImport.importJSON(data: plaintext, context: context, mode: .replace)
         }
-        try context.save()
-        DoseLogService.shared.changed()
         Logger.backupManager.notice("Restore (\(String(describing: strategy), privacy: .public)) completed.")
     }
 

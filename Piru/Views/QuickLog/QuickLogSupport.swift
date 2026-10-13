@@ -140,7 +140,7 @@ struct DockSheetHost: View {
 // MARK: - Staging Haptics
 
 /// A zero-size leaf that fires the staging haptics. It exists so the tick-counter
-/// reads (`stageTick` / `incrementTick`) live *here* and not in `QuickLogView.body`
+/// reads (`stageTick` / `incrementTick` / `unstageTick`) live *here* and not in `QuickLogView.body`
 /// — reading the `@Observable` counters in the parent body would re-run the whole
 /// quick-log screen on every chip tap. Mounted always-present via `.background`,
 /// so it fires regardless of which dock face is showing.
@@ -151,6 +151,7 @@ struct StagingHaptics: View {
         Color.clear
             .sensoryFeedback(.impact(weight: .light), trigger: tray.stageTick)
             .sensoryFeedback(.increase, trigger: tray.incrementTick)
+            .sensoryFeedback(.decrease, trigger: tray.unstageTick)
     }
 }
 
@@ -223,7 +224,7 @@ struct QuickLogCardList: View {
         // now?" is answered on the pills themselves (a due pill wears the
         // slot time and a check circle), never as a second list of the same
         // meds above them.
-        dailySection(staged: staged)
+        dailySection()
 
         if content.cachedCards.isEmpty, content.cachedDailyGroups.isEmpty {
             ContentUnavailableView(
@@ -256,7 +257,7 @@ struct QuickLogCardList: View {
     // MARK: - Daily routine
 
     @ViewBuilder
-    private func dailySection(staged: [String: StagedChipCounts]) -> some View {
+    private func dailySection() -> some View {
         // The collapse toggle is the whole header row — chevron included.
         Button {
             withAnimation(.snappy) { routinesCollapsed.toggle() }
@@ -280,7 +281,7 @@ struct QuickLogCardList: View {
         if !routinesCollapsed {
             FlowLayout(spacing: Spacing.md) {
                 ForEach(content.cachedDailyGroups) { group in
-                    routinePill(group, staged: staged)
+                    routinePill(group)
                 }
                 manageMedsPill
             }
@@ -308,22 +309,18 @@ struct QuickLogCardList: View {
         .buttonStyle(.plain)
     }
 
-    private func routinePill(_ group: DailyCategoryGroup, staged: [String: StagedChipCounts]) -> some View {
+    private func routinePill(_ group: DailyCategoryGroup) -> some View {
+        // "Staged" means this pill's own doses are all still in the tray, so
+        // the look and the tap agree: a staged pill's tap takes them back out.
         MedGroupPill(
             group: group,
-            allStaged: group.isFullyStaged(in: staged),
+            allStaged: tray.isPillStaged(group.id),
             onTap: {
                 withAnimation(.snappy) {
-                    for item in group.unstaged(in: staged) {
-                        stageDailyItem(item)
-                    }
+                    tray.togglePill(group.id, meds: group.items, colorLookup: content.cachedColorLookup)
                 }
             },
         )
-    }
-
-    private func stageDailyItem(_ item: DailyDoseItem) {
-        tray.stage(dailyItem: item, colorLookup: content.cachedColorLookup)
     }
 
     // MARK: - Substance Card
@@ -391,7 +388,8 @@ struct QuickLogCardList: View {
 
     /// Staging-only counterpart to `QuickLogView.openLibrarySubstance` — a card
     /// in the list isn't a search surface, so it stages a draft without the
-    /// search-state reset the dock version performs.
+    /// search-state reset the dock version performs, and opens the draft at
+    /// the dock's half height without raising the keyboard.
     private func openLibrarySubstance(_ substance: Substance) {
         withAnimation(.snappy) {
             tray.stageDraft(
@@ -400,6 +398,7 @@ struct QuickLogCardList: View {
                 unit: substance.defaultUnit,
                 tint: content.cachedColorLookup[substance.name.lowercased()],
                 librarySubstance: substance,
+                focusesAmount: false,
             )
         }
     }

@@ -375,7 +375,7 @@ struct UsageAnalyticsTests {
     @Test
     func `A dose in the ladder's own unit resolves to its tier`() {
         func level(_ amount: Double) -> Int? {
-            UsageAnalyticsModel.doseLevelIndex(range: mdmaLadder, ladderUnit: "mg", amount: amount, loggedUnit: "mg")
+            levelIndex(mdmaLadder, "mg", amount, "mg")
         }
         #expect(level(10) == UsageAnalyticsModel.index(of: .sub))
         #expect(level(25) == UsageAnalyticsModel.index(of: .threshold))
@@ -389,13 +389,13 @@ struct UsageAnalyticsTests {
     func `A convertible mass unit is converted before it is placed`() {
         // 0.09 g is 90 mg — common, not sub-threshold.
         #expect(
-            UsageAnalyticsModel.doseLevelIndex(range: mdmaLadder, ladderUnit: "mg", amount: 0.09, loggedUnit: "g")
+            levelIndex(mdmaLadder, "mg", 0.09, "g")
                 == UsageAnalyticsModel.index(of: .common),
         )
         // Both spellings of micro must work; only one of them is MICRO SIGN.
         let microgram = DoseRange(threshold: 20, light: 50 ... 100, common: 100 ... 150, strong: 150 ... 200, heavy: 200)
         #expect(
-            UsageAnalyticsModel.doseLevelIndex(range: microgram, ladderUnit: "µg", amount: 0.12, loggedUnit: "mg")
+            levelIndex(microgram, "µg", 0.12, "mg")
                 == UsageAnalyticsModel.index(of: .common),
         )
     }
@@ -403,23 +403,23 @@ struct UsageAnalyticsTests {
     @Test
     func `An incomparable unit drops out instead of being read across`() {
         // A volume against a mass ladder: 5 mL is not 5 mg.
-        #expect(UsageAnalyticsModel.doseLevelIndex(range: mdmaLadder, ladderUnit: "mg", amount: 5, loggedUnit: "mL") == nil)
-        #expect(UsageAnalyticsModel.doseLevelIndex(range: mdmaLadder, ladderUnit: "mg", amount: 5, loggedUnit: "IU") == nil)
+        #expect(levelIndex(mdmaLadder, "mg", 5, "mL") == nil)
+        #expect(levelIndex(mdmaLadder, "mg", 5, "IU") == nil)
         // A qualified unit states a basis; folding it onto plain mg would
         // compare a freebase amount against a salt ladder.
-        #expect(UsageAnalyticsModel.doseLevelIndex(range: mdmaLadder, ladderUnit: "mg", amount: 90, loggedUnit: "mg (freebase)") == nil)
+        #expect(levelIndex(mdmaLadder, "mg", 90, "mg (freebase)") == nil)
     }
 
     @Test
     func `An empty ladder places nothing`() {
-        #expect(UsageAnalyticsModel.doseLevelIndex(range: DoseRange(), ladderUnit: "mg", amount: 90, loggedUnit: "mg") == nil)
+        #expect(levelIndex(DoseRange(), "mg", 90, "mg") == nil)
     }
 
     @Test
     func `A common dose is expressed as a multiple of the common midpoint`() {
         /// MDMA common band is 75–110, midpoint 92.5.
         func common(_ amount: Double, _ unit: String = "mg") -> Double? {
-            UsageAnalyticsModel.commonDoses(range: mdmaLadder, ladderUnit: "mg", amount: amount, loggedUnit: unit)
+            commonDoses(mdmaLadder, "mg", amount, unit)
         }
         // A dose at the midpoint is exactly one common dose.
         #expect(common(92.5) == 1.0)
@@ -433,9 +433,9 @@ struct UsageAnalyticsTests {
     func `Common-dose units need a common band and a convertible unit`() {
         // No common tier: threshold/heavy only.
         let noCommon = DoseRange(threshold: 20, heavy: 200)
-        #expect(UsageAnalyticsModel.commonDoses(range: noCommon, ladderUnit: "mg", amount: 50, loggedUnit: "mg") == nil)
+        #expect(commonDoses(noCommon, "mg", 50, "mg") == nil)
         // Incomparable unit against a mass ladder.
-        #expect(UsageAnalyticsModel.commonDoses(range: mdmaLadder, ladderUnit: "mg", amount: 5, loggedUnit: "mL") == nil)
+        #expect(commonDoses(mdmaLadder, "mg", 5, "mL") == nil)
     }
 
     @Test
@@ -877,4 +877,15 @@ struct UsageAnalyticsTests {
         #expect(result.weekdays.count == 7)
         #expect(!result.routes.routesAreMeaningful)
     }
+}
+
+/// A dose of `amount` `unit` placed on `range` written in `ladderUnit`, as the
+/// §4 tier index.
+private func levelIndex(_ range: DoseRange, _ ladderUnit: String, _ amount: Double, _ unit: String) -> Int? {
+    DoseLadder(range: range, unit: ladderUnit).level(of: DoseQuantity(amount, unit: unit)).map(UsageAnalyticsModel.index(of:))
+}
+
+/// A dose of `amount` `unit` as a multiple of `range`'s common dose.
+private func commonDoses(_ range: DoseRange, _ ladderUnit: String, _ amount: Double, _ unit: String) -> Double? {
+    DoseLadder(range: range, unit: ladderUnit).commonDoses(of: DoseQuantity(amount, unit: unit))
 }

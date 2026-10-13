@@ -238,14 +238,14 @@ private struct MyMedsToolCard: View {
         HStack(spacing: Spacing.lg) {
             slotCircle(slot)
                 .frame(width: 18, height: 18)
-            Text(displayName(for: slot.item))
+            Text(displayName(for: slot.med))
                 .font(.subheadline.weight(slot.taken ? .regular : .medium))
                 .foregroundStyle(slot.taken ? Theme.secondaryLabel : .primary)
                 .strikethrough(slot.taken, color: Theme.secondaryLabel.opacity(Theme.Opacity.dimmed))
                 .lineLimit(1)
             Spacer(minLength: 4)
             HStack(spacing: Spacing.xs) {
-                Text("\(slot.item.amount.doseFormatted) \(slot.item.unit)")
+                Text("\(slot.med.amount.doseFormatted) \(slot.med.unit)")
                     .font(.footnote.monospacedDigit())
                 if let time = slot.time {
                     Text("·")
@@ -283,7 +283,7 @@ private struct MyMedsToolCard: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.secondaryLabel)
                 .frame(width: 18)
-            Text("Next: \(displayName(for: slot.item)) at \(Self.timeText(slot.time!))")
+            Text("Next: \(displayName(for: slot.med)) at \(Self.timeText(slot.time!))")
                 .font(.footnote)
                 .foregroundStyle(Theme.secondaryLabel)
                 .lineLimit(1)
@@ -295,7 +295,7 @@ private struct MyMedsToolCard: View {
         .padding(.vertical, Spacing.sm)
     }
 
-    private func displayName(for item: DailyDoseItem) -> String {
+    private func displayName(for item: DailyMedSnapshot) -> String {
         if warmed {
             item.productName ?? CustomSubstanceStore.shared.displayName(for: item.substance)
         } else {

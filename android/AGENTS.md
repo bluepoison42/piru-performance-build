@@ -4,6 +4,14 @@
 
 ## Gotchas
 
+- **A control `droid tree` lists twice is composed twice.** Two live copies bound to one
+  `@FocusState` take focus from each other every frame, and the screen recomposes without
+  pause. Count the copies before profiling a lag; vendor patch 0006 is why `.shadow` no longer
+  makes them.
+- **Visited tabs stay composed** (vendor patch 0007): only the selected one is placed, and
+  `onAppear`, `onDisappear`, `.task`, focus, alerts and confirmation dialogs follow which tab is
+  shown. A `.sheet` in tab content still opens while its tab is hidden, so a sheet that can be
+  raised by something finishing in the background belongs on the root `AppNavigator` stack.
 - **`package-apk.sh` does not restage.** A template, stand-in or `symbols.tsv` change needs
   `build-app.sh`, or at least `python3 android/tools/stage.py`.
 - **Upstream edits go through patches.** Edit the file in `Piru/` or `Shared/`, run
@@ -17,6 +25,16 @@
   skip-fuse-ui patch, run phase 1 for that target (`swift build --triple arm64-apple-ios …
   --target SkipUI` in the stage) and check the patch reached
   `.build/plugins/outputs/<package>/…/*.kt` before packaging.
+- **The lock holds only at the path it was made in.** `Package.resolved`'s `originHash` covers
+  the staged manifest, which names `android/Compat` by absolute path; from another checkout
+  path SwiftPM treats the file as stale, re-resolves, and moves unvendored packages
+  (skip-android-bridge, skip-foundation) to newer releases. After a build, diff
+  `$PIRU_ANDROID/stage/Package.resolved` against the committed one: only vendored revisions
+  may differ.
+- **Gradle can keep Kotlin from an older transpile.** After a vendor patch moves a package,
+  `package-apk.sh` may fail in a module the patch never touched (unresolved references in
+  `SkipFoundation`). Trash that module's `build/` under
+  `$PIRU_ANDROID/stage/.build/plugins/outputs/<package>/…/skipstone/<Module>/` and package again.
 - **Keep `/* SKIP @bridge */` a block comment.** skipstone drops a declaration whose marker
   became `/** */` or `//`; `android/.swiftformat` turns off the rules that would do that.
   Inside a worktree, format with `swiftformat --config .swiftformat` plus the options in

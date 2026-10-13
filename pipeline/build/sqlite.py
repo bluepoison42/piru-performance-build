@@ -265,7 +265,6 @@ DOSE_CONTEXT_BY_SOURCE: dict[str, str] = {
 #: published it.
 _THERAPEUTIC_NOTE_MARKERS = (
     "label dosing",
-    "product labeling",
     "prescriber",
     "maximum daily dose",
     "therapeutic ranges based on labeling",
@@ -274,6 +273,13 @@ _THERAPEUTIC_NOTE_MARKERS = (
     # Deliberately NOT "titrate" or "do not exceed": both are ordinary
     # harm-reduction phrasing ("start low and titrate up"), and they tagged 80
     # recreational rows — 1P-LSD, 2C-T-7, 3-MeO-PCP — as clinical ladders.
+    # Deliberately NOT bare "product labeling" either: a note can cite a product's
+    # label as evidence about an unregulated preparation's strength without the
+    # ladder being clinical. It matched two rows and both were wrong — Piru's own
+    # mitragynine ladder, derived from extract-product labeling, and
+    # 7-hydroxymitragynine's, whose note says commercial product labeling is often
+    # inaccurate. Being ranked last is what a `therapeutic` tag costs a ladder, so
+    # the mitragynine page showed a kratom-leaf gram ladder instead of its own.
 )
 
 
@@ -9509,7 +9515,16 @@ class Build:
                 "UPDATE substances SET dosewiki_slug=COALESCE(dosewiki_slug, ?) WHERE id=?",
                 (rec["slug"], sid),
             )
-            self._dosewiki_identity(sid, slug, rec, skeleton_owners)
+            # `skip_chemistry` is for an article about a PREPARATION that dose.wiki describes with its
+            # active molecule's structure (the kratom article carries mitragynine's SMILES). The
+            # skeleton_owners guard below catches that only when the molecule's own Piru row already
+            # holds the key at this point in the build, and the PubChem passes that fill it run later —
+            # so for those the join states it. Names, doses and prose still land on the preparation
+            # row, which is what the article is actually about.
+            if entry.get("skip_chemistry"):
+                self._dosewiki_aliases(sid, slug, rec)
+            else:
+                self._dosewiki_identity(sid, slug, rec, skeleton_owners)
             if rec.get("expert_reviewed"):
                 self._dosewiki_reviewed(sid, slug, rec, spellings)
 
@@ -9594,7 +9609,13 @@ class Build:
                 ).rowcount
                 self.stats["dosewiki_identifiers"] += changed
 
-        for raw_alias in identification.get("alternative_names") or []:
+        self._dosewiki_aliases(sid, slug, rec)
+
+    def _dosewiki_aliases(self, sid: int, slug: str, rec: dict) -> None:
+        """The names half of an article's identity, which a `skip_chemistry` join still takes: a
+        preparation's vernacular names (Maeng Da, Thom) are about the preparation even when the
+        structure beside them is its active molecule's."""
+        for raw_alias in (rec.get("identification") or {}).get("alternative_names") or []:
             alias = dosewiki_clean(raw_alias)
             # An alias that is another substance's canonical name sends search to
             # the wrong compound. dose.wiki's alternative_names carry plant common

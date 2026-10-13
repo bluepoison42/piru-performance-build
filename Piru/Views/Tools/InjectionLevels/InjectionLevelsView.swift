@@ -184,28 +184,24 @@ struct InjectionLevelsView: View {
     }
 
     /// The injectable mass one logged dose contributes (canonical mg), and whether it
-    /// was logged in a volume unit. A dose in mg/µg converts by its unit scale; a dose
+    /// was logged in a volume unit. A dose in µg/mg/g converts to mg; a dose
     /// in mL joins at `volumeConcentrationMgPerML` (its `mg` is `nil` until a vial
     /// strength is known, but it is still counted as volume-logged). Anything else
     /// (a non-mass, non-volume unit) contributes nothing.
     static func doseMassMg(
         _ entry: DoseEntry, volumeConcentrationMgPerML: Double?,
     ) -> (mg: Double?, isVolumeUnit: Bool) {
-        if let scale = DoseEquivalent.milligramScale(ofDoseUnit: entry.unit) {
-            let mg = entry.amount * scale
+        switch entry.quantity {
+        case let .mass(mass)?:
+            let mg = mass.value(in: .milligrams)
             return (mg > 0 ? mg : nil, false)
-        }
-        if isVolumeUnit(entry.unit) {
+        case let .volume(volume)?:
             guard let concentration = volumeConcentrationMgPerML, concentration > 0 else { return (nil, true) }
-            let mg = entry.amount * concentration
+            let mg = volume.converted(to: .milliliters).value * concentration
             return (mg > 0 ? mg : nil, true)
+        case .count?, nil:
+            return (nil, false)
         }
-        return (nil, false)
-    }
-
-    static func isVolumeUnit(_ unit: String) -> Bool {
-        let normalized = unit.trimmingCharacters(in: .whitespaces).lowercased()
-        return normalized == "ml" || normalized == "cc"
     }
 
     /// The modelable ester the user logs most for `analyte`, from the ester named on

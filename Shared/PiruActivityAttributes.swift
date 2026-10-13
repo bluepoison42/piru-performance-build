@@ -50,10 +50,11 @@ nonisolated struct ActiveSubstanceState: Codable, Hashable {
     /// Dose intensity used to scale the timeline curve height, clamped to
     /// `[0.05, 1.0]`.
     ///
-    /// Computed by `ActiveSubstanceCalculator.computeDoseIntensity(amount:doseRange:)`:
-    /// `amount / heavy_threshold`, with looser fallbacks (strong upper, common
-    /// upper × 1.5) when `heavy` isn't defined. Substances with no dose-range
-    /// data fall back to `unknownIntensity` (0.60) — a neutral mid-common-ish
+    /// Computed by `ActiveSubstanceState.computeDoseIntensity(dose:ladder:)`:
+    /// `amount / heavy_threshold` in the ladder's unit, with looser fallbacks
+    /// (strong upper, common upper × 1.5) when `heavy` isn't defined. Substances
+    /// with no dose-range data, and doses in a unit the ladder can't express,
+    /// fall back to `unknownIntensity` (0.60) — a neutral mid-common-ish
     /// height. Sub-threshold doses are floored at `minimumIntensity` (0.05) so
     /// they still render as a visible nub instead of disappearing.
     let doseIntensity: Double
@@ -75,21 +76,21 @@ nonisolated struct ActiveSubstanceState: Codable, Hashable {
     /// the denominator *is* a published `heavy` value — so the number itself
     /// carries no new information, but its presence does: it is the difference
     /// between a threshold somebody wrote down and one
-    /// `ActiveSubstanceCalculator.heavyReference(for:)` improvised from the
+    /// `ActiveSubstanceState.heavyReference(for:)` improvised from the
     /// strong/common bounds so the curve would have *some* height. Only the
     /// former may be drawn as a marked region on the graph; the fallbacks scale
     /// a curve honestly enough but are nobody's stated threshold.
     ///
     /// Route caveat: the ladder is the one that scaled this dose, which for a
     /// route with no doses of its own is another route's (see
-    /// `ActiveSubstanceCalculator.resolveDoseRange(substance:route:)`). That is
+    /// `Substance.scalingLadder(for:)`). That is
     /// already true of the curve's whole height, so the band inherits it rather
     /// than introducing it.
     let heavyThresholdMagnitude: Double?
 
     /// `true` when the substance has no dose ladder to scale this dose
-    /// against, so ``doseIntensity`` is the neutral
-    /// `ActiveSubstanceCalculator.unknownIntensity` rather than a reading of
+    /// against, or the dose's unit can't be read on it, so ``doseIntensity`` is
+    /// the neutral `ActiveSubstanceState.unknownIntensity` rather than a reading of
     /// the amount. The timeline draws such a curve at that fixed height and
     /// dotted, so it never reads as the substance's strongest dose.
     let doseIsUnscaled: Bool
@@ -185,3 +186,38 @@ nonisolated struct ActiveSubstanceState: Codable, Hashable {
         offsetSpreadMinutes = try c.decodeIfPresent(Double.self, forKey: .offsetSpreadMinutes)
     }
 }
+
+// MARK: - Timing
+
+nonisolated extension ActiveSubstanceState {
+    /// When this dose's curve runs out: `doseTimestamp + totalMinutes`.
+    var endDate: Date {
+        doseTimestamp.addingTimeInterval(totalMinutes * 60)
+    }
+
+    /// Every instant the Live Activity's phase readout changes for this dose:
+    /// the boundaries `SessionTiming.nextTransition` counts down to, ending
+    /// with ``endDate``.
+    var phaseChangeDates: [Date] {
+        var minutes = [onsetEndMinutes, comeupEndMinutes, peakEndMinutes]
+        if afterglowEndMinutes != nil { minutes.append(offsetEndMinutes) }
+        minutes.append(totalMinutes)
+        return minutes.map { doseTimestamp.addingTimeInterval($0 * 60) }
+    }
+}
+
+#if os(iOS)
+    nonisolated extension PiruActivityAttributes.ContentState {
+        /// When the last curve in this state runs out, or `nil` for an empty state.
+        var endDate: Date? {
+            activeSubstances.map(\.endDate).max()
+        }
+
+        /// Whether every curve in this state has run out by `now`. An empty
+        /// state has nothing left to show, so it counts as run out.
+        func hasRunOut(at now: Date = .now) -> Bool {
+            guard let endDate else { return true }
+            return endDate <= now
+        }
+    }
+#endif

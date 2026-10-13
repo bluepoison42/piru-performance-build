@@ -17,8 +17,11 @@ struct BarbiturateInteractionTests {
         await SubstanceStore.shared.ensureAllLoaded()
     }
 
+    /// A dose of `amount` in the substance's own unit — 100 g of alcohol, not
+    /// 100 mg, which is a sip and rightly suppressed as trivial.
     private func makeEntry(substance: String, amount: Double = 100) -> DoseEntry {
-        DoseEntry(substance: substance, amount: amount, route: .oral, timestamp: .now)
+        let unit = SubstanceLibrary.lookup(substance)?.defaultUnit ?? "mg"
+        return DoseEntry(substance: substance, amount: amount, unit: unit, route: .oral, timestamp: .now)
     }
 
     // MARK: - Class resolution

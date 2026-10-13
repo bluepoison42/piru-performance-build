@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="report_shortcut_short">Informar</string>
+    <string name="report_shortcut_long">Informar de un problema</string>
+    <string name="report_failed">No se pudo escribir el informe.</string>
+</resources>

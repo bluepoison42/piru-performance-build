@@ -15,9 +15,11 @@ import SwiftUI
         ContentView()
             .modelContainer(PiruAndroidLaunch.container)
             .task {
+                AppUpdateCheck.shared.startLaunchCheck()
                 await AppLaunch.finishLaunching(container: PiruAndroidLaunch.container)
                 PiruAndroidLaunch.finishedLaunching = true
             }
+            .modifier(ProblemReportPrompt())
     }
 }
 

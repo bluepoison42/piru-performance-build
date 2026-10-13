@@ -2,8 +2,10 @@ import SwiftUI
 
 /// One My Meds pill: a time-of-day group (or a lone PRN med) that is a
 /// *shortcut* — one tap stages its whole set into the tray (the
-/// eight-supplements use case), idempotent for anything already staged.
-/// Long-press to manage meds.
+/// eight-supplements use case), skipping anything already staged; a tap on
+/// a staged pill takes back exactly the doses it staged
+/// (``DoseTrayModel/togglePill(_:meds:colorLookup:)``). Long-press to manage
+/// meds.
 ///
 /// Three faces. **Plain**: scheduled for later today, or unscheduled.
 /// **Due**: a slot has opened — accent outline, the slot time as a second
@@ -15,7 +17,7 @@ import SwiftUI
 /// Value inputs only, so a staging change re-evaluates pills, not the list.
 struct MedGroupPill: View {
     let group: DailyCategoryGroup
-    /// Every member is already in the tray.
+    /// Everything this pill staged is still in the tray, so a tap unstages.
     let allStaged: Bool
     let onTap: () -> Void
 
@@ -41,7 +43,7 @@ struct MedGroupPill: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(group.title)
             .accessibilityValue(accessibilityValue)
-            .accessibilityHint("Stages this group’s meds")
+            .accessibilityHint(allStaged ? Text("Unstages this group’s meds") : Text("Stages this group’s meds"))
             .accessibilityAddTraits(.isButton)
             .contextMenu {
                 Button {
@@ -141,11 +143,11 @@ struct MedGroupPill: View {
     }
 
     private var accessibilityValue: Text {
+        if allStaged { return Text("Staged") }
         if group.isDue {
-            if allStaged { return Text("Staged") }
             let due = group.dueSlotMinutes.map { String(localized: "Due at \(Self.timeText($0))") } ?? String(localized: "Due now")
             guard count > 1 else { return Text(due) }
-            let items = String(localized: "^[\(count) item](inflect: true)")
+            let items = String(inflecting: "^[\(count) item](inflect: true)")
             let value = "\(due), \(items)"
             return Text(value)
         }

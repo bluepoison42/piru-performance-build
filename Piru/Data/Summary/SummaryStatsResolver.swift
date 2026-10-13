@@ -66,7 +66,7 @@ enum SummaryStatsResolver {
             }
 
             // An unknown dose is a dose taken with no exposure to sum.
-            let doseMg = entry.isUnknownDose ? nil : DoseUnit.convert(entry.amount, from: entry.unit, to: "mg")
+            let doseMg = entry.quantity?.milligrams
             let exposure = entry.isUnknownDose ? nil : exposureValue(
                 currency: meta.currency, substance: meta.substance, entry: entry,
                 doseMg: doseMg, opioids: opioids, benzos: benzos,
@@ -116,11 +116,8 @@ enum SummaryStatsResolver {
             // A common dose is a point on the base-form ladder; an extended-release
             // dose isn't a multiple of it (see `Substance.tierLadder`).
             guard let substance, BaseReleaseForm.contains(entry.releaseForm) else { return nil }
-            let route = entry.route
-            let range = substance.doseRange(for: route) ?? substance.doseRange(for: substance.defaultRoute) ?? substance.routes.first?.doses
-            guard let range else { return nil }
-            let ladderUnit = substance.unit(for: route)
-            return UsageAnalyticsModel.commonDoses(range: range, ladderUnit: ladderUnit, amount: entry.amount, loggedUnit: entry.unit)
+            guard let dose = substance.quantity(of: entry) else { return nil }
+            return substance.scalingLadder(for: entry.route)?.commonDoses(of: dose)
         case .milligrams:
             return doseMg
         }
@@ -141,7 +138,7 @@ enum SummaryStatsResolver {
     /// unmodeled forms, which are excluded from co-exposure the same way they're
     /// excluded from the body-load graph.
     private static func rateConstants(substance: Substance?, entry: DoseEntry) -> (Double?, Double?) {
-        if substance?.category == .supplement { return (nil, nil) }
+        if substance?.modelsBodyLoad == false { return (nil, nil) }
         let productDuration = entry.productDuration
         if productDuration == nil, entry.namesUnmodeledForm { return (nil, nil) }
         guard let params = PKResolver.params(

@@ -193,6 +193,9 @@ struct TimelineStripDayContent: View {
     /// nothing. Each tile draws the whole slice translated to its origin, so
     /// the tiles join seamlessly.
     private static let tileHeight: CGFloat = 1_024
+    /// How far past its own edges a tile draws the repeated marks (gridlines,
+    /// chevrons), so a mark straddling two tiles is drawn by both.
+    private static let tileOverdraw: CGFloat = 16
 
     private func strip(bubbleLeft: CGFloat, columnX: CGFloat) -> some View {
         let tileYs = Array(stride(from: CGFloat(0), to: max(day.totalHeight, 1), by: Self.tileHeight))
@@ -202,6 +205,7 @@ struct TimelineStripDayContent: View {
                 drawStrip(
                     in: &context,
                     size: CGSize(width: size.width, height: day.totalHeight),
+                    visibleY: (tileY - Self.tileOverdraw) ... (tileY + Self.tileHeight + Self.tileOverdraw),
                     bubbleLeft: bubbleLeft,
                     columnX: columnX,
                 )
@@ -222,7 +226,16 @@ struct TimelineStripDayContent: View {
     private static let dottedCurveDotSize: CGFloat = 2.2
     private static let dottedCurveSpacing: CGFloat = 5
 
-    private func drawStrip(in context: inout GraphicsContext, size: CGSize, bubbleLeft: CGFloat, columnX: CGFloat) {
+    /// Draws the slice into one tile. `visibleY` is the tile's span (plus
+    /// overdraw) in slice coordinates: the repeated marks are drawn only there,
+    /// so a tall slice costs each tile its own marks, never the whole slice's.
+    private func drawStrip(
+        in context: inout GraphicsContext,
+        size: CGSize,
+        visibleY: ClosedRange<CGFloat>,
+        bubbleLeft: CGFloat,
+        columnX: CGFloat,
+    ) {
         let mapHeight = day.mapHeight
         guard mapHeight > 0 else { return }
 
@@ -238,14 +251,14 @@ struct TimelineStripDayContent: View {
         // a compressed gap they bunch together, which is what says "time is
         // squeezed here".
         let gridlineEnd = max(axisX, bubbleLeft - Self.gridlineInset)
-        for tick in day.hourTicks {
+        for tick in day.hourTicks where visibleY.contains(tick.y) {
             var line = Path()
             line.move(to: CGPoint(x: axisX, y: tick.y))
             line.addLine(to: CGPoint(x: gridlineEnd, y: tick.y))
             context.stroke(line, with: .color(Color.primary.opacity(0.06)), lineWidth: 0.5)
         }
 
-        drawAxis(in: &context, size: size, axisX: axisX)
+        drawAxis(in: &context, size: size, visibleY: visibleY, axisX: axisX)
         drawHeartRate(in: &context, axisX: axisX, laneWidth: curveWidth)
 
         // Per-substance curves, as wide as the dose is strong (see
@@ -512,6 +525,8 @@ struct TimelineStripDayContent: View {
         }
     }
 
+    /// Distance between the axis's up-chevrons.
+    private static let chevronSpacing: CGFloat = 130
     /// Length of the axis fade into a break below the slice.
     private static let axisFadeLength: CGFloat = 40
 
@@ -523,7 +538,7 @@ struct TimelineStripDayContent: View {
     /// to transparent, so skipped days read as a gap rather than a line.
     /// Faint up-chevrons along it are the ambient reminder that time on this
     /// strip flows upward.
-    private func drawAxis(in context: inout GraphicsContext, size: CGSize, axisX: CGFloat) {
+    private func drawAxis(in context: inout GraphicsContext, size: CGSize, visibleY: ClosedRange<CGFloat>, axisX: CGFloat) {
         let axisTop: CGFloat = day.breakAbove + (day.showsLiveEdge ? 16 : 0)
         let axisColor = Color.primary.opacity(day.showsLiveEdge ? 0.22 : 0.12)
         var axisLine = Path()
@@ -551,8 +566,12 @@ struct TimelineStripDayContent: View {
             context.stroke(arrow, with: .color(Color.primary.opacity(0.3)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
         }
 
-        var chevronY = size.height - 60
-        while chevronY > axisTop + 40 {
+        // Chevrons sit every `chevronSpacing` up from the bottom; start at the
+        // first one inside this tile rather than walking the whole slice.
+        let bottomChevron = size.height - 60
+        let skipped = max(0, ((bottomChevron - visibleY.upperBound) / Self.chevronSpacing).rounded(.up))
+        var chevronY = bottomChevron - skipped * Self.chevronSpacing
+        while chevronY > max(axisTop + 40, visibleY.lowerBound) {
             let clearOfDots = day.doseDots.allSatisfy { abs($0.y - chevronY) > 14 }
             let clearOfNow = day.nowY.map { abs($0 - chevronY) > 14 } ?? true
             if clearOfDots, clearOfNow {
@@ -562,7 +581,7 @@ struct TimelineStripDayContent: View {
                 chevron.addLine(to: CGPoint(x: axisX + 3.5, y: chevronY + 3))
                 context.stroke(chevron, with: .color(Color.primary.opacity(0.16)), style: StrokeStyle(lineWidth: 1.2, lineCap: .round, lineJoin: .round))
             }
-            chevronY -= 130
+            chevronY -= Self.chevronSpacing
         }
     }
 }

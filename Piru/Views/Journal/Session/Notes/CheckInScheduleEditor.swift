@@ -101,7 +101,8 @@ struct CheckInScheduleEditor: View {
                 .wheelPickerStyle()
                 .frame(maxWidth: .infinity)
                 Picker("Minutes", selection: $minutes) {
-                    ForEach(Array(stride(from: 0, to: 60, by: 5)), id: \.self) { Text("\($0) m").tag($0) }
+                    // Every minute: any offset ``CheckInOffsets`` accepts is reachable.
+                    ForEach(0 ..< 60, id: \.self) { Text("\($0) m").tag($0) }
                 }
                 .wheelPickerStyle()
                 .frame(maxWidth: .infinity)

@@ -1,0 +1,13 @@
+diff --git a/Sources/SkipSwiftUI/Text/Text.swift b/Sources/SkipSwiftUI/Text/Text.swift
+--- a/Sources/SkipSwiftUI/Text/Text.swift
++++ b/Sources/SkipSwiftUI/Text/Text.swift
+@@ -151,7 +151,8 @@
+     public struct DateStyle : Equatable, Sendable {
+         public static let time: DateStyle = {
+             let formatter = DateFormatter()
+-            formatter.timeStyle = .medium
++            // Hours and minutes, as SwiftUI's `.time` shows them.
++            formatter.timeStyle = .short
+             return DateStyle(identifier: 1) {
+                 return formatter.string(from: $0)
+             }

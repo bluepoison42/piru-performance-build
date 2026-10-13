@@ -1,5 +1,5 @@
 {
-  "_comment": "dose.wiki slug -> the Piru substance its article is about. Seeded from a 577-row structural comparison (InChIKey recomputed from both sides' SMILES, CAS check-digit validated, contested cases adjudicated against PubChem) and reviewed by hand. `name` is how the ingest resolves the row, because substance_uid is assigned long after ingest; `substance_uid` is the durable half, checked against data/curated/substance-ids.json so a rename cannot silently move a join. `substance_uid: null` means deliberately unmapped and the note says why. Every published dose.wiki slug must appear here or ingest_dosewiki fails the build — a slug nobody has decided about is the one way a whole article lands on the wrong molecule.",
+  "_comment": "dose.wiki slug -> the Piru substance its article is about. Seeded from a 577-row structural comparison (InChIKey recomputed from both sides' SMILES, CAS check-digit validated, contested cases adjudicated against PubChem) and reviewed by hand. `name` is how the ingest resolves the row, because substance_uid is assigned long after ingest; `substance_uid` is the durable half, checked against data/curated/substance-ids.json so a rename cannot silently move a join. `substance_uid: null` means deliberately unmapped and the note says why. Every published dose.wiki slug must appear here or ingest_dosewiki fails the build — a slug nobody has decided about is the one way a whole article lands on the wrong molecule. `skip_chemistry: true` keeps one article's structure off its Piru row while its names, doses and prose still land: dose.wiki describes a preparation with its active molecule's structure, and copying that onto the preparation would file one molecule under two identities.",
   "1-4-butanediol": {
     "name": "1,4-Butanediol",
     "substance_uid": "WERYXYBDKMZEQL"
@@ -736,8 +736,10 @@
     "note": "Plant (Catha edulis). Piru has a dedicated Khat row with no structure; dose.wiki's identification block carries the active principle S-(-)-cathinone (PUAQLLVFLMYYJJ-ZETCQYMHSA-N). Not a match to Piru's Cathinone row."
   },
   "kratom": {
-    "name": "Mitragynine",
-    "substance_uid": "LELBFTMXCIIKKX"
+    "name": "Kratom",
+    "substance_uid": "8TUKMTNTYZWJLX",
+    "skip_chemistry": true,
+    "note": "Plant (Mitragyna speciosa). The structural seed matched Mitragynine because dose.wiki's identification block carries the alkaloid's IUPAC name and structure, but the article is about the leaf — its own dose note says the ranges \"apply to plain leaf material only\" — so the ladder is grams of leaf and belongs on Piru's Kratom row, not on the pure alkaloid. Same shape as the khat entry below. Not yet reported upstream."
   },
   "lean": {
     "name": "Codeine",
@@ -1002,8 +1004,10 @@
     "substance_uid": "HYWLMSUAZVDUFW"
   },
   "psilocybin-mushrooms": {
-    "name": "Psilocybin",
-    "substance_uid": "QVDSEJDULKLHCG"
+    "name": "Psilocybin mushrooms",
+    "substance_uid": "7BIMCTXPBJZGRY",
+    "skip_chemistry": true,
+    "note": "Fungi (Psilocybe spp.). The structural seed matched Psilocybin because dose.wiki's identification block carries the prodrug's IUPAC name and SMILES, but the article is about the mushrooms: its oral ladder is grams of dried P. cubensis (\"Values refer to dried P. cubensis mushrooms\"), so it belongs on Piru's Psilocybin mushrooms row, not on the pure molecule dosed in milligrams. dose.wiki has no separate psilocybin article, so the Psilocybin row carries no dose.wiki mapping. Same shape as the kratom entry. Not yet reported upstream."
   },
   "pyrazolam": {
     "name": "Pyrazolam",

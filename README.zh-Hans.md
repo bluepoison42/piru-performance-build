@@ -16,7 +16,7 @@
 
 <a href="https://kagerou.glass/get/piru/ios?from=readme"><img src=".github/download-iphone.zh-Hans.svg" alt="在 TestFlight 上获取 iPhone 版 Piru" width="270" height="60"></a>
 <a href="https://kagerou.glass/get/piru/mac?from=readme"><img src=".github/download-mac.zh-Hans.svg" alt="下载 Mac 版 Piru" width="270" height="60"></a>
-<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.zh-Hans.svg" alt="下载 Android 版 Piru" width="270" height="60"></a><br><sub>免费 · iPhone：TestFlight 测试版 · Mac：已签名并公证的磁盘映像 · Android：已签名的 alpha 版 APK</sub>
+<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.zh-Hans.svg" alt="下载 Android 版 Piru" width="270" height="60"></a><br><sub>免费 · iPhone：TestFlight 测试版 · Mac：已签名并公证的磁盘映像 · Android：已签名的 APK</sub>
 
 <table>
   <tr>
@@ -32,7 +32,7 @@
 
 ---
 
-一款 iPhone 和 Android 上的剂量日志与笔记本，附带离线参考资料库。
+一款 iPhone、Android 和 Mac 上的剂量日志与笔记本，配有 Apple Watch 伴侣应用和离线参考资料库。
 
 - **日志。** 记下你摄入了什么、在什么时候、多少。片剂规格、每日服药安排和提醒都排在当天的时间线旁；
   时间线上的曲线是估算。
@@ -47,13 +47,15 @@
 ## 获取 Piru
 
 - **iPhone。** 在 [TestFlight](https://kagerou.glass/get/piru/ios?from=readme) 上免费获取，需要 iOS 26 或更高版本。
+- **Apple Watch。** 随 iPhone 版一起提供：轻点收藏或最近用过的物质即可记录，用数码表冠调整剂量，
+  还可以把复杂功能放在表盘上。需要 watchOS 26 或更高版本。
 - **Mac。** [下载磁盘映像](https://kagerou.glass/get/piru/mac?from=readme)：免费，已签名并公证，需要 macOS 26 或更高版本，
   支持 Apple 芯片和 Intel。
-- **Android。** [下载最新的 alpha 版 APK](https://kagerou.glass/get/piru/android?from=readme)。所有 alpha 版本都发布在 [Releases 页面](https://github.com/kageroumado/piru/releases?q=android&expanded=true)，是已签名的 APK，
+- **Android。** [下载最新的 APK](https://kagerou.glass/get/piru/android?from=readme)。所有 Android 版本都发布在 [Releases 页面](https://github.com/kageroumado/piru/releases?q=android&expanded=true)，是已签名的 APK，
   需要 Android 9 或更高版本（64 位 ARM）。想自动获取更新，可以把本仓库添加到
   [Obtainium](https://github.com/ImranR98/Obtainium)，并按 `android-` 筛选发布版本。
 
-问题和错误报告请发到 [Discord](https://discord.gg/hbpMZhPSdx)。
+问题和错误报告请发到 [Discord](https://discord.gg/hbpMZhPSdx)。[如何报告错误](BUG-REPORTS.md)（英文）说明了该发到哪里，以及如何从手机上取得崩溃日志。
 
 ## 构建
 

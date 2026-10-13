@@ -25,6 +25,10 @@ struct TimelineStripBuilder {
     /// Raw entries per substance (lowercased name, ascending) — the PK mode's
     /// input.
     private let entriesBySubstance: [String: [DoseEntry]]
+    /// PK mode's per-dose weight: the amount, read in the unit most of its
+    /// substance's doses share so 500 mg and 1 g stack as 500 and 1 000. A dose
+    /// with no amount, or in a unit that can't be read in that one, weighs nothing.
+    private let pkDoseWeights: [PersistentIdentifier: Double]
     /// Sessions materialized by one fetch, keyed by identifier. `entry.session`
     /// hands back a fault, and reading its `id` fires a one-row fetch — one per
     /// session per build (508 in a launch trace). Resolving through this map
@@ -97,6 +101,8 @@ struct TimelineStripBuilder {
         heartRate: [HeartRateSample] = [],
         sessions: [PersistentIdentifier: Session] = [:],
     ) {
+        // A dose with a non-finite timestamp has no place on any axis.
+        let entries = entries.filter(\.timestamp.timeIntervalSinceReferenceDate.isFinite)
         guard !entries.isEmpty else { return nil }
         self.colorMap = colorMap
         self.style = style
@@ -137,6 +143,17 @@ struct TimelineStripBuilder {
             bySubstance[k]?.sort { $0.timestamp < $1.timestamp }
         }
         entriesBySubstance = bySubstance
+        var weights: [PersistentIdentifier: Double] = [:]
+        if style.pkMode {
+            for substanceEntries in bySubstance.values {
+                let quantities = substanceEntries.map(\.quantity)
+                guard let unitOf = DoseQuantity.reference(among: quantities.compactMap(\.self)) else { continue }
+                for (entry, dose) in zip(substanceEntries, quantities) {
+                    weights[entry.persistentModelID] = dose?.value(inUnitOf: unitOf)
+                }
+            }
+        }
+        pkDoseWeights = weights
 
         var sessions: [UUID: Session] = [:]
         for entry in entries {
@@ -176,16 +193,13 @@ struct TimelineStripBuilder {
         // windows, or six half-lives in body-load mode.
         let globalStart = byDay[oldestDay]!.map(\.timestamp).min()!.addingTimeInterval(-5 * 60)
         let currentTime = now
-        let modeledEnds: [Date] = style.pkMode
-            ? TimelineActivity.pkActivityEnds(entries: entries)
-            : states.map { $0.doseTimestamp.addingTimeInterval($0.totalMinutes * 60) }
-        let curvesEnd = modeledEnds.filter { $0 > currentTime }.max()
-        let globalEnd = max(
-            currentTime.addingTimeInterval(Self.minimumFutureSeconds),
-            min(
-                (curvesEnd ?? .distantPast).addingTimeInterval(Self.futureMarginSeconds),
-                currentTime.addingTimeInterval(Self.maximumFutureSeconds),
-            ),
+        let modeledCurves: [DateInterval] = style.pkMode
+            ? TimelineActivity.pkActivityIntervals(entries: entries)
+            : states.map { DateInterval(start: $0.doseTimestamp, duration: max(0, $0.totalMinutes * 60)) }
+        let globalEnd = Self.stripEnd(
+            now: currentTime,
+            modeledCurves: modeledCurves,
+            newestDose: entries.map(\.timestamp).max()!,
         )
 
         // Where each curve is still above threshold and not yet a baseline —
@@ -268,12 +282,39 @@ struct TimelineStripBuilder {
         )
     }
 
+    /// The strip's live edge: past now by at least ``minimumFutureSeconds``,
+    /// out to the last still-running curve's end plus ``futureMarginSeconds``,
+    /// and never short of the newest dose — a dose logged ahead of now is on
+    /// the strip like any other, and the strip's oldest moment (five minutes
+    /// before the oldest dose) always lies below its live edge.
+    ///
+    /// A curve reaches at most ``maximumFutureSeconds`` past the later of its
+    /// dose and now: a dose already taken holds the edge a day past now at
+    /// most, and a dose logged days ahead still draws its whole curve.
+    static func stripEnd(now: Date, modeledCurves: [DateInterval], newestDose: Date) -> Date {
+        let curvesEnd = modeledCurves
+            .filter { $0.end > now }
+            .map { curve in
+                min(
+                    curve.end.addingTimeInterval(futureMarginSeconds),
+                    max(curve.start, now).addingTimeInterval(maximumFutureSeconds),
+                )
+            }
+            .max()
+        return max(
+            now.addingTimeInterval(minimumFutureSeconds),
+            curvesEnd ?? .distantPast,
+            newestDose.addingTimeInterval(minimumFutureSeconds),
+        )
+    }
+
     /// The strip always runs at least this far past now, so the live edge
     /// has room for its arrowhead and fade even when nothing is active.
     private static let minimumFutureSeconds: TimeInterval = 10 * 60
     /// Breathing room past the last curve's modeled end.
     private static let futureMarginSeconds: TimeInterval = 30 * 60
-    /// Ceiling on the future extent, whatever is still active.
+    /// Ceiling on how far past its dose (or now, for a dose already taken) a
+    /// curve holds the live edge open, whatever is still active.
     private static let maximumFutureSeconds: TimeInterval = 24 * 3_600
 
     /// Room a slice's cards need so they never spill into the next day:
@@ -734,6 +775,7 @@ struct TimelineStripBuilder {
         var grid: [(t: Date, y: CGFloat)] = []
         var segStart = slice.bottomTime
         let mapTimes = map.times
+        guard !mapTimes.isEmpty else { return [] }
         while segStart < slice.topTime {
             var lo = 0
             var hi = mapTimes.count - 1
@@ -742,6 +784,9 @@ struct TimelineStripBuilder {
                 if mapTimes[mid] <= segStart { lo = mid } else { hi = mid }
             }
             let segEnd = min(mapTimes[hi], slice.topTime)
+            // A slice running past the map's last breakpoint has nothing
+            // left to sample, and would otherwise never advance.
+            guard segEnd > segStart else { break }
             let h = localY(segStart) - localY(segEnd)
             let steps = max(2, Int(h / 3))
             let span = segEnd.timeIntervalSince(segStart)
@@ -897,9 +942,8 @@ struct TimelineStripBuilder {
         return peak
     }
 
-    /// PK mode's per-dose weight: the logged amount.
     private func doseWeight(_ entry: DoseEntry) -> Double {
-        entry.amount
+        pkDoseWeights[entry.persistentModelID] ?? 0
     }
 
     /// Stacked effect intensity for one substance at `t` — each dose's
@@ -930,7 +974,9 @@ struct TimelineStripBuilder {
     /// stacked curve continuous where the reference changes.
     static func relativeWeights(states: [ActiveSubstanceState], lookback: TimeInterval) -> [Double] {
         guard !states.isEmpty else { return [] }
-        let usesAmount = states.contains(where: \.doseIsUnscaled)
+        // Raw amounts only when no dose can be read on a ladder; one unreadable
+        // dose must not put every other dose of the substance on its raw number.
+        let usesAmount = states.allSatisfy(\.doseIsUnscaled)
         let raw = states.map { usesAmount ? $0.amount : $0.doseMagnitude }
         let longest = states.map(\.totalMinutes).max() ?? 0
 
@@ -1074,7 +1120,7 @@ struct TimelineStripBuilder {
     }
 
     /// Fraction of each dose still in the body, keyed by entry identity.
-    /// Mirrors ``ActiveSubstanceCalculator``'s gates (supplements and unmodeled
+    /// Mirrors ``ActiveSubstanceCalculator``'s gates (``Substance/modelsBodyLoad`` and unmodeled
     /// forms contribute nothing; ≤3% counts as cleared) so the card badge and
     /// the In Your System readout can never disagree about what is active — depot
     /// doses included, on their long depot half-life (PKResolver).
@@ -1095,7 +1141,7 @@ struct TimelineStripBuilder {
                 substanceCache[key] = substance
             }
 
-            if substance?.category == .supplement { continue }
+            if substance?.modelsBodyLoad == false { continue }
             let isDepot = PKResolver.isDepot(entry: entry)
             let productDuration = entry.productDuration
             if !isDepot, productDuration == nil, entry.namesUnmodeledForm { continue }

@@ -102,22 +102,6 @@ private extension RouteOfAdministration {
         case .other: "ORAL"
         }
     }
-
-    init(psylogName: String) {
-        switch psylogName.uppercased() {
-        case "ORAL": self = .oral
-        case "SUBLINGUAL": self = .sublingual
-        case "BUCCAL": self = .buccal
-        case "INSUFFLATED": self = .insufflation
-        case "INHALED": self = .inhalation
-        case "INTRAVENOUS": self = .intravenous
-        case "INTRAMUSCULAR": self = .intramuscular
-        case "SUBCUTANEOUS": self = .subcutaneous
-        case "TRANSDERMAL": self = .transdermal
-        case "RECTAL": self = .rectal
-        default: self = .other
-        }
-    }
 }
 
 // MARK: - PsyLog Codable Types
@@ -530,6 +514,13 @@ extension DataExportImport {
         var seenDoseKeys = Set(existingDoses.map {
             doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.amount, unit: $0.unit, route: $0.route)
         })
+        // Stored doses on route Other, keyed as if the file's dose were Other too.
+        // An earlier build filed PW's SMOKED as Other; when the same file comes
+        // in again, its dose names the real route, so the stored copy takes that
+        // route instead of a second copy landing beside it.
+        var unroutedDoses = Dictionary(grouping: existingDoses.filter { $0.route == .other }) {
+            doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.amount, unit: $0.unit, route: .other)
+        }
 
         for experience in file.experiences {
             var sessionDoses: [DoseEntry] = []
@@ -547,10 +538,21 @@ extension DataExportImport {
                 // Skip entries with missing or zero dose
                 guard let dose = ingestion.dose, dose > 0 else { continue }
 
-                let route = RouteOfAdministration(psylogName: ingestion.administrationRoute)
+                // The shared parser, never a table of this importer's own: PW
+                // writes SMOKED beside INHALED (and PsyLog files carry the same
+                // vocabulary), and a local table that missed one filed every
+                // such dose as Other.
+                let route = RouteOfAdministration.from(string: ingestion.administrationRoute)
                 let timestamp = Date(ms: ingestion.time)
                 let key = doseDedupKey(substance: name, timestamp: timestamp, amount: dose, unit: ingestion.units, route: route)
                 guard seenDoseKeys.insert(key).inserted else { continue }
+                if route != .other {
+                    let unroutedKey = doseDedupKey(substance: name, timestamp: timestamp, amount: dose, unit: ingestion.units, route: .other)
+                    if let stored = unroutedDoses[unroutedKey]?.popLast() {
+                        stored.route = route
+                        continue
+                    }
+                }
 
                 let extractedTags = TagExtractor.extractTags(from: ingestion.notes)
                 // A dose's own location (a Piru extension, present only in older
@@ -617,7 +619,7 @@ extension DataExportImport {
                     substance: item.substance,
                     amount: item.amount,
                     unit: item.unit,
-                    route: RouteOfAdministration(psylogName: item.route),
+                    route: RouteOfAdministration.from(string: item.route),
                     sortOrder: item.sortOrder,
                 ))
             }

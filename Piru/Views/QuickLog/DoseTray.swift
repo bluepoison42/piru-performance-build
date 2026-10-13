@@ -222,7 +222,7 @@ struct StagedDose: Identifiable, Equatable {
     var doseLevel: DoseLevel? {
         guard !isUnknownAmount, let librarySubstance, librarySubstance.displayClass.showsDoseLadder else { return nil }
         return librarySubstance.doseLevel(
-            of: totalAmount, unit: unit,
+            of: librarySubstance.quantity(totalAmount, unit: unit),
             route: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm,
         )
     }
@@ -388,6 +388,13 @@ struct StagedChipKey: Hashable {
     let amountKey: Int
 }
 
+/// One chip across the whole tray: the staged row's substance identity plus
+/// the chip within it. What a My Meds pill records per dose it staged.
+struct StagedChipUnit: Hashable {
+    let identity: String
+    let chip: StagedChipKey
+}
+
 /// A value snapshot of one substance's staged chip counts. Passed to
 /// ``SubstanceCardView`` so a card reflects staged state through a *comparable*
 /// input instead of reading the live `DoseTrayModel` — reading the model would
@@ -426,6 +433,14 @@ final class DoseTrayModel {
     /// attach `.sensoryFeedback` without coupling feedback to every tap.
     private(set) var stageTick = 0
     private(set) var incrementTick = 0
+    /// Bumped when a My Meds pill takes its doses back out of the tray.
+    private(set) var unstageTick = 0
+
+    /// What each My Meds pill's taps put in the tray, keyed by the pill's
+    /// ``DailyCategoryGroup/id``: units per chip. A second tap subtracts
+    /// exactly this, so a dose added by any other path — another substance,
+    /// one more unit of a med the pill also staged — stays put.
+    private var pillContributions: [String: [StagedChipUnit: Int]] = [:]
 
     /// Stored — *not* computed from `staged` — so a view reading it (the
     /// toolbar's close button, the dock's face selection in `QuickLogView.body`)
@@ -509,6 +524,11 @@ final class DoseTrayModel {
     /// logs as Concerta — the tray derives the release form/isomer from it,
     /// same as search.
     func stage(dailyItem item: DailyDoseItem, colorLookup: [String: P3Color]) {
+        stage(dailyMed: DailyMedSnapshot(item), colorLookup: colorLookup)
+    }
+
+    /// Stage a daily-set med from the My Meds pills' value snapshot.
+    func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color]) {
         stage(
             substance: item.substance,
             route: item.route,
@@ -520,6 +540,104 @@ final class DoseTrayModel {
             isFromDailySet: true,
             isBackgroundMed: item.isBackgroundMed,
         )
+    }
+
+    // MARK: My Meds pills
+
+    /// Whether a My Meds pill reads as staged: it staged something, and all of
+    /// it is still in the tray. A pill whose doses were partly removed by hand
+    /// reads as unstaged, and its next tap stages what is missing.
+    func isPillStaged(_ pillID: String) -> Bool {
+        guard let contribution = pillContributions[pillID], !contribution.isEmpty else { return false }
+        return contribution.allSatisfy { unit, count in stagedCount(of: unit) >= count }
+    }
+
+    /// One tap on a My Meds pill. A staged pill (``isPillStaged(_:)``) takes
+    /// back exactly what it staged; otherwise it stages each of `meds` not
+    /// already in the tray from any source — so two pills sharing a med never
+    /// stage it twice — and records those units as its own.
+    func togglePill(_ pillID: String, meds: [DailyMedSnapshot], colorLookup: [String: P3Color]) {
+        if isPillStaged(pillID) {
+            unstagePill(pillID)
+        } else {
+            stagePill(pillID, meds: meds, colorLookup: colorLookup)
+        }
+    }
+
+    /// Stage the members of a pill that are missing from the tray, adding them
+    /// to whatever of the pill's earlier contribution is still there.
+    func stagePill(_ pillID: String, meds: [DailyMedSnapshot], colorLookup: [String: P3Color]) {
+        var contribution = presentContribution(of: pillID)
+        for med in meds {
+            let unit = Self.chipUnit(for: med)
+            guard stagedCount(of: unit) == 0 else { continue }
+            stage(dailyMed: med, colorLookup: colorLookup)
+            contribution[unit, default: 0] += 1
+        }
+        pillContributions[pillID] = contribution.isEmpty ? nil : contribution
+    }
+
+    /// Take a pill's contribution back out: subtract each recorded unit from
+    /// its chip, never past what the chip still holds, and drop rows left
+    /// with nothing in them. Units staged by any other path are untouched.
+    func unstagePill(_ pillID: String) {
+        guard let contribution = pillContributions.removeValue(forKey: pillID) else { return }
+        var removedAny = false
+        for (unit, count) in contribution {
+            guard let rowIndex = staged.firstIndex(where: { Self.matches($0, unit.identity, unit.chip) }),
+                  let componentIndex = staged[rowIndex].components.firstIndex(where: { Self.displayKey($0.amount) == unit.chip.amountKey })
+            else { continue }
+            let available = staged[rowIndex].components[componentIndex].count
+            let removing = min(count, available)
+            guard removing > 0 else { continue }
+            removedAny = true
+            if removing == available {
+                staged[rowIndex].components.remove(at: componentIndex)
+            } else {
+                staged[rowIndex].components[componentIndex].count -= removing
+            }
+            if staged[rowIndex].components.isEmpty {
+                expandedItemIDs.remove(staged[rowIndex].id)
+                staged.remove(at: rowIndex)
+            }
+        }
+        guard removedAny else { return }
+        unstageTick += 1
+        syncEmptiness()
+    }
+
+    /// The pill's recorded units, each capped at what the tray still holds.
+    private func presentContribution(of pillID: String) -> [StagedChipUnit: Int] {
+        (pillContributions[pillID] ?? [:]).reduce(into: [:]) { result, entry in
+            let present = min(entry.value, stagedCount(of: entry.key))
+            if present > 0 { result[entry.key] = present }
+        }
+    }
+
+    /// Units staged on one chip, across every row carrying its identity.
+    private func stagedCount(of unit: StagedChipUnit) -> Int {
+        staged
+            .filter { Self.matches($0, unit.identity, unit.chip) }
+            .flatMap(\.components)
+            .filter { Self.displayKey($0.amount) == unit.chip.amountKey }
+            .reduce(0) { $0 + $1.count }
+    }
+
+    private static func matches(_ dose: StagedDose, _ identity: String, _ chip: StagedChipKey) -> Bool {
+        dose.identityKey == identity && dose.route == chip.route && dose.unit == chip.unit
+    }
+
+    /// The chip ``stage(dailyMed:colorLookup:)`` files a med under: the
+    /// resolved identity staged rows merge on, and the med's route, unit and
+    /// amount.
+    static func chipUnit(for med: DailyMedSnapshot) -> StagedChipUnit {
+        let identity = stagedIdentity(
+            substance: med.substance,
+            productName: med.productName,
+            librarySubstance: SubstanceLibrary.lookup(med.substance.lowercased()),
+            route: med.route,
+        )
+        return StagedChipUnit(identity: identity, chip: StagedChipKey(route: med.route, unit: med.unit, amountKey: displayKey(med.amount)))
     }
 
     /// Stage a chip. Same substance + route + unit merges into the existing
@@ -615,20 +733,26 @@ final class DoseTrayModel {
         )
     }
 
-    /// Open a staged row for editing on the user's behalf: expands it and asks
-    /// the editor to focus the amount field (see ``StagedDose/wantsAmountFocus``).
-    func openForEditing(_ id: UUID) {
-        if let index = staged.firstIndex(where: { $0.id == id }) {
+    /// Open a staged row for editing on the user's behalf: expands it and, with
+    /// `focusesAmount`, asks the editor to focus the amount field (see
+    /// ``StagedDose/wantsAmountFocus``).
+    func openForEditing(_ id: UUID, focusesAmount: Bool = true) {
+        if focusesAmount, let index = staged.firstIndex(where: { $0.id == id }) {
             staged[index].wantsAmountFocus = true
         }
         expandedItemIDs.insert(id)
     }
 
     /// Stage a draft (from search / the sliders pill) and open it for editing.
-    /// Prefilled with the library's common dose when one is known; the editor
-    /// focuses the amount field either way, since the user asked to type. A
-    /// draft for an already-staged substance opens that row instead of
-    /// duplicating it.
+    /// Prefilled with the library's common dose when one is known. A draft for
+    /// an already-staged substance opens that row instead of duplicating it.
+    ///
+    /// `focusesAmount` raises the keyboard on the amount field. Search keeps
+    /// it on, since the dock is already full height there. The cards behind the
+    /// dock pass `false`: the draft opens at the dock's half-height detent,
+    /// and a keyboard there makes UIKit expand the sheet to full height, only
+    /// to drop back to half the moment a −/+ tap puts the keyboard down. A
+    /// draft with no seeded amount still focuses (the editor's own rule).
     func stageDraft(
         substance: String,
         route: RouteOfAdministration,
@@ -637,6 +761,7 @@ final class DoseTrayModel {
         librarySubstance: Substance?,
         productName: String? = nil,
         saltForm: String? = nil,
+        focusesAmount: Bool = true,
     ) {
         // A by-volume substance (alcohol) must draft in its canonical unit —
         // the drink editor (By Volume / By Mass) gates on it, so a draft
@@ -645,7 +770,7 @@ final class DoseTrayModel {
         let unit = librarySubstance?.byVolumeDosing?.canonicalUnit ?? unit
         let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm)
         if let index = stagedIndex(identity: identity, route: route, unit: unit) {
-            openForEditing(staged[index].id)
+            openForEditing(staged[index].id, focusesAmount: focusesAmount)
             return
         }
         let saltForm = saltForm ?? librarySubstance?.saltForms(for: route).first
@@ -667,7 +792,7 @@ final class DoseTrayModel {
             tint: tint,
             librarySubstance: librarySubstance,
         )
-        draft.wantsAmountFocus = true
+        draft.wantsAmountFocus = focusesAmount
         staged.append(draft)
         expandedItemIDs.insert(draft.id)
         stageTick += 1

@@ -1,14 +1,21 @@
 import SwiftUI
 
 struct DoseLevelIndicator: View {
-    let doseRange: DoseRange
-    let currentDose: Double?
-    /// Unit spoken in the VoiceOver summary ("Common range, 25 mg").
-    var unit: String?
+    let ladder: DoseLadder
+    let dose: DoseQuantity?
+
+    private var doseRange: DoseRange {
+        ladder.range
+    }
+
+    /// The dose read in the ladder's unit — `nil` when it can't be, so no marker
+    /// is placed rather than a gram dose read off a milligram scale.
+    private var currentDose: Double? {
+        dose.flatMap(ladder.reading(of:))
+    }
 
     private var level: DoseLevel? {
-        guard let currentDose else { return nil }
-        return doseRange.level(for: currentDose)
+        dose.flatMap(ladder.level(of:))
     }
 
     var body: some View {
@@ -52,7 +59,7 @@ struct DoseLevelIndicator: View {
 
     private var accessibilitySummary: Text {
         guard let level, let currentDose else { return Text(verbatim: "") }
-        let amount = unit.map { "\(currentDose.doseFormatted) \($0)" } ?? currentDose.doseFormatted
+        let amount = "\(currentDose.doseFormatted) \(ladder.unit)"
         return Text("\(level.displayName) range, \(amount)")
     }
 

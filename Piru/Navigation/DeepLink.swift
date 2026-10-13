@@ -14,10 +14,12 @@ import Foundation
 /// `piru://search`.
 ///
 /// **App-level sheets** (open over the current tab):
-/// - `piru://quicklog[?routine=<name>][?substance=<name>]` → present
-///   `.quickLog`, optionally pre-staging a routine's items (routine-reminder
-///   notification taps) or one substance with its dose editor open (the "Log"
-///   button on a substance's detail screen)
+/// - `piru://quicklog[?routine=<name>][?substance=<name>[&route=<route>]]` →
+///   present `.quickLog`, optionally pre-staging a routine's items
+///   (routine-reminder notification taps) or one substance with its dose editor
+///   open (the "Log" button on a substance's detail screen), on `route` when
+///   given (`oral`, `insufflated`, `smoked`, … as ``RouteOfAdministration``
+///   parses them)
 /// - `piru://settings` → present `.settings`
 /// - `piru://skins` → present `.skins`
 /// - `piru://help` → present `.help`
@@ -44,8 +46,20 @@ import Foundation
 ///   `benzoEquivalence`, `pharma`, `calculator`, `volumetric`, `recovery`,
 ///   `interactions`, `inventory`).
 /// - `piru://session/<uuid>` → Journal tab, push that session's detail.
-/// - `piru://substance/<name>` → Library tab, push that substance's detail
-///   (percent-encode spaces, e.g. `piru://substance/Psilocybin%20mushrooms`).
+/// - `piru://substance/<name>[?brand=<product>]` → Library tab, push that
+///   substance's detail (percent-encode spaces, e.g.
+///   `piru://substance/Psilocybin%20mushrooms`); `brand` preselects that product
+///   in the page's Branded formulations picker.
+///
+/// **Web links** (`https://kagerou.glass/piru/…`, the App Link / Universal
+/// Link form that dose.wiki's articles carry) name a substance by its
+/// dose.wiki slug, which only the loaded catalog can resolve. They decode to a
+/// ``DosewikiLink`` through ``decodeWebLink(_:)``, and the caller turns that
+/// into an outcome once the slug has a name:
+/// - `/piru/log?substance=<slug>[&route=<route>]` → the same outcome as
+///   `piru://quicklog?substance=<name>&route=<route>`
+/// - `/piru/open?substance=<slug>` → the same outcome as
+///   `piru://substance/<name>`
 ///
 /// The encoder always emits a single URL describing the *top* of the modal
 /// stack (or just the tab when no modal is presented). Multi-level stacks
@@ -112,7 +126,11 @@ nonisolated enum DeepLink {
             // App-level sheets preserve the current tab by default.
             return DeepLinkOutcome(
                 tab: overrideTab,
-                sheet: .quickLog(routine: query["routine"], prefillSubstance: query["substance"]),
+                sheet: .quickLog(
+                    routine: query["routine"],
+                    prefillSubstance: query["substance"],
+                    prefillRoute: query["route"].flatMap(route(named:)),
+                ),
             )
 
         case "settings":
@@ -225,12 +243,55 @@ nonisolated enum DeepLink {
             let name = nameSegments.joined(separator: "/")
             guard !name.isEmpty else { return nil }
             let route: PushRoute = dataSection.map { .substanceData(name: name, section: $0) }
-                ?? .substance(name: name)
+                ?? .substance(name: name, brand: query["brand"])
             return DeepLinkOutcome(
                 tab: overrideTab ?? .library,
                 path: [route],
             )
 
+        default:
+            return nil
+        }
+    }
+
+    /// A route named in a link, or `nil` for one ``RouteOfAdministration``
+    /// does not know, so an unknown route falls back to the substance's
+    /// default rather than staging the dose as "Other".
+    private static func route(named name: String) -> RouteOfAdministration? {
+        let route = RouteOfAdministration.from(string: name)
+        return route == .other ? nil : route
+    }
+
+    // MARK: - Web links
+
+    /// The host of dose.wiki's links into the app (`AndroidManifest.xml`'s
+    /// App Link filter names the same host and paths).
+    static let webHost = "kagerou.glass"
+
+    /// Parse a `https://kagerou.glass/piru/…` link. Returns `nil` for any other
+    /// host or path, so a link the app does not understand changes nothing on
+    /// screen. Pure: the slug stays unresolved until the catalog is loaded.
+    static func decodeWebLink(_ url: URL) -> DosewikiLink? {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              components.scheme?.lowercased() == "https",
+              components.host?.lowercased() == webHost
+        else { return nil }
+        let pathSegments = components.path
+            .split(separator: "/", omittingEmptySubsequences: true)
+            .map { $0.lowercased() }
+        guard pathSegments.count == 2, pathSegments[0] == "piru" else { return nil }
+        // First value wins, as in `decode`: the link is untrusted input.
+        let query = Dictionary((components.queryItems ?? []).compactMap { item -> (String, String)? in
+            guard let value = item.value?.trimmingCharacters(in: .whitespaces), !value.isEmpty else { return nil }
+            return (item.name, value)
+        }, uniquingKeysWith: { first, _ in first })
+
+        switch pathSegments[1] {
+        case "log":
+            return DosewikiLink(action: .log, slug: query["substance"], route: query["route"].flatMap(route(named:)))
+        case "open":
+            guard let slug = query["substance"] else { return nil }
+            return DosewikiLink(action: .open, slug: slug, route: nil)
         default:
             return nil
         }
@@ -290,12 +351,13 @@ nonisolated enum DeepLink {
             if let tab, tab != .insights {
                 components.queryItems = [URLQueryItem(name: "tab", value: tab.rawValue)]
             }
-        case let .substance(name):
+        case let .substance(name, brand):
             components.host = "substance"
             components.path = "/\(name)"
-            if let tab, tab != .library {
-                components.queryItems = [URLQueryItem(name: "tab", value: tab.rawValue)]
-            }
+            var items: [URLQueryItem] = []
+            if let brand { items.append(URLQueryItem(name: "brand", value: brand)) }
+            if let tab, tab != .library { items.append(URLQueryItem(name: "tab", value: tab.rawValue)) }
+            if !items.isEmpty { components.queryItems = items }
         case let .substanceData(name, section):
             components.host = "substance"
             components.path = "/\(name)/data/\(section.rawValue)"
@@ -330,7 +392,7 @@ nonisolated enum DeepLink {
         components.scheme = scheme
 
         switch sheet {
-        case let .quickLog(routine, prefillSubstance, prefillDose):
+        case let .quickLog(routine, prefillSubstance, prefillDose, prefillRoute):
             if prefillDose != nil {
                 return nil
             }
@@ -341,6 +403,9 @@ nonisolated enum DeepLink {
             }
             if let prefillSubstance {
                 items.append(URLQueryItem(name: "substance", value: prefillSubstance))
+            }
+            if let prefillRoute {
+                items.append(URLQueryItem(name: "route", value: prefillRoute.rawValue))
             }
             if !items.isEmpty {
                 components.queryItems = items
@@ -407,5 +472,38 @@ nonisolated enum DeepLink {
         }
 
         return components.url
+    }
+}
+
+/// A `kagerou.glass/piru/…` link from a dose.wiki article, decoded but not yet
+/// resolved: `slug` is the article's slug, which names a substance only
+/// through the catalog's `dosewiki_slug` column.
+nonisolated struct DosewikiLink: Hashable {
+    enum Action: Hashable {
+        /// `/piru/log`: the "Log in Piru" pill — Quick Log with the substance staged.
+        case log
+        /// `/piru/open`: the header chip — the substance's page.
+        case open
+    }
+
+    var action: Action
+    var slug: String?
+    var route: RouteOfAdministration?
+
+    /// The navigator outcome once the slug has resolved to `substanceName`
+    /// (`nil` when it named nothing in the catalog). A log link still opens
+    /// Quick Log without a substance, since the reader came to log; an open
+    /// link with no substance to show changes nothing.
+    func outcome(substanceName: String?) -> DeepLinkOutcome? {
+        switch action {
+        case .log:
+            DeepLinkOutcome(sheet: .quickLog(
+                routine: nil,
+                prefillSubstance: substanceName,
+                prefillRoute: substanceName == nil ? nil : route,
+            ))
+        case .open:
+            substanceName.map { DeepLinkOutcome(tab: .library, path: [.substance(name: $0)]) }
+        }
     }
 }

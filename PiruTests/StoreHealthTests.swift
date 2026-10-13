@@ -143,4 +143,84 @@ struct StoreHealthTests {
         try seedStore(at: url, entries: 5)
         #expect(StoreRecovery.userDataCount(at: url) == 5)
     }
+
+    // MARK: - Read-only row count (the launch fast path)
+
+    @Test
+    func `Every user-data table is named the way Core Data lays out a SwiftData store`() throws {
+        // The SQL count trusts `Z` + uppercased model name; a real store is the proof.
+        let url = tmpStoreURL()
+        try seedStore(at: url, entries: 1)
+        var config = Configuration()
+        config.readonly = true
+        // The seeding container finishes closing asynchronously; wait as `StoreHealth.probe` does.
+        config.busyMode = .timeout(2)
+        let queue = try DatabaseQueue(path: url.path, configuration: config)
+        let tables = StoreRecovery.userDataTables
+        #expect(tables == ["ZDOSEENTRY", "ZDAILYDOSEITEM", "ZFAVORITESUBSTANCE", "ZSUBSTANCECOLOR"])
+        let missing = try queue.read { db in try tables.filter { try !db.tableExists($0) } }
+        #expect(missing.isEmpty)
+        try queue.close()
+    }
+
+    @Test
+    func `The SQL row count agrees with the SwiftData count`() throws {
+        let url = tmpStoreURL()
+        try seedStore(at: url, entries: 4)
+        #expect(StoreHealth.rowCount(at: url, tables: StoreRecovery.userDataTables) == 4)
+        #expect(StoreRecovery.launchUserDataCount(at: url) == StoreRecovery.userDataCount(at: url))
+    }
+
+    @Test
+    func `The SQL row count cannot answer for a missing file or a store SwiftData did not make`() throws {
+        #expect(StoreHealth.rowCount(at: tmpStoreURL(), tables: StoreRecovery.userDataTables) == nil)
+        let plain = tmpStoreURL()
+        try makeStoreWithUncheckpointedWAL(at: plain)
+        #expect(StoreHealth.rowCount(at: plain, tables: StoreRecovery.userDataTables) == nil)
+        let garbage = tmpStoreURL()
+        try Data(repeating: 0x00, count: 4_096).write(to: garbage)
+        #expect(StoreHealth.rowCount(at: garbage, tables: StoreRecovery.userDataTables) == nil)
+    }
+
+    @Test
+    func `The launch count is zero for an absent store and never creates one`() {
+        let url = tmpStoreURL()
+        #expect(StoreRecovery.launchUserDataCount(at: url) == 0)
+        #expect(!FileManager.default.fileExists(atPath: url.path))
+    }
+
+    @Test
+    func `The SQL row count reads the WAL, counts absent tables as empty, and never checkpoints`() throws {
+        // A Core Data-shaped WAL store whose rows exist only as uncheckpointed
+        // frames, with one of the counted tables missing.
+        let url = tmpStoreURL()
+        let source = url.deletingLastPathComponent().appendingPathComponent("source.store")
+        var config = Configuration()
+        config.prepareDatabase { db in
+            try db.execute(sql: "PRAGMA journal_mode = WAL")
+            try db.execute(sql: "PRAGMA wal_autocheckpoint = 0")
+        }
+        let writer = try DatabaseQueue(path: source.path, configuration: config)
+        try writer.write { db in
+            try db.execute(sql: "CREATE TABLE Z_METADATA (Z_VERSION INTEGER PRIMARY KEY)")
+            try db.execute(sql: "CREATE TABLE ZDOSEENTRY (Z_PK INTEGER PRIMARY KEY)")
+            try db.execute(sql: "CREATE TABLE ZFAVORITESUBSTANCE (Z_PK INTEGER PRIMARY KEY)")
+            try db.execute(sql: "INSERT INTO ZDOSEENTRY DEFAULT VALUES")
+            try db.execute(sql: "INSERT INTO ZDOSEENTRY DEFAULT VALUES")
+            try db.execute(sql: "INSERT INTO ZFAVORITESUBSTANCE DEFAULT VALUES")
+        }
+        try FileManager.default.copyItem(at: source, to: url)
+        try FileManager.default.copyItem(atPath: source.path + "-wal", toPath: url.path + "-wal")
+        try writer.close()
+
+        let footprint = { () -> [String] in
+            [url.path, url.path + "-wal"].map { path in
+                let attributes = (try? FileManager.default.attributesOfItem(atPath: path)) ?? [:]
+                return "\(attributes[.size] ?? 0)|\(attributes[.modificationDate] ?? "missing")"
+            }
+        }
+        let before = footprint()
+        #expect(StoreHealth.rowCount(at: url, tables: StoreRecovery.userDataTables) == 3)
+        #expect(footprint() == before)
+    }
 }

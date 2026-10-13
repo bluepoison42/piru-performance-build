@@ -64,8 +64,8 @@ extension RouteOfAdministration {
         case "buccal", "buccally", "pouch", "snus": .buccal
         case "insufflated", "insufflation", "insufflated(pure)", "intranasal", "nasal": .insufflation
         case "inhaled", "inhalation", "smoked", "vapourized", "vaporized": .inhalation
-        case "intravenous", "iv": .intravenous
-        case "intramuscular", "im": .intramuscular
+        case "intravenous", "iv", "i.v.": .intravenous
+        case "intramuscular", "im", "i.m.": .intramuscular
         case "subcutaneous": .subcutaneous
         case "transdermal", "topical": .transdermal
         case "rectal", "plugged": .rectal

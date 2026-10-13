@@ -138,6 +138,8 @@ figure.walk	directions_walk	0
 flame.fill	local_fire_department	1
 flask	science	0
 flask.fill	science	1
+folder	folder	0
+folder.badge.plus	create_new_folder	0
 fork.knife	restaurant	0
 function	function	0
 gauge.with.dots.needle.33percent	speed	0
@@ -163,6 +165,7 @@ iphone	smartphone	0
 iphone.slash	mobile_off	0
 key	key	0
 key.horizontal	key	0
+ladybug	bug_report	0
 leaf	eco	0
 leaf.fill	eco	1
 lifepreserver	support	0

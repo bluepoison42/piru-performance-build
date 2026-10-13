@@ -8,6 +8,12 @@
 # Logger comes from SkipFuse (Skip's AndroidLogging); the privacy interpolation,
 # OSAllocatedUnfairLock and signposts from Android/OSCompat.swift.
 ^([ \t]*)import (os|OSLog)$	\1import SkipFuse
+# semantic: whether an @Observable model's changes re-render the views reading it. The macro
+# names `Observation.ObservationRegistrar`, which reaches Compose only as SkipAndroidBridge's
+# struct of that name, visible where SkipFuse is imported; a file that reaches the macro some
+# other way (Observation alone, or SwiftData through PortableData) gets the plain registrar, and
+# its views never update. So every file declaring an @Observable type imports SkipFuse.
+\A(?=[\s\S]*?^[ \t]*(?:@\w+[ \t]+)*@Observable\b)	import SkipFuse\n
 ^([ \t]*)import SwiftData$	\1import PortableData
 ^([ \t]*)import CryptoKit$	\1import Crypto
 # CLLocationCoordinate2D comes from Android/AndroidPlatformTypes.swift.
@@ -60,7 +66,6 @@
 \blistRowInsets\(	androidListRowInsets(
 \bimageScale\(	androidImageScale(
 \bscrollEdgeEffectStyle\(	androidScrollEdgeEffectStyle(
-\.pendingNotificationRequests\(\)	.androidPendingNotificationRequests()
 \.stringArray\(forKey:	.androidStringArray(forKey:
 \bcontrolSize\(	androidControlSize(
 \btruncationMode\(	androidTruncationMode(

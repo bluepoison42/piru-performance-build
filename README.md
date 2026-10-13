@@ -16,7 +16,7 @@
 
 <a href="https://kagerou.glass/get/piru/ios?from=readme"><img src=".github/download-iphone.svg" alt="Get Piru for iPhone on TestFlight" width="270" height="60"></a>
 <a href="https://kagerou.glass/get/piru/mac?from=readme"><img src=".github/download-mac.svg" alt="Download Piru for Mac" width="270" height="60"></a>
-<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.svg" alt="Download Piru for Android" width="270" height="60"></a><br><sub>Free · iPhone: TestFlight beta · Mac: signed, notarized disk image · Android: signed alpha APK</sub>
+<a href="https://kagerou.glass/get/piru/android?from=readme"><img src=".github/download-android.svg" alt="Download Piru for Android" width="270" height="60"></a><br><sub>Free · iPhone: TestFlight beta · Mac: signed, notarized disk image · Android: signed APK</sub>
 
 <table>
   <tr>
@@ -32,7 +32,7 @@
 
 ---
 
-A dose journal and notebook for iPhone and Android, with an offline reference library.
+A dose journal and notebook for iPhone, Android and Mac, with an Apple Watch companion and an offline reference library.
 
 - **Journal.** Log what you took, when, and how much. Tablet strengths, daily routines, and
   reminders sit beside the day's timeline, and the curves on it are estimates.
@@ -49,13 +49,16 @@ The journal is stored on your device. No account, ads, or analytics.
 ## Get Piru
 
 - **iPhone.** Free on [TestFlight](https://kagerou.glass/get/piru/ios?from=readme), for iOS 26 or later.
+- **Apple Watch.** Comes with the iPhone app: tap a favorite or recent substance to log it, set the
+  amount with the Digital Crown, and keep a complication on your watch face. For watchOS 26 or later.
 - **Mac.** [Download the disk image](https://kagerou.glass/get/piru/mac?from=readme): free, signed and notarized, for
   macOS 26 or later on Apple silicon or Intel.
-- **Android.** [Download the latest alpha APK](https://kagerou.glass/get/piru/android?from=readme). Every alpha build is on the [releases page](https://github.com/kageroumado/piru/releases?q=android&expanded=true), as signed APKs for
+- **Android.** [Download the latest APK](https://kagerou.glass/get/piru/android?from=readme). Every Android build is on the [releases page](https://github.com/kageroumado/piru/releases?q=android&expanded=true), as signed APKs for
   Android 9 or later (64-bit ARM). To get updates automatically, add this repository to
   [Obtainium](https://github.com/ImranR98/Obtainium) and filter releases by `android-`.
 
-Questions and bug reports go to the [Discord](https://discord.gg/hbpMZhPSdx).
+Questions and bug reports go to the [Discord](https://discord.gg/hbpMZhPSdx). [How to report a bug](BUG-REPORTS.md)
+covers where to send one and how to get the crash details from your phone.
 
 ## Building
 

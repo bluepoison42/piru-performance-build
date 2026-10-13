@@ -160,11 +160,14 @@ enum AppSources {
     ///
     /// Returns `nil` rather than the site root, for the reason spelled out on
     /// ``freeodwikiURL(slug:)``.
+    ///
+    /// `?from=piru` tells dose.wiki the reader came from the app, so its
+    /// article pages can show their link back into Piru.
     static func dosewikiURL(slug: String?) -> URL? {
         guard let slug, !slug.isEmpty,
               let encoded = slug.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
         else { return nil }
-        return URL(string: "https://dose.wiki/\(encoded)")
+        return URL(string: "https://dose.wiki/\(encoded)?from=piru")
     }
 
     /// Deep link to a source's page for a substance, keyed by the DB `slug`

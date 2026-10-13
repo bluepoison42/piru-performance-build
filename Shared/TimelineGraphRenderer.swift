@@ -31,6 +31,10 @@ struct TimelineGraphRenderer {
     /// the one piece of view `@State` drawing reads (it suppresses the resting
     /// now-dots and draws the scrub rule).
     let scrubX: CGFloat?
+    /// Whether the view draws phase milestones over the curves, resolved by the
+    /// view (``TimelineGraphView/showsMilestones``). The relative-hour row
+    /// yields wherever a milestone reaches up into it.
+    var showsMilestones = false
 
     /// The visible-window snapshot, computed by the view's windowing math.
     struct Viewport {
@@ -164,7 +168,7 @@ struct TimelineGraphRenderer {
     /// The drawable rectangle of the canvas, derived once from the view size so
     /// the `Canvas` closure, the pan/scrub gestures, and the callout overlay all
     /// map points ⇄ minutes through identical math.
-    struct GraphGeometry {
+    nonisolated struct GraphGeometry {
         let inset: CGFloat
         let top: CGFloat
         let width: CGFloat
@@ -242,6 +246,121 @@ struct TimelineGraphRenderer {
 
     func scrubClockTime(atMinute global: Double) -> String {
         Self.timeLabelFormatter.string(from: earliestDose.addingTimeInterval(global * 60))
+    }
+
+    // MARK: - Milestones
+
+    /// One phase-boundary mark: the phase glyph stacked over its clock time,
+    /// the stack centered at (`x`, `y`) in canvas points.
+    struct MilestonePlacement: Identifiable {
+        let id: String
+        let x: CGFloat
+        let y: CGFloat
+        let symbol: String
+        let color: Color
+        /// The clock time under the glyph, with its `~` prefix.
+        let label: String
+    }
+
+    /// Font sizes and stack metrics shared by the view, which draws the
+    /// milestones, and the relative-hour row, which steps around them.
+    nonisolated enum MilestoneMetrics {
+        static let glyphSize: CGFloat = 9
+        static let labelSize: CGFloat = 9
+        static let spacing: CGFloat = 1
+        /// Glyph line plus label line plus the spacing between them.
+        static let stackHeight: CGFloat = 23
+        /// How far above its curve the stack's center sits.
+        static let liftAboveCurve: CGFloat = 16
+        /// Lowest center y, so the glyph never clips at the canvas top.
+        static let minimumCenterY: CGFloat = 14
+
+        static func labelFont() -> Font {
+            .system(size: labelSize, weight: .medium, design: .rounded).monospacedDigit()
+        }
+    }
+
+    /// Every visible milestone, placed: the glyph at the height its own curve
+    /// has there, the clock time under it. Empty unless ``showsMilestones``.
+    func milestonePlacements(geom: GraphGeometry, visibleStart: Double, visibleSpan: Double) -> [MilestonePlacement] {
+        guard showsMilestones, geom.width > 0, visibleSpan > 0 else { return [] }
+        var placements: [MilestonePlacement] = []
+        for (doseIndex, dose) in substances.enumerated() {
+            let offset = dose.doseTimestamp.timeIntervalSince(earliestDose) / 60
+            for milestone in Self.milestones(of: dose) {
+                let global = offset + milestone.minutes
+                let x = geom.inset + CGFloat((global - visibleStart) / visibleSpan) * geom.width
+                guard x >= geom.inset, x <= geom.inset + geom.width else { continue }
+                // The sample for *this* curve, not the tallest one there: with
+                // two doses drawn, `scrubSamples` is sorted strongest-first and
+                // its head can easily belong to the other one.
+                guard let value = scrubSamples(atMinute: global)
+                    .first(where: { $0.name == dose.substanceName })?.value else { continue }
+                placements.append(MilestonePlacement(
+                    id: "\(doseIndex)|\(milestone.minutes)",
+                    x: x,
+                    y: max(
+                        MilestoneMetrics.minimumCenterY,
+                        geom.top + geom.height * CGFloat(1 - value) - MilestoneMetrics.liftAboveCurve,
+                    ),
+                    symbol: milestone.symbol,
+                    color: dose.tint.color,
+                    label: "~\(scrubClockTime(atMinute: global))",
+                ))
+            }
+        }
+        return placements
+    }
+
+    /// Where a milestone's clock time is centered: under its glyph, slid
+    /// sideways just enough to stay inside the plot when centering it there
+    /// would run past either edge. The glyph keeps its moment.
+    nonisolated static func milestoneLabelCenterX(_ x: CGFloat, labelWidth: CGFloat, geom: GraphGeometry) -> CGFloat {
+        let lowest = geom.inset + labelWidth / 2
+        let highest = geom.inset + geom.width - labelWidth / 2
+        guard lowest <= highest else { return geom.inset + geom.width / 2 }
+        return min(max(x, lowest), highest)
+    }
+
+    /// Each milestone's glyph-and-time stack as the view draws it, in canvas
+    /// points: what the Now rule breaks around and the relative-hour row
+    /// yields to.
+    func milestoneFrames(_ milestones: [MilestonePlacement], context: GraphicsContext, size: CGSize, geom: GraphGeometry) -> [CGRect] {
+        milestones.map { milestone in
+            let labelWidth = context.resolve(Text(verbatim: milestone.label).font(MilestoneMetrics.labelFont()))
+                .measure(in: size).width
+            let top = milestone.y - MilestoneMetrics.stackHeight / 2
+            let labelCenter = Self.milestoneLabelCenterX(milestone.x, labelWidth: labelWidth, geom: geom)
+            let label = CGRect(
+                x: labelCenter - labelWidth / 2, y: top,
+                width: labelWidth, height: MilestoneMetrics.stackHeight,
+            )
+            let glyph = CGRect(
+                x: milestone.x - MilestoneMetrics.glyphSize, y: top,
+                width: MilestoneMetrics.glyphSize * 2, height: MilestoneMetrics.stackHeight,
+            )
+            return label.union(glyph)
+        }
+    }
+
+    /// A dose's four modeled moments, in minutes from the dose.
+    ///
+    /// Boundaries at or past the curve's end contribute nothing, and two that
+    /// land within a few minutes of each other are the same pixel — the later
+    /// one is dropped rather than drawn on top of the earlier.
+    static func milestones(of dose: ActiveSubstanceState) -> [(minutes: Double, symbol: String)] {
+        let candidates: [(Double, String)] = [
+            (dose.onsetEndMinutes, DosePhaseGlyph.comeup),
+            (dose.comeupEndMinutes, DosePhaseGlyph.peak),
+            (dose.peakEndMinutes, DosePhaseGlyph.offset),
+            (dose.totalMinutes, DosePhaseGlyph.ended),
+        ]
+        var kept: [(minutes: Double, symbol: String)] = []
+        for (minutes, symbol) in candidates where minutes > 0 {
+            if let last = kept.last, minutes - last.minutes < dose.totalMinutes * 0.06 { continue }
+            kept.append((minutes, symbol))
+        }
+        return kept
     }
 
     /// Interpolated heart rate (bpm) at a scrubbed minute-since-`earliestDose`, for
@@ -425,6 +544,11 @@ struct TimelineGraphRenderer {
             context.stroke(origin, with: .color(.primary.opacity(0.28)), lineWidth: 1)
         }
 
+        let milestoneStacks = milestoneFrames(
+            milestonePlacements(geom: geom, visibleStart: vStart, visibleSpan: vSpan),
+            context: context, size: size, geom: geom,
+        )
+
         let nowMinutes = currentTime.timeIntervalSince(earliestDose) / 60
         let nowX = graphInset + CGFloat((nowMinutes - vStart) / vSpan) * graphWidth
         // Only while the session is live. Once every dose's effect window has
@@ -458,12 +582,18 @@ struct TimelineGraphRenderer {
                 }
             }
             if drawsNowRule {
+                // The rule breaks around each milestone stack, so it never
+                // strikes through a clock time it passes.
+                var ruleContext = context
+                for frame in milestoneStacks {
+                    ruleContext.clip(to: Path(frame.insetBy(dx: -2, dy: -1)), options: .inverse)
+                }
                 var nowLine = Path()
                 nowLine.move(to: CGPoint(x: nowX, y: graphTop))
                 // Extend through the companion vitals lane so the "you are here"
                 // rule is one continuous line across both curves and the HR band.
                 nowLine.addLine(to: CGPoint(x: nowX, y: indicatorBottom))
-                context.stroke(nowLine, with: .color(.primary.opacity(0.7)), lineWidth: 2.5)
+                ruleContext.stroke(nowLine, with: .color(.primary.opacity(0.7)), lineWidth: 2.5)
                 // A small dot centered on the baseline (the origin line), anchoring
                 // the rule to "now" on the time axis rather than floating at the top.
                 let capRadius: CGFloat = 3
@@ -693,6 +823,7 @@ struct TimelineGraphRenderer {
                 graphTop: graphTop,
                 dataSpan: viewport.totalSpan,
                 avoiding: markerSlots.map(\.x),
+                milestoneFrames: milestoneStacks,
             )
         }
     }
@@ -1813,6 +1944,7 @@ struct TimelineGraphRenderer {
         graphTop _: CGFloat,
         dataSpan: Double,
         avoiding markerXs: [CGFloat] = [],
+        milestoneFrames: [CGRect] = [],
     ) {
         let graphWidth = size.width - inset * 2
         let labelY: CGFloat = 12
@@ -1826,6 +1958,9 @@ struct TimelineGraphRenderer {
         let maxHours = Int(ceil(dataSpan / 60))
         var lastLabelRight: CGFloat = -.infinity
         let minSpacing: CGFloat = 8
+        // A milestone riding a curve near the top reaches up into this row
+        // (`milestoneFrames`); the hour label yields to it, since the milestone
+        // already names the time.
 
         while hour <= maxHours {
             let minutePos = Double(hour) * 60
@@ -1841,7 +1976,8 @@ struct TimelineGraphRenderer {
                     .font(.system(size: 10, weight: .medium, design: .rounded))
                     .foregroundStyle(.primary.legibleOpacity(0.6))
                 let resolved = context.resolve(text)
-                let labelWidth = resolved.measure(in: size).width
+                let labelSize = resolved.measure(in: size)
+                let labelWidth = labelSize.width
 
                 let labelLeft: CGFloat = if x < 15 {
                     x
@@ -1850,8 +1986,13 @@ struct TimelineGraphRenderer {
                 } else {
                     x - labelWidth / 2
                 }
+                let labelFrame = CGRect(
+                    x: labelLeft, y: labelY - labelSize.height / 2,
+                    width: labelWidth, height: labelSize.height,
+                ).insetBy(dx: -2, dy: -1)
 
-                if labelLeft >= lastLabelRight + minSpacing {
+                if labelLeft >= lastLabelRight + minSpacing,
+                   !milestoneFrames.contains(where: { $0.intersects(labelFrame) }) {
                     let anchor: UnitPoint = if x < 15 {
                         .leading
                     } else if x > size.width - 15 {

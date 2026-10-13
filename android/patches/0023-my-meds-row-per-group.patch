@@ -1,0 +1,42 @@
+Opening My Meds crashed on Android once a med had times in two groups: the hub's list is one LazyColumn, which takes a key once, so rows are keyed by group and med
+
+diff --git a/Piru/Views/Journal/DailyDose/MyMedsHubView.swift b/Piru/Views/Journal/DailyDose/MyMedsHubView.swift
+index 9b729445..29bc16e7 100644
+--- a/Piru/Views/Journal/DailyDose/MyMedsHubView.swift
++++ b/Piru/Views/Journal/DailyDose/MyMedsHubView.swift
+@@ -119,11 +119,21 @@ struct MyMedsHubView: View {
+             } else {
+                 ForEach(groups, id: \.group) { group, members in
+                     Section {
++                        #if os(Android)
++                            // The list is one LazyColumn, which takes a key once: a med with times in
++                            // two groups is keyed per group, or opening the hub crashes.
++                            ForEach(members.map { MedGroupRow(group: group, item: $0) }) { row in
++                                MedRow(item: row.item, group: group) {
++                                    navigator.push(.medDetail(identityKey: row.item.identityKey, sortOrder: row.item.sortOrder))
++                                }
++                            }
++                        #else
+                         ForEach(members) { item in
+                             MedRow(item: item, group: group) {
+                                 navigator.push(.medDetail(identityKey: item.identityKey, sortOrder: item.sortOrder))
+                             }
+                         }
++                        #endif
+                     } header: {
+                         HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
+                             Image(systemName: group.symbol)
+@@ -280,3 +290,13 @@ private struct MedRow: View {
+         return date.formatted(date: .omitted, time: .shortened)
+     }
+ }
++
++#if os(Android)
++    /// A med as one group's row, identified by both.
++    private struct MedGroupRow: Identifiable {
++        let group: MedTimeGroup
++        let item: DailyDoseItem
++
++        var id: String { "\(group)/\(item.id)" }
++    }
++#endif

@@ -5,8 +5,10 @@
     <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> -->
     <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> -->
 
-    <!-- The app works offline and never opens a connection; libraries' network permissions go. -->
-    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <!-- The one connection the app opens: the daily update check, a GET of GitHub's release list
+         (Android/Update/AppUpdateCheck+Android.swift), off in Settings. Libraries' other network
+         permissions go. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
     <!-- sensoryFeedback (staging, logging): without it every haptic throws a SecurityException -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -24,6 +26,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:windowSoftInputMode="adjustResize">
@@ -31,7 +34,40 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- dose.wiki's links: kagerou.glass/piru/log (the "Log in Piru" pill) and /piru/open (the
+                 header chip), App Links verified against kagerou.glass/.well-known/assetlinks.json.
+                 Unverified, Android hands every tap to the browser. Exact paths, so the app claims no
+                 other page under /piru; the query is not part of the match. The trailing-slash forms
+                 are the ones DeepLink.decodeWebLink also reads. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="kagerou.glass" />
+                <data android:path="/piru/log" />
+                <data android:path="/piru/log/" />
+                <data android:path="/piru/open" />
+                <data android:path="/piru/open/" />
+            </intent-filter>
+            <!-- piru:// links (DeepLink.swift), read by ContentView's onOpenURL. singleTop hands a link
+                 to the running activity through onNewIntent; Main.kt forwards the cases it cannot. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="piru" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
+        <!-- The launcher shortcut that writes a problem report (Skip/AndroidDiagnostics.kt). -->
+        <activity
+            android:name="piru.module.ReportProblemActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- Shares files as content:// URIs (Skip/AndroidDocuments.kt). -->
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -43,7 +43,9 @@ struct SubstanceLibraryView: View {
 @Observable
 @MainActor
 final class SubstanceSearchModel {
-    private(set) var results: [Substance] = []
+    /// Each hit keeps the alias it matched, so a "Concerta" search titles its row
+    /// "Concerta" and opens Methylphenidate with that brand selected.
+    private(set) var results: [SubstanceMatch] = []
 
     /// Debounce, then rank + resolve OFF the main actor — the ranking scans the
     /// whole name/alias index and the resolution runs the heavy per-substance
@@ -57,7 +59,7 @@ final class SubstanceSearchModel {
         }
         try? await Task.sleep(for: .milliseconds(150))
         guard !Task.isCancelled else { return }
-        let found = await SubstanceLibrary.searchAsync(searchText)
+        let found = await SubstanceLibrary.searchMatchesAsync(searchText)
         guard !Task.isCancelled else { return }
         results = found
     }
@@ -71,7 +73,7 @@ private struct SubstanceSearchResultsList: View {
     let searchText: String
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \FavoriteSubstance.createdAt, order: .reverse) private var favorites: [FavoriteSubstance]
-    let searchResults: [Substance]
+    let searchResults: [SubstanceMatch]
     /// Cached so each search-result row's swipe action doesn't rebuild the set.
     @State private var favoriteNames: Set<String> = []
 
@@ -89,9 +91,14 @@ private struct SubstanceSearchResultsList: View {
                 )
             } else if !searchResults.isEmpty {
                 Section("\(searchResults.count) results") {
-                    ForEach(searchResults) { substance in
-                        NavigationLink(value: PushRoute.substance(name: substance.name)) {
-                            SubstanceRowView(substance: substance, isPersonalized: CustomSubstanceStore.shared.isPersonalized(substance.name))
+                    ForEach(searchResults) { match in
+                        let substance = match.substance
+                        NavigationLink(value: PushRoute.substance(name: substance.name, brand: match.matchedBrand)) {
+                            SubstanceRowView(
+                                substance: substance,
+                                matchedAlias: match.matchedAlias,
+                                isPersonalized: CustomSubstanceStore.shared.isPersonalized(substance.name),
+                            )
                         }
                         .swipeActions(edge: .trailing) {
                             let isFav = favoriteNames.contains(substance.name.lowercased())
@@ -511,6 +518,10 @@ struct SubstanceRowView: View {
     /// label disambiguate why it's here.
     var contextCategory: SubstanceCategory?
 
+    /// The alias a search query named ("Concerta"), which then titles the row —
+    /// the shared ``SubstanceMatch`` title and secondary-line rule.
+    var matchedAlias: String?
+
     /// Whether the user has renamed this substance (resolved by the parent
     /// list, which holds the `CustomSubstanceStore`). Injected as a plain value
     /// so the row holds no store reference — it stays value-comparable, SwiftUI
@@ -534,14 +545,15 @@ struct SubstanceRowView: View {
                 .fill(substance.category.color.gradient)
                 .frame(width: 10, height: 10)
                 .accessibilityHidden(true)
+            let match = SubstanceMatch(substance: substance, matchedAlias: matchedAlias)
             VStack(alignment: .leading, spacing: Spacing.xxs) {
-                Text(substance.displayTitle)
+                Text(match.displayName)
                     .font(.body.weight(.medium))
                     .foregroundStyle(.primary)
                 // When personalized, show the canonical name as the subtitle so
                 // the user can tell what "joint" actually maps to. One line —
                 // long alias lists shouldn't blow a row up to three lines.
-                if let subtitle = isPersonalized ? substance.name : substance.displaySubtitle {
+                if let subtitle = isPersonalized ? substance.name : match.secondaryLine() {
                     Text(subtitle)
                         .captionSecondary()
                         .lineLimit(1)

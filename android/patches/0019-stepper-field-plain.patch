@@ -1,0 +1,45 @@
+The amount stepper's field on Android: Compose's text field fills its row and draws an outline, so the unit stacked over the number and the outline ran under the minus button; the number and unit split the row and the field is plain, as on iOS
+
+diff --git a/Piru/Views/Tools/Inventory/InventorySupport.swift b/Piru/Views/Tools/Inventory/InventorySupport.swift
+index 1f8f0f46..ac863705 100644
+--- a/Piru/Views/Tools/Inventory/InventorySupport.swift
++++ b/Piru/Views/Tools/Inventory/InventorySupport.swift
+@@ -267,6 +267,30 @@ struct InventoryStepperRow: View {
+     /// The number and its unit share a baseline so "50,000 mg" reads as one
+     /// figure; the pair is centered between the step buttons. The whole field is
+     /// tappable to type an exact amount.
++    #if os(Android)
++        private var amountField: some View {
++            // Compose's text field fills its row and has no intrinsic width to fix, so the number
++            // takes the left half, right-aligned, and the unit the right half: the pair meets in
++            // the middle as it does on iOS. The plain style drops Material's outline.
++            HStack(spacing: 5) {
++                TextField("0", value: $value, format: .number)
++                    .textFieldStyle(.plain)
++                    .decimalKeyboard()
++                    .multilineTextAlignment(.trailing)
++                    .font(.piru(.title2, weight: .semibold))
++                    .monospacedDigit()
++                    .focused($focused)
++                    .frame(maxWidth: .infinity)
++                unitView
++                    .frame(maxWidth: .infinity, alignment: .leading)
++            }
++            .frame(maxWidth: .infinity)
++            .frame(minHeight: 38)
++            .contentShape(Rectangle())
++            .accessibilityAddTraits(.isButton)
++            .onTapGesture { focused = true }
++        }
++    #else
+     private var amountField: some View {
+         HStack(alignment: .firstTextBaseline, spacing: 5) {
+             TextField("0", value: $value, format: .number)
+@@ -284,6 +308,7 @@ struct InventoryStepperRow: View {
+         .accessibilityAddTraits(.isButton)
+         .onTapGesture { focused = true }
+     }
++    #endif
+ 
+     @ViewBuilder
+     private var unitView: some View {

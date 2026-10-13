@@ -1,6 +1,7 @@
 import AsyncAlgorithms
 import Foundation
 import SwiftData
+import Synchronization
 
 /// A snapshot of tolerance state for one **mechanism class**, derived by replaying the dose log and
 /// aggregating every engaged target in that class (DAT+NET → Stimulants, all NMDA sites →
@@ -300,8 +301,7 @@ final class ToleranceStore {
     /// and the mapping can happen off the main actor.
     nonisolated struct DoseSnapshot: Sendable {
         let substance: String
-        let amount: Double
-        let unit: String
+        let dose: DoseQuantity
         let timestamp: Date
     }
 
@@ -309,8 +309,8 @@ final class ToleranceStore {
     /// unknown dose has no concentration to replay, so it is not in the log at
     /// all here — every entry point folds entries through this one function.
     private nonisolated static func snapshots(of entries: [DoseEntry]) -> [DoseSnapshot] {
-        entries.compactMap {
-            $0.isUnknownDose ? nil : DoseSnapshot(substance: $0.substance, amount: $0.amount, unit: $0.unit, timestamp: $0.timestamp)
+        entries.compactMap { entry in
+            entry.quantity.map { DoseSnapshot(substance: entry.substance, dose: $0, timestamp: entry.timestamp) }
         }
     }
 
@@ -342,7 +342,7 @@ final class ToleranceStore {
 
         // Sendable replay values + resolve each unique substance once (kills the per-dose N+1).
         let doses = entries.map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         // Resolve pharmacology off the main actor: the per-substance Kᵢ/PK/molar-mass reads run on
         // SubstanceStore's batch connection, not in a tight loop on main (the post-commit hang the
@@ -372,7 +372,7 @@ final class ToleranceStore {
     ) async -> [(date: Date, load: Double)] {
         let weightKg = UserProfileStore.shared.effectiveWeightKg
         let doses = Self.snapshots(of: entries).map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         let uniqueNames = Array(Set(doses.map(\.substance) + SubstanceStore.shared.classRepresentativeNames()))
         let params = await SubstanceStore.shared.pharmacologyParametersBatchOffMain(forNames: uniqueNames)
@@ -394,7 +394,7 @@ final class ToleranceStore {
         if signature == perSubstanceSignature { return }
 
         let doses = snapshots.map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         // Resolve pharmacology for every logged substance and the class representatives once (shared
         // across the per-substance replays, exactly as the joint recompute does).
@@ -460,9 +460,11 @@ final class ToleranceStore {
             // prediction" — there is no tolerance curve to predict. (It just produces no card.)
             // Tolerance-relevant if a named target classifies to a (non-rebound) mechanism OR the
             // substance's category alone implies one (a designer benzo with no binding rows still is).
+            let yardstick = mechanismYardstickNanomolar(p)
             let hasTargetMechanism = p.targets.contains(where: {
                 let cls = ReceptorClasses.classify(target: $0.target, action: $0.action)
                 return cls != .unknown && !cls.hostsReboundWarningOnly
+                    && withinSelectivityWindow($0, yardstick: yardstick)
             })
             guard hasTargetMechanism || !p.categoryClasses.isEmpty else { continue }
             // A representative-backed fallback (target- or category-inferred) can still model it ⇒ not incomplete.
@@ -494,9 +496,11 @@ final class ToleranceStore {
             return rep.canComputeOccupancy && rep.referenceDoseMg != nil
         }
         var classes: Set<ReceptorClasses.ReceptorClass> = []
+        let yardstick = mechanismYardstickNanomolar(substanceParams)
         for engagement in substanceParams.targets {
             let cls = ReceptorClasses.classify(target: engagement.target, action: engagement.action)
-            guard cls != .unknown, hasRepresentative(cls) else { continue }
+            guard cls != .unknown, withinSelectivityWindow(engagement, yardstick: yardstick),
+                  hasRepresentative(cls) else { continue }
             classes.insert(cls)
         }
         // Category-inferred classes (independent of binding data) — the RC-tail rescue.
@@ -538,8 +542,7 @@ final class ToleranceStore {
             count += 1
             var hasher = Hasher()
             hasher.combine(entry.substance)
-            hasher.combine(entry.amount)
-            hasher.combine(entry.unit)
+            hasher.combine(entry.dose)
             hasher.combine(entry.timestamp)
             combined ^= UInt64(bitPattern: Int64(hasher.finalize()))
         }
@@ -579,7 +582,7 @@ final class ToleranceStore {
         resolve: (String) -> PharmacologyParameters?,
     ) -> [ReceptorClasses.ReceptorClass: ClassTolerance] {
         let doses = snapshots(of: entries).map {
-            SimDose(substance: $0.substance, amountMg: DoseUnit.convert($0.amount, from: $0.unit, to: "mg"), timestamp: $0.timestamp)
+            SimDose(substance: $0.substance, amountMg: $0.dose.milligrams, timestamp: $0.timestamp)
         }
         var params: [String: PharmacologyParameters] = [:]
         var resolved = Set<String>()
@@ -855,11 +858,16 @@ final class ToleranceStore {
             // same ligand counted N times is N× its real drive. Tightest-first order makes the first
             // engagement per base the one to keep.
             var seenReceptors = Set<String>()
+            let yardstick = ToleranceStore.mechanismYardstickNanomolar(sourceParams)
             for engagement in sourceParams.targets {
                 // Mechanism-direction gate: off-mechanism engagements (a 5-HT2A antagonist, an α7
                 // antagonist) classify to `.unknown` and are skipped — no card.
                 let cls = ReceptorClasses.classify(target: engagement.target, action: engagement.action)
                 guard cls != .unknown else { continue }
+                // Selectivity gate: a target two orders of magnitude weaker than this substance's own
+                // primary mechanism is not one of its mechanisms (ketamine's 42 µM μ-opioid against its
+                // 300 nM NMDA), whatever the dose makes of it.
+                guard ToleranceStore.withinSelectivityWindow(engagement, yardstick: yardstick) else { continue }
                 // Fallback path: only build the representative's targets that fall in the one class
                 // being surrogate-modeled.
                 if let restrictToClass, cls != restrictToClass { continue }
@@ -1213,6 +1221,48 @@ final class ToleranceStore {
     /// integration tail cutoff.
     nonisolated static let minMeaningfulOccupancy = 0.05
 
+    /// How many times weaker than a substance's **own primary mechanism** an engagement may be and
+    /// still count as one of that substance's tolerance mechanisms (the selectivity gate in
+    /// ``mechanismYardstickNanomolar(_:)``).
+    ///
+    /// People titrate a dose against the mechanism they are taking the drug for, so the primary target
+    /// sits near half-saturation (`O ≈ 0.5`, concentration ≈ its constant) at an ordinary dose. A
+    /// co-engagement whose constant is `N×` higher is then at `≈ 1/(1 + N)` occupancy — 1% at `N = 100`,
+    /// a fifth of ``minMeaningfulOccupancy``. So past 100× a target can only clear the occupancy gate
+    /// when the primary mechanism is several-fold over-saturated, and the card it spawns says more about
+    /// the dose than about the drug. The ratio is relative, never absolute, because the absolute numbers
+    /// are not comparable across mechanisms: alcohol works at millimolar (GABA-A ≈ 3 mM, NMDA ≈ 50 mM)
+    /// and both of those are real mechanisms, 17× apart.
+    ///
+    /// Rebound-only classes are excluded from being the yardstick — see ``mechanismYardstickNanomolar(_:)``.
+    nonisolated static let mechanismSelectivityWindow = 100.0
+
+    /// The half-max constant of a substance's **tightest tolerance-bearing engagement** — the
+    /// denominator of the selectivity gate above. `nil` when the substance engages no tolerance class.
+    ///
+    /// `targets` is tightest-first, so this is a first-match scan. A rebound-only class
+    /// (``ReceptorClasses/ReceptorClass/hostsReboundWarningOnly``) cannot be the yardstick: those model
+    /// a discontinuation rebound rather than a tolerance curve, and a sub-nanomolar adrenergic affinity
+    /// would otherwise disqualify every real mechanism the substance has (CBG binds α₂ at 0.2 nM and
+    /// CB1 at 380 nM — CB1 is still what CBG does).
+    private nonisolated static func mechanismYardstickNanomolar(_ p: PharmacologyParameters) -> Double? {
+        p.targets.first {
+            let cls = ReceptorClasses.classify(target: $0.target, action: $0.action)
+            return cls != .unknown && !cls.hostsReboundWarningOnly && $0.halfMaxNanomolar > 0
+        }?.halfMaxNanomolar
+    }
+
+    /// Whether `engagement` is close enough to the substance's own primary mechanism to be one of its
+    /// tolerance mechanisms — the selectivity gate (``mechanismSelectivityWindow``). Applied wherever a
+    /// target is turned into class membership, so the contributor path, the missing-PK fallback and the
+    /// "can't predict yet" list all agree on which mechanisms a substance has.
+    private nonisolated static func withinSelectivityWindow(
+        _ engagement: PharmacologyParameters.TargetEngagement, yardstick: Double?,
+    ) -> Bool {
+        guard let yardstick, yardstick > 0 else { return true }
+        return engagement.halfMaxNanomolar <= mechanismSelectivityWindow * yardstick
+    }
+
     /// One substance-dose's contribution to one target: PK shape + the nM prefactor + that target's
     /// half-saturation constant, plus the `[onset, expiry]` active window that bounds the integration.
     private nonisolated struct Contributor {
@@ -1555,6 +1605,9 @@ final class ToleranceStore {
         states = loaded
     }
 
+    /// The newest ``persist(_:now:)`` call; a persist task writes only while it is still the newest.
+    private nonisolated static let persistGeneration = Mutex(0)
+
     /// Write the durable ``ToleranceState`` cache **off the main actor**, on
     /// ``DatabaseActor``.
     ///
@@ -1565,9 +1618,24 @@ final class ToleranceStore {
     /// database actor (instead of the old unstructured `Task.detached` + throwaway context) keeps
     /// concurrent persists ordered — last writer wins *deterministically* — alongside every other
     /// background database operation; the 2 s debounce + signature gate already make overlap rare.
+    ///
+    /// The save runs under a ``BackgroundActivity``. A dose-log tick can arrive while the app is in
+    /// the background (a notification action, a watch-logged dose, a background launch), and the
+    /// replay it starts finishes seconds later; a save still committing when iOS suspends the app
+    /// holds a lock on the App Group store, which RunningBoard punishes with a `0xdead10cc` kill.
+    /// When the system refuses the hold, the save is skipped: the in-memory ``states`` stay current,
+    /// and the next launch's replay rewrites the cache. Waiting for the hold is a suspension point, so
+    /// a persist that a newer one overtook while waiting steps aside and leaves the write to it.
     private func persist(_ computed: [ReceptorClasses.ReceptorClass: ClassTolerance], now: Date) {
         guard let container else { return }
-        Task { @DatabaseActor in
+        let generation = Self.persistGeneration.withLock { latest in
+            latest += 1
+            return latest
+        }
+        Task(name: "Persist tolerance cache") { @DatabaseActor in
+            guard let activity = await BackgroundActivity.begin("Persist tolerance cache") else { return }
+            defer { activity.end() }
+            guard Self.persistGeneration.withLock({ $0 == generation }) else { return }
             let context = ModelContext(container)
             let existing = (try? context.fetch(FetchDescriptor<ToleranceState>())) ?? []
             var byKey = Dictionary(existing.map { ($0.target, $0) }, uniquingKeysWith: { a, _ in a })

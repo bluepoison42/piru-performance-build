@@ -551,6 +551,35 @@
         }
       }
     },
+    "#bug-reports on Discord" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#bug-reports en Discord"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#bug-reports en Discord"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord 上的 #bug-reports"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord 上的 #bug-reports"
+          }
+        }
+      }
+    },
     "% ABV" : {
       "localizations" : {
         "es" : {
@@ -1934,6 +1963,12 @@
     },
     "%@ Custom" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Personalizado"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6883,6 +6918,12 @@
     },
     "^[%lld dose](inflect: true)" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld dosis](inflect: true)"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7130,6 +7171,12 @@
     },
     "^[%lld staged dose](inflect: true)" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld dosis preparada](inflect: true)"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9513,6 +9560,12 @@
     },
     "A meal delays **%@** by %@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una comida retrasa el inicio de **%@** %@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9535,6 +9588,12 @@
     },
     "A meal delays ^[%lld dose](inflect: true) by up to ~%@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una comida retrasa ^[%lld dosis](inflect: true) hasta ~%@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9725,6 +9784,7 @@
       }
     },
     "A Piru or PsychonautWiki file, or an encrypted backup" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -9777,6 +9837,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Piru 或 PsychonautWiki 的 JSON 檔案"
+          }
+        }
+      }
+    },
+    "A Piru, PsychonautWiki, or DrugsPRO file, or an encrypted backup" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo de Piru, PsychonautWiki o DrugsPRO, o una copia de seguridad cifrada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo de Piru, PsychonautWiki o DrugsPRO, o una copia de seguridad cifrada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru、PsychonautWiki 或 DrugsPRO 文件，或加密备份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru、PsychonautWiki 或 DrugsPRO 檔案，或加密備份"
           }
         }
       }
@@ -10061,6 +10149,35 @@
         }
       }
     },
+    "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un informe ayuda a corregirlo. Contiene cómo se cerró Piru y su propio registro, nada de tu diario, y tú eliges adónde va."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un informe ayuda a corregirlo. Contiene cómo se cerró Piru y su propio registro, nada de tu diario, y tú eliges adónde va."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一份报告有助于修复它。报告包含 Piru 如何关闭及其自身的日志，不含你日记里的任何内容，发送到哪里由你决定。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一份報告有助於修復它。報告包含 Piru 如何關閉及其本身的日誌，不含你日記裡的任何內容，傳送到哪裡由你決定。"
+          }
+        }
+      }
+    },
     "A safety net" : {
       "localizations" : {
         "es" : {
@@ -10175,6 +10292,12 @@
     },
     "A snack delays **%@** by %@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un tentempié retrasa el inicio de **%@** %@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10197,6 +10320,12 @@
     },
     "A snack delays ^[%lld dose](inflect: true) by up to ~%@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un tentempié retrasa ^[%lld dosis](inflect: true) hasta ~%@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10275,6 +10404,12 @@
     },
     "A typical delay for oral doses. No food study has measured **%@** itself." : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un retraso típico para dosis orales. Ningún estudio sobre comida ha medido **%@** en concreto."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14906,7 +15041,36 @@
         }
       }
     },
+    "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog or DrugsPRO export — or start with a clean slate." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Ya llevas un diario? Importa una copia de seguridad de Piru, cifrada o no, o una exportación de PsyLog o DrugsPRO — o empieza de cero."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Ya llevas un diario? Importa una copia de seguridad de Piru, cifrada o no, o una exportación de PsyLog o DrugsPRO — o empieza de cero."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已经在记录了？导入 Piru 备份（加密或未加密均可）、PsyLog 或 DrugsPRO 的导出文件——或者从头开始。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已經在記錄了？匯入 Piru 備份（加密或未加密皆可）、PsyLog 或 DrugsPRO 的匯出檔案——或者從頭開始。"
+          }
+        }
+      }
+    },
     "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog-format export — or start with a clean slate." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -16941,6 +17105,35 @@
         }
       }
     },
+    "Attach the file and say what you were doing when it went wrong." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjunta el archivo y cuenta qué estabas haciendo cuando falló."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjunta el archivo y cuenta qué estabas haciendo cuando falló."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "附上这个文件，并说明出问题时你在做什么。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "附上這個檔案，並說明出問題時你在做什麼。"
+          }
+        }
+      }
+    },
     "Auditory" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -17306,6 +17499,64 @@
         }
       }
     },
+    "Back Up Now" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia ahora"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia ahora"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立即备份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立即備份"
+          }
+        }
+      }
+    },
+    "Back Up to a Folder…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia en una carpeta…"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia en una carpeta…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "备份到文件夹…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "備份到資料夾…"
+          }
+        }
+      }
+    },
     "Backing up…" : {
       "localizations" : {
         "es" : {
@@ -17358,6 +17609,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "備份"
+          }
+        }
+      }
+    },
+    "Backup Found" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia encontrada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia encontrada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找到备份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找到備份"
           }
         }
       }
@@ -19614,6 +19894,12 @@
     "BoringSSL, part of Foundation's networking on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BoringSSL, parte de las funciones de red de Foundation en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21915,6 +22201,35 @@
         }
       }
     },
+    "Check for Updates" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar actualizaciones"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar actualizaciones"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检查更新"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢查更新"
+          }
+        }
+      }
+    },
     "Check how substances interact" : {
       "localizations" : {
         "es" : {
@@ -22333,6 +22648,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "中文社群維基。"
+          }
+        }
+      }
+    },
+    "Choose Another Folder…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir otra carpeta…"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir otra carpeta…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择其他文件夹…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇其他資料夾…"
           }
         }
       }
@@ -24422,6 +24766,12 @@
     "commonmark-java. Copyright © Robin Stocker." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "commonmark-java. Copyright © Robin Stocker."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26125,6 +26475,35 @@
         }
       }
     },
+    "Create Report" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear informe"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear informe"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生成报告"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "產生報告"
+          }
+        }
+      }
+    },
     "Created when you ask and saved where you choose. Exports are unencrypted unless you choose an encrypted backup." : {
       "localizations" : {
         "es" : {
@@ -26548,6 +26927,12 @@
     "curl, part of Foundation's networking on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "curl, parte de las funciones de red de Foundation en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29179,6 +29564,34 @@
         }
       }
     },
+    "Discord" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        }
+      }
+    },
     "Dismiss" : {
       "localizations" : {
         "es" : {
@@ -30862,6 +31275,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "下降百分之 %lld"
+          }
+        }
+      }
+    },
+    "Download" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下載"
           }
         }
       }
@@ -33803,6 +34245,12 @@
     },
     "Empty stomach" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estómago vacío"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -33852,6 +34300,7 @@
       }
     },
     "Enable Selected" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -37375,6 +37824,12 @@
     },
     "Fasted" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En ayunas"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38182,6 +38637,35 @@
         }
       }
     },
+    "Folder" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpeta"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpeta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "資料夾"
+          }
+        }
+      }
+    },
     "Follow System" : {
       "localizations" : {
         "es" : {
@@ -38212,6 +38696,12 @@
     },
     "Food" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38234,6 +38724,12 @@
     },
     "Food doesn't delay **%@**" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La comida no retrasa **%@**"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38256,6 +38752,12 @@
     },
     "Food doesn't delay these doses" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La comida no retrasa estas dosis"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -39039,6 +39541,12 @@
     },
     "Full meal" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida completa"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -39957,6 +40465,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取得協助"
+          }
+        }
+      }
+    },
+    "Get help with the app or send your suggestions on our Discord server." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pide ayuda con la app o envía tus sugerencias en nuestro servidor de Discord."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pide ayuda con la app o envía tus sugerencias en nuestro servidor de Discord."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在我们的 Discord 服务器上获取应用帮助，或提出你的建议。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在我們的 Discord 伺服器上取得應用程式協助，或提出你的建議。"
           }
         }
       }
@@ -42606,6 +43142,35 @@
         }
       }
     },
+    "How to Report a Problem" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo informar de un problema"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo informar de un problema"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何报告问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何回報問題"
+          }
+        }
+      }
+    },
     "How tolerance works" : {
       "localizations" : {
         "es" : {
@@ -43055,6 +43620,7 @@
       }
     },
     "I'll Set This Later" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -43141,6 +43707,12 @@
     "ICU, the Unicode data behind dates, numbers and text on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ICU, los datos Unicode detrás de fechas, números y texto en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -45692,6 +46264,35 @@
         }
       }
     },
+    "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está en GitHub, de donde viene Piru, e instalarla sobre esta versión conserva tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está en GitHub, de donde viene Piru, e instalarla sobre esta versión conserva tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新版本在 GitHub 上，也就是 Piru 的来源；直接安装在当前版本之上会保留你的日记。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新版本在 GitHub 上，也就是 Piru 的來源；直接安裝在目前版本之上會保留你的日記。"
+          }
+        }
+      }
+    },
     "It's been a long session. Your body and brain need sleep to recover. Try to wind down." : {
       "localizations" : {
         "es" : {
@@ -46403,6 +47004,12 @@
     "Kotlin, AndroidX, Jetpack Compose, Coil, Material Symbols, swift-crypto, swift-asn1, swift-jni and swift-android-native." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kotlin, AndroidX, Jetpack Compose, Coil, Material Symbols, swift-crypto, swift-asn1, swift-jni y swift-android-native."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -47633,6 +48240,12 @@
     },
     "Light snack" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo ligero"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50106,6 +50719,12 @@
     },
     "Meal" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -57717,6 +58336,7 @@
       }
     },
     "Not Now" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -58533,6 +59153,12 @@
     "Nothing to Share" : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada que compartir"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -59506,6 +60132,35 @@
         }
       }
     },
+    "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una vez al día, Piru le pregunta a GitHub cuál es la versión más reciente. No se envía nada sobre ti ni sobre tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una vez al día, Piru le pregunta a GitHub cuál es la versión más reciente. No se envía nada sobre ti ni sobre tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 每天向 GitHub 查询一次最新版本。不会发送任何关于你或你日记的信息。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 每天向 GitHub 查詢一次最新版本。不會傳送任何關於你或你日記的資訊。"
+          }
+        }
+      }
+    },
     "Once daily" : {
       "localizations" : {
         "es" : {
@@ -59587,6 +60242,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "昂丹司瓊"
+          }
+        }
+      }
+    },
+    "One file with the app and Android versions, the phone model, how Piru's recent runs ended, any crash traces and Piru's own log. It holds nothing from your journal, and it leaves your phone only if you send it." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo con las versiones de la app y de Android, el modelo del teléfono, cómo terminaron las últimas ejecuciones de Piru, los rastros de cualquier fallo y el registro propio de Piru. No contiene nada de tu diario y solo sale de tu teléfono si lo envías."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo con las versiones de la app y de Android, el modelo del teléfono, cómo terminaron las últimas ejecuciones de Piru, los rastros de cualquier fallo y el registro propio de Piru. No contiene nada de tu diario y solo sale de tu teléfono si lo envías."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一个文件，包含应用和 Android 版本、手机型号、Piru 最近几次运行如何结束、崩溃记录以及 Piru 自身的日志。其中不含你日记里的任何内容，只有你发送时它才会离开手机。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一個檔案，包含應用程式和 Android 版本、手機型號、Piru 最近幾次執行如何結束、當機記錄以及 Piru 本身的日誌。其中不含你日記裡的任何內容，只有你傳送時它才會離開手機。"
           }
         }
       }
@@ -59705,6 +60389,34 @@
         }
       }
     },
+    "Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開"
+          }
+        }
+      }
+    },
     "Open %@ page" : {
       "localizations" : {
         "es" : {
@@ -59729,6 +60441,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開啟 %@ 頁面"
+          }
+        }
+      }
+    },
+    "Open a GitHub Issue" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir un issue en GitHub"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir un issue en GitHub"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 GitHub 上提交 issue"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 GitHub 上提交 issue"
           }
         }
       }
@@ -62647,6 +63388,64 @@
         }
       }
     },
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca se conecta a internet. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca se conecta a internet. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不联网。在新手机上恢复时，在这里选择同一个文件夹即可。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不連網。在新手機上還原時，在這裡選擇同一個資料夾即可。"
+          }
+        }
+      }
+    },
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca la envía a ninguna parte. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca la envía a ninguna parte. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不把它发送到任何地方。在新手机上恢复时，在这里选择同一个文件夹即可。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不把它傳送到任何地方。在新手機上還原時，在這裡選擇同一個資料夾即可。"
+          }
+        }
+      }
+    },
     "Pick a longer time range to see your history." : {
       "localizations" : {
         "es" : {
@@ -62899,6 +63698,35 @@
         }
       }
     },
+    "Piru %@ is available" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ está disponible"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ está disponible"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ 已推出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ 已推出"
+          }
+        }
+      }
+    },
     "Piru and PsychonautWiki files are plain JSON. Imports add to your journal (duplicates skipped). Encrypted restores can merge or replace. Inventory is included in Piru and encrypted backups, but not PsychonautWiki files." : {
       "localizations" : {
         "es" : {
@@ -63039,6 +63867,35 @@
         }
       }
     },
+    "Piru can no longer reach this folder. Choose it again to keep backing up." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru ya no puede acceder a esta carpeta. Vuelve a elegirla para seguir haciendo copias."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru ya no puede acceder a esta carpeta. Vuelve a elegirla para seguir haciendo copias."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 已无法访问此文件夹。请重新选择它以继续备份。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 已無法存取此資料夾。請重新選擇它以繼續備份。"
+          }
+        }
+      }
+    },
     "Piru can't assess heart symptoms. With chest pain, shortness of breath or fainting, call emergency services." : {
       "localizations" : {
         "es" : {
@@ -63119,6 +63976,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Piru 無法判斷意識混亂是一時的不適還是嚴重症狀。不斷加重的意識混亂，或伴隨高燒時，應當立刻求助。"
+          }
+        }
+      }
+    },
+    "Piru Closed Unexpectedly" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru se cerró inesperadamente"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru se cerró inesperadamente"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 意外关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 意外關閉"
           }
         }
       }
@@ -69124,6 +70010,35 @@
         }
       }
     },
+    "Report a Problem" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informar de un problema"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informar de un problema"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "报告问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回報問題"
+          }
+        }
+      }
+    },
     "Report Includes" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -71398,6 +72313,35 @@
         }
       }
     },
+    "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guarda cada vez que sales de la app, cifrada con tu frase de contraseña. Al desactivarla, la última copia se queda en la carpeta."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guarda cada vez que sales de la app, cifrada con tu frase de contraseña. Al desactivarla, la última copia se queda en la carpeta."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每次你离开应用时保存，并用你的密码短语加密。关闭后，最后一份备份会留在文件夹中。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每次你離開應用程式時儲存，並以你的密碼短語加密。關閉後，最後一份備份會留在資料夾中。"
+          }
+        }
+      }
+    },
     "Scan a box" : {
       "localizations" : {
         "es" : {
@@ -72797,6 +73741,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "傳送記錄檔給開發者"
+          }
+        }
+      }
+    },
+    "Send to dose.wiki" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a dose.wiki"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a dose.wiki"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送到 dose.wiki"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送到 dose.wiki"
+          }
+        }
+      }
+    },
+    "Send to dose.wiki?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Enviar a dose.wiki?"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Enviar a dose.wiki?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送到 dose.wiki？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送到 dose.wiki？"
           }
         }
       }
@@ -75246,6 +76246,34 @@
         }
       }
     },
+    "Shows morning and evening doses as two halves of each day. When off, a dose logged at any time counts toward the whole day." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra las dosis de la mañana y de la noche como dos mitades de cada día. Si está desactivado, una dosis registrada a cualquier hora cuenta para todo el día."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra las dosis de la mañana y de la noche como dos mitades de cada día. Si está desactivado, una dosis registrada a cualquier hora cuenta para todo el día."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "把早间和晚间剂量显示为每天的两半。关闭后，当天任何时间记录的剂量都计入整天。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "把早間和晚間劑量顯示為每天的兩半。關閉後，當天任何時間記錄的劑量都計入整天。"
+          }
+        }
+      }
+    },
     "Shows the dose with a ~; the estimate still drives the curves." : {
       "localizations" : {
         "es" : {
@@ -75360,6 +76388,12 @@
     },
     "Shows the staged doses" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra las dosis preparadas"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -75977,6 +77011,12 @@
     "Skip, which runs Piru's Swift code on Android. Piru's changes to it are in android/vendor in its repository." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip, que ejecuta el código Swift de Piru en Android. Los cambios de Piru están en android/vendor de su repositorio."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -76420,6 +77460,12 @@
     },
     "Snack" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ligero"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -76745,6 +77791,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "有些效應會減弱，有些不會"
+          }
+        }
+      }
+    },
+    "Some long notes were shortened or left out to fit." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas notas largas se acortaron u omitieron para que quepan."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas notas largas se acortaron u omitieron para que quepan."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分较长的记录已被缩短或省略，以便放得下。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分較長的紀錄已被縮短或省略，以便放得下。"
           }
         }
       }
@@ -77334,6 +78408,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在最長間隔處拆分（%@）"
+          }
+        }
+      }
+    },
+    "Split Days at Noon" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dividir los días al mediodía"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dividir los días al mediodía"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以中午划分每天"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以中午劃分每天"
           }
         }
       }
@@ -78966,6 +80068,12 @@
     },
     "Stomach" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estómago"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -78988,6 +80096,12 @@
     },
     "Stomach: %@" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estómago: %@"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -81927,6 +83041,35 @@
         }
       }
     },
+    "That passphrase didn't open the backup. Try again." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esa frase de contraseña no abrió la copia. Inténtalo de nuevo."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esa frase de contraseña no abrió la copia. Inténtalo de nuevo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该密码短语无法打开此备份。请重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "該密碼短語無法打開此備份。請再試一次。"
+          }
+        }
+      }
+    },
     "That preset already exists." : {
       "localizations" : {
         "es" : {
@@ -82063,6 +83206,64 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最接近此時間的 Apple 健康樣本。"
+          }
+        }
+      }
+    },
+    "The backup folder could not be reached." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo acceder a la carpeta de la copia de seguridad."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo acceder a la carpeta de la copia de seguridad."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法访问备份文件夹。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法存取備份資料夾。"
+          }
+        }
+      }
+    },
+    "The backup was merged with your journal." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La copia se fusionó con tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La copia se fusionó con tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "备份已与你的日记合并。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "備份已與你的日記合併。"
           }
         }
       }
@@ -82407,6 +83608,12 @@
     "The file picker could not be opened." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el selector de archivos."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -82507,6 +83714,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "有人報告這種迷糊感會在數小時內消退。如果沒有消退，請就醫。"
+          }
+        }
+      }
+    },
+    "The folder picker could not be opened." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el selector de carpetas."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el selector de carpetas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法打开文件夹选择器。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法開啟資料夾選擇器。"
           }
         }
       }
@@ -83024,6 +84260,35 @@
         }
       }
     },
+    "The report could not be written." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo escribir el informe."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo escribir el informe."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法写入报告。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法寫入報告。"
+          }
+        }
+      }
+    },
     "The rest of the family" : {
       "comment" : "Header above the sibling drug classes",
       "localizations" : {
@@ -83168,6 +84433,12 @@
     "The Swift runtime, Foundation and Dispatch, which run Piru on Android." : {
       "extractionState" : "stale",
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El entorno de ejecución de Swift, Foundation y Dispatch, que ejecutan Piru en Android."
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -83889,6 +85160,91 @@
         }
       }
     },
+    "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta carpeta ya contiene una copia de seguridad de Piru. Escribe su frase de contraseña para fusionarla con tu diario; las copias siguientes usarán la misma frase."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta carpeta ya contiene una copia de seguridad de Piru. Escribe su frase de contraseña para fusionarla con tu diario; las copias siguientes usarán la misma frase."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此文件夹中已有一份 Piru 备份。输入它的密码短语即可将其与你的日记合并；之后的备份也会使用同一密码短语。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此資料夾中已有一份 Piru 備份。輸入它的密碼短語即可將其與你的日記合併；之後的備份也會使用同一密碼短語。"
+          }
+        }
+      }
+    },
+    "This half-life is out of range: projections take 1 minute to 10 years." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个半衰期超出范围：可推算的范围是 1 分钟到 10 年。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個半衰期超出範圍：可推算的範圍是 1 分鐘到 10 年。"
+          }
+        }
+      }
+    },
+    "This interval is out of range: projections take 1 minute to 1 year." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个用药间隔超出范围：可推算的范围是 1 分钟到 1 年。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個用藥間隔超出範圍：可推算的範圍是 1 分鐘到 1 年。"
+          }
+        }
+      }
+    },
     "This is an encrypted Piru backup. Import it from Tools → Data & Backup, which asks for its passphrase." : {
       "localizations" : {
         "es" : {
@@ -84030,6 +85386,34 @@
         }
       }
     },
+    "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto abre el formulario de relatos de viaje de dose.wiki con esta sesión ya rellenada. Nada sale de tu dispositivo hasta que lo envíes allí."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto abre el formulario de relatos de viaje de dose.wiki con esta sesión ya rellenada. Nada sale de tu dispositivo hasta que lo envíes allí."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会在 dose.wiki 打开体验报告表单，并填好这个场次的内容。你在那里提交之前，什么都不会发送。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這會在 dose.wiki 打開體驗報告表單，並填好這個場次的內容。你在那裡送出之前，什麼都不會傳送。"
+          }
+        }
+      }
+    },
     "This period" : {
       "localizations" : {
         "es" : {
@@ -84082,6 +85466,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "這會用此副本中的 %@ 取代你目前的資料。取代前會先為目前資料建立快照，因此可以復原。之後請重新啟動 Piru 以載入。"
+          }
+        }
+      }
+    },
+    "This schedule takes more than %@ doses to settle, so it can't be projected." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按这个方案，需要超过 %@ 剂才能达到稳态，因此无法推算。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按這個方案，需要超過 %@ 劑才能達到穩態，因此無法推算。"
           }
         }
       }
@@ -86254,6 +87666,35 @@
         }
       }
     },
+    "Turn Off Folder Backup" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar la copia en carpeta"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar la copia en carpeta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭文件夹备份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉資料夾備份"
+          }
+        }
+      }
+    },
     "Turn On Apple Health" : {
       "localizations" : {
         "es" : {
@@ -86424,6 +87865,12 @@
     },
     "Typical estimate" : {
       "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estimación típica"
+          }
+        },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
@@ -87147,6 +88594,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "不安全"
+          }
+        }
+      }
+    },
+    "Unstages this group’s meds" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quita de la cola los medicamentos de este grupo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quita de la cola los medicamentos de este grupo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将该组用药移出暂存"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將該組用藥移出暫存"
           }
         }
       }
@@ -89919,6 +91394,35 @@
         }
       }
     },
+    "Where to Send It" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dónde enviarlo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dónde enviarlo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送到哪里"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送到哪裡"
+          }
+        }
+      }
+    },
     "Where your journal lives" : {
       "localizations" : {
         "es" : {
@@ -92249,672 +93753,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "μ-鴉片受體配體"
-          }
-        }
-      }
-    },
-    "Split Days at Noon" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "以中午划分每天"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "以中午劃分每天"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dividir los días al mediodía"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dividir los días al mediodía"
-          }
-        }
-      }
-    },
-    "Shows morning and evening doses as two halves of each day. When off, a dose logged at any time counts toward the whole day." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "把早间和晚间剂量显示为每天的两半。关闭后，当天任何时间记录的剂量都计入整天。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "把早間和晚間劑量顯示為每天的兩半。關閉後，當天任何時間記錄的劑量都計入整天。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra las dosis de la mañana y de la noche como dos mitades de cada día. Si está desactivado, una dosis registrada a cualquier hora cuenta para todo el día."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra las dosis de la mañana y de la noche como dos mitades de cada día. Si está desactivado, una dosis registrada a cualquier hora cuenta para todo el día."
-          }
-        }
-      }
-    },
-    "substance.wiki timelines" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "substance.wiki 时间线"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "substance.wiki 時間軸"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cronologías de substance.wiki"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cronologías de substance.wiki"
-          }
-        }
-      }
-    },
-    "Route unknown" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "给药途径未知"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "給藥途徑未知"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vía desconocida"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vía desconocida"
-          }
-        }
-      }
-    },
-    "Reference %lld" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "参考 %lld"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "參考 %lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Referencia %lld"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Referencia %lld"
-          }
-        }
-      }
-    },
-    "Read source context" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "阅读来源背景"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "閱讀來源背景"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leer el contexto de la fuente"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leer el contexto de la fuente"
-          }
-        }
-      }
-    },
-    "Partial timing data" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "部分时间数据"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "部分時間資料"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datos temporales parciales"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datos temporales parciales"
-          }
-        }
-      }
-    },
-    "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已发表的时间示意。各阶段的计时起点尚未核实。未知时间不会被估算，也不会用于预测你的体验。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已發表的時間示意。各階段的計時起點尚未核實。未知時間不會被估算，也不會用於預測你的體驗。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión."
-          }
-        }
-      }
-    },
-    "After-effects" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "后续效应"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "後續效應"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Efectos posteriores"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Efectos posteriores"
-          }
-        }
-      }
-    },
-    "Reported total" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "报告的总时长"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "報告的總時長"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración total indicada"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración total indicada"
-          }
-        }
-      }
-    },
-    "Units unknown" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "单位未知"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "單位未知"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unidades desconocidas"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unidades desconocidas"
-          }
-        }
-      }
-    },
-    "Study timeline" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究时间线"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究時間軸"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cronología del estudio"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cronología del estudio"
-          }
-        }
-      }
-    },
-    "Study statistics describe this condition, not a prediction of your session. The maximum response is a time point, not a peak plateau." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究统计数据描述这一实验条件，不能预测你的体验。最大反应是一个时间点，而非峰值平台期。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究統計資料描述這一實驗條件，不能預測你的體驗。最大反應是一個時間點，而非峰值平台期。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las estadísticas describen esta condición del estudio, no predicen tu sesión. La respuesta máxima es un momento, no una meseta."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las estadísticas describen esta condición del estudio, no predicen tu sesión. La respuesta máxima es un momento, no una meseta."
-          }
-        }
-      }
-    },
-    "Study dose (µg base)" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究剂量（µg，游离碱）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究劑量（µg，游離鹼）"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dosis del estudio (µg de base)"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dosis del estudio (µg de base)"
-          }
-        }
-      }
-    },
-    "Participants: %lld" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "参与者：%lld"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "參與者：%lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Participantes: %lld"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Participantes: %lld"
-          }
-        }
-      }
-    },
-    "Clock origin" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "计时起点"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "計時起點"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Origen del tiempo"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Origen del tiempo"
-          }
-        }
-      }
-    },
-    "Response threshold (% of individual maximum)" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "反应阈值（个人最大值的百分比）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "反應閾值（個人最大值的百分比）"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umbral de respuesta (% del máximo individual)"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umbral de respuesta (% del máximo individual)"
-          }
-        }
-      }
-    },
-    "Active duration: onset to offset" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作用时长：起效至消退"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作用時長：起效至消退"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración activa: del inicio al final"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración activa: del inicio al final"
-          }
-        }
-      }
-    },
-    "Study article" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究论文"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究論文"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Artículo del estudio"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Artículo del estudio"
-          }
-        }
-      }
-    },
-    "Study data table" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究数据表"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "研究資料表"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabla de datos del estudio"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabla de datos del estudio"
-          }
-        }
-      }
-    },
-    "Mean ± SD" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "均值 ± 标准差"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "平均值 ± 標準差"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Media ± DE"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Media ± DE"
-          }
-        }
-      }
-    },
-    "Participant range" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "参与者范围"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "參與者範圍"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rango entre participantes"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rango entre participantes"
-          }
-        }
-      }
-    },
-    "This source entry has a recorded timing or route concern." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "此来源条目存在已记录的时间或给药途径问题。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "此來源條目存在已記錄的時間或給藥途徑問題。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esta entrada tiene un problema de tiempo o vía documentado."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esta entrada tiene un problema de tiempo o vía documentado."
-          }
-        }
-      }
-    },
-    "Bar: participant range; dot: mean." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "横条：参与者范围；圆点：均值。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "橫條：參與者範圍；圓點：平均值。"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barra: rango entre participantes; punto: media."
           }
         }
       }

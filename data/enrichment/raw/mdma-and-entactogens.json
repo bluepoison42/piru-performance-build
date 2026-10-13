@@ -369,13 +369,35 @@
           "reference": "pmid:32875347"
         },
         {
-          "target": "5-HT2A",
-          "ki_nm": null,
-          "action": "agonist",
-          "intrinsic_activity_pct": null,
+          "target": "DAT",
+          "ec50_nm": 106,
+          "intrinsic_activity_pct": 104,
+          "action": "releasingAgent",
           "species": "rat",
-          "tissue_or_cell": null,
-          "reference": null
+          "tissue_or_cell": "rat brain synaptosomes, [3H]MPP+ release",
+          "reference": "pmid:32875347",
+          "notes": "Brandt 2020 Table 1, the same assay and table that give this entry's SERT 162 nM and MDMA's DAT 120 / NET 90 / SERT 85 nM — so MDA's release potency is read against MDMA's on one panel, not across labs."
+        },
+        {
+          "target": "NET",
+          "ec50_nm": 47,
+          "intrinsic_activity_pct": 91,
+          "action": "releasingAgent",
+          "species": "rat",
+          "tissue_or_cell": "rat brain synaptosomes, [3H]MPP+ release",
+          "reference": "pmid:32875347",
+          "notes": "Brandt 2020 Table 1 (same panel as the DAT and SERT rows)."
+        },
+        {
+          "target": "5-HT2A",
+          "ki_nm": 3300,
+          "ec50_nm": 630,
+          "emax_pct": 77,
+          "action": "agonist",
+          "species": "human",
+          "tissue_or_cell": "HEK293 expressing human 5-HT2A",
+          "reference": "doi:10.1111/bph.13128",
+          "notes": "Rickli 2015 Table 3. The same table measures MDMA at Ki 6.3 µM / EC50 6.1 µM / 55% max, so MDA activates 5-HT2A about ten times more potently and to a higher ceiling than MDMA does — which is the receptor half of why MDA reads as the more psychedelic of the pair."
         }
       ],
       "functional": [],

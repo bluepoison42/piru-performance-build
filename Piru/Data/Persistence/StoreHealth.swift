@@ -30,7 +30,7 @@ enum StoreHealth {
     /// with an older candidate, and a transient error must never trigger that.
     nonisolated static func isReadable(at url: URL) -> Bool {
         guard FileManager.default.fileExists(atPath: url.path) else { return true }
-        switch probe(at: url) {
+        switch probe(at: url, allowsReadWriteFallback: true, inspect: { _ in }) {
         case .healthy:
             return true
         case let .corrupt(detail):
@@ -42,13 +42,52 @@ enum StoreHealth {
         }
     }
 
-    private enum Verdict {
-        case healthy
+    /// The rows in `tables` of the SwiftData store at `url`, counted with plain
+    /// SQL on the same read-only connection that runs `quick_check`.
+    ///
+    /// This is how launch learns the journal has data without opening a
+    /// throwaway `ModelContainer` on the App Group store: that container opens
+    /// read-write, and releasing it closes the store's last connection, which
+    /// checkpoints the WAL into the database file. A prewarmed launch suspended
+    /// during that write is killed with `0xdead10cc`. A read-only connection
+    /// writes nothing and skips the checkpoint.
+    ///
+    /// A table the store lacks counts as empty: the migration that would create
+    /// it creates it empty. `nil` when the probe cannot answer — the file is
+    /// missing, is not a Core Data store (no `Z_METADATA`), fails `quick_check`,
+    /// or cannot be opened read-only — and the caller falls back to counting
+    /// through SwiftData.
+    nonisolated static func rowCount(at url: URL, tables: [String]) -> Int? {
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+        let verdict = probe(at: url, allowsReadWriteFallback: false) { db -> Int? in
+            guard try db.tableExists("Z_METADATA") else { return nil }
+            var total = 0
+            for table in tables {
+                guard try db.tableExists(table) else { continue }
+                total += try Int.fetchOne(db, sql: "SELECT count(*) FROM \(table.quotedDatabaseIdentifier)") ?? 0
+            }
+            return total
+        }
+        switch verdict {
+        case let .healthy(count):
+            return count
+        case let .corrupt(detail):
+            Logger.storeHealth.error("Store corrupt at \(url.path, privacy: .public): \(detail, privacy: .public)")
+            return nil
+        case let .inconclusive(detail):
+            Logger.storeHealth.error("Store row count inconclusive at \(url.path, privacy: .public): \(detail, privacy: .public)")
+            return nil
+        }
+    }
+
+    private enum Verdict<Value> {
+        case healthy(Value)
         case corrupt(String)
         case inconclusive(String)
     }
 
-    /// Open a throwaway connection, run `quick_check`, and drop the connection.
+    /// Open a throwaway connection, run `quick_check`, run `inspect` on the same
+    /// connection when the check passes, and drop the connection.
     ///
     /// Read-only first: a read-only connection takes no write lock and skips the
     /// WAL checkpoint SQLite otherwise runs when the last connection closes —
@@ -56,16 +95,21 @@ enum StoreHealth {
     /// iOS suspended and killed the process (`SerializedDatabase.deinit`
     /// crashes). SQLite opens a WAL-mode store read-only whenever it can create
     /// the `-shm` beside it, which a sandbox directory always allows; the
-    /// read-write open remains as the fallback for the case where it cannot.
-    /// Both connections observe suspension so an in-flight `quick_check` is
-    /// interrupted rather than holding its lock into suspension.
+    /// read-write open remains as the fallback for the case where it cannot,
+    /// when `allowsReadWriteFallback` permits it. Both connections observe
+    /// suspension so an in-flight `quick_check` is interrupted rather than
+    /// holding its lock into suspension.
     ///
     /// The busy timeout waits out a lock another connection is still letting go
     /// of — the widget finishing a read of the App Group store, or a container
     /// released a moment ago — so the header is actually read and judged. Without
     /// it a busy store returns `SQLITE_BUSY` before the header is examined,
     /// which reads as inconclusive and lets a corrupt file through the gate.
-    private nonisolated static func probe(at url: URL) -> Verdict {
+    private nonisolated static func probe<Value>(
+        at url: URL,
+        allowsReadWriteFallback: Bool,
+        inspect: (Database) throws -> Value,
+    ) -> Verdict<Value> {
         var config = Configuration()
         config.label = "piru-storehealth"
         config.observesSuspensionNotifications = true
@@ -78,6 +122,7 @@ enum StoreHealth {
         } catch let error as DatabaseError where error.indicatesCorruption {
             return .corrupt(error.description)
         } catch {
+            guard allowsReadWriteFallback else { return .inconclusive(error.localizedDescription) }
             do {
                 queue = try DatabaseQueue(path: url.path, configuration: config)
             } catch let error as DatabaseError where error.indicatesCorruption {
@@ -87,10 +132,11 @@ enum StoreHealth {
             }
         }
         do {
-            let result = try queue.read { db in
-                try String.fetchOne(db, sql: "PRAGMA quick_check")
+            return try queue.read { db -> Verdict<Value> in
+                let result = try String.fetchOne(db, sql: "PRAGMA quick_check")
+                guard result == "ok" else { return .corrupt("quick_check: \(result ?? "nil")") }
+                return try .healthy(inspect(db))
             }
-            return result == "ok" ? .healthy : .corrupt("quick_check: \(result ?? "nil")")
         } catch let error as DatabaseError where error.indicatesCorruption {
             return .corrupt(error.description)
         } catch {

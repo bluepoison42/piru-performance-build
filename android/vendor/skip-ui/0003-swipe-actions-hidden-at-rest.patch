@@ -1,16 +1,16 @@
 diff --git a/Sources/SkipUI/SkipUI/Containers/List.swift b/Sources/SkipUI/SkipUI/Containers/List.swift
-index e7d029f..ae58f21 100644
+index 0224733..9ca33c9 100644
 --- a/Sources/SkipUI/SkipUI/Containers/List.swift
 +++ b/Sources/SkipUI/SkipUI/Containers/List.swift
-@@ -57,6 +57,7 @@ import androidx.compose.runtime.remember
- import androidx.compose.runtime.rememberCoroutineScope
+@@ -58,6 +58,7 @@ import androidx.compose.runtime.rememberCoroutineScope
  import androidx.compose.runtime.rememberUpdatedState
+ import androidx.compose.runtime.withFrameNanos
  import androidx.compose.ui.Modifier
 +import androidx.compose.ui.draw.alpha
  import androidx.compose.ui.draw.clip
  import androidx.compose.ui.draw.clipToBounds
  import androidx.compose.ui.draw.shadow
-@@ -798,7 +799,9 @@ public final class List : View, Renderable {
+@@ -1004,7 +1005,9 @@ public final class List : View, Renderable {
              let trailingCount = Float(trailingButtons.size)
  
              if leadingButtons.size > 0 && curOffset >= Float(0) {
@@ -21,7 +21,7 @@ index e7d029f..ae58f21 100644
                      if leadingUseStretch {
                          let rowWidthDp = with(density) { revealedLeadingPx.toDp() }
                          Row(modifier: Modifier.fillMaxHeight().width(rowWidthDp)) {
-@@ -841,7 +844,9 @@ public final class List : View, Renderable {
+@@ -1047,7 +1050,9 @@ public final class List : View, Renderable {
                  }
              }
              if trailingButtons.size > 0 && curOffset <= Float(0) {
