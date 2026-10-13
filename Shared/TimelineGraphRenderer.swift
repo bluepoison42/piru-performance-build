@@ -1558,6 +1558,12 @@ struct TimelineGraphRenderer {
     /// Lane colors (shared with the entry-row chips via ``VitalsPalette``).
     private static let hrColor = VitalsPalette.heart
     private static let bpColor = VitalsPalette.bloodPressure
+    /// bpm guide spacings, finest first; the lane uses the first one whose lines
+    /// sit at least ``bpmGuideMinSpacing`` apart.
+    private static let bpmGuideSteps: [Double] = [20, 40, 50, 100]
+    private static let bpmGuideMinSpacing: CGFloat = 14
+    /// Cap height of the 7 pt guide numerals, used to keep them out of the lane-label row.
+    private static let bpmGuideLabelHeight: CGFloat = 7
     /// Clear space required between two blood-pressure labels before the second
     /// one is allowed to draw. Below this they overprint into an unreadable mush.
     private static let bpLabelGap: CGFloat = 6
@@ -1669,8 +1675,14 @@ struct TimelineGraphRenderer {
         // bpm guide lines every 20 bpm, each labeled at the left inset so the lane
         // reads as a real bpm axis at a glance — the exact values used to live only
         // behind a long-press scrub, which is what the "no legend" report was about.
-        var guideBpm = (lo / 20).rounded(.down) * 20
-        if guideBpm <= lo { guideBpm += 20 }
+        // The axis spans the whole series, so a wide range in this short lane would
+        // stack 20-bpm labels on top of each other: the step widens until labels
+        // clear one another, and a label that would reach into the lane-label row
+        // keeps its line but drops its number.
+        let guideStep = Self.bpmGuideSteps.first { CGFloat($0 / (hi - lo)) * plotH >= Self.bpmGuideMinSpacing }
+            ?? Self.bpmGuideSteps.last!
+        var guideBpm = (lo / guideStep).rounded(.down) * guideStep
+        if guideBpm <= lo { guideBpm += guideStep }
         let guideFont = Font.system(size: 7, weight: .medium, design: .rounded).monospacedDigit()
         while guideBpm < hi {
             let gy = yH(guideBpm)
@@ -1678,9 +1690,11 @@ struct TimelineGraphRenderer {
             line.move(to: CGPoint(x: graphInset, y: gy))
             line.addLine(to: CGPoint(x: graphInset + graphWidth, y: gy))
             context.stroke(line, with: .color(.secondary.opacity(0.18)), style: StrokeStyle(lineWidth: 0.5, dash: [1, 4]))
-            let tick = Text(verbatim: "\(Int(guideBpm))").font(guideFont).foregroundStyle(Self.hrColor.legibleOpacity(0.75))
-            context.draw(context.resolve(tick), at: CGPoint(x: graphInset + 2, y: gy - 4), anchor: .bottomLeading)
-            guideBpm += 20
+            if gy - 4 - Self.bpmGuideLabelHeight >= plotTop {
+                let tick = Text(verbatim: "\(Int(guideBpm))").font(guideFont).foregroundStyle(Self.hrColor.legibleOpacity(0.75))
+                context.draw(context.resolve(tick), at: CGPoint(x: graphInset + 2, y: gy - 4), anchor: .bottomLeading)
+            }
+            guideBpm += guideStep
         }
 
         // Each run: the min–max envelope, then the mean as the monotone cubic the
