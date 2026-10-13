@@ -8901,23 +8901,6 @@ class Build:
                 )
                 self.stats["reported_effects"] += 1
 
-    @staticmethod
-    def _dc_phase_bounds(phase) -> tuple[float, float] | None:
-        """Absolute (start, end) for a drug.community phase dict, in source units.
-
-        Returns None when the phase is absent or malformed. Phase windows use
-        `start`/`end`; `total_duration` (handled separately) uses `min`/`max`.
-        """
-        if not isinstance(phase, dict):
-            return None
-        start, end = phase.get("start"), phase.get("end")
-        if start is None or end is None:
-            return None
-        try:
-            return (float(start), float(end))
-        except (TypeError, ValueError):
-            return None
-
     # Unit-to-mg conversion factors. Anything not here keeps its row unit.
     _DC_UNIT_FACTORS = {
         "g": 1000.0,
