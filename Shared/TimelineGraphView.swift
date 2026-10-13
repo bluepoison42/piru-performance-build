@@ -700,7 +700,7 @@ struct TimelineGraphView: View, Equatable {
         if let scrubX, geom.width > 0 {
             let minute = visibleStart + Double((scrubX - geom.inset) / geom.width) * visibleSpan
             let samples = renderer.scrubSamples(atMinute: minute)
-            let heartRate = renderer.scrubHeartRate(atMinute: minute)
+            let heartRate = renderer.scrubHeartRate(atMinute: minute, visibleSpan: visibleSpan)
             if !samples.isEmpty || heartRate != nil {
                 let calloutWidth: CGFloat = 158
                 let maxLeft = max(4, geom.width + geom.inset * 2 - calloutWidth - 4)

@@ -363,20 +363,13 @@ struct TimelineGraphRenderer {
         return kept
     }
 
-    /// Interpolated heart rate (bpm) at a scrubbed minute-since-`earliestDose`, for
-    /// the scrub callout. Nil when there are no vitals or the minute is outside the
-    /// sampled range.
-    func scrubHeartRate(atMinute minute: Double) -> Int? {
-        guard let hr = vitals?.heartRate, !hr.isEmpty else { return nil }
-        let pts = hr.map { (m: $0.date.timeIntervalSince(earliestDose) / 60, bpm: $0.bpm) }
-        guard let first = pts.first, let last = pts.last, minute >= first.m, minute <= last.m else { return nil }
-        for i in 1 ..< pts.count where pts[i].m >= minute {
-            let a = pts[i - 1], b = pts[i]
-            let span = b.m - a.m
-            let t = span > 0 ? (minute - a.m) / span : 0
-            return Int((a.bpm + (b.bpm - a.bpm) * t).rounded())
-        }
-        return Int(last.bpm.rounded())
+    /// Heart rate (bpm) at a scrubbed minute-since-`earliestDose`, for the scrub
+    /// callout: the value of the curve the vitals lane draws at this zoom, the same
+    /// one its tracking dot reads. Nil in a gap between readings and outside them.
+    func scrubHeartRate(atMinute minute: Double, visibleSpan: Double) -> Int? {
+        guard vitalsBandActive, let trace = vitals?.heartRateTrace else { return nil }
+        let date = earliestDose.addingTimeInterval(minute * 60)
+        return trace.bpm(at: date, visibleSpan: visibleSpan * 60).map { Int($0.rounded()) }
     }
 
     /// Normalized height of the heavy-dose bound on this graph, memoized inputs
@@ -1638,8 +1631,8 @@ struct TimelineGraphRenderer {
 
     /// The companion cardio lane: HR as a min–max envelope + mean line on a bpm
     /// scale, BP as systolic→diastolic range bars on their own mmHg scale, plus a
-    /// lane label and the HR "now" dot. Shares the effect graph's time axis, so it
-    /// pans / zooms / scrubs in lockstep.
+    /// lane label and the HR dot. Shares the effect graph's time axis, so it
+    /// pans / zooms / scrubs in lockstep; both scales span the whole session.
     private func drawVitalsLane(
         context: GraphicsContext, size: CGSize, vitals: SessionVitals,
         visibleStart: Double, visibleSpan: Double,
@@ -1656,22 +1649,21 @@ struct TimelineGraphRenderer {
             graphInset + CGFloat((minute - visibleStart) / visibleSpan) * graphWidth
         }
 
-        // Heart-rate samples in (and just around) the visible window.
-        let hr: [(m: Double, bpm: Double)] = vitals.heartRate.compactMap {
-            let m = $0.date.timeIntervalSince(earliest) / 60
-            return (m >= visibleStart - 5 && m <= visEnd + 5) ? (m, $0.bpm) : nil
+        // Heart rate comes pre-bucketed in absolute time (see ``HeartRateTrace``):
+        // panning only moves the same points sideways, and the axis spans the whole
+        // series, so nothing here changes shape while the graph moves.
+        let trace = vitals.heartRateTrace
+        guard let axis = trace.axis, let level = trace.level(forVisibleSpan: visibleSpan * 60) else { return }
+        let lo = axis.lowerBound, hi = axis.upperBound
+        let earliestTime = earliest.timeIntervalSinceReferenceDate
+        func xTime(_ time: TimeInterval) -> CGFloat {
+            x((time - earliestTime) / 60)
         }
-        guard !hr.isEmpty else { return }
-
-        // bpm scale from the visible data, padded and snapped to 10s.
-        let bpms = hr.map(\.bpm)
-        var lo = ((bpms.min() ?? 60) - 6) / 10
-        var hi = ((bpms.max() ?? 100) + 6) / 10
-        lo = lo.rounded(.down) * 10
-        hi = hi.rounded(.up) * 10
-        if hi - lo < 20 { hi = lo + 20 }
+        // Unclamped: every point lies inside the axis by construction, and a Bézier
+        // control point outside it must stay where it is or the stroke would leave
+        // the curve the dot reads.
         func yH(_ bpm: Double) -> CGFloat {
-            plotTop + (1 - CGFloat((min(hi, max(lo, bpm)) - lo) / (hi - lo))) * plotH
+            plotTop + (1 - CGFloat((bpm - lo) / (hi - lo))) * plotH
         }
 
         // bpm guide lines every 20 bpm, each labeled at the left inset so the lane
@@ -1691,59 +1683,62 @@ struct TimelineGraphRenderer {
             guideBpm += 20
         }
 
-        // Bin the samples across the visible window into a min/max envelope + mean.
-        let bins = 60
-        var lows = [Double?](repeating: nil, count: bins)
-        var highs = [Double?](repeating: nil, count: bins)
-        var sums = [Double](repeating: 0, count: bins)
-        var counts = [Int](repeating: 0, count: bins)
-        for sample in hr {
-            let f = (sample.m - visibleStart) / visibleSpan
-            guard f >= 0, f <= 1 else { continue }
-            let i = min(bins - 1, max(0, Int(f * Double(bins))))
-            lows[i] = Swift.min(lows[i] ?? sample.bpm, sample.bpm)
-            highs[i] = Swift.max(highs[i] ?? sample.bpm, sample.bpm)
-            sums[i] += sample.bpm
-            counts[i] += 1
-        }
-        var meanPts: [CGPoint] = [], hiPts: [CGPoint] = [], loPts: [CGPoint] = []
-        for i in 0 ..< bins where counts[i] > 0 {
-            let cx = x(visibleStart + (Double(i) + 0.5) / Double(bins) * visibleSpan)
-            meanPts.append(CGPoint(x: cx, y: yH(sums[i] / Double(counts[i]))))
-            hiPts.append(CGPoint(x: cx, y: yH(highs[i] ?? 0)))
-            loPts.append(CGPoint(x: cx, y: yH(lows[i] ?? 0)))
+        // Each run: the min–max envelope, then the mean as the monotone cubic the
+        // trace's tangents describe. Only the stretch overlapping the visible window
+        // is built (plus one point either side, so the stroke enters and leaves the
+        // plot column rather than stopping short of its edge).
+        let visibleStartTime = earliestTime + visibleStart * 60
+        let visibleEndTime = earliestTime + visEnd * 60
+        for run in level.runs {
+            guard let first = run.first, let last = run.last,
+                  last.time >= visibleStartTime - level.bucket,
+                  first.time <= visibleEndTime + level.bucket
+            else { continue }
+            if run.count == 1 {
+                let p = CGPoint(x: xTime(first.time), y: yH(first.mean))
+                context.fill(Path(ellipseIn: CGRect(x: p.x - 2, y: p.y - 2, width: 4, height: 4)), with: .color(Self.hrColor))
+                continue
+            }
+            let lower = run.lastIndex(where: { $0.time <= visibleStartTime }) ?? 0
+            let upper = run.firstIndex(where: { $0.time >= visibleEndTime }) ?? run.count - 1
+            guard upper > lower else { continue }
+            let slice = run[lower ... upper]
+
+            var envelope = Path()
+            envelope.move(to: CGPoint(x: xTime(run[lower].time), y: yH(run[lower].high)))
+            for point in slice.dropFirst() {
+                envelope.addLine(to: CGPoint(x: xTime(point.time), y: yH(point.high)))
+            }
+            for point in slice.reversed() {
+                envelope.addLine(to: CGPoint(x: xTime(point.time), y: yH(point.low)))
+            }
+            envelope.closeSubpath()
+            context.fill(envelope, with: .color(Self.hrColor.opacity(0.16)))
+
+            var mean = Path()
+            mean.move(to: CGPoint(x: xTime(run[lower].time), y: yH(run[lower].mean)))
+            for i in lower ..< upper {
+                let a = run[i], b = run[i + 1]
+                let third = (b.time - a.time) / 3
+                mean.addCurve(
+                    to: CGPoint(x: xTime(b.time), y: yH(b.mean)),
+                    control1: CGPoint(x: xTime(a.time + third), y: yH(a.mean + a.slope * third)),
+                    control2: CGPoint(x: xTime(b.time - third), y: yH(b.mean - b.slope * third)),
+                )
+            }
+            context.stroke(mean, with: .color(Self.hrColor), style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
         }
 
-        // Envelope band.
-        if hiPts.count >= 2 {
-            var env = Path()
-            env.move(to: hiPts[0])
-            for p in hiPts.dropFirst() {
-                env.addLine(to: p)
-            }
-            for p in loPts.reversed() {
-                env.addLine(to: p)
-            }
-            env.closeSubpath()
-            context.fill(env, with: .color(Self.hrColor.opacity(0.16)))
-        }
-        // Mean line (smoothed), or a single dot when only one bin has data.
-        if meanPts.count >= 2 {
-            var line = Path()
-            addSmoothCurve(meanPts, to: &line, startNew: true)
-            context.stroke(line, with: .color(Self.hrColor), lineWidth: 1.6)
-        } else if let p = meanPts.first {
-            context.fill(Path(ellipseIn: CGRect(x: p.x - 2, y: p.y - 2, width: 4, height: 4)), with: .color(Self.hrColor))
-        }
-
-        // Blood pressure — systolic→diastolic range bars on their own mmHg scale.
+        // Blood pressure — systolic→diastolic range bars on their own mmHg scale,
+        // fitted to every reading rather than the visible ones, so the bars hold
+        // still while the graph pans just as the heart-rate axis does.
         let bp = vitals.bloodPressure.filter {
             let m = $0.date.timeIntervalSince(earliest) / 60
             return m >= visibleStart && m <= visEnd
         }
         if !bp.isEmpty {
-            var bpLo = ((bp.map(\.diastolic).min() ?? 60) / 10).rounded(.down) * 10 - 10
-            var bpHi = ((bp.map(\.systolic).max() ?? 130) / 10).rounded(.up) * 10 + 10
+            var bpLo = ((vitals.bloodPressure.map(\.diastolic).min() ?? 60) / 10).rounded(.down) * 10 - 10
+            var bpHi = ((vitals.bloodPressure.map(\.systolic).max() ?? 130) / 10).rounded(.up) * 10 + 10
             if bpHi - bpLo < 30 { bpHi = bpLo + 30 }
             bpLo = max(0, bpLo)
             func yBP(_ v: Double) -> CGFloat {
@@ -1788,35 +1783,22 @@ struct TimelineGraphRenderer {
             }
         }
 
-        /// HR marker on the trace: follows the scrub rule while inspecting (with a
-        /// bpm readout, since the SwiftUI callout sits over the curves above), else
-        /// rests at "now". bpm is linearly interpolated between samples so the dot
-        /// and value track the finger smoothly.
-        func interpolatedBpm(at minute: Double) -> Double? {
-            guard let first = hr.first, let last = hr.last else { return nil }
-            if minute <= first.m { return first.bpm }
-            if minute >= last.m { return last.bpm }
-            for i in 1 ..< hr.count where hr[i].m >= minute {
-                let a = hr[i - 1], b = hr[i]
-                let span = b.m - a.m
-                let t = span > 0 ? (minute - a.m) / span : 0
-                return a.bpm + (b.bpm - a.bpm) * t
-            }
-            return last.bpm
-        }
-
-        // The bpm value rides in the scrub callout above (with the substances);
-        // here we draw only the tracking dot at the scrub position, else at now.
-        let markerMinute: Double? = if let sx = scrubX {
-            visibleStart + Double((min(max(sx, graphInset), graphInset + graphWidth) - graphInset) / graphWidth) * visibleSpan
+        // The HR dot. While scrubbing it sits on the stroked curve under the rule
+        // (its bpm rides in the SwiftUI callout above, read from the same curve),
+        // and disappears where there is no reading to sit on. At rest it marks the
+        // newest reading, at that reading's own time, while that reading is recent.
+        let marker: (time: TimeInterval, bpm: Double)?
+        if let sx = scrubX {
+            let minute = visibleStart + Double((min(max(sx, graphInset), graphInset + graphWidth) - graphInset) / graphWidth) * visibleSpan
+            let time = earliestTime + minute * 60
+            marker = HeartRateTrace.bpm(at: time, in: level).map { (time, $0) }
         } else if showNowIndicator {
-            currentTime.timeIntervalSince(earliest) / 60
+            marker = trace.latestPoint(asOf: currentTime, visibleSpan: visibleSpan * 60).map { ($0.time, $0.mean) }
         } else {
-            nil
+            marker = nil
         }
-        if let minute = markerMinute, minute >= visibleStart, minute <= visEnd,
-           let bpm = interpolatedBpm(at: minute) {
-            let cx = x(minute), cy = yH(bpm)
+        if let marker, marker.time >= visibleStartTime, marker.time <= visibleEndTime {
+            let cx = xTime(marker.time), cy = yH(marker.bpm)
             let dot = CGRect(x: cx - 3, y: cy - 3, width: 6, height: 6)
             context.fill(Path(ellipseIn: dot), with: .color(Self.hrColor))
             context.stroke(Path(ellipseIn: dot), with: .color(.white.opacity(0.9)), lineWidth: 1)
