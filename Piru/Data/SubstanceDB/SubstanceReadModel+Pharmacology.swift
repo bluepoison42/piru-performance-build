@@ -603,6 +603,52 @@ extension SubstanceReadModel {
         }
     }
 
+    /// The substance's **complete** `saturable_kinetics` elimination row, as the exposure path needs
+    /// it: Km, a Vmax resolved to mg/min at a reference weight, the volume both were fitted against,
+    /// and the absorption rate. `nil` for a substance with no such row, and for a row that states the
+    /// mechanism without the constants (GHB's — no clean human Km or Vmax exists, and the in-vitro and
+    /// animal estimates are grade D), because a partial set cannot be integrated.
+    ///
+    /// `vmax_basis` is honored rather than assumed: `whole_body_mg_per_min` is already the unit the
+    /// engine wants, while `mg_per_kg_per_day` (phenytoin's convention) is converted against a 70 kg
+    /// anchor so the per-kg scaling at the point of use reproduces the stated per-kg rate exactly.
+    nonisolated static func saturableElimination(
+        substanceID: Int64, db queue: DatabaseQueue,
+    ) -> PharmacologyParameters.SaturableElimination? {
+        let row = try? queue.read { db in
+            try Row.fetchOne(db, sql: """
+                SELECT km_mg_per_l, vmax, vmax_basis, vd_l_per_kg, ka_per_min, confidence
+                  FROM saturable_kinetics
+                 WHERE substance_id = ? AND mechanism = 'elimination'
+                 ORDER BY rank ASC
+                 LIMIT 1
+            """, arguments: [substanceID])
+        }
+        guard let row, let km: Double = row["km_mg_per_l"], km > 0,
+              let vmax: Double = row["vmax"], vmax > 0,
+              let basis: String = row["vmax_basis"],
+              let vdLPerKg: Double = row["vd_l_per_kg"], vdLPerKg > 0,
+              let ka: Double = row["ka_per_min"], ka > 0
+        else { return nil }
+        let referenceWeightKg = PKModel.referenceBodyWeightKg
+        let vmaxMgPerMin: Double
+        switch basis {
+        case "whole_body_mg_per_min": vmaxMgPerMin = vmax
+        case "mg_per_kg_per_day": vmaxMgPerMin = vmax * referenceWeightKg / (24 * 60)
+        default: return nil
+        }
+        return PharmacologyParameters.SaturableElimination(
+            vmaxMgPerMin: vmaxMgPerMin,
+            // A whole-body Vmax is quoted against the weight the app anchors its zero-order curve to,
+            // so the two engines scale the same number the same way.
+            referenceWeightKg: referenceWeightKg,
+            kmMgPerL: km,
+            vdLPerKg: vdLPerKg,
+            kaPerMin: ka,
+            confidence: ConfidenceTier(grade: row["confidence"]),
+        )
+    }
+
     /// Every `bioavailability_by_dose` series, keyed by lowercased canonical name, each ascending by
     /// dose — the ingester refuses a series that is not, so a consumer may interpolate between
     /// neighbouring points without re-sorting.

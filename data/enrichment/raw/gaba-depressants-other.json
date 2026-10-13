@@ -25,29 +25,35 @@
           "ki_ci_nm": null,
           "kd_nm": null,
           "ec50_nm": null,
-          "ic50_nm": 50000000,
+          "ic50_nm": 30000000,
           "intrinsic_activity_pct": null,
           "reference_agonist": null,
           "action": "channelBlocker",
           "species": "rat",
           "tissue_or_cell": "hippocampal pyramidal neurons (Lovinger 1989)",
           "radioligand_or_probe": null,
-          "reference": "doi:10.1073/pnas.2435171100"
+          "confidence": "MEDIUM",
+          "assay_notes": "Whole-cell voltage clamp at -50 mV, Mg-free, 50 uM NMDA. Lovinger, White & Weight 1989, Science 243:1721-1724, p. 1721 col. 3: average inhibition by 50 mM EtOH 61 +/- 3% (n = 14), and the concentration producing 50% inhibition (IC50) ~30 mM. Inhibition threshold ~5 mM (p. 1722 col. 3), which is the range human intoxication begins in (20-30 mg/100 mL = 4-6 mM, same page).",
+          "notes": "Never store 50 mM here: it is the concentration the paper tested at, and the figure beside it (61% inhibition) is the response to that test, not a half-maximal one. MEDIUM rather than HIGH: rat neurons, one laboratory, and the paper states the value as an approximation.",
+          "reference": "doi:10.1126/science.2467382"
         },
         {
           "target": "GABA-A α4β3δ (extrasynaptic)",
           "ki_nm": null,
           "ki_ci_nm": null,
           "kd_nm": null,
-          "ec50_nm": 3000000,
+          "ec50_nm": null,
           "ic50_nm": null,
           "intrinsic_activity_pct": null,
-          "reference_agonist": "GABA EC10",
+          "reference_agonist": "GABA EC20",
           "action": "positiveAllostericModulator",
           "species": "human",
-          "tissue_or_cell": "HEK293 expressing human α4β3δ",
+          "tissue_or_cell": "Xenopus oocytes expressing human α4β3δ / α6β3δ",
           "radioligand_or_probe": null,
-          "reference": "doi:10.1126/science.2467382"
+          "confidence": "LOW",
+          "assay_notes": "Wallner, Hanchar & Olsen 2003, PNAS 100:15218-15223, p. 15220-15221: just-detectable enhancement at 3 mM EtOH on α4β3δ and α6β3δ (Fig. 3, Table 2; 15.6 +/- 0.8% increase of the GABA EC20 response at 3 mM), with γ2-containing receptors insensitive below 30-100 mM.",
+          "notes": "Never put the 3 mM figure in ec50_nm: it is a detection threshold, and as a Hill constant it hands ethanol more than 70% GABA-A occupancy at two drinks on a number nobody measured as a half-max. The low-concentration δ-subunit sensitivity is also contested — Borghese et al. 2006 (pmid:16272217) found α4β3δ responsive only at 100 mM in oocytes and 300 mM in a stable cell line across four laboratories, reviewed in Borghese & Harris 2007 (pmid:17521845). The engagement stays recorded and drives no occupancy until a replicated concentration-effect value exists.",
+          "reference": "doi:10.1073/pnas.2435171100"
         },
         {
           "target": "Glycine receptor α1 (homomeric)",
@@ -79,7 +85,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Multi-target depressant. Direct effects: NMDA antagonism (50 mM IC50), glycine PAM, GABA-A δ-subunit PAM at low conc, 5-HT3 PAM. Indirect: ethanol induces neurosteroid (allopregnanolone) synthesis via HPA axis activation, and allopregnanolone is a much more potent GABA-A PAM (nM) than ethanol itself — this neurosteroid loop explains why GABA-A involvement persists at conc where direct ethanol PAM is undetectable. Chronic exposure → adaptive NMDA upregulation (NR2B subunit), GABA-A α4/γ2 switching, and cAMP/PKA signalling rearrangement, all of which underlie tolerance and the withdrawal/seizure phenotype.",
+      "downstream_signalling": "Multi-target depressant. Direct effects: NMDA inhibition (IC50 ~30 mM, threshold ~5 mM), glycine PAM, 5-HT3 PAM, and GABA-A potentiation whose concentration dependence is unsettled — the δ-subunit sensitivity reported at 3 mM failed to replicate in four laboratories, which saw responses only at 100 mM and above. Indirect: ethanol induces neurosteroid (allopregnanolone) synthesis via HPA axis activation, and allopregnanolone is a much more potent GABA-A PAM (nM) than ethanol itself — this neurosteroid loop explains why GABA-A involvement persists at conc where direct ethanol PAM is undetectable. Chronic exposure → adaptive NMDA upregulation (NR2B subunit), GABA-A α4/γ2 switching, and cAMP/PKA signalling rearrangement, all of which underlie tolerance and the withdrawal/seizure phenotype.",
       "neuroimaging": [
         {
           "modality": "PET",

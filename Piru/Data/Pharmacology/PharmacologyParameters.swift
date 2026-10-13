@@ -84,6 +84,35 @@ nonisolated struct PharmacologyParameters {
         }
     }
 
+    /// Capacity-limited elimination for a substance whose clearing enzyme is saturated across its
+    /// dose range — the **alternative** to ``halfLifeMinutes`` on the exposure path.
+    ///
+    /// Ethanol is the case this exists for: alcohol dehydrogenase saturates at a blood level far below
+    /// any intoxicating one, so elimination runs at a fixed mass-per-time and no half-life describes
+    /// the decline people experience. Deriving one from the Michaelis-Menten parameters gives ≈5 min
+    /// (the sub-Km tail), which is true only below 10 mg/100 mL and wrong across the whole
+    /// intoxication. With these the engine integrates `dC/dt = absorption − Vmax·C/(Km+C)` instead.
+    ///
+    /// From the bundled DB's `saturable_kinetics` elimination rows. ``vdLPerKg`` is that table's own
+    /// volume — the one `Vmax` and `Km` were fitted against (ethanol: total body water, 0.55 L/kg) —
+    /// and is deliberately **not** ``PharmacologyParameters/vdLPerKg``, which for ethanol holds the
+    /// forensic Widmark 0.7 L/kg.
+    struct SaturableElimination: Hashable, Sendable {
+        /// Maximum elimination rate in mg/min at ``referenceWeightKg``; scaled per-kg at the point of
+        /// use, because clearing throughput tracks lean/liver mass.
+        let vmaxMgPerMin: Double
+        /// Body weight (kg) ``vmaxMgPerMin`` is anchored to.
+        let referenceWeightKg: Double
+        /// Michaelis constant in mg/L — the concentration at half-maximal clearance rate.
+        let kmMgPerL: Double
+        /// The volume of distribution `Vmax`/`Km` were fitted against, L/kg.
+        let vdLPerKg: Double
+        /// First-order absorption rate constant, per minute.
+        let kaPerMin: Double
+        /// Evidence grade of the parameter set as a whole.
+        let confidence: ConfidenceTier
+    }
+
     /// An active metabolite the parent produces, carried so the tolerance engine can extend a dose's
     /// occupancy tail past the parent's own elimination (K.5). The load-bearing case is diazepam →
     /// nordazepam (t½ ≈ 100 h, equipotent at GABA-A): without it, diazepam's integrated tolerance and
@@ -164,6 +193,11 @@ nonisolated struct PharmacologyParameters {
     /// strain/species).
     let doseScaleConfidence: ConfidenceTier
     let halfLifeMinutes: Double?
+    /// Capacity-limited elimination parameters, for the substances whose clearance saturates and which
+    /// therefore have no half-life to run on — see ``SaturableElimination``. Present only when the
+    /// substance ships a complete `saturable_kinetics` elimination row **and** no first-order
+    /// half-life: a substance with both keeps the closed-form path it already used.
+    let saturableElimination: SaturableElimination?
     /// Time-to-peak (Tmax) in **minutes** for the coherent PK row, when the source carries one — used
     /// to wire a *real* absorption rate `ka` (via ``PKModel/estimateKa(timeToPeak:ke:)``) instead of
     /// the `4·ke` elimination-derived default, so a fast-onset insufflated stimulant and a slow oral
@@ -269,7 +303,9 @@ nonisolated struct PharmacologyParameters {
         diazepamPerMg: Double? = nil,
         opioidMMEPerMg: Double? = nil,
         representsClasses: Set<ReceptorClasses.ReceptorClass> = [],
+        saturableElimination: SaturableElimination? = nil,
     ) {
+        self.saturableElimination = saturableElimination
         self.molarMassGramsPerMole = molarMassGramsPerMole
         self.vdLPerKg = vdLPerKg
         self.bioavailabilityFraction = bioavailabilityFraction
@@ -298,10 +334,49 @@ nonisolated struct PharmacologyParameters {
         targets.first
     }
 
-    /// Whether every input occupancy needs (Vd, molar mass, half-life, a primary target) is present.
+    /// Whether every input occupancy needs (Vd, molar mass, an elimination description, F, a primary
+    /// target) is present. The elimination description is a half-life **or** a
+    /// ``SaturableElimination`` parameter set: a capacity-limited drug has no half-life to give, and
+    /// requiring one left ethanol — which ships Vmax, Km, Vd, ka and F — modeled as another drug.
     var canComputeOccupancy: Bool {
-        vdLPerKg != nil && molarMassGramsPerMole != nil && halfLifeMinutes != nil
+        vdLPerKg != nil && molarMassGramsPerMole != nil
+            && (halfLifeMinutes != nil || saturableElimination != nil)
             && bioavailabilityFraction != nil && primaryTarget != nil
+    }
+
+    /// One dose's **free** concentration over time in nanomolar, for a substance that eliminates
+    /// capacity-limited — the saturable sibling of the `prefactor × Bateman shape` the first-order
+    /// path multiplies out. `nil` when the substance has no saturable parameters or the dose is empty.
+    ///
+    /// `Vmax` is scaled to this body weight exactly as the timeline's zero-order curve scales it
+    /// (``PKModel/zeroOrderKinetics(vmaxMgPerMin:referenceWeightKg:kaPerMin:bioavailability:weightKg:)``),
+    /// so the two surfaces never tell one night's drinking two different stories.
+    func saturableTrackNanomolar(doseMg: Double, weightKg: Double) -> PKModel.ConcentrationTrack? {
+        guard let saturable = saturableElimination, let molarMassGramsPerMole, molarMassGramsPerMole > 0,
+              let bioavailabilityFraction, doseMg > 0, weightKg > 0 else { return nil }
+        let scaled = PKModel.zeroOrderKinetics(
+            vmaxMgPerMin: saturable.vmaxMgPerMin, referenceWeightKg: saturable.referenceWeightKg,
+            kaPerMin: saturable.kaPerMin, bioavailability: bioavailabilityFraction, weightKg: weightKg,
+        )
+        let vdLitres = saturable.vdLPerKg * weightKg
+        guard vdLitres > 0 else { return nil }
+        let activeDoseMg = doseMg * doseScale
+        return PKModel.saturableTrack(
+            dose: activeDoseMg,
+            bioavailability: bioavailabilityFraction,
+            vdPerKg: saturable.vdLPerKg,
+            weightKg: weightKg,
+            ka: saturable.kaPerMin,
+            km: saturable.kmMgPerL,
+            vmaxMgPerLPerMin: scaled.vmaxMgPerMin / vdLitres,
+            durationMinutes: PKModel.saturableDurationMinutes(
+                doseMg: activeDoseMg, bioavailability: bioavailabilityFraction,
+                vmaxMgPerMin: scaled.vmaxMgPerMin, ka: saturable.kaPerMin,
+            ),
+            // mg/L → mol/L is ÷1000 ÷ molar mass, and mol/L → nM is ×1e9; `fu` corrects total plasma
+            // concentration to the free drug a Kᵢ/IC₅₀ was measured against.
+            unitScale: fractionUnbound * 1e6 / molarMassGramsPerMole,
+        )
     }
 
     /// Peak fractional occupancy/engagement of the primary target for a single oral dose, evaluated
@@ -311,8 +386,16 @@ nonisolated struct PharmacologyParameters {
     /// ``fractionUnbound``; pass an explicit value to override (tests use this to compare fu=1 vs
     /// fu=0.02 without rebuilding the parameters).
     func peakPrimaryOccupancy(doseMg: Double, weightKg: Double, unboundFraction fu: Double? = nil) -> Double? {
+        guard let primaryTarget else { return nil }
+        if let track = saturableTrackNanomolar(doseMg: doseMg, weightKg: weightKg) {
+            // The track already carries the stored `fu`; an override re-bases it.
+            let rebase = fu.map { fractionUnbound > 0 ? $0 / fractionUnbound : 1 } ?? 1
+            return PKModel.occupancy(
+                concentration: track.peakValue * rebase, halfMax: primaryTarget.halfMaxNanomolar,
+            )
+        }
         guard let vdLPerKg, let molarMassGramsPerMole, let halfLifeMinutes,
-              let bioavailabilityFraction, let primaryTarget else { return nil }
+              let bioavailabilityFraction else { return nil }
         let ke = PKModel.ke(fromHalfLifeMinutes: halfLifeMinutes)
         let ka = PKModel.defaultKa(ke: ke)
         let peak = PKModel.tmax(ke: ke, ka: ka)
