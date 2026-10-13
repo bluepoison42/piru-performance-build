@@ -23,7 +23,11 @@ proxied response is refused instead of committed.
 
 ``bootstrap`` carries the whole substance roster: ``{ drugs: [...] }``, each
 element the per-substance object ``/api/info?name=<X>`` returns (drug_name,
-dosages, duration_curves, subjective_effects, categories, …).
+dosages, duration_curves, duration_charts, duration_studies, duration and
+half_life prose, subjective_effects, categories, …). Piru snapshots it and the
+``intensity-spectra``, ``effects`` and ``combinations`` companions; the
+release's other datasets (``mentions``, ``global-search``, ``effect-landscape``,
+``subjective-effects-meta``) feed nothing in the build and are not fetched.
 
 Why store the responses in the repo: re-running this surfaces any upstream
 change as a reviewable git diff. That gives Piru a visible history of where its
@@ -38,7 +42,8 @@ Usage:
 
 Writes:
     data/sources/drug-community.json       — array of drug profiles, sorted by slug
-    data/sources/drug-community.meta.json   — fetch provenance (release / when / how many)
+    data/sources/drug-community.meta.json   — fetch provenance (release, when, how many, and
+                                              the digest of every dataset verified)
     data/sources/drug-community-{spectra,effects,combinations}.json — companion datasets
 """
 
@@ -252,6 +257,18 @@ def main() -> int:
     new_names = {d["drug_name"] for d in ordered}
 
     OUT.write_text(json.dumps(ordered, indent=2, ensure_ascii=False, sort_keys=True) + "\n")
+
+    print(f"\nwrote {len(ordered)} substances → {OUT.relative_to(REPO)}")
+    added = sorted(new_names - prev_names)
+    removed = sorted(prev_names - new_names)
+    print(f"  added ({len(added)}):   {added}")
+    print(f"  removed ({len(removed)}): {removed}")
+
+    print("\ncompanion datasets:")
+    fetch_extra_datasets(release)
+
+    # Written last so `verified_datasets` names every dataset this run checked
+    # against the manifest, the companions included.
     META.write_text(
         json.dumps(
             {
@@ -273,15 +290,6 @@ def main() -> int:
         )
         + "\n"
     )
-
-    print(f"\nwrote {len(ordered)} substances → {OUT.relative_to(REPO)}")
-    added = sorted(new_names - prev_names)
-    removed = sorted(prev_names - new_names)
-    print(f"  added ({len(added)}):   {added}")
-    print(f"  removed ({len(removed)}): {removed}")
-
-    print("\ncompanion datasets:")
-    fetch_extra_datasets(release)
     return 0
 
 
