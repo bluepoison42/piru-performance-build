@@ -1,0 +1,42 @@
+Library rows on Android: a long press opens the Favorite / Unfavorite action the trailing swipe holds, on search results and category lists, so it is reachable without the swipe gesture as Android rows offer their actions
+
+diff --git a/Piru/Views/Library/SubstanceLibraryView.swift b/Piru/Views/Library/SubstanceLibraryView.swift
+index c4f57705..0d0bf899 100644
+--- a/Piru/Views/Library/SubstanceLibraryView.swift
++++ b/Piru/Views/Library/SubstanceLibraryView.swift
+@@ -109,6 +109,17 @@ private struct SubstanceSearchResultsList: View {
+                             }
+                             .tint(.yellow)
+                         }
++                        #if os(Android)
++                            // A long press holds the swipe's action too, as Android rows offer theirs.
++                            .contextMenu {
++                                let isFav = favoriteNames.contains(substance.name.lowercased())
++                                Button {
++                                    FavoriteService.toggle(substance: substance.name, substanceUID: substance.substanceUID, in: modelContext)
++                                } label: {
++                                    Label(isFav ? "Unfavorite" : "Favorite", systemImage: isFav ? "star.slash" : "star")
++                                }
++                            }
++                        #endif
+                         .listRowBackground(CardBackground())
+                     }
+                 }
+@@ -475,6 +486,17 @@ struct SubstanceCategoryListView: View {
+                     }
+                     .tint(.yellow)
+                 }
++                #if os(Android)
++                    // A long press holds the swipe's action too, as Android rows offer theirs.
++                    .contextMenu {
++                        let isFav = favoriteNames.contains(substance.name.lowercased())
++                        Button {
++                            FavoriteService.toggle(substance: substance.name, substanceUID: substance.substanceUID, in: modelContext)
++                        } label: {
++                            Label(isFav ? "Unfavorite" : "Favorite", systemImage: isFav ? "star.slash" : "star")
++                        }
++                    }
++                #endif
+             }
+             .listRowBackground(CardBackground())
+         }
