@@ -1,0 +1,79 @@
+A TextField(value:format:) shows the binding's formatted value on every recomposition, so "7." can't be typed and an emptied field refills; a field created with formatsValue keeps text that leaves the value unchanged (the fix proposed upstream; skip-fuse-ui 0005 passes the flag).
+
+diff --git a/Sources/SkipUI/SkipUI/Text/TextField.swift b/Sources/SkipUI/SkipUI/Text/TextField.swift
+index 3ec09be..d2f8c63 100644
+--- a/Sources/SkipUI/SkipUI/Text/TextField.swift
++++ b/Sources/SkipUI/SkipUI/Text/TextField.swift
+@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
+ import androidx.compose.material3.OutlinedTextFieldDefaults
+ import androidx.compose.material3.TextFieldColors
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.SideEffect
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Modifier
+@@ -44,6 +45,11 @@ public struct TextField : View, Renderable {
+     let prompt: Text?
+     let isSecure: Bool
+     let axis: Axis
++    /// Whether `text` is a value rendered by a format (`TextField(value:format:)`). Such a binding
++    /// reads back the formatted value while text that leaves the value unchanged ("7.", an
++    /// emptied field) is on screen, so the field keeps what was typed until the binding's own
++    /// text changes.
++    let formatsValue: Bool
+ 
+     public init(text: Binding<String>, selection: Binding<TextSelection?>? = nil, prompt: Text? = nil, isSecure: Bool = false, axis: Axis = Axis.horizontal, @ViewBuilder label: () -> any View) {
+         self.text = text
+@@ -52,16 +58,23 @@ public struct TextField : View, Renderable {
+         self.prompt = prompt
+         self.isSecure = isSecure
+         self.axis = axis
++        self.formatsValue = false
+     }
+ 
+     // SKIP @bridge
+     public init(getText: @escaping () -> String, setText: @escaping (String) -> Void, getSelection: @escaping () -> TextSelection?, setSelection: @escaping (TextSelection?) -> Void, prompt: Text?, isSecure: Bool, bridgedAxis: Int, bridgedLabel: any View) {
++        self.init(getText: getText, setText: setText, getSelection: getSelection, setSelection: setSelection, prompt: prompt, isSecure: isSecure, formatsValue: false, bridgedAxis: bridgedAxis, bridgedLabel: bridgedLabel)
++    }
++
++    // SKIP @bridge
++    public init(getText: @escaping () -> String, setText: @escaping (String) -> Void, getSelection: @escaping () -> TextSelection?, setSelection: @escaping (TextSelection?) -> Void, prompt: Text?, isSecure: Bool, formatsValue: Bool, bridgedAxis: Int, bridgedLabel: any View) {
+         self.text = Binding(get: getText, set: setText)
+         self.selection = Binding(get: getSelection, set: setSelection)
+         self.label = ComposeBuilder.from { bridgedLabel }
+         self.prompt = prompt
+         self.isSecure = isSecure
+         self.axis = Axis(rawValue: bridgedAxis) ?? Axis.horizontal
++        self.formatsValue = formatsValue
+     }
+ 
+     public init(_ title: String, text: Binding<String>, selection: Binding<TextSelection?>? = nil, prompt: Text? = nil, axis: Axis = Axis.horizontal) {
+@@ -92,14 +105,27 @@ public struct TextField : View, Renderable {
+         let currentSelection = selection?.wrappedValue?.asComposeTextRange()
+         let defaultTextFieldValue = TextFieldValue(text: currentText, selection: TextRange(currentText.count))
+         let textFieldValue = remember { mutableStateOf(defaultTextFieldValue) }
++        // The binding's text as of the last composition, which tells a formatted value's own
++        // change apart from typed text that leaves the value unchanged (see `formatsValue`).
++        let lastBindingText = remember { mutableStateOf(currentText) }
+         var currentTextFieldValue = textFieldValue.value
+         
+         // If the text has been updated externally, use the default value for the current text,
+         // which also places the cursor at the end. This mimics SwiftUI behavior for external modifications,
+         // such as when applying formatting to the user input.
+-        if currentTextFieldValue.text != currentText {
++        let isExternalChange = currentTextFieldValue.text != currentText && (!formatsValue || lastBindingText.value != currentText)
++        if isExternalChange {
+             currentTextFieldValue = defaultTextFieldValue
+         }
++        if formatsValue {
++            SideEffect {
++                lastBindingText.value = currentText
++                // Stored, so a later composition that reads the same binding text keeps the new text.
++                if isExternalChange {
++                    textFieldValue.value = defaultTextFieldValue
++                }
++            }
++        }
+         
+         // If the selection has been updated externally, update just the selection value.
+         if let currentSelection, currentTextFieldValue.selection != currentSelection {

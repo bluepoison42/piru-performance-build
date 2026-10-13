@@ -7,6 +7,7 @@ import skip.ui.*
 
 import android.Manifest
 import android.app.Application
+import android.content.Intent
 import android.graphics.Color as AndroidColor
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -55,8 +56,25 @@ open class MainActivity: AppCompatActivity {
     constructor() {
     }
 
+    /// Set when this instance only hands its intent to the task's root and finishes, so it skips
+    /// the app's lifecycle callbacks.
+    private var isForwarding = false
+
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!isTaskRoot) {
+            forwardToTaskRoot()
+            return
+        }
+        // A link is read from the activity's intent at first composition (SkipUI's onOpenURL), and
+        // a task keeps the intent that started it. Recreated after the process was killed, or
+        // relaunched from Recents, the activity would get that link or notification tap again
+        // and replay it.
+        val relaunched = savedInstanceState != null || (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
+        val notificationTap = if (relaunched) null else notificationUserInfo(intent)
+        if (relaunched || notificationTap != null) {
+            setIntent(Intent(this, MainActivity::class.java).setAction(Intent.ACTION_MAIN))
+        }
         logger.info("starting activity")
         UIApplication.launch(this)
         AndroidDocuments.register(this)
@@ -72,6 +90,7 @@ open class MainActivity: AppCompatActivity {
         }
 
         AppDelegate.shared.onLaunch()
+        notificationTap?.let { AppDelegate.shared.onNotificationTap(it) }
 
         // Example of requesting permissions on startup.
         // These must match the permissions in the AndroidManifest.xml file.
@@ -83,6 +102,57 @@ open class MainActivity: AppCompatActivity {
         //)
         //let requestTag = 1
         //ActivityCompat.requestPermissions(self, permissions.toTypedArray(), requestTag)
+    }
+
+    /// The single-top launch mode keeps the system picker that Import, Export and the backup folder
+    /// open above this activity when the launcher icon is tapped again (single-task would clear it).
+    /// The cost is a second instance whenever the root is not on top of the task: a link while a
+    /// picker is open, the launcher icon on a task a link started, or a link launched into another
+    /// app's task. That instance never builds a UI. A link or a notification tap goes on to the
+    /// root, clearing what is above it; anything else just finishes, which shows the task as it was.
+    private fun forwardToTaskRoot() {
+        isForwarding = true
+        val handoff = when {
+            intent.action == Intent.ACTION_VIEW && intent.data != null ->
+                Intent(Intent.ACTION_VIEW, intent.data, this, MainActivity::class.java)
+            notificationUserInfo(intent) != null ->
+                Intent(this, MainActivity::class.java).setAction(Intent.ACTION_MAIN).putExtras(intent)
+            else -> null
+        }
+        // finish() first: a CLEAR_TOP start resolves to the topmost instance that is not finishing,
+        // which must be the root rather than this one.
+        finish()
+        if (handoff != null) {
+            startActivity(
+                handoff.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+        }
+    }
+
+    /// A link or a notification tap to the running activity. A link is also set as the activity's
+    /// intent, because it can arrive before the first composition has registered SkipUI's
+    /// listener: the system delivers pending intents to an activity recreated after its process
+    /// was killed before it resumes. onOpenURL handles it once either way and then clears the
+    /// intent. A notification tap goes straight to the app and never becomes the intent.
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val notificationTap = notificationUserInfo(intent)
+        if (notificationTap != null) {
+            AppDelegate.shared.onNotificationTap(notificationTap)
+        } else {
+            setIntent(intent)
+        }
+    }
+
+    /// The userInfo of a tapped notification, or null for any other intent. SkipUI's
+    /// NotificationWorker opens a notification with the app's launch intent and the request's
+    /// userInfo as extras, which no SkipUI code reads back; a launcher tap carries none. Piru's
+    /// userInfo values are all strings.
+    private fun notificationUserInfo(intent: Intent): skip.lib.Dictionary<String, String>? {
+        if (intent.action != Intent.ACTION_MAIN) return null
+        val extras = intent.extras ?: return null
+        val userInfo = extras.keySet().mapNotNull { key -> extras.getString(key)?.let { key to it } }.toMap()
+        return if (userInfo.isEmpty()) null else skip.lib.Dictionary(userInfo)
     }
 
     override fun onStart() {
@@ -107,12 +177,12 @@ open class MainActivity: AppCompatActivity {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppDelegate.shared.onDestroy()
+        if (!isForwarding) AppDelegate.shared.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        AppDelegate.shared.onLowMemory()
+        if (!isForwarding) AppDelegate.shared.onLowMemory()
     }
 
     override fun onRestart() {

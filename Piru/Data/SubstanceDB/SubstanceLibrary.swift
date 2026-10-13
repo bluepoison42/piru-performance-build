@@ -99,6 +99,24 @@ enum SubstanceLibrary {
         overlayCustom(library: SubstanceStore.shared.lookupByNameOrAlias(nameOrAlias), query: nameOrAlias)
     }
 
+    /// The canonical name of the substance a dose.wiki article slug names
+    /// (`psilocybin-mushrooms` → "Psilocybin"), for links from dose.wiki.
+    ///
+    /// The build-time `dosewiki_slug` decides first, because a slug is not a
+    /// name: the hyphenated form matches no name, and dose.wiki's article
+    /// grouping can differ from Piru's ("Psilocybin mushrooms" is its own
+    /// substance here). A slug the catalog does not record falls back to the
+    /// name and alias search, as written and with hyphens read as spaces.
+    /// Await ``SubstanceStore/ensureAllLoaded()`` first.
+    static func name(forDosewikiSlug slug: String) -> String? {
+        if let canonical = SubstanceStore.shared.canonicalName(forDosewikiSlug: slug),
+           let substance = lookup(canonical) {
+            return substance.name
+        }
+        let spaced = slug.replacingOccurrences(of: "-", with: " ")
+        return (lookup(slug) ?? lookup(spaced))?.name
+    }
+
     /// The default overlay-aware resolve. A dict hit over the lightweight batch
     /// cache (``SubstanceStore/timelineRow(_:)``) — name, category, routes,
     /// dose ranges (per-salt ladders included), durations, half-life — then any
@@ -123,6 +141,12 @@ enum SubstanceLibrary {
     /// this is additive; it changes no existing behavior.
     static func substanceUID(for nameOrAlias: String) -> String? {
         SubstanceStore.shared.substanceUID(forNameOrAlias: nameOrAlias)
+    }
+
+    /// The dose.wiki page slug for a library substance named or aliased
+    /// `nameOrAlias`; `nil` for a custom-only substance or one dose.wiki lacks.
+    static func dosewikiSlug(for nameOrAlias: String) -> String? {
+        SubstanceStore.shared.dosewikiSlug(forNameOrAlias: nameOrAlias)
     }
 
     /// The PSID of the default form a name or alias resolves to.

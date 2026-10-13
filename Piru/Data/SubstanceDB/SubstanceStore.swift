@@ -1102,6 +1102,14 @@ final class SubstanceStore {
         return resolveSubstance(id: id, canonicalName: nameOrAlias)
     }
 
+    /// The canonical name of the substance a dose.wiki article slug names.
+    ///
+    /// **Raw library value** — bypasses the custom overlay; app code resolves
+    /// through ``SubstanceLibrary/name(forDosewikiSlug:)``.
+    func canonicalName(forDosewikiSlug slug: String) -> String? {
+        reader.canonicalName(dosewikiSlug: slug)
+    }
+
     /// Resolve a substance *name or alias* to its library id, mirroring
     /// ``lookupByNameOrAlias(_:)``'s canonical-then-alias precedence.
     ///
@@ -1133,6 +1141,18 @@ final class SubstanceStore {
         if let byAlias, !stubIDs.contains(byAlias) { return byAlias }
         if let nonStub = nonStubAliasOwner(for: key) { return nonStub }
         return byName ?? byAlias
+    }
+
+    /// The substance's dose.wiki page slug, for a name or alias, or `nil` when it
+    /// does not resolve or dose.wiki has no page for it. One column read, so a
+    /// caller that needs only the slug skips the ~21-query full resolve.
+    func dosewikiSlug(forNameOrAlias name: String) -> String? {
+        guard let id = substanceID(forNameOrAlias: name) else { return nil }
+        let slug = try? substancesDB.read { db in
+            try String.fetchOne(db, sql: "SELECT dosewiki_slug FROM substances WHERE id = ?", arguments: [id])
+        }
+        guard let slug, !slug.isEmpty else { return nil }
+        return slug
     }
 
     /// A substance owning `key` as an alias that actually carries data, when the

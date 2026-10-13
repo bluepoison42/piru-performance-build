@@ -65,12 +65,29 @@ struct ContentView: View {
     // MARK: - Deep Linking
 
     private func handleDeepLink(_ url: URL) {
+        if let link = DeepLink.decodeWebLink(url) {
+            handleWebLink(link)
+            return
+        }
         guard let outcome = DeepLink.decode(url) else { return }
         // A `piru://day` link targets the current session; resolving its id
         // here lets the navigator reveal an already-open session screen
         // instead of presenting a duplicate sheet over it.
         let sessionID = outcome.sheet == .sessionDetail ? mostRecentSessionID(in: modelContext) : nil
         navigator.apply(outcome, currentSessionID: sessionID)
+    }
+
+    /// A dose.wiki link names its substance by article slug, which resolves
+    /// only against the loaded catalog. On a cold start the link arrives while
+    /// the launch prewarm is still running, so it waits for it here and then
+    /// lands exactly where the matching `piru://` link would.
+    private func handleWebLink(_ link: DosewikiLink) {
+        Task(name: "Open dose.wiki link") {
+            await SubstanceStore.shared.ensureAllLoaded()
+            let name = link.slug.flatMap(SubstanceLibrary.name(forDosewikiSlug:))
+            guard let outcome = link.outcome(substanceName: name) else { return }
+            navigator.apply(outcome)
+        }
     }
 }
 

@@ -3350,6 +3350,11 @@ ES = {
     "This half-life is out of range: projections take 1 minute to 10 years.": "Esta vida media está fuera de rango: las proyecciones admiten de 1 minuto a 10 años.",
     "This interval is out of range: projections take 1 minute to 1 year.": "Este intervalo está fuera de rango: las proyecciones admiten de 1 minuto a 1 año.",
     "This schedule takes more than %@ doses to settle, so it can't be projected.": "Este esquema necesita más de %@ dosis para alcanzar el estado estacionario, así que no se puede proyectar.",
+    "Send to dose.wiki": "Enviar a dose.wiki",
+    "Send to dose.wiki?": "¿Enviar a dose.wiki?",
+    "Open": "Abrir",
+    "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.": "Esto abre el formulario de relatos de viaje de dose.wiki con esta sesión ya rellenada. Nada sale de tu dispositivo hasta que lo envíes allí.",
+    "Some long notes were shortened or left out to fit.": "Algunas notas largas se acortaron u omitieron para que quepan.",
 }
 
 # Spain only: the few strings Spain must see differently — today the iOS Settings

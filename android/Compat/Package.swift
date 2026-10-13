@@ -19,7 +19,7 @@ let package = Package(
         .library(name: "PortableData", targets: ["PortableData"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/groue/GRDB.swift.git", exact: "7.10.0"),
+        .package(url: "https://github.com/groue/GRDB.swift.git", exact: "7.11.1"),
         .package(url: "https://github.com/apple/swift-crypto.git", from: "4.0.0"),
         // A range, not a pin: Skip's tool (skipstone) requires 602.x in the same graph.
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "602.0.0" ..< "605.0.0"),

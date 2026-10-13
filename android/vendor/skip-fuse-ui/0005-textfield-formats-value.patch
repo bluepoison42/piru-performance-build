@@ -1,0 +1,83 @@
+TextField(value:format:) tells SkipUI it formats a value, so text that leaves the value unchanged ("7.", an emptied field) stays as typed; needs skip-ui 0010 (the fix proposed upstream).
+
+diff --git a/Sources/SkipSwiftUI/Text/TextField.swift b/Sources/SkipSwiftUI/Text/TextField.swift
+index 1b77807..a1c0497 100644
+--- a/Sources/SkipSwiftUI/Text/TextField.swift
++++ b/Sources/SkipSwiftUI/Text/TextField.swift
+@@ -10,6 +10,9 @@ public struct TextField<Label> where Label : View {
+     private let label: Label
+     private var selection: Binding<TextSelection?>? = nil
+     private var axis = Axis.horizontal
++    /// Whether `text` renders a value through a format, which SkipUI needs to keep text that
++    /// leaves the value unchanged ("7.", an emptied field) on screen.
++    private var formatsValue = false
+ }
+ 
+ extension TextField : View {
+@@ -18,7 +21,7 @@ extension TextField : View {
+ 
+ extension TextField : SkipUIBridging {
+     public var Java_view: any SkipUI.View {
+-        return SkipUI.TextField(getText: { text.wrappedValue }, setText: { text.wrappedValue = $0 }, getSelection: { selection?.wrappedValue }, setSelection: { selection?.wrappedValue = $0 }, prompt: prompt?.Java_view as? SkipUI.Text, isSecure: false, bridgedAxis: Int(axis.rawValue), bridgedLabel: label.Java_viewOrEmpty)
++        return SkipUI.TextField(getText: { text.wrappedValue }, setText: { text.wrappedValue = $0 }, getSelection: { selection?.wrappedValue }, setSelection: { selection?.wrappedValue = $0 }, prompt: prompt?.Java_view as? SkipUI.Text, isSecure: false, formatsValue: formatsValue, bridgedAxis: Int(axis.rawValue), bridgedLabel: label.Java_viewOrEmpty)
+     }
+ }
+ 
+@@ -69,36 +72,42 @@ extension TextField {
+ extension TextField where Label == Text {
+     public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = Text(titleKey)
+         self.prompt = prompt
+     }
+ 
+     @_disfavoredOverload public init<F>(_ titleResource: AndroidLocalizedStringResource, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = Text(titleResource)
+         self.prompt = prompt
+     }
+ 
+     @_disfavoredOverload public init<S, F>(_ title: S, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = Text(title)
+         self.prompt = prompt
+     }
+ 
+     public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = Text(titleKey)
+         self.prompt = prompt
+     }
+ 
+     @_disfavoredOverload public init<F>(_ titleResource: AndroidLocalizedStringResource, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = Text(titleResource)
+         self.prompt = prompt
+     }
+ 
+     @_disfavoredOverload public init<S, F>(_ title: S, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = Text(title)
+         self.prompt = prompt
+     }
+@@ -107,12 +116,14 @@ extension TextField where Label == Text {
+ extension TextField {
+     public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = label()
+         self.prompt = prompt
+     }
+ 
+     public init<F>(value: Binding<F.FormatInput>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
+         self.text = Self.text(from: value, format: format)
++        self.formatsValue = true
+         self.label = label()
+         self.prompt = prompt
+     }
