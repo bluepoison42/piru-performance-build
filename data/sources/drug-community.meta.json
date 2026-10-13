@@ -3,18 +3,33 @@
   "api": "https://substance.wiki/api/data/manifest",
   "api_docs": "https://substance.wiki/api/docs",
   "human_url_pattern": "https://substance.wiki/drug/{slug}",
-  "fetched_at": "2026-10-05T15:34:39+00:00",
-  "release_id": "def03efdc502a146d7baef0816dad0f855b7403171fd1dc72cc60a2540c92e67",
-  "release_generated_at": "2026-10-05T13:51:15.886Z",
+  "fetched_at": "2026-10-13T21:12:39+00:00",
+  "release_id": "8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9",
+  "release_generated_at": "2026-10-13T18:51:16.224Z",
   "schema_version": 2,
   "pipeline_version": "catalog-v2-backfill/2",
-  "substance_count": 427,
-  "snapshot_sha256": "73ca00adb7b3e618a9fce11e5ef725ddfecbf239de65580b7ad62c230cbfb576",
+  "substance_count": 431,
+  "snapshot_sha256": "b45c447ff50ec23f456a9ed8863c103b52247cdead3fcb3fe2de0bc83b8de097",
   "verified_datasets": {
     "bootstrap": {
-      "url": "/api/data/releases/def03efdc502a146d7baef0816dad0f855b7403171fd1dc72cc60a2540c92e67/bootstrap",
-      "sha256": "e00a4cef4f59a67105301cdf375c2c1354c418a9e3c2b3e2d2cd9e82cc5b896c",
-      "bytes": 3938173
+      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/bootstrap",
+      "sha256": "178f9b5bcff62149c85b629f98585c77150e3c3533b2d6e8be7684bde2b2ae07",
+      "bytes": 4108010
+    },
+    "intensity-spectra": {
+      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/intensity-spectra",
+      "sha256": "7cb9774a57233a69cca1a0e2a3a2d7d51a95c88be797c2f565ce0e1165a2f3c5",
+      "bytes": 1134713
+    },
+    "effects": {
+      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/effects",
+      "sha256": "e6d94e79afa16e189357fca928f57aaf340c12b11be6693b1509795f1795a82d",
+      "bytes": 17048022
+    },
+    "combinations": {
+      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/combinations",
+      "sha256": "47916668d2d16cde1467b2cf2487f89c06c4951c22747cf51eb3e334830d6213",
+      "bytes": 3967914
     }
   }
 }
