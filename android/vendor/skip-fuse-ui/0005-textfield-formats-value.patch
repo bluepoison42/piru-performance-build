@@ -1,20 +1,21 @@
-TextField(value:format:) tells SkipUI it formats a value, so text that leaves the value unchanged ("7.", an emptied field) stays as typed; needs skip-ui 0010 (the fix proposed upstream).
+TextField(value:format:) tells SkipUI it formats a value, so the field keeps the typed text while it has focus ("7.", an emptied field, "1.2" in a whole-number format) and shows and writes back the formatted value when focus leaves; needs skip-ui 0010. Proposed upstream.
 
 diff --git a/Sources/SkipSwiftUI/Text/TextField.swift b/Sources/SkipSwiftUI/Text/TextField.swift
-index 1b77807..a1c0497 100644
+index 6f8b799..7f32047 100644
 --- a/Sources/SkipSwiftUI/Text/TextField.swift
 +++ b/Sources/SkipSwiftUI/Text/TextField.swift
-@@ -10,6 +10,9 @@ public struct TextField<Label> where Label : View {
+@@ -10,6 +10,10 @@ public struct TextField<Label> where Label : View {
      private let label: Label
      private var selection: Binding<TextSelection?>? = nil
      private var axis = Axis.horizontal
-+    /// Whether `text` renders a value through a format, which SkipUI needs to keep text that
-+    /// leaves the value unchanged ("7.", an emptied field) on screen.
++    /// Whether `text` renders a value through a format. Such a binding reads back the formatted
++    /// value rather than what was typed ("7." reads "7"), so SkipUI keeps the typed text while the
++    /// field has focus, and shows and writes back the formatted value when focus leaves.
 +    private var formatsValue = false
  }
  
  extension TextField : View {
-@@ -18,7 +21,7 @@ extension TextField : View {
+@@ -18,7 +22,7 @@ extension TextField : View {
  
  extension TextField : SkipUIBridging {
      public var Java_view: any SkipUI.View {
@@ -23,7 +24,7 @@ index 1b77807..a1c0497 100644
      }
  }
  
-@@ -69,36 +72,42 @@ extension TextField {
+@@ -70,36 +74,42 @@ extension TextField {
  extension TextField where Label == Text {
      public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
          self.text = Self.text(from: value, format: format)
@@ -66,7 +67,7 @@ index 1b77807..a1c0497 100644
          self.label = Text(title)
          self.prompt = prompt
      }
-@@ -107,12 +116,14 @@ extension TextField where Label == Text {
+@@ -108,12 +118,14 @@ extension TextField where Label == Text {
  extension TextField {
      public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
          self.text = Self.text(from: value, format: format)
