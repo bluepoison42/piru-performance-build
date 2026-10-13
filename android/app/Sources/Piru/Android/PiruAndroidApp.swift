@@ -43,12 +43,6 @@ import SwiftUI
 
     /* SKIP @bridge */ public func onLaunch() {}
 
-    /// A tap on one of the app's notifications: the string extras of the intent it opened the
-    /// activity with, which are the request's userInfo.
-    /* SKIP @bridge */ public func onNotificationTap(_ userInfo: [String: String]) {
-        AndroidNotificationDelegate.shared.receiveTap(userInfo: userInfo)
-    }
-
     /// A return to the foreground. The activity also resumes as it launches, which on iOS is
     /// the launch task's work, so a resume counts only once the launch passes have run.
     /* SKIP @bridge */ public func onResume() {

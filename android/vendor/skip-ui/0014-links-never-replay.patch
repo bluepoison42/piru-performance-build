@@ -1,0 +1,109 @@
+onOpenURL: a relaunched activity's launch intent (restored from saved state, or relaunched from Recents) is not opened again; UIApplication.launch records it, told apart by FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY or a marker saved in the activity's state, and a link set as the activity's intent afterwards still opens. Proposed upstream.
+
+diff --git a/Sources/SkipUI/SkipUI/System/UserActivity.swift b/Sources/SkipUI/SkipUI/System/UserActivity.swift
+index 663998c..6d2ef3f 100644
+--- a/Sources/SkipUI/SkipUI/System/UserActivity.swift
++++ b/Sources/SkipUI/SkipUI/System/UserActivity.swift
+@@ -48,7 +48,9 @@ extension View {
+                 }
+             }
+ 
+-            guard let intent = newIntent.value ?? activity.intent else {
++            // A relaunched activity's launch intent was handled in the activity's earlier life.
++            let launchIntent = activity.intent === UIApplication.shared.replayedLaunchIntent ? nil : activity.intent
++            guard let intent = newIntent.value ?? launchIntent else {
+                 return ComposeResult.ok
+             }
+             newIntent.value = nil
+diff --git a/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift b/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift
+index a9f5c80..e50f799 100644
+--- a/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift
++++ b/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift
+@@ -75,6 +75,7 @@ let logger: Logger = Logger(subsystem: "skip.ui", category: "SkipUI") // adb log
+     public static func launch(_ activity: androidx.activity.ComponentActivity) {
+         if activity !== shared.androidActivity {
+             shared.androidActivity = activity
++            shared.replayedLaunchIntent = isRelaunch(activity) ? activity.intent : nil
+ 
+             // Must registerForActivityResult on or before Activity.onCreate
+             do {
+@@ -94,6 +95,29 @@ let logger: Logger = Logger(subsystem: "skip.ui", category: "SkipUI") // adb log
+         }
+     }
+ 
++    /// The intent the system relaunched the activity with, which the activity's earlier life
++    /// already handled: an activity recreated from saved state (after a process death or a
++    /// configuration change) or relaunched from Recents gets its task's launch intent again.
++    var replayedLaunchIntent: Intent?
++
++    private static let relaunchStateKey = "skip.ui.UIApplication"
++
++    private static func isRelaunch(_ activity: androidx.activity.ComponentActivity) -> Bool {
++        if let intent = activity.intent, (intent.flags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0 {
++            return true
++        }
++        // The saved state holds this key from the activity's earlier life only.
++        do {
++            let registry = activity.savedStateRegistry
++            let restored = registry.consumeRestoredStateForKey(relaunchStateKey) != nil
++            registry.registerSavedStateProvider(relaunchStateKey, RelaunchStateProvider())
++            return restored
++        } catch {
++            android.util.Log.w("SkipUI", "error reading the activity's saved state", error as? Throwable)
++            return false
++        }
++    }
++
+     func onActivityDestroy() {
+         // The permission launcher appears to hold a strong reference to the activity, so we must nil it to avoid memory leaks
+         self.requestPermissionLauncher = nil
+@@ -484,5 +508,12 @@ struct UIApplicationLifecycleEventObserver: LifecycleEventObserver, DefaultLifec
+         }
+     }
+ }
++
++/// Saves a marker in the activity's state, so a recreated activity can tell it was restored.
++struct RelaunchStateProvider: androidx.savedstate.SavedStateRegistry.SavedStateProvider {
++    override func saveState() -> android.os.Bundle {
++        return android.os.Bundle()
++    }
++}
+ #endif
+ #endif
+diff --git a/Tests/SkipUITests/LaunchIntentReplayTests.swift b/Tests/SkipUITests/LaunchIntentReplayTests.swift
+new file mode 100644
+index 0000000..7461ade
+--- /dev/null
++++ b/Tests/SkipUITests/LaunchIntentReplayTests.swift
+@@ -0,0 +1,31 @@
++// Copyright 2026 Skip
++// SPDX-License-Identifier: MPL-2.0
++import Foundation
++import SwiftUI
++import XCTest
++
++#if SKIP
++import androidx.activity.ComponentActivity
++import androidx.compose.ui.test.junit4.createAndroidComposeRule
++#endif
++
++final class LaunchIntentReplayTests: SkipUITestCase {
++    // SKIP INSERT: @get:org.junit.Rule val composeRule = createAndroidComposeRule<ComponentActivity>()
++
++    func testRecreatedActivityGetsItsLaunchIntentAsAReplay() throws {
++        #if !SKIP
++        throw XCTSkip("Launch intents are Android's")
++        #else
++        let first = composeRule.activity
++        UIApplication.launch(first)
++        XCTAssertNil(UIApplication.shared.replayedLaunchIntent)
++
++        composeRule.activityRule.scenario.recreate()
++        let recreated = composeRule.activity
++        XCTAssertFalse(recreated === first)
++        UIApplication.launch(recreated)
++        XCTAssertNotNil(UIApplication.shared.replayedLaunchIntent)
++        XCTAssertTrue(UIApplication.shared.replayedLaunchIntent === recreated.intent)
++        #endif
++    }
++}
