@@ -782,22 +782,37 @@ private struct ChartRenderer {
         guard !configuration.xHidden else { return }
         if !categories.isEmpty {
             for (index, name) in categories.enumerated() where categories.count <= 12 {
-                context.draw(Text(name).font(.caption2).foregroundStyle(Color.secondary), at: CGPoint(x: px(Double(index) + 0.5), y: plot.maxY + 9))
+                drawXLabel(&context, Text(name).font(.caption2).foregroundStyle(Color.secondary), x: px(Double(index) + 0.5), y: plot.maxY + 9)
             }
         } else if marks.contains(where: { if case .date = $0.x { true } else { false } }) {
             let span = xDomain.upperBound - xDomain.lowerBound
             for value in Self.ticks(xDomain, count: 4) {
                 let date = Date(timeIntervalSinceReferenceDate: value)
                 let label = span > 3 * 86400 ? date.formatted(.dateTime.month(.abbreviated).day()) : date.formatted(.dateTime.hour())
-                context.draw(Text(label).font(.caption2).foregroundStyle(Color.secondary), at: CGPoint(x: px(value), y: plot.maxY + 9))
+                drawXLabel(&context, Text(label).font(.caption2).foregroundStyle(Color.secondary), x: px(value), y: plot.maxY + 9)
             }
         } else {
             for value in Self.ticks(xDomain, count: 4) {
-                context.draw(
+                drawXLabel(
+                    &context,
                     Text(Self.format(value, span: xDomain.upperBound - xDomain.lowerBound)).font(.caption2).foregroundStyle(Color.secondary),
-                    at: CGPoint(x: px(value), y: plot.maxY + 9),
+                    x: px(value), y: plot.maxY + 9,
                 )
             }
+        }
+    }
+
+    /// An x-axis label centered under its value, slid inside the chart when centering it would run
+    /// past either edge, as Swift Charts keeps its axis labels in bounds. The anchor moves to the
+    /// edge it would cross, so Compose lines the label up with that edge by its measured width.
+    private func drawXLabel(_ context: inout GraphicsContext, _ text: Text, x: CGFloat, y: CGFloat) {
+        let half = context.resolve(text).measure(in: size).width / 2
+        if x - half < 0 {
+            context.draw(text, at: CGPoint(x: 0, y: y), anchor: .leading)
+        } else if x + half > size.width {
+            context.draw(text, at: CGPoint(x: size.width, y: y), anchor: .trailing)
+        } else {
+            context.draw(text, at: CGPoint(x: x, y: y))
         }
     }
 
