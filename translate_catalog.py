@@ -52,6 +52,66 @@ T = {
         "此来源条目存在已记录的时间或给药途径问题。",
         "此來源條目存在已記錄的時間或給藥途徑問題。",
     ),
+    "Published timing": (
+        "已发表的时间",
+        "已發表的時間",
+    ),
+    "Anecdotal timing": (
+        "个人报告的时间",
+        "個人報告的時間",
+    ),
+    "Extrapolated, not validated": (
+        "外推估计，未经验证",
+        "外推估計，未經驗證",
+    ),
+    "Plasma model (illustrative)": (
+        "血浆模型（示意）",
+        "血漿模型（示意）",
+    ),
+    "Reference timing chart for one administration. Inferred or unknown phases are not used to predict your session.": (
+        "单次用药的参考时间图。推断或未知的阶段不会用于预测你的体验。",
+        "單次用藥的參考時間圖。推斷或未知的階段不會用於預測你的體驗。",
+    ),
+    "Modeled drug level in plasma, which is not the same as felt effects. It is not used to predict your session.": (
+        "模型估算的血浆药物浓度，与主观感受到的效果不同。它不会用于预测你的体验。",
+        "模型估算的血漿藥物濃度，與主觀感受到的效果不同。它不會用於預測你的體驗。",
+    ),
+    "Confidence": (
+        "可信度",
+        "可信度",
+    ),
+    "Low to moderate": (
+        "低至中等",
+        "低至中等",
+    ),
+    "Very low": (
+        "很低",
+        "很低",
+    ),
+    "Analyte": (
+        "检测物",
+        "檢測物",
+    ),
+    "Model time to peak level": (
+        "模型达峰时间",
+        "模型達峰時間",
+    ),
+    "Model half-life": (
+        "模型半衰期",
+        "模型半衰期",
+    ),
+    "seconds": (
+        "秒",
+        "秒",
+    ),
+    "Time since administration": (
+        "自用药起计时",
+        "自用藥起計時",
+    ),
+    "Endpoint: modeled “any drug effect” rating on a visual analog scale": (
+        "终点：模型估算的“任何药物效应”视觉模拟量表评分",
+        "終點：模型估算的「任何藥物效應」視覺類比量表評分",
+    ),
     # Hebi Arcade: the cabinet you get by tapping the backdrop's ship
     "Score": ("得分", "得分"),
     "Best": ("最高分", "最高分"),
@@ -9282,6 +9342,25 @@ if __name__ == "__main__":
     )
 
     NEW_KEYS.add("Bar: participant range; dot: mean.")
+    NEW_KEYS.update(
+        {
+            "Published timing",
+            "Anecdotal timing",
+            "Extrapolated, not validated",
+            "Plasma model (illustrative)",
+            "Reference timing chart for one administration. Inferred or unknown phases are not used to predict your session.",
+            "Modeled drug level in plasma, which is not the same as felt effects. It is not used to predict your session.",
+            "Confidence",
+            "Low to moderate",
+            "Very low",
+            "Analyte",
+            "Model time to peak level",
+            "Model half-life",
+            "seconds",
+            "Time since administration",
+            "Endpoint: modeled “any drug effect” rating on a visual analog scale",
+        }
+    )
     print("--- Piru main app catalog ---")
     n, added, missing = apply_translations(
         project_root / "Piru/Localizable.xcstrings",

@@ -101,4 +101,52 @@ struct WikiTimingRecordTests {
         #expect(study.activeDuration.quantity == "interval_between_modeled_onset_and_offset")
         #expect(study.context.participantCount == 16)
     }
+
+    @Test
+    func `duration charts keep their evidence class and hypothesis`() throws {
+        let result = try record(#"""
+        {"schemaVersion":"drug-community-duration-chart/1","id":"fictional-oral-hypothesis-v1",
+         "label":"Fictional schematic","route":"oral","formulation":null,
+         "time_origin":"single_administration","kind":"subjective_effect","evidence":"extrapolated_timing",
+         "sources":[{"title":"Fictional source","url":"https://example.org/a"}],
+         "limitations":["Fictional limitation"],
+         "curve":{"reference":"Fictional","units":"hours","total_duration":{"min":12,"max":30},
+           "onset":{"start":0.5,"end":2},"peak":{"start":2,"end":6},"offset":{"start":8,"end":30}},
+         "hypothesis":{"model_status":"extrapolated_not_validated","context":"recreational",
+           "confidence":"low","attribution":"Fictional proposal","residual_may_exceed_end":true}}
+        """#, kind: "duration_chart")
+        let chart = try #require(result.chart)
+        #expect(result.study == nil)
+        #expect(chart.evidence == "extrapolated_timing")
+        #expect(chart.hypothesis?.modelStatus == "extrapolated_not_validated")
+        #expect(chart.hypothesis?.confidence == "low")
+        #expect(chart.limitations == ["Fictional limitation"])
+        #expect(chart.sources?.first?.url == "https://example.org/a")
+        #expect(result.curve?.offset?.end == 30)
+        #expect(result.formulation == nil)
+    }
+
+    @Test
+    func `a plasma model stays a plasma model`() throws {
+        let result = try record(#"""
+        {"schemaVersion":"drug-community-duration-chart/1","id":"fictional-oral-parent-plasma-v1",
+         "label":"Fictional plasma model","route":"oral","formulation":"Fictional tablet",
+         "time_origin":"single_administration","kind":"plasma_concentration","evidence":"parameterized_model",
+         "sources":[{"title":"Fictional label","url":"https://example.org/b"}],
+         "limitations":["Plasma concentration is not felt effect"],
+         "compartment":"plasma","normalization":"peak_percent",
+         "analyte":{"name":"fictional","kind":"parent_drug"},
+         "representation":"one_compartment_first_order_absorption","phase_definition":"rise_peak_decline",
+         "absorption_lag_hours":0,
+         "parameters":{"half_life_hours":75,"tmax_hours":3,"reported_tmax_hours":[3,5]},
+         "time_horizon_hours":300,"scenarios":[],"assumptions":["Fictional assumption"]}
+        """#, kind: "duration_chart")
+        let chart = try #require(result.chart)
+        #expect(chart.kind == "plasma_concentration")
+        #expect(chart.analyte?.name == "fictional")
+        #expect(chart.parameters?.halfLifeHours == 75)
+        #expect(chart.parameters?.tmaxHours == 3)
+        #expect(result.curve == nil)
+        #expect(result.formulation == "Fictional tablet")
+    }
 }

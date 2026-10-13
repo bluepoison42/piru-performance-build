@@ -13,6 +13,7 @@ struct WikiTimingRecord: Identifiable {
     let formulation: String?
     let curve: WikiTimingCurve?
     let study: WikiTimingStudy?
+    let chart: WikiDurationChart?
     let timingText: [String: String]
 
     init(
@@ -29,15 +30,23 @@ struct WikiTimingRecord: Identifiable {
         self.hasSourceException = hasSourceException
         let decoder = JSONDecoder()
         let data = Data(entryJSON.utf8)
-        if kind == "duration_study" {
+        switch kind {
+        case "duration_study":
             study = try decoder.decode(WikiTimingStudy.self, from: data)
             curve = nil
+            chart = nil
             formulation = study?.context.formulation
-        } else {
+        case "duration_chart":
+            chart = try decoder.decode(WikiDurationChart.self, from: data)
+            curve = chart?.curve
+            formulation = chart?.formulation
+            study = nil
+        default:
             let entry = try decoder.decode(WikiTimingEntry.self, from: data)
             curve = kind == "partial_duration_curve" ? entry.partialCurve : entry.curve
             formulation = entry.formulation
             study = nil
+            chart = nil
         }
         timingText = try decoder.decode([String: String].self, from: Data(timingTextJSON.utf8))
     }
@@ -160,5 +169,57 @@ struct WikiTimingStudy: Decodable {
         let tableUrl: String
         let doi: String
         let locator: String
+    }
+}
+
+/// A typed substance.wiki duration chart (`drug-community-duration-chart/1`).
+/// Reference material only: a subjective schematic keeps its evidence class and
+/// hypothesis status, and a plasma model describes the parent drug in plasma, a
+/// different quantity from felt effects. Neither feeds the session model.
+struct WikiDurationChart: Decodable {
+    let label: String?
+    let kind: String
+    let evidence: String
+    let formulation: String?
+    let curve: WikiTimingCurve?
+    let limitations: [String]?
+    let warnings: [String]?
+    let assumptions: [String]?
+    let sources: [Source]?
+    let hypothesis: Hypothesis?
+    let analyte: Analyte?
+    let parameters: Parameters?
+
+    struct Source: Decodable, Identifiable {
+        let title: String
+        let url: String
+
+        var id: String { url + title }
+    }
+
+    struct Hypothesis: Decodable {
+        let modelStatus: String?
+        let confidence: String?
+        let attribution: String?
+
+        enum CodingKeys: String, CodingKey {
+            case modelStatus = "model_status"
+            case confidence
+            case attribution
+        }
+    }
+
+    struct Analyte: Decodable {
+        let name: String
+    }
+
+    struct Parameters: Decodable {
+        let halfLifeHours: Double?
+        let tmaxHours: Double?
+
+        enum CodingKeys: String, CodingKey {
+            case halfLifeHours = "half_life_hours"
+            case tmaxHours = "tmax_hours"
+        }
     }
 }
