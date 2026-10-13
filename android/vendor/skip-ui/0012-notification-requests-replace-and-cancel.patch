@@ -1,0 +1,120 @@
+UNUserNotificationCenter: a request replaces the pending one with its identifier (unique work, after a cancel by tag that clears the duplicates earlier versions enqueued); removal cancels an identifier's work whatever its saved date; pending requests include queued work; removing all cancels every notification's work. Proposed upstream.
+
+diff --git a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
+index acc3fae8..5a56d939 100644
+--- a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
++++ b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
+@@ -20,7 +20,9 @@ import androidx.lifecycle.Lifecycle
+ import androidx.lifecycle.LifecycleEventObserver
+ import androidx.lifecycle.LifecycleOwner
+ import androidx.work.Data
++import androidx.work.ExistingWorkPolicy
+ import androidx.work.Worker
++import androidx.work.WorkInfo
+ import androidx.work.WorkManager
+ import androidx.work.WorkerParameters
+ import androidx.work.ListenableWorker
+@@ -141,14 +143,18 @@ public final class UNUserNotificationCenter {
+         // Get the work manager.
+         let workManager = WorkManager.getInstance(activity)
+         
+-        // Add the notification work request to the work manager.
++        // Add the notification work request to the work manager. As on iOS, a request replaces the pending
++        // request with its identifier: unique work replaces the work enqueued under its name. Cancelling by
++        // tag first also replaces work that carries the identifier only as a tag, which SkipUI versions
++        // without unique requests enqueued once per call, so an app update clears their duplicates.
+         let workData = dataBuilder.build()
+         let workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+             .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
+             .setInputData(workData)
+             .addTag(request.identifier)
+             .build()
+-        workManager.enqueue(workRequest)
++        workManager.cancelAllWorkByTag(request.identifier)
++        workManager.enqueueUniqueWork(UNUserNotificationCenter.uniqueWorkName(request.identifier), ExistingWorkPolicy.REPLACE, workRequest)
+         
+         // Add the notification identifier to the shared preferences to be able to cancel it later.
+         if let triggerMillis = nextDate?.currentTimeMillis {
+@@ -166,7 +172,14 @@ public final class UNUserNotificationCenter {
+     // SKIP @bridge
+     public func pendingNotificationRequests() async -> [Any /* UNNotificationRequest */] {
+         #if SKIP
+-        return getPendingNotificationRequests()
++        // Queued work is pending whatever its saved date says: WorkManager can run a request after its
++        // trigger date, and a request with no saved date has none to compare.
++        var requests = getPendingNotificationRequests()
++        let saved = Set(requests.compactMap { ($0 as? UNNotificationRequest)?.identifier })
++        for identifier in queuedNotificationIdentifiers() where !saved.contains(identifier) {
++            requests.append(UNNotificationRequest(identifier: identifier, content: UNMutableNotificationContent(), trigger: nil))
++        }
++        return requests
+         #else
+         fatalError()
+         #endif
+@@ -185,12 +198,13 @@ public final class UNUserNotificationCenter {
+         // Get the work manager.
+         let workManager = WorkManager.getInstance(activity)
+         
+-        // Cancel all pending notifications using the work manager.
++        // Cancel the work of every identifier, whatever its saved date: work can still be queued after its
++        // trigger date, and cancelling work that has already run does nothing. Only a request that has not
++        // reached its date leaves the saved list, which also lists delivered notifications.
+         let now = System.currentTimeMillis()
+         for identifier in identifiers {
+-            let triggerTime = preferences.getLong("date_" + identifier, 0)
+-            if triggerTime > now {
+-                workManager.cancelAllWorkByTag(identifier)
++            workManager.cancelAllWorkByTag(identifier)
++            if preferences.getLong("date_" + identifier, 0) > now {
+                 ids.remove(identifier)
+                 editor.remove("date_" + identifier)
+             }
+@@ -210,6 +224,11 @@ public final class UNUserNotificationCenter {
+         let pendingNotifications = getPendingNotificationRequests()
+         let identifiers = pendingNotifications.compactMap { ($0 as? UNNotificationRequest)?.identifier }
+         removePendingNotificationRequests(withIdentifiers: identifiers)
++        // Every notification's work carries its worker's class name as a tag, so this also cancels work
++        // whose identifier the saved list does not hold.
++        if let activity = UIApplication.shared.androidActivity {
++            WorkManager.getInstance(activity).cancelAllWorkByTag(UNUserNotificationCenter.notificationWorkTag)
++        }
+         #else
+         fatalError()
+         #endif
+@@ -277,6 +296,36 @@ public final class UNUserNotificationCenter {
+     }
+ 
+     #if SKIP
++    /// The tag WorkManager gives every notification's work: its worker's class name.
++    private static let notificationWorkTag = NotificationWorker.self.java.name
++
++    /// The unique work name of the request with `identifier`.
++    private static func uniqueWorkName(_ identifier: String) -> String {
++        return "__skip_usernotifications." + identifier
++    }
++
++    /// The identifiers of the notifications whose work has not run yet.
++    private func queuedNotificationIdentifiers() -> [String] {
++        guard let activity = UIApplication.shared.androidActivity else { return [] }
++        let workInfos = WorkManager.getInstance(activity).getWorkInfosByTag(UNUserNotificationCenter.notificationWorkTag).get()
++        var identifiers: [String] = []
++        let iterator = workInfos.iterator()
++        while iterator.hasNext() {
++            let workInfo = iterator.next() as! WorkInfo
++            guard workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.BLOCKED else {
++                continue
++            }
++            let tags = workInfo.tags.iterator()
++            while tags.hasNext() {
++                let tag = tags.next() as! String
++                if tag != UNUserNotificationCenter.notificationWorkTag && !identifiers.contains(tag) {
++                    identifiers.append(tag)
++                }
++            }
++        }
++        return identifiers
++    }
++
+     private func getAllNotificationRequests() -> [(id: String, timestamp: Long)] {
+         guard let activity = UIApplication.shared.androidActivity else { return [] }
+         let preferences = activity.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
