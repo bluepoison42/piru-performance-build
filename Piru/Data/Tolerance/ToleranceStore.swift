@@ -801,6 +801,8 @@ final class ToleranceStore {
             let ke: Double
             let ka: Double
             let prefactorNanomolar: Double
+            /// Set for a capacity-limited dose (ethanol) — see ``Contributor/track``.
+            let track: PKModel.ConcentrationTrack?
             let bestTargetByClass: [ReceptorClasses.ReceptorClass: PharmacologyParameters.TargetEngagement]
         }
 
@@ -828,23 +830,40 @@ final class ToleranceStore {
         ) -> DoseExposure? {
             guard sourceParams.canComputeOccupancy,
                   let vdPerKg = sourceParams.vdLPerKg, let mw = sourceParams.molarMassGramsPerMole,
-                  let f = sourceParams.bioavailabilityFraction, let halfLife = sourceParams.halfLifeMinutes
+                  let f = sourceParams.bioavailabilityFraction
             else { return nil }
             let vd = vdPerKg * weightKg
-            guard vd > 0, mw > 0, halfLife > 0 else { return nil }
-            let ke = PKModel.ke(fromHalfLifeMinutes: halfLife)
+            guard vd > 0, mw > 0 else { return nil }
+            // Capacity-limited elimination (ethanol): the dose's whole concentration curve is
+            // integrated once here from Vmax/Km/Vd/ka and carried on the contributor, because no
+            // (ke, ka) pair describes a decline that is linear rather than exponential. A substance
+            // with a half-life never reaches this branch — see `PharmacologyParameters.saturableElimination`.
+            let track = sourceParams.saturableTrackNanomolar(doseMg: doseMg, weightKg: weightKg)
+            guard track != nil || (sourceParams.halfLifeMinutes ?? 0) > 0 else { return nil }
+            let halfLife = sourceParams.halfLifeMinutes ?? 0
+            let ke = track == nil ? PKModel.ke(fromHalfLifeMinutes: halfLife) : 0
             // §3: a real absorption rate from onset/Tmax where the substance carries one, else the
             // `4·ke` elimination-derived default. `peakOccupancy`, `decayWindowMinutes`, and the per-cell
             // integration all read this same `ka`, so timing/amplitude stay internally consistent.
-            let ka = sourceParams.tmaxMinutes.map { PKModel.estimateKa(timeToPeak: $0, ke: ke) }
-                ?? PKModel.defaultKa(ke: ke)
+            let ka = if let saturable = sourceParams.saturableElimination, track != nil {
+                saturable.kaPerMin
+            } else {
+                sourceParams.tmaxMinutes.map { PKModel.estimateKa(timeToPeak: $0, ke: ke) }
+                    ?? PKModel.defaultKa(ke: ke)
+            }
             // Only badge the prediction down for a *guessed onset*: with no Tmax we fall back to `4·ke`
-            // (unchanged behavior), so the onset contributes no uncertainty (`.high` = min no-op).
-            let onsetConfidence: ConfidenceTier = sourceParams.tmaxMinutes == nil ? .high : sourceParams.tmaxConfidence
+            // (unchanged behavior), so the onset contributes no uncertainty (`.high` = min no-op). A
+            // saturable dose rides the absorption rate its own parameter set states, graded with it.
+            let onsetConfidence: ConfidenceTier = if let saturable = sourceParams.saturableElimination, track != nil {
+                saturable.confidence
+            } else {
+                sourceParams.tmaxMinutes == nil ? .high : sourceParams.tmaxConfidence
+            }
             // free molar = fu·(F·dose·scale/Vd)·shape /1000 /MW ; ×1e9 → nM. One concentration()
             // call per contributor per step then multiplies this prefactor. `fractionUnbound` corrects
             // total→free plasma concentration so occupancy matches the assay conditions (Kᵢ is measured
             // against free drug). `doseScale` converts a logged preparation mass to active-compound mass.
+            // A saturable dose carries its concentrations on the track instead, already in nM.
             let fu = sourceParams.fractionUnbound
             let prefactorNanomolar = fu * (f * doseMg * sourceParams.doseScale / vd) / 1_000 / mw * 1e9
 
@@ -873,22 +892,27 @@ final class ToleranceStore {
                 if let restrictToClass, cls != restrictToClass { continue }
                 guard seenReceptors.insert("\(cls)|\(engagement.targetBase)").inserted else { continue }
                 // Meaningfulness gate: skip engagements barely occupied at this dose (weak off-targets).
-                let peak = ToleranceStore.peakOccupancy(
-                    prefactorNanomolar: prefactorNanomolar, ke: ke, ka: ka,
-                    halfMaxNanomolar: engagement.halfMaxNanomolar,
-                )
+                let peak = if let track {
+                    PKModel.occupancy(concentration: track.peakValue, halfMax: engagement.halfMaxNanomolar)
+                } else {
+                    ToleranceStore.peakOccupancy(
+                        prefactorNanomolar: prefactorNanomolar, ke: ke, ka: ka,
+                        halfMaxNanomolar: engagement.halfMaxNanomolar,
+                    )
+                }
                 guard peak >= ToleranceStore.minMeaningfulOccupancy else { continue }
                 peaksByClass[cls, default: []].append(peak)
 
                 if bestTargetByClass[cls] == nil { bestTargetByClass[cls] = engagement }
                 let expiry = onset + ToleranceStore.decayWindowMinutes(
                     ke: ke, ka: ka, prefactorNanomolar: prefactorNanomolar,
-                    halfMaxNanomolar: engagement.halfMaxNanomolar,
+                    halfMaxNanomolar: engagement.halfMaxNanomolar, track: track,
                 )
                 contributorsByClass[cls, default: []].append(
                     Contributor(
                         onset: onset, expiry: expiry, ke: ke, ka: ka,
                         prefactorNanomolar: prefactorNanomolar,
+                        track: track,
                         halfMaxNanomolar: engagement.halfMaxNanomolar,
                         confidence: Swift.min(sourceParams.vdConfidence, sourceParams.bioavailabilityConfidence, sourceParams.doseScaleConfidence, onsetConfidence, engagement.confidence, confidenceFloor),
                         escalation: escalation,
@@ -902,7 +926,10 @@ final class ToleranceStore {
                 }
                 substanceRecency[cls, default: [:]][loggedName] = onset
             }
-            return DoseExposure(ke: ke, ka: ka, prefactorNanomolar: prefactorNanomolar, bestTargetByClass: bestTargetByClass)
+            return DoseExposure(
+                ke: ke, ka: ka, prefactorNanomolar: prefactorNanomolar, track: track,
+                bestTargetByClass: bestTargetByClass,
+            )
         }
 
         /// Register one dose as a tolerance modulator for any class it modulates. Presence is
@@ -914,12 +941,13 @@ final class ToleranceStore {
                 for edge in ToleranceModulation.edges(forModulatorClass: modClass) {
                     let expiry = onset + ToleranceStore.decayWindowMinutes(
                         ke: exposure.ke, ka: exposure.ka, prefactorNanomolar: exposure.prefactorNanomolar,
-                        halfMaxNanomolar: best.halfMaxNanomolar,
+                        halfMaxNanomolar: best.halfMaxNanomolar, track: exposure.track,
                     )
                     modulatorsByClass[edge.affectedClass, default: []].append(
                         ModulatorContributor(
                             onset: onset, expiry: expiry, ke: exposure.ke, ka: exposure.ka,
                             prefactorNanomolar: exposure.prefactorNanomolar,
+                            track: exposure.track,
                             halfMaxNanomolar: best.halfMaxNanomolar,
                             muFactor: edge.muFactor,
                         ),
@@ -975,7 +1003,8 @@ final class ToleranceStore {
                     contributorsByClass[cls, default: []].append(
                         Contributor(
                             onset: onset, expiry: expiry, ke: keMetabolite, ka: kaMetabolite,
-                            prefactorNanomolar: prefactor, halfMaxNanomolar: best.halfMaxNanomolar,
+                            prefactorNanomolar: prefactor, track: nil,
+                            halfMaxNanomolar: best.halfMaxNanomolar,
                             confidence: confidence, escalation: escalation,
                             suppressesSynthesis: sourceParams.suppressesSerotoninSynthesis,
                             intrinsicEfficacy: sourceParams.intrinsicEfficacy,
@@ -1126,8 +1155,7 @@ final class ToleranceStore {
     private nonisolated static func combinedDrive(_ contributors: [Contributor], atMinutes t: Double) -> Double {
         var sumRatio = 0.0
         for c in contributors where t >= c.onset && c.halfMaxNanomolar > 0 {
-            let conc = c.prefactorNanomolar * PKModel.concentration(at: t - c.onset, ke: c.ke, ka: c.ka)
-            sumRatio += conc / c.halfMaxNanomolar
+            sumRatio += c.concentrationNanomolar(afterMinutes: t - c.onset) / c.halfMaxNanomolar
         }
         return sumRatio
     }
@@ -1156,7 +1184,7 @@ final class ToleranceStore {
             t += stepMinutes
         }
         for c in contributors {
-            let tp = c.onset + PKModel.tmax(ke: c.ke, ka: c.ka)
+            let tp = c.onset + c.peakOffsetMinutes
             if tp >= lo, tp <= endMinutes {
                 peak = Swift.max(peak, combinedDrive(contributors, atMinutes: tp))
             }
@@ -1271,6 +1299,11 @@ final class ToleranceStore {
         let ke: Double
         let ka: Double
         let prefactorNanomolar: Double
+        /// The dose's integrated free-concentration curve in nM, for a substance whose elimination is
+        /// **capacity-limited** (ethanol): `dC/dt = absorption − Vmax·C/(Km+C)` has no closed form, so
+        /// the shape is sampled once per dose and read back by interpolation. `nil` for the
+        /// first-order contributors, which multiply ``prefactorNanomolar`` by the Bateman shape.
+        let track: PKModel.ConcentrationTrack?
         let halfMaxNanomolar: Double
         let confidence: ConfidenceTier
         /// Dose-relative **escalation** factor `dose ÷ the substance's heavy ceiling` for the dose
@@ -1290,6 +1323,20 @@ final class ToleranceStore {
         /// excluded from ``scheduleRegularityFactor`` (else a regular daily course reads as irregular,
         /// its cadence halved by the interleaved metabolite onsets).
         var isMetabolite = false
+
+        /// Free concentration (nM) `dt` minutes after this contributor's onset — the one place the
+        /// two elimination shapes meet, so every consumer (the drive sum, the peak, the active
+        /// window) reads a capacity-limited dose the same way it reads a first-order one.
+        func concentrationNanomolar(afterMinutes dt: Double) -> Double {
+            guard dt >= 0 else { return 0 }
+            if let track { return track.value(atMinutes: dt) }
+            return prefactorNanomolar * PKModel.concentration(at: dt, ke: ke, ka: ka)
+        }
+
+        /// Minutes from onset to this contributor's peak concentration.
+        var peakOffsetMinutes: Double {
+            track?.peakMinutes ?? PKModel.tmax(ke: ke, ka: ka)
+        }
     }
 
     /// One co-active substance's tolerance-modulation contribution at one affected class.
@@ -1299,8 +1346,17 @@ final class ToleranceStore {
         let ke: Double
         let ka: Double
         let prefactorNanomolar: Double
+        /// The integrated curve for a capacity-limited modulator — see ``Contributor/track``.
+        let track: PKModel.ConcentrationTrack?
         let halfMaxNanomolar: Double
         let muFactor: Double
+
+        /// Free concentration (nM) `dt` minutes after onset, by whichever elimination shape applies.
+        func concentrationNanomolar(afterMinutes dt: Double) -> Double {
+            guard dt >= 0 else { return 0 }
+            if let track { return track.value(atMinutes: dt) }
+            return prefactorNanomolar * PKModel.concentration(at: dt, ke: ke, ka: ka)
+        }
     }
 
     /// Minutes after onset by which this contributor's occupancy has decayed below
@@ -1311,9 +1367,18 @@ final class ToleranceStore {
     /// `ka/(ka−ke)` coefficient over-estimates the amplitude, so the window errs long (safe).
     private nonisolated static func decayWindowMinutes(
         ke: Double, ka: Double, prefactorNanomolar: Double, halfMaxNanomolar: Double,
-        epsOcc: Double = occupancyPruneEpsilon,
+        epsOcc: Double = occupancyPruneEpsilon, track: PKModel.ConcentrationTrack? = nil,
     ) -> Double {
-        guard ke > 0, ka > 0, halfMaxNanomolar > 0, prefactorNanomolar > 0 else { return 0 }
+        guard halfMaxNanomolar > 0 else { return 0 }
+        // A capacity-limited dose states its own window: the concentration reaches zero rather than
+        // trailing an exponential, so the grid's crossing is the window, with no tail to extrapolate.
+        if let track {
+            return Swift.max(
+                track.peakMinutes * 1.5,
+                track.endMinutes(atOrBelow: (epsOcc / (1 - epsOcc)) * halfMaxNanomolar),
+            )
+        }
+        guard ke > 0, ka > 0, prefactorNanomolar > 0 else { return 0 }
         let tmax = PKModel.tmax(ke: ke, ka: ka)
         let cThreshold = (epsOcc / (1 - epsOcc)) * halfMaxNanomolar
         let coeff = abs(ka - ke) < 1e-10 ? 1 : ka / (ka - ke)
@@ -1456,8 +1521,7 @@ final class ToleranceStore {
                     writeIndex += 1
                     if contributor.escalation > maxEscalation { maxEscalation = contributor.escalation }
                     if contributor.suppressesSynthesis { anySynthesisSuppressor = true }
-                    let concentration = contributor.prefactorNanomolar
-                        * PKModel.concentration(at: midpoint - contributor.onset, ke: contributor.ke, ka: contributor.ka)
+                    let concentration = contributor.concentrationNanomolar(afterMinutes: midpoint - contributor.onset)
                     if concentration > 0 {
                         let ratio = concentration / contributor.halfMaxNanomolar
                         sumRatio += ratio
@@ -1484,8 +1548,7 @@ final class ToleranceStore {
                         if modulator.expiry < midpoint { continue }
                         if modWriteIndex != readIndex { activeModulators[modWriteIndex] = modulator }
                         modWriteIndex += 1
-                        let freeConcentration = modulator.prefactorNanomolar
-                            * PKModel.concentration(at: midpoint - modulator.onset, ke: modulator.ke, ka: modulator.ka)
+                        let freeConcentration = modulator.concentrationNanomolar(afterMinutes: midpoint - modulator.onset)
                         if freeConcentration > 0 {
                             let presence = freeConcentration / (modulator.halfMaxNanomolar + freeConcentration)
                             modulation *= (1 - (1 - modulator.muFactor) * presence)
