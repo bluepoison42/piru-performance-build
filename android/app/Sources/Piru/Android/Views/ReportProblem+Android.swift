@@ -11,7 +11,6 @@ import SkipBridge
 import SwiftUI
 
 private enum ReportProblemLinks {
-    static let discord = URL(string: "https://discord.gg/hbpMZhPSdx")!
     static let issues = URL(string: "https://github.com/kageroumado/piru/issues/new")!
     static let guide = URL(string: "https://github.com/kageroumado/piru/blob/main/BUG-REPORTS.md")!
 }
@@ -52,7 +51,7 @@ struct ReportProblemView: View {
             .listRowBackground(CardBackground())
 
             Section {
-                Link(destination: ReportProblemLinks.discord) {
+                Link(destination: DiscordInvite.url) {
                     Label("#bug-reports on Discord", systemImage: "arrow.up.right")
                 }
                 Link(destination: ReportProblemLinks.issues) {

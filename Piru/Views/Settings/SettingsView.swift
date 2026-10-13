@@ -11,6 +11,7 @@ struct SettingsView: View {
                     SubstanceNamesSection()
                 }
                 ScreensSection()
+                DiscordSection()
                 AboutSection()
                 AppVersionFooter()
             }

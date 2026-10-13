@@ -22201,6 +22201,35 @@
         }
       }
     },
+    "Check for Updates" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar actualizaciones"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar actualizaciones"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检查更新"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢查更新"
+          }
+        }
+      }
+    },
     "Check how substances interact" : {
       "localizations" : {
         "es" : {
@@ -29535,6 +29564,34 @@
         }
       }
     },
+    "Discord" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discord"
+          }
+        }
+      }
+    },
     "Dismiss" : {
       "localizations" : {
         "es" : {
@@ -31218,6 +31275,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "下降百分之 %lld"
+          }
+        }
+      }
+    },
+    "Download" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下載"
           }
         }
       }
@@ -40383,6 +40469,34 @@
         }
       }
     },
+    "Get help with the app or send your suggestions on our Discord server." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pide ayuda con la app o envía tus sugerencias en nuestro servidor de Discord."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pide ayuda con la app o envía tus sugerencias en nuestro servidor de Discord."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在我们的 Discord 服务器上获取应用帮助，或提出你的建议。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在我們的 Discord 伺服器上取得應用程式協助，或提出你的建議。"
+          }
+        }
+      }
+    },
     "Get Started" : {
       "localizations" : {
         "es" : {
@@ -46146,6 +46260,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "它估計一個水平，從不建議劑量或目標。你的化驗結果讓模型貼合你的測量值，但這並不能證明各次測量之間的準確性。參考線是你自己的。"
+          }
+        }
+      }
+    },
+    "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está en GitHub, de donde viene Piru, e instalarla sobre esta versión conserva tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está en GitHub, de donde viene Piru, e instalarla sobre esta versión conserva tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新版本在 GitHub 上，也就是 Piru 的来源；直接安装在当前版本之上会保留你的日记。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新版本在 GitHub 上，也就是 Piru 的來源；直接安裝在目前版本之上會保留你的日記。"
           }
         }
       }
@@ -59989,6 +60132,35 @@
         }
       }
     },
+    "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una vez al día, Piru le pregunta a GitHub cuál es la versión más reciente. No se envía nada sobre ti ni sobre tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una vez al día, Piru le pregunta a GitHub cuál es la versión más reciente. No se envía nada sobre ti ni sobre tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 每天向 GitHub 查询一次最新版本。不会发送任何关于你或你日记的信息。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 每天向 GitHub 查詢一次最新版本。不會傳送任何關於你或你日記的資訊。"
+          }
+        }
+      }
+    },
     "Once daily" : {
       "localizations" : {
         "es" : {
@@ -63245,6 +63417,35 @@
         }
       }
     },
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca la envía a ninguna parte. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una carpeta, en este teléfono o en Google Drive, Dropbox u otra app en la nube, y Piru guardará allí una copia cifrada de tu diario cada vez que salgas de la app. Solo tu frase de contraseña la abre, y la app en la nube se encarga de subirla: Piru nunca la envía a ninguna parte. Para restaurarla en un teléfono nuevo, elige aquí la misma carpeta."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不把它发送到任何地方。在新手机上恢复时，在这里选择同一个文件夹即可。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不把它傳送到任何地方。在新手機上還原時，在這裡選擇同一個資料夾即可。"
+          }
+        }
+      }
+    },
     "Pick a longer time range to see your history." : {
       "localizations" : {
         "es" : {
@@ -63493,6 +63694,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Piru"
+          }
+        }
+      }
+    },
+    "Piru %@ is available" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ está disponible"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ está disponible"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ 已推出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru %@ 已推出"
           }
         }
       }
