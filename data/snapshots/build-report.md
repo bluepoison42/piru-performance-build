@@ -1,29 +1,30 @@
 # Piru SQLite build report
 
-Built 2026-10-12.1 → `Piru/Data/piru-substances.sqlite` (18,092,032 bytes, sha256 `64e94437d5a476373bd9e171c8416b474890b3d756bff19081ff9c21e9b2d794`)
+Built 2026-10-13.1 → `Piru/Data/piru-substances.sqlite` (20,992,000 bytes, sha256 `2f9835a93efbe892e49d3d089a8c412e54df9ce9e98b9c81b085410ae82bda30`)
 
 ## Row counts
 
 | Table | Rows |
 |---|---|
 | substances | 1,689 |
-| aliases | 5,726 |
+| aliases | 5,729 |
 | sources | 18 |
-| source_field_priority | 2 |
-| citations | 2,484 |
+| source_field_priority | 1 |
+| citations | 2,483 |
 | categories | 1,559 |
 | tags | 7,053 |
-| dose_ranges | 2,739 |
-| durations | 10,471 |
+| dose_ranges | 2,740 |
+| durations | 6,559 |
+| drug_community_timelines | 750 |
 | half_lives | 717 |
 | mechanisms_summary | 1,212 |
 | effects | 2,952 |
-| subjective_effects | 23,645 |
+| subjective_effects | 23,664 |
 | subjective_effect_concepts | 506 |
 | subjective_effect_concept_aliases | 1,178 |
 | tolerance | 322 |
 | diazepam_equivalents | 32 |
-| bindings | 1,464 |
+| bindings | 1,459 |
 | functional_assays | 179 |
 | biased_agonism | 23 |
 | receptor_oligomers | 8 |
@@ -98,9 +99,9 @@ Identifier columns a source was allowed to overwrite because the stored row cont
 | Source | Dose ranges | Bindings | Categories | Tags |
 |---|---|---|---|---|
 | piru-curated | 220 | 444 | 650 | 2,268 |
-| peer-review-primary | 0 | 1,008 | 0 | 1,582 |
+| peer-review-primary | 0 | 1,003 | 0 | 1,582 |
 | dosewiki | 290 | 12 | 0 | 0 |
-| drug.community | 819 | 0 | 0 | 124 |
+| drug.community | 820 | 0 | 0 | 124 |
 | psychonautwiki | 377 | 0 | 63 | 316 |
 | tripsit | 574 | 0 | 411 | 1,266 |
 | dailymed | 0 | 0 | 0 | 0 |
