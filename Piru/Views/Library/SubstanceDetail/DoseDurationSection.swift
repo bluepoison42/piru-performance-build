@@ -216,8 +216,10 @@ struct DoseDurationSection: View {
                     // on the screen is a card, and this was a pink bar sitting on
                     // the page between two of them. Inside, under the sources, it
                     // reads as "…and here is what you do with this".
+                    // A full section gap above it: the action is set apart from
+                    // the reference lines it follows, not stacked onto them.
                     RecordEntryButton(substanceName: substance.name)
-                        .padding(.top, Spacing.xl)
+                        .padding(.top, Spacing.xxxl)
                 }
                 .listRowSeparator(.hidden)
             } header: {
@@ -284,7 +286,7 @@ struct DoseDurationSection: View {
     }
 }
 
-/// "Compare N other sources ›" — the entry point to ``DoseSourceComparisonView``.
+/// "Compare all N sources ›" — the entry point to ``DoseSourceComparisonView``.
 private struct CompareSourcesRow: View {
     let substanceName: String
     let route: RouteOfAdministration
@@ -296,23 +298,26 @@ private struct CompareSourcesRow: View {
         Button {
             navigator.present(.doseSources(substance: substanceName, route: route))
         } label: {
-            HStack(spacing: Spacing.xs) {
-                Text("Compare all \(sourceCount) sources", comment: "Opens the dose-source comparison")
-                Image(systemName: "chevron.right")
-                    .font(.caption2.weight(.semibold))
-                    .accessibilityHidden(true)
+            // Built as one more line of the source list: the same glyph column
+            // (its glyph hidden), gap, text size and spacing as the source rows,
+            // so the text starts on their label column at every text size.
+            HStack(spacing: SourceAttributionRow.glyphSpacing) {
+                SourceAttributionGlyph()
+                    .hidden()
+                HStack(spacing: Spacing.xs) {
+                    Text("Compare all \(sourceCount) sources", comment: "Opens the dose-source comparison")
+                    Image(systemName: "chevron.right")
+                        .accessibilityHidden(true)
+                }
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.accent)
+                Spacer(minLength: 0)
             }
-            .font(.caption.weight(.semibold))
-            .foregroundStyle(Theme.accent)
-            // Matches SourceAttributionRow's own leading inset — the checkmark
-            // glyph's width plus its gap — so this line starts where the source
-            // names above it start instead of hanging off to their left.
-            .padding(.leading, 22)
-            .padding(.top, Spacing.xxs)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, SourceAttributionRow.lineVerticalPadding)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .padding(.top, SourceAttributionRow.topGap)
     }
 }
 
