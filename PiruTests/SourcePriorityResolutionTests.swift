@@ -56,8 +56,7 @@ struct SourcePriorityResolutionTests {
 
 /// `source_field_priority` — a source's rank for ONE field, where its material
 /// there differs from what its overall position says. dose.wiki's reviewed
-/// summaries rise above the published literature for `descriptions`, and
-/// drug.community's point-estimate timelines sink to the end for `durations`.
+/// summaries rise above the published literature for `descriptions`.
 @Suite("Per-field source priority")
 struct SourceFieldPriorityTests {
     @Test
@@ -104,13 +103,14 @@ struct SourceFieldPriorityTests {
 
     @Test
     @MainActor
-    func `drug.community's timeline ranks beneath the wikis`() throws {
+    func `drug.community never supplies a session timeline`() throws {
         let (store, tempDir) = try makeIsolatedSubstanceStore()
         defer { tearDownIsolatedSubstanceStore(store, tempDir: tempDir) }
 
-        // drug.community outranks both wikis in the user's order, and its
-        // timelines are point estimates where theirs are intervals — so a
-        // `durations` override drops it beneath them for phases alone.
+        // drug.community outranks both wikis in the user's order, yet its
+        // timelines are reference rows (`drug_community_timelines`) whose
+        // start/end fields share no declared clock origin, so they never
+        // become `durations` and the wikis' intervals drive the session model.
         for (name, route) in [
             ("Heroin", RouteOfAdministration.intravenous),
             ("Methamphetamine", .inhalation),
@@ -120,8 +120,8 @@ struct SourceFieldPriorityTests {
             #expect(source != "drug.community", "\(name) \(route) resolved \(source)")
         }
 
-        // The number the override exists for: PsychonautWiki puts intravenous
-        // heroin's come-up at 0–5 seconds, drug.community at 29.5 minutes.
+        // PsychonautWiki puts intravenous heroin's come-up at 0–5 seconds;
+        // differencing drug.community's boundaries would read 29.5 minutes.
         let iv = try #require(
             store.lookup("Heroin")?.routes.first { $0.route == .intravenous },
             "Heroin has no intravenous route",
@@ -132,13 +132,13 @@ struct SourceFieldPriorityTests {
 
     @Test
     @MainActor
-    func `The override moves durations and not doses`() throws {
+    func `drug.community keeps its dose rank without a timeline`() throws {
         let (store, tempDir) = try makeIsolatedSubstanceStore()
         defer { tearDownIsolatedSubstanceStore(store, tempDir: tempDir) }
 
         // drug.community's dose ladders keep its ordinary rank. Smoked heroin
         // has no reviewed dose.wiki ladder, so drug.community's outranks
-        // PsychonautWiki's while its timeline still sits beneath it.
+        // PsychonautWiki's, while the timeline comes from another source.
         let prov = try #require(store.provenance(forSubstanceName: "Heroin"))
         #expect(prov.routesBySource[.inhalation]?.doseSource == "drug.community")
         #expect(prov.routesBySource[.inhalation]?.durationSource != "drug.community")

@@ -434,7 +434,52 @@ The rows today:
 | field | source | beneath | why |
 |---|---|---|---|
 | `descriptions` | dosewiki | piru-curated | a reviewed summary written for its article beats a copied wiki lead and machine-translated Chinese |
-| `durations` | drug.community | the last source in `SOURCES` | its timelines are single boundaries, so every derived phase is a point (2,555 of 3,988 rows min == max); beneath every source that states an interval it fills the routes nobody else describes |
+
+The substance.wiki duration importer retains every full or partial timing entry
+(`duration_curves`), every study timeline (`duration_studies`) and every typed
+duration chart (`duration_charts`) in `drug_community_timelines`, one row each,
+with `kind` `duration_curve`, `partial_duration_curve`, `duration_study` or
+`duration_chart`. Each row preserves the original entry, source route/formulation,
+notes, citations, source profile digest, and position in a hash-bound snapshot.
+Duplicate routes stay distinct. The fetch metadata binds the local file digest
+to the immutable release and records the digest of every dataset it verified.
+
+These are reference timelines, displayed separately from `DurationProfile`:
+legacy start/end fields do not establish compatible clock origins, unknowns stay
+unknown, and neutral after-effects are not positive afterglow. No inferred phase
+lengths enter the session model. Study means, standard deviations and participant
+ranges retain their stated context; a maximum-response time is not a plateau.
+Source exceptions stay attached to reference rows. Whole-source refreshes remove
+withdrawn entries, and source-disabled readers return no reference rows.
+
+Typed charts (`drug-community-duration-chart/1`) come in two kinds, and the API
+contract says neither is a personal duration input. A `subjective_effect` chart
+carries its `evidence` class (`published_timing`, `anecdotal_timing`,
+`extrapolated_timing`); an extrapolated one adds a `hypothesis` block
+(`extrapolated_not_validated`, per-phase confidence, attribution), and its
+`visualization` is a schematic whose intensity was never measured. A
+`plasma_concentration` chart is a `parameterized_model`: a one-compartment curve
+of the parent drug in plasma from a stated t_max and half-life, a different
+quantity from felt effects. The importer stores both verbatim, limitations,
+sources and assumptions included, and the detail page labels each by its
+evidence class. None of their numbers reach `durations`, `half_lives` or the
+effect curve. An unknown chart version or kind fails the build.
+
+The profile's `half_life` and `duration` fields are prose, including explicit
+unknowns ("No applicable human elimination half-life was verified"). The build
+parses neither: `duration` is kept beside each reference row as published, and
+`half_life` is not read. A profile whose `legacy_intensity_spectrum_policy` has
+`status: excluded` gets no spectrum levels or reported effects from the
+`intensity-spectra` dataset, because the source itself withdrew that spectrum.
+
+Run `python3 pipeline/build/tests/test_drug_community_timelines.py` for the real
+importer/SQLite/prose-pass regressions. `WikiTimingRecordTests` and
+`WikiTimingReadModelTests` belong to the native Piru test suite and are also
+exposed by the `WikiTimingTests` target in `android/PiruCore`. On Linux, testing
+that package can also build the separate smoke executable; a failure in its
+Foundation predicate macros is not a result for the timeline tests.
+A release still requires a complete database rebuild, the matching published DB
+and manifest, and native UI verification on the supported app platforms.
 
 drug.community's dose ladders are real ranges and keep their overall rank,
 directly beneath dose.wiki. dose.wiki leads the community sources: only its
