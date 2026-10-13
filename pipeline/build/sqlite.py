@@ -8733,6 +8733,9 @@ class Build:
         # withdrawals. Never leave old inferred phase lengths behind.
         for table in ("drug_community_timelines", "durations"):
             self.cur.execute(f"DELETE FROM {table} WHERE source_id=?", (self.source_ids[slug],))
+        # Profiles whose legacy intensity spectrum the source itself excluded
+        # (unreviewed lineage); read by ingest_drug_community_experiential.
+        self.dc_spectrum_excluded: set[str] = set()
         for s in sorted(
             data,
             key=lambda x: (
@@ -8755,6 +8758,9 @@ class Build:
                 "UPDATE substances SET drug_community_slug=COALESCE(drug_community_slug, ?) WHERE id=?",
                 (dc_slugify(raw), sid),
             )
+            spectrum_policy = s.get("legacy_intensity_spectrum_policy")
+            if isinstance(spectrum_policy, dict) and spectrum_policy.get("status") == "excluded":
+                self.dc_spectrum_excluded.add(dc_slugify(raw))
             if s.get("psychoactive_class"):
                 self.add_category(sid, slug, s["psychoactive_class"])
             elif s.get("categories"):
@@ -8859,10 +8865,14 @@ class Build:
             effects_by_slug = payload.get("drugEffects") or {}
 
         spectra = json.loads(spectra_path.read_text()) if spectra_path.exists() else []
+        excluded = getattr(self, "dc_spectrum_excluded", set())
         for rec in spectra:
             dc_slug = rec.get("drug_slug")
             spectrum = rec.get("spectrum_data") or {}
             if not dc_slug or not spectrum:
+                continue
+            if dc_slug in excluded:
+                self.stats["dc_spectrum_excluded_by_source"] += 1
                 continue
             sid = _sid_for(dc_slug)
             if sid is None:

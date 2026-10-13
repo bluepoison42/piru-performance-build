@@ -3,6 +3,13 @@
 The published legacy fields do not declare a shared clock origin. In particular,
 start/end are not a license to subtract across phases, and after_effects does not
 mean positive afterglow. Study statistics have their own, explicit contract.
+
+Typed duration charts (``duration_charts``) are reference material too. The API
+contract says they "are never personal duration calculation inputs": an
+anecdotal or extrapolated subjective schematic carries its own evidence class
+and hypothesis status, and a plasma-concentration model describes the parent
+drug in plasma, which is a different quantity from felt effects. Neither feeds
+``durations``, ``half_lives`` or the effect curve.
 """
 
 from __future__ import annotations
@@ -10,6 +17,9 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+
+DURATION_CHART_SCHEMA = "drug-community-duration-chart/1"
+DURATION_CHART_KINDS = frozenset({"subjective_effect", "plasma_concentration"})
 
 
 def canonical_json(value: object) -> str:
@@ -46,17 +56,25 @@ def reference_timelines(record: dict, snapshot_sha256: str):
     for collection, representations in (
         ("duration_curves", ("duration_curve", "partial_duration_curve")),
         ("duration_studies", ("duration_study",)),
+        ("duration_charts", ("duration_chart",)),
     ):
         for index, entry in enumerate(record.get(collection) or []):
             if not isinstance(entry, dict):
                 raise ValueError(
                     f"{record.get('drug_name')}: {collection}[{index}] is not an object"
                 )
-            kinds = (
-                representations
-                if collection == "duration_studies"
-                else tuple(key for key in representations if isinstance(entry.get(key), dict))
-            )
+            if collection == "duration_curves":
+                kinds = tuple(key for key in representations if isinstance(entry.get(key), dict))
+            elif collection == "duration_charts":
+                # A chart version or kind this importer has not read is refused
+                # rather than stored under a contract it may not honor.
+                known = (
+                    entry.get("schemaVersion") == DURATION_CHART_SCHEMA
+                    and entry.get("kind") in DURATION_CHART_KINDS
+                )
+                kinds = representations if known else ()
+            else:
+                kinds = representations
             if not kinds:
                 raise ValueError(f"{record.get('drug_name')}: unrecognized {collection}[{index}]")
             for kind in kinds:
@@ -68,6 +86,8 @@ def reference_timelines(record: dict, snapshot_sha256: str):
                     "source_name": record["drug_name"],
                     "route": context.get("route")
                     if kind == "duration_study"
+                    else entry.get("route")
+                    if kind == "duration_chart"
                     else entry.get("method"),
                     "kind": kind,
                     "entry_index": index,

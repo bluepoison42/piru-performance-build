@@ -65,6 +65,13 @@ class TimelineImportTests(unittest.TestCase):
                 for i, entry in enumerate(r.get("duration_studies") or [])
             }
         )
+        expected.update(
+            {
+                (r["drug_name"], i, "duration_chart"): entry
+                for r in records
+                for i, entry in enumerate(r.get("duration_charts") or [])
+            }
+        )
         actual = {
             (r["source_name"], r["entry_index"], r["kind"]): json.loads(r["entry_json"])
             for r in rows
@@ -170,6 +177,114 @@ class TimelineImportTests(unittest.TestCase):
         self.assertEqual(len(merged), 2)
         self.assertEqual({r["substance_id"] for r in merged}, {rows[0]["substance_id"]})
         self.assertEqual({r["source_name"] for r in merged}, {"Fictional one", "Fictional two"})
+
+    def test_duration_charts_stay_reference_material(self):
+        subjective = {
+            "schemaVersion": "drug-community-duration-chart/1",
+            "id": "fictional-oral-hypothesis-v1",
+            "label": "Fictional schematic",
+            "route": "oral",
+            "formulation": None,
+            "time_origin": "single_administration",
+            "sources": [{"title": "Fictional source", "url": "https://example.org/a"}],
+            "limitations": ["Fictional limitation"],
+            "kind": "subjective_effect",
+            "evidence": "extrapolated_timing",
+            "curve": {
+                "reference": "Fictional",
+                "units": "hours",
+                "total_duration": {"min": 12, "max": 30},
+                "onset": {"start": 0.5, "end": 2},
+                "peak": {"start": 2, "end": 6},
+                "offset": {"start": 8, "end": 30},
+            },
+            "hypothesis": {
+                "model_status": "extrapolated_not_validated",
+                "context": "recreational",
+                "confidence": "low",
+                "attribution": "Fictional proposal",
+                "residual_may_exceed_end": True,
+            },
+        }
+        plasma = {
+            "schemaVersion": "drug-community-duration-chart/1",
+            "id": "fictional-oral-parent-plasma-v1",
+            "label": "Fictional plasma model",
+            "route": "oral",
+            "formulation": "fictional tablet",
+            "time_origin": "single_administration",
+            "sources": [{"title": "Fictional label", "url": "https://example.org/b"}],
+            "limitations": ["Plasma concentration is not felt effect"],
+            "kind": "plasma_concentration",
+            "evidence": "parameterized_model",
+            "analyte": {"name": "fictional", "kind": "parent_drug"},
+            "parameters": {"half_life_hours": 75, "tmax_hours": 3, "reported_tmax_hours": [3, 5]},
+            "assumptions": ["Fictional assumption"],
+        }
+        rows = self.ingest(
+            [{"drug_name": "Fictional compound", "duration_charts": [subjective, plasma]}]
+        )
+        self.assertEqual([r["kind"] for r in rows], ["duration_chart", "duration_chart"])
+        self.assertEqual([json.loads(r["entry_json"]) for r in rows], [subjective, plasma])
+        self.assertEqual({r["route"] for r in rows}, {"oral"})
+        for table in ("durations", "half_lives"):
+            self.assertEqual(self.db.execute(f"SELECT count(*) FROM {table}").fetchone()[0], 0)
+
+    def test_unknown_chart_contract_fails_visibly(self):
+        for chart in (
+            {"schemaVersion": "drug-community-duration-chart/2", "kind": "subjective_effect"},
+            {"schemaVersion": "drug-community-duration-chart/1", "kind": "fictional_kind"},
+        ):
+            with self.assertRaisesRegex(ValueError, "unrecognized"):
+                list(
+                    reference_timelines(
+                        {"drug_name": "Fictional", "duration_charts": [chart]}, "snapshot"
+                    )
+                )
+
+    def test_source_excluded_spectrum_is_not_ingested(self):
+        self.ingest(
+            [
+                {
+                    "drug_name": name,
+                    "legacy_intensity_spectrum_policy": {"status": "excluded", "reason": "x"},
+                }
+                if name == "Fictional excluded"
+                else {"drug_name": name}
+                for name in ("Fictional excluded", "Fictional kept")
+            ]
+        )
+        spectrum = {
+            "levels": [
+                {
+                    "name": "light",
+                    "number": 2,
+                    "description": "Fictional",
+                    "commonEffects": [{"name": "fictional", "frequency": 1}],
+                }
+            ]
+        }
+        spectra = Path(self.directory.name) / "spectra.json"
+        spectra.write_text(
+            json.dumps(
+                [
+                    {"drug_slug": slug, "spectrum_data": spectrum}
+                    for slug in ("fictional-excluded", "fictional-kept")
+                ]
+            )
+        )
+        self.build.ingest_drug_community_experiential(
+            spectra, Path(self.directory.name) / "absent.json"
+        )
+        names = {
+            r[0]
+            for r in self.db.execute(
+                "SELECT s.drug_community_slug FROM spectrum_levels l"
+                " JOIN substances s ON s.id = l.substance_id"
+            )
+        }
+        self.assertEqual(names, {"fictional-kept"})
+        self.assertEqual(self.build.stats["dc_spectrum_excluded_by_source"], 1)
 
     def test_release_binding_rejects_snapshot_drift(self):
         self.path.write_text("[]")
