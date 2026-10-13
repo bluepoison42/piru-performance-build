@@ -1,7 +1,7 @@
 import Foundation
 
 /// JSON-serializable representation of ClosedRange<Double>.
-struct CodableRange: Codable {
+nonisolated struct CodableRange: Codable {
     let lower: Double
     let upper: Double
 
