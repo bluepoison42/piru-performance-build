@@ -1,18 +1,19 @@
-Skip has no AttributedString(localized:locale:): on Android String(inflecting:) drops the inflection markup and keeps the phrase
+Skip has no AttributedString(localized:locale:): on Android String(inflecting:) applies AndroidInflection, the grammar-agreement rules for English and Spanish
 
 diff --git a/Piru/Utilities/InflectedString.swift b/Piru/Utilities/InflectedString.swift
-index 222ca583..9f2667e9 100644
+index 222ca583..f48d5022 100644
 --- a/Piru/Utilities/InflectedString.swift
 +++ b/Piru/Utilities/InflectedString.swift
-@@ -10,6 +10,14 @@ extension String {
+@@ -10,6 +10,15 @@ extension String {
      /// `AttributedString(localized:)` (and `Text`) parse the markdown and
      /// inflect it, so this resolves through it and keeps the characters.
      init(inflecting value: String.LocalizationValue, locale: Locale = .current) {
 +        #if os(Android)
-+            // Skip has no AttributedString(localized:) and no grammar agreement: the markup goes
-+            // and the counted phrase stays as the catalog writes it ("2 item").
-+            self = String(localized: value).replacingOccurrences(
-+                of: #"\^\[([^\]]*)\]\(inflect: *true\)"#, with: "$1", options: .regularExpression,
++            // Skip has no AttributedString(localized:) and Android no morphology engine: the
++            // agreement comes from AndroidInflection's rules for the language the catalog was
++            // resolved in, which is the device's first language.
++            self = AndroidInflection.resolve(
++                String(localized: value), language: AndroidPlatform.languageTags.first ?? "en",
 +            )
 +        #else
          self = String(AttributedString(localized: value, locale: locale).characters)
