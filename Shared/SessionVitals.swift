@@ -180,7 +180,7 @@ nonisolated struct HeartRateTrace: Sendable {
             + (s3 - s2) * span * b.slope
     }
 
-    private typealias Reduced = (time: TimeInterval, mean: Double, low: Double, high: Double)
+    typealias Reduced = (time: TimeInterval, mean: Double, low: Double, high: Double)
 
     private nonisolated struct Bucket {
         let start: TimeInterval
