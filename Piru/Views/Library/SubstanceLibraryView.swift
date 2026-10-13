@@ -74,10 +74,12 @@ private struct SubstanceSearchResultsList: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \FavoriteSubstance.createdAt, order: .reverse) private var favorites: [FavoriteSubstance]
     let searchResults: [SubstanceMatch]
-    /// Cached so each search-result row's swipe action doesn't rebuild the set.
-    @State private var favoriteNames: Set<String> = []
 
     var body: some View {
+        // Built once per body so each row's swipe action reads a set rather than
+        // scanning the query. A `.task` on the `Group` never runs on Android, which
+        // left every label reading "Favorite".
+        let favoriteNames = Set(favorites.map { $0.substance.lowercased() })
         Group {
             if isHelpSearch {
                 helpResourcesSection
@@ -114,19 +116,6 @@ private struct SubstanceSearchResultsList: View {
                 }
             }
         }
-        .task(id: favoritesSignature) {
-            favoriteNames = Set(favorites.map { $0.substance.lowercased() })
-        }
-    }
-
-    /// Favorite identities, not just `count`, so a same-count swap still
-    /// refreshes the cached swipe-action label set.
-    private var favoritesSignature: Int {
-        var hasher = Hasher()
-        for favorite in favorites {
-            hasher.combine(favorite.substance)
-        }
-        return hasher.finalize()
     }
 
     private var isHelpSearch: Bool {
