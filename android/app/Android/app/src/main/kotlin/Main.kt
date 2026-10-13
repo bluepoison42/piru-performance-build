@@ -66,12 +66,6 @@ open class MainActivity: AppCompatActivity {
             forwardToTaskRoot()
             return
         }
-        // A link is read from the activity's intent at first composition (SkipUI's onOpenURL), and
-        // a task keeps the intent that started it. Recreated after the process was killed, or
-        // relaunched from Recents, the activity would get that link again and replay it.
-        if (savedInstanceState != null || (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
-            setIntent(Intent(this, MainActivity::class.java).setAction(Intent.ACTION_MAIN))
-        }
         logger.info("starting activity")
         UIApplication.launch(this)
         AndroidDocuments.register(this)
