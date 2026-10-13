@@ -92,7 +92,7 @@ private struct SubstanceSearchResultsList: View {
                     description: Text("No substances match \"\(searchText)\""),
                 )
             } else if !searchResults.isEmpty {
-                Section("\(searchResults.count) results") {
+                Section(String(inflecting: "^[\(searchResults.count) result](inflect: true)")) {
                     ForEach(searchResults) { match in
                         let substance = match.substance
                         NavigationLink(value: PushRoute.substance(name: substance.name, brand: match.matchedBrand)) {

@@ -5941,6 +5941,7 @@
       }
     },
     "%lld results" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -7165,6 +7166,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "另有 %lld 種物質"
+          }
+        }
+      }
+    },
+    "^[%lld result](inflect: true)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld resultado](inflect: true)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld resultado](inflect: true)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个结果"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個結果"
           }
         }
       }

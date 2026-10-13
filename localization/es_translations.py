@@ -341,6 +341,7 @@ ES = {
     "^[%lld more combination](inflect: true)": "^[%lld combinación más](inflect: true)",
     "^[%lld other substance](inflect: true)": "^[%lld sustancia más](inflect: true)",
     "^[%lld substance](inflect: true)": "^[%lld sustancia](inflect: true)",
+    "^[%lld result](inflect: true)": "^[%lld resultado](inflect: true)",
     "^[%lld tag](inflect: true)": "^[%lld etiqueta](inflect: true)",
     "A benzodiazepine amount in diazepam, per Ashton": "Una cantidad de benzodiacepina expresada en diazepam, según Ashton",
     "A binding-affinity measurement, not clinical potency.": "Una medición de afinidad de unión, no potencia clínica.",

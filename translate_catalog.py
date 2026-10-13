@@ -5799,6 +5799,7 @@ T = {
     ),
     # 2026-06 review fixes — inflected plurals (replace hand-rolled "s"/"ies" suffixes)
     "^[%lld substance](inflect: true)": ("%lld 种物质", "%lld 種物質"),
+    "^[%lld result](inflect: true)": ("%lld 个结果", "%lld 個結果"),
     # 2026-08 — the deep-pharmacology sections (Genetics, Target Evidence,
     # concentration thresholds) and the drug-class write-ups moved to
     # Tools > Education.
@@ -9341,6 +9342,7 @@ if __name__ == "__main__":
         }
     )
 
+    NEW_KEYS.add("^[%lld result](inflect: true)")
     NEW_KEYS.add("Bar: participant range; dot: mean.")
     NEW_KEYS.update(
         {
