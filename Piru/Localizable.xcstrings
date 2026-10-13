@@ -11444,6 +11444,34 @@
         }
       }
     },
+    "Active duration: onset to offset" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración activa: del inicio al final"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración activa: del inicio al final"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作用时长：起效至消退"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作用時長：起效至消退"
+          }
+        }
+      }
+    },
     "Active in micrograms — a thousandth of a milligram. Always measure volumetrically. You cannot dose this by eye." : {
       "localizations" : {
         "es" : {
@@ -13917,6 +13945,34 @@
         }
       }
     },
+    "After-effects" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efectos posteriores"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efectos posteriores"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后续效应"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "後續效應"
+          }
+        }
+      }
+    },
     "Afterglow" : {
       "localizations" : {
         "es" : {
@@ -15844,6 +15900,34 @@
         }
       }
     },
+    "Analyte" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analito"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analito"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检测物"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢測物"
+          }
+        }
+      }
+    },
     "and %lld more" : {
       "localizations" : {
         "es" : {
@@ -15868,6 +15952,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "另有 %lld 筆"
+          }
+        }
+      }
+    },
+    "Anecdotal timing" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempos según relatos personales"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempos según relatos personales"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "个人报告的时间"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "個人報告的時間"
           }
         }
       }
@@ -17837,6 +17949,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "較為均衡——類似共情劑"
+          }
+        }
+      }
+    },
+    "Bar: participant range; dot: mean." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barra: rango entre participantes; punto: media."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barra: rango entre participantes; punto: media."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "横条：参与者范围；圆点：均值。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橫條：參與者範圍；圓點：平均值。"
           }
         }
       }
@@ -23270,6 +23410,34 @@
         }
       }
     },
+    "Clock origin" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origen del tiempo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origen del tiempo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时起点"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "計時起點"
+          }
+        }
+      }
+    },
     "Close" : {
       "localizations" : {
         "es" : {
@@ -25545,6 +25713,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "條件性耐受：Siegel 1976；Siegel, Hinson, Krank & McCully 1982；Weise-Kelly & Siegel 2001；Carlton & Wolgin 1971。"
+          }
+        }
+      }
+    },
+    "Confidence" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confianza"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confianza"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可信度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可信度"
           }
         }
       }
@@ -34580,6 +34776,34 @@
         }
       }
     },
+    "Endpoint: modeled “any drug effect” rating on a visual analog scale" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Variable de resultado: valoración modelada de «cualquier efecto del fármaco» en una escala visual analógica"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Variable de resultado: valoración modelada de «cualquier efecto del fármaco» en una escala visual analógica"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "终点：模型估算的“任何药物效应”视觉模拟量表评分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終點：模型估算的「任何藥物效應」視覺類比量表評分"
+          }
+        }
+      }
+    },
     "Energy" : {
       "localizations" : {
         "es" : {
@@ -37649,6 +37873,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "多一次翻滾！"
+          }
+        }
+      }
+    },
+    "Extrapolated, not validated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extrapolado, no validado"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extrapolado, no validado"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外推估计，未经验证"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外推估計，未經驗證"
           }
         }
       }
@@ -49988,6 +50240,34 @@
         }
       }
     },
+    "Low to moderate" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baja a moderada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baja a moderada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低至中等"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低至中等"
+          }
+        }
+      }
+    },
     "Lower IC₅₀ / Kᵢ = more potent block." : {
       "localizations" : {
         "es" : {
@@ -50741,6 +51021,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正餐"
+          }
+        }
+      }
+    },
+    "Mean ± SD" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media ± DE"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media ± DE"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "均值 ± 标准差"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均值 ± 標準差"
           }
         }
       }
@@ -52502,6 +52810,34 @@
         }
       }
     },
+    "Model half-life" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida media del modelo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida media del modelo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型半衰期"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型半衰期"
+          }
+        }
+      }
+    },
     "Model near zero" : {
       "localizations" : {
         "es" : {
@@ -52554,6 +52890,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "模型歸零"
+          }
+        }
+      }
+    },
+    "Model time to peak level" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo hasta el pico según el modelo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo hasta el pico según el modelo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型达峰时间"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型達峰時間"
           }
         }
       }
@@ -52722,6 +53086,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "相對於你近期峰值的模型推算合併負荷，目前約為百分之 %lld。"
+          }
+        }
+      }
+    },
+    "Modeled drug level in plasma, which is not the same as felt effects. It is not used to predict your session." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nivel del fármaco en plasma según un modelo, que no equivale a los efectos que se sienten. No se usa para predecir tu sesión."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nivel del fármaco en plasma según un modelo, que no equivale a los efectos que se sienten. No se usa para predecir tu sesión."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型估算的血浆药物浓度，与主观感受到的效果不同。它不会用于预测你的体验。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型估算的血漿藥物濃度，與主觀感受到的效果不同。它不會用於預測你的體驗。"
           }
         }
       }
@@ -62100,6 +62492,34 @@
         }
       }
     },
+    "Partial timing data" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos temporales parciales"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos temporales parciales"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分时间数据"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分時間資料"
+          }
+        }
+      }
+    },
     "Partial μ-opioid agonist" : {
       "localizations" : {
         "es" : {
@@ -62152,6 +62572,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "部分已服用"
+          }
+        }
+      }
+    },
+    "Participant range" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango entre participantes"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango entre participantes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "参与者范围"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "參與者範圍"
+          }
+        }
+      }
+    },
+    "Participants: %lld" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participantes: %lld"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participantes: %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "参与者：%lld"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "參與者：%lld"
           }
         }
       }
@@ -64491,6 +64967,34 @@
         }
       }
     },
+    "Plasma model (illustrative)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modelo plasmático (ilustrativo)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modelo plasmático (ilustrativo)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "血浆模型（示意）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "血漿模型（示意）"
+          }
+        }
+      }
+    },
     "Plateau" : {
       "localizations" : {
         "es" : {
@@ -66148,6 +66652,62 @@
         }
       }
     },
+    "Published timing" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempos publicados"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempos publicados"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已发表的时间"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已發表的時間"
+          }
+        }
+      }
+    },
+    "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已发表的时间示意。各阶段的计时起点尚未核实。未知时间不会被估算，也不会用于预测你的体验。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已發表的時間示意。各階段的計時起點尚未核實。未知時間不會被估算，也不會用於預測你的體驗。"
+          }
+        }
+      }
+    },
     "pubmed.ncbi.nlm.nih.gov" : {
       "localizations" : {
         "es" : {
@@ -67078,6 +67638,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "展開"
+          }
+        }
+      }
+    },
+    "Read source context" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el contexto de la fuente"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el contexto de la fuente"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读来源背景"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "閱讀來源背景"
           }
         }
       }
@@ -68315,6 +68903,34 @@
         }
       }
     },
+    "Reference %lld" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Referencia %lld"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Referencia %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "参考 %lld"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "參考 %lld"
+          }
+        }
+      }
+    },
     "Reference content is compiled from third-party, community and curated sources and may be incomplete, outdated or wrong. Every curve, level and estimate is an illustrative model, not a measurement." : {
       "localizations" : {
         "es" : {
@@ -68570,6 +69186,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "參考文字由 Alexander 和 Ann Shulgin 撰寫。"
+          }
+        }
+      }
+    },
+    "Reference timing chart for one administration. Inferred or unknown phases are not used to predict your session." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gráfico de tiempos de referencia para una sola administración. Las fases inferidas o desconocidas no se usan para predecir tu sesión."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gráfico de tiempos de referencia para una sola administración. Las fases inferidas o desconocidas no se usan para predecir tu sesión."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单次用药的参考时间图。推断或未知的阶段不会用于预测你的体验。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單次用藥的參考時間圖。推斷或未知的階段不會用於預測你的體驗。"
           }
         }
       }
@@ -70124,6 +70768,34 @@
         }
       }
     },
+    "Reported total" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración total indicada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración total indicada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "报告的总时长"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "報告的總時長"
+          }
+        }
+      }
+    },
     "Reports" : {
       "localizations" : {
         "es" : {
@@ -70512,6 +71184,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "有呼吸抑制的風險——解離劑會掩蓋過量的徵兆。"
+          }
+        }
+      }
+    },
+    "Response threshold (% of individual maximum)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbral de respuesta (% del máximo individual)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbral de respuesta (% del máximo individual)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "反应阈值（个人最大值的百分比）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "反應閾值（個人最大值的百分比）"
           }
         }
       }
@@ -71664,6 +72364,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "途徑尚未遷移："
+          }
+        }
+      }
+    },
+    "Route unknown" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vía desconocida"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vía desconocida"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "给药途径未知"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "給藥途徑未知"
           }
         }
       }
@@ -73123,6 +73851,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "搜尋維基百科"
+          }
+        }
+      }
+    },
+    "seconds" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "segundos"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "segundos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "秒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "秒"
           }
         }
       }
@@ -80543,6 +81299,146 @@
         }
       }
     },
+    "Study article" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artículo del estudio"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artículo del estudio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究论文"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究論文"
+          }
+        }
+      }
+    },
+    "Study data table" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabla de datos del estudio"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabla de datos del estudio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究数据表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究資料表"
+          }
+        }
+      }
+    },
+    "Study dose (µg base)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis del estudio (µg de base)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis del estudio (µg de base)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究剂量（µg，游离碱）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究劑量（µg，游離鹼）"
+          }
+        }
+      }
+    },
+    "Study statistics describe this condition, not a prediction of your session. The maximum response is a time point, not a peak plateau." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las estadísticas describen esta condición del estudio, no predicen tu sesión. La respuesta máxima es un momento, no una meseta."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las estadísticas describen esta condición del estudio, no predicen tu sesión. La respuesta máxima es un momento, no una meseta."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究统计数据描述这一实验条件，不能预测你的体验。最大反应是一个时间点，而非峰值平台期。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究統計資料描述這一實驗條件，不能預測你的體驗。最大反應是一個時間點，而非峰值平台期。"
+          }
+        }
+      }
+    },
+    "Study timeline" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cronología del estudio"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cronología del estudio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究时间线"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "研究時間軸"
+          }
+        }
+      }
+    },
     "Sub-threshold" : {
       "localizations" : {
         "es" : {
@@ -81016,6 +81912,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "substance.wiki"
+          }
+        }
+      }
+    },
+    "substance.wiki timelines" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cronologías de substance.wiki"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cronologías de substance.wiki"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "substance.wiki 时间线"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "substance.wiki 時間軸"
           }
         }
       }
@@ -85526,6 +86450,34 @@
         }
       }
     },
+    "This source entry has a recorded timing or route concern." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta entrada tiene un problema de tiempo o vía documentado."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta entrada tiene un problema de tiempo o vía documentado."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此来源条目存在已记录的时间或给药途径问题。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此來源條目存在已記錄的時間或給藥途徑問題。"
+          }
+        }
+      }
+    },
     "This substance already has a \"%@\" unit." : {
       "localizations" : {
         "es" : {
@@ -85887,6 +86839,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "時效性通知可以突破專注模式和通知摘要。不希望立即送達的可以在這裡關閉。"
+          }
+        }
+      }
+    },
+    "Time since administration" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo desde la administración"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo desde la administración"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自用药起计时"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自用藥起計時"
           }
         }
       }
@@ -88200,6 +89180,34 @@
         }
       }
     },
+    "Units unknown" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unidades desconocidas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unidades desconocidas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单位未知"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單位未知"
+          }
+        }
+      }
+    },
     "Units you defined for your doses" : {
       "localizations" : {
         "es" : {
@@ -89848,6 +90856,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "極高"
+          }
+        }
+      }
+    },
+    "Very low" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muy baja"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muy baja"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "很低"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "很低"
           }
         }
       }
