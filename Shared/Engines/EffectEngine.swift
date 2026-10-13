@@ -262,8 +262,15 @@ nonisolated enum EffectEngine {
         let dt = 0.5 / 60.0
         let n = Int((12 / dt).rounded())
         func peakTime(_ trialKa: Double) -> Double {
-            let curve = absKernel(ka: trialKa, ke: ke, nAbs: nAbs, dt: dt, n: n,
-                                  k12: kR, k21: kR * 0.22)
+            let curve = absKernel(
+                ka: trialKa,
+                ke: ke,
+                nAbs: nAbs,
+                dt: dt,
+                n: n,
+                k12: kR,
+                k21: kR * 0.22,
+            )
             var index = 0
             for i in 1 ..< curve.count where curve[i] > curve[index] { index = i }
             guard index > 0, index < n else { return Double(index) * dt }
@@ -274,7 +281,7 @@ nonisolated enum EffectEngine {
         }
         var low = 0.001, high = 60.0
         var result = ka
-        if peakTime(low) >= target && peakTime(high) <= target {
+        if peakTime(low) >= target, peakTime(high) <= target {
             for _ in 0 ..< 36 {
                 let mid = (low + high) * 0.5
                 if peakTime(mid) > target { low = mid } else { high = mid }
@@ -287,11 +294,24 @@ nonisolated enum EffectEngine {
 
     /// Concentration shape used by simulate; exposed internally for peak and
     /// curated-override regression tests.
-    static func drivingKernel(params: SubstanceModelParams, ka: Double, kR: Double,
-                              nAbs: Int, dt: Double, n: Int) -> [Double] {
+    static func drivingKernel(
+        params: SubstanceModelParams,
+        ka: Double,
+        kR: Double,
+        nAbs: Int,
+        dt: Double,
+        n: Int,
+    ) -> [Double] {
         let kernelKa = hasCuratedKa(params) ? ka : matchedKa(ka: ka, ke: params.ke, kR: kR, nAbs: nAbs)
-        return absKernel(ka: kernelKa, ke: params.ke, nAbs: nAbs, dt: dt, n: n,
-                         k12: kR, k21: kR * 0.22)
+        return absKernel(
+            ka: kernelKa,
+            ke: params.ke,
+            nAbs: nAbs,
+            dt: dt,
+            n: n,
+            k12: kR,
+            k21: kR * 0.22,
+        )
     }
 
     /// Simulate a multi-substance session. Ports `simulateSession`. Substance-agnostic.
