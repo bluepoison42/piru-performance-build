@@ -7730,6 +7730,11 @@ T = {
     "Add an entry": ("添加记录", "新增記錄"),
     "Remove entry": ("移除记录", "移除記錄"),
     "Discard Entries": ("放弃记录", "捨棄記錄"),
+    "Nothing Staged": ("尚无暂存剂量", "尚無暫存劑量"),
+    "Choose a dose on the left, or search for a substance.": (
+        "在左侧选择一个剂量，或搜索物质。",
+        "在左側選擇一個劑量，或搜尋物質。",
+    ),
     "Move Entries": ("移动记录", "移動記錄"),
     "Move Entries…": ("移动记录…", "移動記錄…"),
     "Recent Entries (24h)": ("最近记录（24 小时）", "最近記錄（24 小時）"),
@@ -9344,6 +9349,7 @@ if __name__ == "__main__":
 
     NEW_KEYS.add("^[%lld result](inflect: true)")
     NEW_KEYS.add("Bar: participant range; dot: mean.")
+    NEW_KEYS.update({"Nothing Staged", "Choose a dose on the left, or search for a substance."})
     NEW_KEYS.update(
         {
             "Published timing",

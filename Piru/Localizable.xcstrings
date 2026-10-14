@@ -22821,6 +22821,34 @@
         }
       }
     },
+    "Choose a dose on the left, or search for a substance." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una dosis a la izquierda o busca una sustancia."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una dosis a la izquierda o busca una sustancia."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在左侧选择一个剂量，或搜索物质。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在左側選擇一個劑量，或搜尋物質。"
+          }
+        }
+      }
+    },
     "Choose Another Folder…" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -59511,6 +59539,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "還沒有打過分"
+          }
+        }
+      }
+    },
+    "Nothing Staged" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada en cola"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada en cola"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚无暂存剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚無暫存劑量"
           }
         }
       }

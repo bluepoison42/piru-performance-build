@@ -1051,6 +1051,8 @@ ES = {
     "Dietary Supplement": "Suplemento dietético",
     "different study": "estudio distinto",
     "Discard Entries": "Descartar registros",
+    "Nothing Staged": "Nada en cola",
+    "Choose a dose on the left, or search for a substance.": "Elige una dosis a la izquierda o busca una sustancia.",
     "Disconnective": "Desconectivo",
     "Dismiss": "Cerrar",
     "Display as (e.g. joint)": "Mostrar como (p. ej. café)",

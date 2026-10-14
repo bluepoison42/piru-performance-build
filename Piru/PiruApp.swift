@@ -111,14 +111,18 @@ struct PiruApp: App {
             }
         }
         .modelContainer(container)
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active, !AppIdentity.isLegacy {
-                AppLaunch.becameActive(container: container)
+        #if os(macOS)
+            // Room for the sidebar, a journal column and the Log sheet over it.
+            .defaultSize(width: 1100, height: 760)
+        #endif
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active, !AppIdentity.isLegacy {
+                    AppLaunch.becameActive(container: container)
+                }
+                if phase == .background {
+                    enterBackground()
+                }
             }
-            if phase == .background {
-                enterBackground()
-            }
-        }
     }
 
     @ViewBuilder
