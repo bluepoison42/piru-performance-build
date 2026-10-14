@@ -65,11 +65,14 @@ pipeline/screenshots.py --no-build --skins none  # the piru skin only, ~1 min pe
 pipeline/screenshots.py --screens journal,quicklog --skins tsuki,yuki --locales en
 pipeline/screenshots.py --appearance both        # light and dark
 pipeline/screenshots.py --list                   # screen and skin names
+pipeline/screenshots.py --platform macos --skins none --locales en   # the native Mac app, ~1 min
 ```
 
 - **Output is `Store/shots/` (gitignored):** `en/01-journal.png` for the piru skin, `en/skins/tsuki/01-journal-tsuki.png` per skin, `zh-Hans/…`, `en-dark/…`, plus `index.json`. Numbers are fixed by the catalog, so a re-run of one screen overwrites the same file.
 - **The app does the walking.** `ScreenshotTour` (`Piru/Utilities/ScreenshotTour.swift`, DEBUG) is enabled by `-piruScreenshots <dir>`, seeds the `week` persona, lands on each screen through `AppNavigator`, and asks the host for a capture through `<dir>/.tour/request.json`; the script answers with `simctl io screenshot` so the 9:41 status bar and real pixels are in the picture. **Add a screen by adding a `Screen` to `catalog`**; a new skin is in the pass the moment it is in `Skin.available`.
 - **It runs on its own simulator, "Piru Screenshots"** (an iPhone 18 Pro Max created on first use), so the persona reseed never wipes the journal on the simulator you develop on. `--udid booted` uses that one anyway.
+- **`--platform macos` runs the same tour in the Mac app** and writes `Store/shots-macos/`. The sandboxed app can write nowhere the script can read, so the tour POSTs each request to a loopback server in the script (`-piruScreenshotHost`), and the window is captured at 1280×820 with `rocuronium screenshot --pid`.
+- **Every tour runs on its own store, `screenshots.store`** (`StoreRecovery.activeStoreName`): the persona reseed wipes whatever store it opens, and on a Mac the debug build shares its App Group container with the installed app's real journal.
 - **`--clock` (default 9:41) sets both the status bar and the vertical timeline's Now** — the strip reads `DebugClock.now`, pinned by `-piruNow`, and the `week` persona seeds against it. Other surfaces (the Active Now card, the accessory's "Next:" countdown, In Your Body) still read the wall clock.
 
 ## Lint & format — pinned tool versions
