@@ -1,9 +1,9 @@
 # `pipeline/` — substance data processing
 
-All the processing code that turns external substance data into Piru's
-bundled SQLite database lives here. The data itself lives in
-[`../data/`](../data/); the app artifact ships from
-[`../Piru/Data/piru-substances.sqlite`](../Piru/Data/).
+Piru's data pipeline combines external records and per-compound corrections into a SQLite database with source attribution and per-field priority. It also exports reviewable snapshots and audits competing claims. Inputs live in [`data/`](../data/); the app reads [`Piru/Data/piru-substances.sqlite`](../Piru/Data/).
+
+<details>
+<summary>Source resolution, data gates, and pipeline reference</summary>
 
 ## Layout
 
@@ -18,11 +18,6 @@ pipeline/
 screenshots.py    Captures every app screen on the simulator, per language and
                   skin, into Store/shots/ (see "Screenshots" in ../CLAUDE.md)
 ```
-
-`pipeline/build.sh` is the single answer to "how is the DB built?" — every step
-is a real script and that file sequences them in order. `pipeline/build.sh fast`
-rebuilds from committed inputs (offline, reproducible); `pipeline/build.sh full`
-re-runs the upstream scrape/extract first.
 
 ## Curated data
 
@@ -114,10 +109,7 @@ silently never rendered.
                                               data/snapshots/substances.{json,csv}  ← humans read this
 ```
 
-Note: `snapshots.py` reads the **built SQLite**, so the snapshots mirror exactly
-what ships — resolved categories, curated overrides, references, casing — and
-are deterministic (ordered by canonical name). Regenerate and commit them
-alongside a DB rebuild.
+`snapshots.py` reads the built SQLite and orders records by canonical name. Regenerate and commit snapshots with each database rebuild.
 
 ## Running the pipeline
 
@@ -139,10 +131,7 @@ fast path is enough (it's offline and reproducible from committed inputs). A
 `full` run is only needed when upstream external data has actually changed; it
 requires network and `~/Developer/piru-data`.
 
-After a build, commit `Piru/Data/piru-substances.sqlite`, `Piru/Data/manifest.json`,
-and `data/snapshots/build-report.md` (+ any `data/` inputs that genuinely
-changed). The raw `piru-data` files and `/tmp/piru-extract` JSON are
-deliberately NOT committed — only the built SQLite is.
+After a build, commit changed inputs, `Piru/Data/manifest.json`, and generated snapshots. The SQLite database is gitignored; publish it with `pipeline/publish-db.sh` before pushing the manifest. Keep raw `piru-data` files and `/tmp/piru-extract` outside the repository.
 
 ## Sub-pipeline overviews
 
@@ -165,11 +154,7 @@ deliberately NOT committed — only the built SQLite is.
   (out of repo). `build/sqlite.py` ingests those directly. `_common.py`
   holds the shared category/route/dose parsing helpers.
 
-Fetching the *papers* those citations point at is not here — a paper cache
-belongs outside this repo (it is public, and an open-access license permits
-reading a paper, not vendoring it into someone else's git history). Piru's half
-is `audit/cited_identifiers.py`, which emits the identifiers this database
-cites. See [Researching a claim](#researching-a-claim).
+`audit/cited_identifiers.py` exports cited paper identifiers. Keep fetched papers in a cache outside this repository; see [Researching a claim](#researching-a-claim).
 
 ### `enrichment/`
 LLM-assisted research used to fill gaps external sources don't cover
@@ -268,10 +253,7 @@ LLM-assisted research used to fill gaps external sources don't cover
 
 ## The adjudicator
 
-`audit/adjudicate.py` exists because the shipped resolution is one global source
-ranking. `sources.default_priority` says PsychonautWiki beats TripSit for every
-substance, every route and every field — an average that is wrong wherever the
-average is not the case, and silently so.
+`audit/adjudicate.py` compares source claims for individual substances, routes, and fields, exposing disagreements that a source ranking alone can hide.
 
 ```bash
 python3 pipeline/audit/adjudicate.py                       # everything, ~4s
@@ -360,15 +342,7 @@ feature absent from that object is zero). So calibration is:
 3. Re-run and compare. Never edit `adjudicate.py` to change a verdict: the code
    computes features, the file decides what they are worth.
 
-`binding_target_map.json` beside it is the receptor-name normalization the
-binding cells are keyed by — Piru carries 17 spellings of the mu-opioid receptor
-and 33 of GABA-A, and two values cannot be compared until they agree what they
-are about. Regenerate it with `--write-target-map` after new binding rows land;
-it is tracked so the rest of the pipeline can key off the same names. The
-normalizer itself lives in `pipeline/target_names.py`, shared with the build:
-`sqlite.py` writes each row's `base` to `bindings.target_base`, which is what
-the app's tolerance engine collapses a substance's rows on — one contributor
-per receptor per dose, however many assays measured it.
+`binding_target_map.json` normalizes receptor names before comparison. Regenerate it with `--write-target-map` after adding binding rows. The shared normalizer in `pipeline/target_names.py` writes `bindings.target_base`; the tolerance engine uses that key to count one contributor per receptor per dose.
 
 ## dose.wiki
 
@@ -553,44 +527,14 @@ pipeline/audit/cited_identifiers.py --limit 50 # the 50 most-cited
 
 Pipe that into whatever fetches full text for you.
 
-### What a paper-fetching CLI should do
+### Paper cache requirements
 
-The maintainers use a private `papers` CLI for this. If you want to build your
-own (any language, any architecture), here is what it needs to provide:
+A fetcher should accept DOI, PMID, PMCID, or arXiv identifiers; retrieve available full text; and produce searchable text with tables preserved. Store papers outside this repository. Support metadata lookup, identifier batches, cache hits, and claim anchors that can be checked against the stored text.
 
-1. **Fetch by identifier** — accept a DOI, PMID, PMCID, or arXiv id; locate
-   the paper via open-access routes (Unpaywall, PubMed Central, Sci-Hub,
-   arXiv); download the PDF.
-2. **Convert to text** — turn the PDF into searchable Markdown or plain text,
-   preserving tables (that is where the binding values live). Store the result
-   in a local cache directory **outside this repo**.
-3. **Metadata lookup** — given an identifier, return title, authors, journal,
-   year, and DOI without fetching the full paper. Triangulating across
-   registries (Crossref, OpenAlex, Europe PMC, arXiv) catches errors a single
-   source misses. This is the cheap first pass before committing to a download.
-4. **Batch mode** — accept a file of identifiers (one per line, as emitted by
-   `audit/cited_identifiers.py`) and fetch them all, skipping cache hits.
-5. **Anchor + verify** — pin a specific claim to a quoted sentence in the
-   paper, then re-verify that the quote still appears (a string comparison
-   that can gate CI).
-6. **Cache semantics** — a fetch is a no-op when the cache already holds the
-   result. The cache is rebuildable from the PDFs: metadata in front matter,
-   index derived. A paper fetched once is cheap to read in every future session.
+**Do not cite a number from a paper nobody read.** Request inaccessible papers through a library. An unresolved identifier needs investigation; `audit/verify_citations.py` checks registry resolution and topicality.
 
-The output of (1) + (2) is a readable file at a predictable path. The output of
-(3) is structured metadata (JSON or stdout fields). The output of (5) is
-exit-zero-or-not, suitable for a CI gate.
+</details>
 
-If you use an open-access fetcher, expect roughly three-quarters of these to
-come back with no free copy — that is the state of the pharmacology literature,
-not a bug. Such a paper is a library request; **do not cite a number from a
-paper nobody read**. An identifier no registry resolves is suspicious but not
-proof of fabrication: that verdict belongs to `audit/verify_citations.py`, which
-weighs topicality too.
+## Notes
 
-## Reproducibility
-
-Every script can be run from the repo root with no arguments — paths are
-absolute relative to `pipeline/__file__`. No environment variables, no
-config files. If a script needs a different location it accepts that as
-an argument.
+- Scripts resolve paths from `pipeline/__file__`; location overrides are command-line arguments.
