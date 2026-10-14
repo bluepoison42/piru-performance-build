@@ -213,6 +213,15 @@ def clear_tour(tour: Path) -> None:
         (tour / name).unlink(missing_ok=True)
 
 
+def capture_target(leaf: Path, file: str) -> Path:
+    """Where a requested capture lands. The name comes from the app (or, on macOS,
+    from anything that can reach the loopback port), so it must stay inside `leaf`."""
+    target = (leaf / file).resolve()
+    if not target.is_relative_to(leaf.resolve()) or target.suffix != ".png":
+        sys.exit(f"✗ refusing capture outside {leaf}: {file!r}")
+    return target
+
+
 def process_alive(pid: int) -> bool:
     try:
         os.kill(pid, 0)
@@ -241,12 +250,12 @@ def capture_pass(udid: str, leaf: Path, launch_args: list[str], timeout: float, 
             except (json.JSONDecodeError, OSError):
                 time.sleep(0.02)
                 continue
-            target = leaf / request["file"]
+            target = capture_target(leaf, request["file"])
             target.parent.mkdir(parents=True, exist_ok=True)
             simctl("io", udid, "screenshot", str(target))
             ack.touch()
             print(f"  [{request['index']:>3}/{request['total']}] {label}/{request['file']}")
-            files.append({**request, "path": str(target.relative_to(leaf.parent))})
+            files.append({**request, "path": str(target.relative_to(leaf.resolve().parent))})
             while request_file.exists() or ack.exists():
                 time.sleep(0.02)
             last_activity = time.monotonic()
@@ -307,10 +316,16 @@ def capture_pass_macos(
         def do_POST(self) -> None:  # noqa: N802 — the stdlib's name
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"] or 0)) or b"{}")
             if self.path == "/request":
-                target = leaf / body["file"]
+                try:
+                    target = capture_target(leaf, body["file"])
+                except SystemExit as refusal:
+                    print(refusal)
+                    self.send_response(400)
+                    self.end_headers()
+                    return
                 capture_window(state["pid"], target)
                 print(f"  [{body['index']:>3}/{body['total']}] {label}/{body['file']}")
-                files.append({**body, "path": str(target.relative_to(leaf.parent))})
+                files.append({**body, "path": str(target.relative_to(leaf.resolve().parent))})
             elif self.path == "/done":
                 state["report"] = body
                 done.set()
