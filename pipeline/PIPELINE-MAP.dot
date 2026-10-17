@@ -60,8 +60,6 @@ digraph piru_pipeline {
 
     /* dead */
     node [fillcolor="#ffecec", color="#cc0000", fontcolor="#990000"];
-    f_fodtr  [label="brushers/\nfreeodwiki_translate.py"];
-    f_fixik  [label="brushers/\nfix_enrichment_inchikeys.py"];
   }
 
   /* ---------------------------------------------------------------- */
@@ -98,8 +96,6 @@ digraph piru_pipeline {
     s_chembl[label="chembl-cache.json\neuropepmc-cache.json\n(gitignored)"];
 
     node [fillcolor="#ffecec", color="#cc0000", fontcolor="#990000"];
-    s_dccomb [label="drug-community-\ncombinations.json\n(written, never read)"];
-    s_dcname [label="drug-community-names.json\n(no writer, no reader)"];
   }
 
   /* ---------------------------------------------------------------- */
@@ -185,6 +181,7 @@ digraph piru_pipeline {
     a_cid  [label="cited_identifiers.py"];
     a_dose [label="dose_sanity.py (CLI)"];
     a_pub  [label="publish-db.sh"];
+    a_slc  [label="source_link_check.py\n(before a release)"];
 
     node [shape=box, style="rounded,filled", fillcolor="#eeeeee", color="#888888", fontcolor="#444444"];
     a_out  [label="data/adjudication/*\n(gitignored)\ncells.jsonl, sources.json,\nsummary.md, calibration-top100.md"];
@@ -196,9 +193,7 @@ digraph piru_pipeline {
     label="Dead — zero references anywhere";
     style=dashed; color="#cc0000"; fontsize=11;
     node [shape=ellipse, style=filled, fillcolor="#ffecec", color="#cc0000", fontcolor="#990000"];
-    d_slc  [label="source_link_check.py\n(1,738 lines, has a --gate)"];
     d_acf  [label="apply_citation_fixes.py"];
-    d_vm   [label="validate_metabolites.py"];
     node [shape=box, style="rounded,filled", fillcolor="#ffecec"];
     d_merged [label="data/enrichment/\nmerged.json, class-context.json,\ncoverage.csv"];
   }
@@ -233,7 +228,6 @@ digraph piru_pipeline {
   f_coll  -> s_bun [style=dashed, color="#cc0000"];
   f_dc    -> s_dc;
   f_dc    -> s_dcx;
-  f_dc    -> s_dccomb [color="#cc0000"];
   f_ts    -> s_ts;
   f_pubmed-> s_pt;
   f_cids  -> s_pubchem;
@@ -252,8 +246,6 @@ digraph piru_pipeline {
   o_db    -> f_pubmed[style=dashed];
   o_snap  -> f_pc    [label="name allowlist\n(feedback cycle)", style=dashed];
   c_sub   -> f_coll  [label="--curated-overlay\n(path missing)", style=dashed, color="#cc0000"];
-  f_fodtr -> s_fod   [style=dashed, color="#cc0000", label="writes /tmp only"];
-  f_fixik -> e_raw   [style=dashed, color="#cc0000"];
 
   /* ================= EDGES: build ================= */
   c_sub  -> b_val;
@@ -322,12 +314,11 @@ digraph piru_pipeline {
   o_db -> a_surv; c_sub -> a_surv; a_surv -> c_sub [style=dashed, label="--apply"];
   o_db -> a_cid -> p_pap;
   o_db -> a_dose;
+  o_db -> a_slc;
   a_dose -> a_adj [style=dotted, label="import: LADDER,\nROUTE_RANK, units"];
   s_vcache -> g_tests;
 
   /* ================= EDGES: dead ================= */
-  o_db    -> d_slc [color="#cc0000", style=dashed, label="never run"];
   c_cfix  -> d_acf [color="#cc0000"];
   d_acf   -> e_raw [color="#cc0000", style=dashed];
-  e_raw   -> d_vm  [color="#cc0000", style=dashed];
 }

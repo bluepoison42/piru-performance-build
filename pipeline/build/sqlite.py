@@ -283,15 +283,6 @@ _THERAPEUTIC_NOTE_MARKERS = (
 )
 
 
-def dose_context_for(source_slug: str, route: str, notes: str | None) -> str:
-    """Which regime this ladder describes. Notes win over the source default."""
-    if notes:
-        lowered = notes.lower()
-        if any(marker in lowered for marker in _THERAPEUTIC_NOTE_MARKERS):
-            return "therapeutic"
-    return DOSE_CONTEXT_BY_SOURCE.get(source_slug, "unknown")
-
-
 # External datasource extractions (Substance-shaped JSON with x_* extension
 # fields). Produced out-of-repo by pipeline/fetch/brushers/extract.py from the
 # raw files in ~/Developer/piru-data. Kept out of the repo by design —
@@ -6913,7 +6904,7 @@ class Build:
 
         try:
             self.cur.execute(
-                "INSERT INTO dose_ranges(substance_id, route, source_id, unit, threshold, light_lower, light_upper, common_lower, common_upper, strong_lower, strong_upper, heavy, notes, salt_form, dose_context, citation_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO dose_ranges(substance_id, route, source_id, unit, threshold, light_lower, light_upper, common_lower, common_upper, strong_lower, strong_upper, heavy, notes, salt_form, citation_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     sid,
                     route,
@@ -6929,7 +6920,6 @@ class Build:
                     h,
                     notes,
                     salt_form,
-                    dose_context_for(source_slug, route, notes),
                     self.cite(citation),
                 ),
             )

@@ -250,6 +250,22 @@ LLM-assisted research used to fill gaps external sources don't cover
   values the other sources contradict (from the adjudicator), rows Piru refuses
   and why. Output under `Specs/evidence/upstream-reports/`. See
   [Gates and corrections](#gates-and-corrections).
+- **`source_link_check.py`** — checks that every per-substance source link in
+  the app lands on a page about that substance. It builds the same URL the app
+  builds (mirroring `AppSources.swift` and `SubstanceSourceLinks.swift`), then
+  rejects the site root, the host's soft-404 page, and pages that never name
+  the substance. `validate_links.py` only checks that a URL resolves, so this is
+  the check that catches a link quietly pointing at the wrong page. Run it
+  before a release and after any change to a source's URL builder or slugs.
+  ```bash
+  python3 pipeline/audit/source_link_check.py                     # full online run, refreshes the cache
+  python3 pipeline/audit/source_link_check.py --source freeodwiki # one source
+  python3 pipeline/audit/source_link_check.py --gate              # offline: static audit + cached verdicts
+  ```
+  `--gate` makes no network calls. It fails on a provable homepage fallback
+  and on any BROKEN or NO_MENTION verdict stored in
+  `data/sources/source-page-cache.json`, so its answer is only as fresh as the
+  last full run. MISSING_SLUG and UNVERIFIABLE are reported but never fail it.
 
 ## The adjudicator
 

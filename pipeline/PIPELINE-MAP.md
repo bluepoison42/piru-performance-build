@@ -360,11 +360,7 @@ refusing any body whose byte count or SHA-256 differs. Writes five files:
 | `data/sources/drug-community.json` | `sqlite.py:146` → `ingest_drug_community` (8403) |
 | `data/sources/drug-community-spectra.json` | `sqlite.py:150` → `ingest_drug_community_experiential` (8563) |
 | `data/sources/drug-community-effects.json` | `sqlite.py:151` → same |
-| `data/sources/drug-community-combinations.json` | **nobody** — written and never read |
 | `data/sources/drug-community.meta.json` | provenance only |
-
-`data/sources/drug-community-names.json` exists in the tree, is written by **no**
-script and read by **no** script.
 
 **Transform** — `pipeline/build/drug_community_effects.py` is imported by
 `sqlite.py:49,52`. It is pure and dependency-free so it can be unit-tested. Two
@@ -522,11 +518,7 @@ excluded.
 
 | Path | What it does | Evidence | Safe to delete? |
 |---|---|---|---|
-| `pipeline/audit/source_link_check.py` (1,738 lines) | Verifies every per-substance source link lands on a page about that substance, with homepage-fallback and soft-404 detection, plus a static audit of `AppSources.swift`. Has a `--gate` that is offline-safe. | `rg -n --hidden 'source_link_check.py' . --glob '!pipeline/audit/source_link_check.py'` → **zero hits**. Not in `ci.yml`, not in `build.sh`, not even in `pipeline/README.md`. | **No — wire it up instead.** It is the largest never-run gate in the repo and it checks something no other gate does. Its `--gate` mode is offline and belongs in `ci.yml`. |
 | `pipeline/audit/apply_citation_fixes.py` (290 lines) | Applies adjudicated citation repairs (replace/drop) to `data/enrichment/raw/*.json` and `data/curated/`, with a byte-preserving serializer. | `rg -n --hidden 'apply_citation_fixes.py' . --glob '!pipeline/audit/apply_citation_fixes.py'` → **zero hits**. | Scope unclear. It is the only writer path for citation repairs, and its four input files are also dead (below) — the whole citation-fix workflow is a completed one-off. Candidate for `DELETE-CANDIDATES.md`, not for deletion. |
-| `pipeline/audit/validate_metabolites.py` (410 lines) | Validates per-class LLM batches of active metabolites and merges survivors into `data/enrichment/raw/metabolites-active.json`. | `rg -n --hidden 'validate_metabolites.py' . --glob '!pipeline/audit/validate_metabolites.py'` → **zero hits**. | Scope unclear — it is a tool for a research pass that may recur. |
-| `pipeline/fetch/brushers/fix_enrichment_inchikeys.py` (152 lines) | Recomputes hallucinated InChIKeys in `data/enrichment/raw/*.json` from their SMILES, in place. | `rg -n 'fix_enrichment_inchikeys' . --glob '!…/fix_enrichment_inchikeys.py'` → `(no matches)`. | Scope unclear. A one-off repair whose damage class (LLM-fabricated identifiers) can recur. |
-| `pipeline/fetch/brushers/freeodwiki_translate.py` (165 lines) | Stage 1 of 2 of a FreeOD English-prose recovery pass. Writes to `/tmp/freeod-trans/`, which nothing reads. Has no `main()` — it executes at import. | `rg -n 'freeodwiki_translate' . --glob '!…/freeodwiki_translate.py'` → `(no matches)`. | **Yes** — it writes only to `/tmp` and its stage 2 does not exist in the repo. |
 
 ### f.2 Manual-but-load-bearing — the script is never invoked, its output *is* on the build path
 
@@ -559,11 +551,10 @@ tables are imported by `adjudicate.py`, and `DELETE-CANDIDATES.md:35` already
 records its SOURCE check as superseded), `audit/compare_to_drugbank.py` (its
 CLI only — five of its functions are imported elsewhere),
 `pipeline/publish-db.sh`, `pipeline/run-tests.sh`,
-`pipeline/annotate_screenshot.py`.
+`pipeline/annotate_screenshot.py`, `audit/source_link_check.py` (documented in
+`pipeline/README.md`; run before a release, `--gate` re-reads cached verdicts
+offline).
 
-`annotate_screenshot.py` has a stale caller: `.claude/skills/naive-user-test/SKILL.md:68`
-still invokes `python3 Tools/annotate_screenshot.py`, a path that has not
-existed since `888f3f31`.
 
 ### f.4 Unused functions inside used modules
 
@@ -578,17 +569,9 @@ existed since `888f3f31`.
 - `pipeline/audit/papers.py` and `pipeline/audit/europepmc.py` — **no** uncalled
   public members. Every one is reached from at least one of
   `citation_sourcing`, `citation_topicality`, `verify_citations`,
-  `validate_metabolites`, `cited_identifiers`, `halflife_from_primary`.
+  `cited_identifiers`, `halflife_from_primary`.
 - `pipeline/audit/citation_labels.py` — module-shaped only in name; its sole
   public function is `main`.
-- `pipeline/build/sqlite.py:226` — **`dose_context_for()` is dead work.** It is
-  called once, at insert time (line 6674), and every value it writes is
-  overwritten later by `assign_dose_contexts()` (13411), which re-applies
-  `DOSE_CONTEXT_BY_SOURCE` in SQL, adds the `piru-curated` rule, and re-runs the
-  `_THERAPEUTIC_NOTE_MARKERS` scan as a `LIKE` sweep. The only rows the
-  insert-time value could survive on are rows from a source absent from
-  `DOSE_CONTEXT_BY_SOURCE`, for which it returns `"unknown"` — the same value the
-  column already defaults to.
 
 ### f.5 Data files under `data/` that no script reads
 
@@ -598,8 +581,6 @@ existed since `888f3f31`.
 | `data/curated/citation-fixes-2026-08-04.json` | zero readers, same command shape |
 | `data/curated/citation-fixes-2026-08-04-likely.json` | zero readers |
 | `data/curated/citation-fixes-2026-08-04-research.json` | zero readers |
-| `data/sources/drug-community-names.json` | zero readers **and zero writers** — not produced by `fetch_drug_community.py` |
-| `data/sources/drug-community-combinations.json` | written by `fetch_drug_community.py:56`, read by nothing |
 | `data/sources/product-codes-openfda.meta.json`, `product-codes-bdpm.meta.json` | zero readers; provenance sidecars by design (the other `.meta.json` files are the same, each referenced only by its own writer) |
 | `data/enrichment/merged.json`, `class-context.json`, `coverage.csv` | zero readers. `.gitignore:75-79` says so outright: "pure derivatives of `data/enrichment/raw/*.json` … **not consumed by any downstream pipeline step**". The build reads `data/enrichment/raw/*.json` directly (`main()`'s `ENRICHMENT_DIR.glob`). |
 
@@ -612,25 +593,17 @@ deletion, or a coherent five-file `DELETE-CANDIDATES.md` entry.
 
 | Class | Count |
 |---|---|
-| Whole orphan scripts (zero references) | 5 |
-| Dead data files (zero readers) | 7 (+3 `.meta.json` sidecars by design) |
+| Whole orphan scripts (zero references) | 1 (`apply_citation_fixes.py`, its pass unfinished) |
+| Dead data files (zero readers) | 4 citation-fix inputs (+3 `.meta.json` sidecars by design) |
 | Manual-but-load-bearing fetchers | 13 |
-| Manual audit tools (docs-only references) | 13 |
-| Dead function inside a live module | 1 (`dose_context_for`) |
-| Never-run gates that exist and work | 1 (`source_link_check.py --gate`) |
+| Manual audit tools (docs-only references) | 14 |
 | Audit tests not in CI | 1 (`test_adjudicate.py`) |
 
 ---
 
 ## g. Observations for a data-quality refactor
 
-**1. The same fact is computed twice, and only one of them counts.**
-`dose_context` is set at insert (`sqlite.py:6674`) and then wholly overwritten
-by `assign_dose_contexts()`. Deleting the insert-time call would remove a
-function, a lookup table read per row, and one place for the two rules to drift
-apart.
-
-**2. Two InChIKey oracles, two toolkits.** `sqlite.py:754`'s
+**1. Two InChIKey oracles, two toolkits.** `sqlite.py:754`'s
 `inchikey_from_smiles` uses RDKit and gates the dose.wiki chemistry ingest;
 `pipeline/chem_ids.py:38`'s `obabel_inchikey` shells out to OpenBabel and gates
 CI's `test_identifier_integrity`. RDKit and OpenBabel do not always agree on
@@ -638,12 +611,12 @@ tautomers and stereo perception, so the ingest gate and the CI gate can hold
 different opinions about the same SMILES. One oracle, or an explicit note about
 why two.
 
-**3. Elimination is stored twice.** `half_lives` and `pk_routes` both carry it,
+**2. Elimination is stored twice.** `half_lives` and `pk_routes` both carry it,
 and `audit/pk_sanity.py --gate` exists precisely because nothing else compares
 them. The gate is the right ratchet; the duplication is the underlying issue,
 and `derive_half_lives_from_pk()` deliberately widens it.
 
-**4. The curated directory is ingested twice, and one copy is thrown away.**
+**3. The curated directory is ingested twice, and one copy is thrown away.**
 The Swift collector loads `data/curated/substances` as step 5/5 and writes
 `piru-curated` rows into `sourced-substances.json`; `sqlite.py` ingests the same
 directory directly, first. `build.sh:32-34` says the collector's rows "are
@@ -652,21 +625,21 @@ ignored downstream". So the collector does work whose only effect is to make
 the curated layer. Passing `--curated-overlay` a nonexistent path would be
 harmless; it currently *is* a nonexistent path, by accident (see §a).
 
-**5. A curated file that silently outranks everything, including curation.**
+**4. A curated file that silently outranks everything, including curation.**
 `drop_removed_substances` is documented as "deliberately UNPROTECTED by the
 curated layer" — a name in `removed-substances.json` deletes a substance even if
 someone wrote a full curated file for it. That is a defensible policy, but it is
 the one place where the precedence runs backwards from everywhere else, and it
 is visible only in a comment at `sqlite.py:119`.
 
-**6. `dose-source-exceptions.json` is a resolution override that resolution
+**5. `dose-source-exceptions.json` is a resolution override that resolution
 never sees.** Because it filters at ingest, the DB carries no record that a
 source *had* a ladder and it was refused. `provenance` / `sourcesProviding` in
 the app will report the next source as though it simply won. For every hand-argued
 exception with a written reason, none of that reasoning is reachable from the
 shipped artifact.
 
-**7. The adjudicator and the shipped resolution do not share a vocabulary.**
+**6. The adjudicator and the shipped resolution do not share a vocabulary.**
 `adjudicate.py` computes per-source, per-column reliability; the app applies one
 global ordering that is the same for every substance, route and field. There is
 no mechanism — no table, no column — by which an adjudicated verdict could
@@ -675,13 +648,13 @@ adjudicator is going to pay for itself, the missing piece is a
 per-(substance, column, source) override table, which is exactly the shape
 `source_field_priority` already demonstrates for one field.
 
-**8. `source_field_priority` has one row and one reader.** The mechanism is
+**7. `source_field_priority` has one row and one reader.** The mechanism is
 general (field × source × rank) and the schema, the writer and the Swift join
 are all in place, but it holds a single row and `resolvedDescription` is the
 only call site. Either that is the intended minimal use or it is scaffolding
-waiting for observation 7.
+waiting for observation 6.
 
-**9. Nothing in the build path is quadratic.** `dedup_substances` is union-find
+**8. Nothing in the build path is quadratic.** `dedup_substances` is union-find
 over two hash maps; `structural_dupes` groups by a key; the alias sweeps are
 one query per row, not per pair. The expensive steps are I/O and shelling out:
 `check_identifier_integrity` runs `obabel` once per row (~200 s, which is why
@@ -689,20 +662,20 @@ pre-commit path-gates it) and `validate_links` makes a network request per
 citation. The adjudicator's class prior is the one place with a real
 peers-of-peers shape, and it is off the build path entirely.
 
-**10. `build.sh full` is not a full refresh.** Five of the eighteen sources are
+**9. `build.sh full` is not a full refresh.** Five of the eighteen sources are
 refreshed by it; drug.community, TripSit, PubChem properties and CIDs, Wikipedia
 popularity, FreeOD, MedTAP PK, identifier reconciliation and PubMed publication
 types all have working fetchers that `build.sh` never calls. A reader who runs
 `full` and sees "re-run the upstream scrape" will believe their snapshots are
 current.
 
-**11. The build's own link gate is mislabelled and is the only network step in
+**10. The build's own link gate is mislabelled and is the only network step in
 `fast` mode.** `build.sh:82` says "Citation link gate (offline — no network)",
 but `validate_links.py` opens sockets and rewrites `link-cache.json`. Since
 `fast` mode is sold as offline and reproducible, this is the one thing that
 makes it neither.
 
-**12. Documentation drift, itemized.**
+**11. Documentation drift, itemized.**
 `build.sh`'s step denominators change from `/8` to `/10` halfway down.
 `pipeline/README.md` does not mention `pubmed_pubtypes.py`, `chem_ids.py`,
 `collision_registry.py`, `psid.py`, `product_codes.py`, `ci_local.py`,

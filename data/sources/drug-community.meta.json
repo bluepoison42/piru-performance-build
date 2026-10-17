@@ -25,11 +25,6 @@
       "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/effects",
       "sha256": "e6d94e79afa16e189357fca928f57aaf340c12b11be6693b1509795f1795a82d",
       "bytes": 17048022
-    },
-    "combinations": {
-      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/combinations",
-      "sha256": "47916668d2d16cde1467b2cf2487f89c06c4951c22747cf51eb3e334830d6213",
-      "bytes": 3967914
     }
   }
 }

@@ -25,8 +25,8 @@ proxied response is refused instead of committed.
 element the per-substance object ``/api/info?name=<X>`` returns (drug_name,
 dosages, duration_curves, duration_charts, duration_studies, duration and
 half_life prose, subjective_effects, categories, …). Piru snapshots it and the
-``intensity-spectra``, ``effects`` and ``combinations`` companions; the
-release's other datasets (``mentions``, ``global-search``, ``effect-landscape``,
+``intensity-spectra`` and ``effects`` companions; the release's other datasets
+(``combinations``, ``mentions``, ``global-search``, ``effect-landscape``,
 ``subjective-effects-meta``) feed nothing in the build and are not fetched.
 
 Why store the responses in the repo: re-running this surfaces any upstream
@@ -44,7 +44,7 @@ Writes:
     data/sources/drug-community.json       — array of drug profiles, sorted by slug
     data/sources/drug-community.meta.json   — fetch provenance (release, when, how many, and
                                               the digest of every dataset verified)
-    data/sources/drug-community-{spectra,effects,combinations}.json — companion datasets
+    data/sources/drug-community-{spectra,effects}.json — companion datasets
 """
 
 from __future__ import annotations
@@ -66,7 +66,6 @@ META = SOURCES / "drug-community.meta.json"
 # Companion datasets (see fetch_extra_datasets).
 SPECTRA_OUT = SOURCES / "drug-community-spectra.json"
 EFFECTS_OUT = SOURCES / "drug-community-effects.json"
-COMBOS_OUT = SOURCES / "drug-community-combinations.json"
 
 BASE = "https://substance.wiki"
 MANIFEST = BASE + "/api/data/manifest"
@@ -187,7 +186,6 @@ def fetch_extra_datasets(release: Release) -> None:
 
         intensity-spectra  → graded dose→effect model (162 substances)
         effects            → erowid effect tags by domain + sample quotes (121)
-        combinations       → anecdotal drug-combo reports + top effects (2397)
     """
     # Intensity spectra: a flat list of per-substance documents. Drop the Mongo
     # bookkeeping and sort by slug for a stable ordering.
@@ -219,16 +217,6 @@ def fetch_extra_datasets(release: Release) -> None:
         )
     except Exception as exc:  # noqa: BLE001 - companion data is best-effort
         print(f"  ! effects fetch failed: {exc}", file=sys.stderr)
-
-    # Combinations: a flat list keyed by combo slug; no Mongo bookkeeping.
-    try:
-        combos = release.dataset("combinations")
-        combos = [c for c in combos if isinstance(c, dict) and c.get("slug")]
-        combos.sort(key=lambda c: c["slug"])
-        kb = _write_json(COMBOS_OUT, combos)
-        print(f"  combinations: {len(combos):4} pairs       ({kb} KB) → {COMBOS_OUT.name}")
-    except Exception as exc:  # noqa: BLE001 - companion data is best-effort
-        print(f"  ! combinations fetch failed: {exc}", file=sys.stderr)
 
 
 def main() -> int:
