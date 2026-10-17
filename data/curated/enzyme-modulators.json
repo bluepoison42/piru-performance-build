@@ -133,7 +133,7 @@
       "citation": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=013450dd-cd42-46c7-98d6-9a2925761978",
       "notes": "Weak, not moderate, and the label says so in its own words: 'modafinil is a weak inducer of CYP3A activity'. The measured substrates agree -- ethinyl estradiol AUC -18%, oral midazolam -32%, IV midazolam -17%, quetiapine -29%, all at or under the 50% moderate threshold. Triazolam (-59%) is a single moderate-band outlier; do not use it alone to re-upgrade the rule. 'Weak' grades the induction, not the consequence: the same label tells patients on steroidal contraceptives to use an alternative method during modafinil and for a month after. Modafinil also reversibly inhibits CYP2C19 and weakly induces CYP1A2/CYP2B6 -- real, and out of scope for this CYP3A4-induction row.",
       "display_name": "Modafinil",
-      "user_note": "Modafinil induces CYP3A4, lowering the levels of drugs cleared by it — including the hormones in systemic contraception."
+      "user_note": "Modafinil induces CYP3A4, lowering the levels of drugs cleared by it, including the hormones in systemic contraception."
     },
     {
       "id": "armodafinil",
@@ -151,7 +151,7 @@
       "citation": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3dd49302-f757-d945-e063-6294a90afcba",
       "notes": "Weak, on the same evidence as the modafinil row and deliberately identical to it: FDA reuses the SAME armodafinil 250 mg trials in both labels (oral midazolam AUC -32%, IV -17%, quetiapine -29%), so the matching numbers on the two rows are directly supported rather than one row being copied to the other. The oral-versus-IV midazolam split shows the induction is largely intestinal, the same pattern as grapefruit and St John's wort. Armodafinil also reversibly inhibits CYP2C19 (omeprazole AUC +40%) -- out of scope for this row.",
       "display_name": "Armodafinil",
-      "user_note": "Armodafinil induces CYP3A4, lowering the levels of drugs cleared by it — including the hormones in systemic contraception."
+      "user_note": "Armodafinil induces CYP3A4, lowering the levels of drugs cleared by it, including the hormones in systemic contraception."
     },
     {
       "id": "bupropion",

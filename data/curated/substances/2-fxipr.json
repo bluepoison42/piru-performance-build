@@ -21,7 +21,7 @@
   ],
   "mechanismOfAction": {
     "summary": "Presumed NMDA receptor antagonist; 2-oxo-arylcyclohexylamine (methoxetamine/MXiPr relative with 2-fluoro substituent replacing 2-methoxy of MXE).",
-    "description": "Tentative IUPAC: 2-(2-fluorophenyl)-2-(isopropylamino)cyclohexan-1-one. The ortho-fluoro isomer replaces the methoxy group of MXE's pharmacophore. NMR-confirmed as ortho-F isomer. Sibling: 2-FXPr (n-propyl variant). Only a single anecdotal intranasal report exists (nervewing blog, 2025) — not a validated dose source; rapid tolerance noted in that report. No CAS/CID available.",
+    "description": "Tentative IUPAC: 2-(2-fluorophenyl)-2-(isopropylamino)cyclohexan-1-one. The ortho-fluoro isomer replaces the methoxy group of MXE's pharmacophore. NMR-confirmed as ortho-F isomer. Sibling: 2-FXPr (n-propyl variant). Only a single anecdotal intranasal report exists (nervewing blog, 2025). It is not a validated dose source; it notes rapid tolerance. No CAS/CID available.",
     "primaryTargets": [
       "NMDA receptor"
     ],

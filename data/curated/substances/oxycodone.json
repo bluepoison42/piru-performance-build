@@ -13,7 +13,7 @@
     {
       "severity": "danger",
       "name": "Benzodiazepines",
-      "description": "Both slow your breathing, by different routes — the pairing causes a large share of opioid deaths. Tolerance to one gives no protection against the other. Do not combine."
+      "description": "Both slow your breathing, by different routes, and the pairing causes a large share of opioid deaths. Tolerance to one gives no protection against the other. Do not combine."
     },
     {
       "severity": "danger",
@@ -28,12 +28,12 @@
     {
       "severity": "caution",
       "name": "Gabapentinoids",
-      "description": "Gabapentin and pregabalin add their own slowed breathing — a pairing rising in overdose data because each half seems mild alone. If both are prescribed, keep doses low and add no other sedatives."
+      "description": "Gabapentin and pregabalin add their own slowed breathing, a pairing rising in overdose data because each half seems mild alone. If both are prescribed, keep doses low and add no other sedatives."
     },
     {
       "severity": "caution",
       "name": "Other opioids",
-      "description": "Same receptor, different names — doses stack directly. A second opioid is a dose increase, not a different drug. Count the total."
+      "description": "Same receptor, different names: doses stack directly. A second opioid is a dose increase, not a different drug. Count the total."
     }
   ]
 }

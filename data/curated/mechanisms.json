@@ -157,7 +157,7 @@
   {
     "name": "7-Hydroxymitragynine",
     "summary": "μ-Opioid Receptor Agonist (Kratom Alkaloid)",
-    "description": "Activates μ-opioid receptors, producing analgesia, euphoria, respiratory depression and slowed gastrointestinal transit. It is also what mitragynine becomes: CYP3A isoforms convert mitragynine to 7-OH, and the brain concentrations reached that way account for most or all of mitragynine's opioid-mediated analgesia, while mitragynine itself accumulates far above its own binding affinity without appearing to activate the receptor directly (Kruegel et al.). So kratom's opioid effect runs through a conversion step, and depends on CYP3A activity; 7-OH taken directly does not. In the leaf it is a trace alkaloid — under 0.05% of dry mass, against mitragynine's 1–2%.",
+    "description": "Activates μ-opioid receptors, producing analgesia, euphoria, respiratory depression and slowed gastrointestinal transit. It is also what mitragynine becomes: CYP3A isoforms convert mitragynine to 7-OH, and the brain concentrations reached that way account for most or all of mitragynine's opioid-mediated analgesia, while mitragynine itself accumulates far above its own binding affinity without appearing to activate the receptor directly (Kruegel et al.). So kratom's opioid effect runs through a conversion step, and depends on CYP3A activity; 7-OH taken directly does not. In the leaf it is a trace alkaloid: under 0.05% of dry mass, against mitragynine's 1–2%.",
     "references": [
       "10.1021/acscentsci.9b00141"
     ]
@@ -278,7 +278,7 @@
   {
     "name": "Amphetamine",
     "summary": "Catecholamine-Releasing Agent",
-    "description": "A substrate-type releasing agent: it enters catecholaminergic neurons through NET and DAT and triggers reverse transport, dumping norepinephrine and dopamine into the synapse. In rat synaptosomes norepinephrine release is most potent, dopamine close behind, and serotonin release is very weak — present but near-SERT-sparing, making amphetamine more catecholamine-selective than methamphetamine. It additionally agonizes TAAR1 and acts at VMAT2 to redistribute vesicular monoamines into the cytosol.",
+    "description": "A substrate-type releasing agent: it enters catecholaminergic neurons through NET and DAT and triggers reverse transport, dumping norepinephrine and dopamine into the synapse. In rat synaptosomes norepinephrine release is most potent, dopamine close behind, and serotonin release is very weak (present but near-SERT-sparing), making amphetamine more catecholamine-selective than methamphetamine. It additionally agonizes TAAR1 and acts at VMAT2 to redistribute vesicular monoamines into the cytosol.",
     "bindings": [
       {
         "target": "NET",
@@ -310,7 +310,7 @@
   {
     "name": "Aripiprazole",
     "summary": "Dopamine D2 Partial Agonist and Serotonin Modulator",
-    "description": "A partial agonist at dopamine D2 receptors — acting as a functional antagonist in hyperdopaminergic states (mesolimbic pathway) and a functional agonist in hypodopaminergic states (mesocortical pathway). This 'dopamine stabilizer' mechanism reduces positive symptoms while potentially improving negative symptoms and cognition. Also a partial agonist at 5-HT1A and an antagonist at 5-HT2A receptors.",
+    "description": "A partial agonist at dopamine D2 receptors, acting as a functional antagonist in hyperdopaminergic states (mesolimbic pathway) and a functional agonist in hypodopaminergic states (mesocortical pathway). This 'dopamine stabilizer' mechanism reduces positive symptoms while potentially improving negative symptoms and cognition. Also a partial agonist at 5-HT1A and an antagonist at 5-HT2A receptors.",
     "bindings": [
       {
         "target": "D2",
@@ -398,7 +398,7 @@
   {
     "name": "Baclofen",
     "summary": "Selective GABA-B Receptor Agonist",
-    "description": "Selectively activates GABA-B receptors — Gi/Go-coupled GPCRs that lower neuronal excitability by opening potassium channels and inhibiting voltage-gated calcium channels. Produces antispasticity/muscle relaxation by reducing excitatory transmission at spinal motoneurons. Unlike benzodiazepines and barbiturates, has no action at GABA-A receptors.",
+    "description": "Selectively activates GABA-B receptors, Gi/Go-coupled GPCRs that lower neuronal excitability by opening potassium channels and inhibiting voltage-gated calcium channels. Produces antispasticity/muscle relaxation by reducing excitatory transmission at spinal motoneurons. Unlike benzodiazepines and barbiturates, has no action at GABA-A receptors.",
     "bindings": [
       {
         "target": "GABA-B",
@@ -536,7 +536,7 @@
   },
   {
     "name": "Cannabis",
-    "summary": "Cannabinoid Mixture — Partial CB1 Agonism (THC)",
+    "summary": "Cannabinoid Mixture: Partial CB1 Agonism (THC)",
     "description": "A plant, not a molecule. THC is the partial agonist at CB1 receptors responsible for intoxication; CB1 sits presynaptically throughout the cortex, hippocampus and basal ganglia, where its activation dampens neurotransmitter release. CBD is not intoxicating and behaves as a negative allosteric modulator at CB1, blunting some THC effects. Cultivars differ severalfold in THC:CBD ratio and in the minor cannabinoids and terpenes alongside them, so the same weight of two flowers is not the same exposure."
   },
   {
@@ -586,7 +586,7 @@
   {
     "name": "Carisoprodol",
     "summary": "GABA-A Modulator (via Meprobamate Metabolite)",
-    "description": "A carbamate muscle relaxant that is partly metabolized to meprobamate, itself a positive allosteric modulator at GABA-A receptors with barbiturate-like activity. The parent compound also acts directly at GABA-A receptors — allosterically potentiating, and at higher concentrations directly gating, the channel in a barbiturate-like manner (blocked by bemegride but not flumazenil) via a site distinct from the benzodiazepine, barbiturate, and neurosteroid sites; this direct action is partly independent of meprobamate. Produces muscle relaxation, sedation, and anxiolysis. The meprobamate metabolite has a long half-life and contributes to dependence potential.",
+    "description": "A carbamate muscle relaxant that is partly metabolized to meprobamate, itself a positive allosteric modulator at GABA-A receptors with barbiturate-like activity. The parent compound also acts directly at GABA-A receptors, allosterically potentiating and, at higher concentrations, directly gating the channel in a barbiturate-like manner (blocked by bemegride but not flumazenil) via a site distinct from the benzodiazepine, barbiturate, and neurosteroid sites; this direct action is partly independent of meprobamate. Produces muscle relaxation, sedation, and anxiolysis. The meprobamate metabolite has a long half-life and contributes to dependence potential.",
     "bindings": [
       {
         "target": "GABA-A",
@@ -718,7 +718,7 @@
   {
     "name": "Codeine",
     "summary": "Prodrug → Morphine (CYP2D6-Dependent Opioid)",
-    "description": "A prodrug metabolized to morphine by cytochrome P450 enzyme CYP2D6. Has very weak intrinsic affinity for μ-opioid receptors; analgesic and antitussive effects depend on conversion to morphine. CYP2D6 polymorphisms strongly affect response — poor metabolizers get little benefit, while ultra-rapid metabolizers may reach dangerous opioid levels.",
+    "description": "A prodrug metabolized to morphine by cytochrome P450 enzyme CYP2D6. Has very weak intrinsic affinity for μ-opioid receptors; analgesic and antitussive effects depend on conversion to morphine. CYP2D6 polymorphisms strongly affect response: poor metabolizers get little benefit, while ultra-rapid metabolizers may reach dangerous opioid levels.",
     "bindings": [
       {
         "target": "μ-opioid (via morphine)",
@@ -769,7 +769,7 @@
   {
     "name": "Dextromethorphan",
     "summary": "NMDA Antagonist, Sigma-1 Agonist, and Serotonin Reuptake Inhibitor",
-    "description": "Produces dose-dependent effects through multiple targets. At therapeutic antitussive doses, acts primarily as a sigma-1 receptor agonist in brainstem cough centers. At higher (recreational) doses, the metabolite dextrorphan acts as an NMDA antagonist producing dissociative effects. The parent compound also inhibits serotonin reuptake (SERT) — a basis for serotonin-syndrome risk with serotonergic drugs — and weakly activates μ-opioid receptors. CYP2D6 polymorphisms significantly affect metabolism and experience.",
+    "description": "Produces dose-dependent effects through multiple targets. At therapeutic antitussive doses, acts primarily as a sigma-1 receptor agonist in brainstem cough centers. At higher (recreational) doses, the metabolite dextrorphan acts as an NMDA antagonist producing dissociative effects. The parent compound also inhibits serotonin reuptake (SERT), a basis for serotonin-syndrome risk with serotonergic drugs, and weakly activates μ-opioid receptors. CYP2D6 polymorphisms significantly affect metabolism and experience.",
     "bindings": [
       {
         "target": "NMDA",
@@ -796,7 +796,7 @@
   {
     "name": "Diazepam",
     "summary": "GABA-A Positive Allosteric Modulator",
-    "description": "Binds the benzodiazepine site of the GABA-A receptor and enhances the inhibitory effect of GABA, increasing the frequency of chloride-channel opening and neuronal hyperpolarization. This produces anxiolytic, sedative, muscle-relaxant, and anticonvulsant effects. It does not open the channel on its own — it only potentiates GABA already present, which is why it is comparatively safe in isolated overdose but dangerous combined with other CNS depressants.",
+    "description": "Binds the benzodiazepine site of the GABA-A receptor and enhances the inhibitory effect of GABA, increasing the frequency of chloride-channel opening and neuronal hyperpolarization. This produces anxiolytic, sedative, muscle-relaxant, and anticonvulsant effects. It does not open the channel on its own. It only potentiates GABA already present, which is why it is comparatively safe in isolated overdose but dangerous combined with other CNS depressants.",
     "bindings": [
       {
         "target": "GABA-A",
@@ -808,7 +808,7 @@
   {
     "name": "Estradiol",
     "summary": "Estrogen Receptor Agonist (ERα / ERβ)",
-    "description": "The principal endogenous estrogen. It activates both estrogen receptor subtypes with similar preference; the subtypes sit in different tissues, which could contribute to tissue-selective action (Kuiper 1997). An injected ester is a prodrug released from its oil depot: enzymatic hydrolysis splits the valerate into 17β-estradiol and its fatty acid, handled thereafter as estradiol is after injection (Düsterberg 1985). The depot sets the time course — the cypionate peaks later and lasts longer than the valerate (Oriowo 1980); subcutaneous and intramuscular cypionate give similar exposure (Sierra-Ramírez 2011). Swallowed valerate is mostly lost to first-pass metabolism (Düsterberg 1985).",
+    "description": "The principal endogenous estrogen. It activates both estrogen receptor subtypes with similar preference; the subtypes sit in different tissues, which could contribute to tissue-selective action (Kuiper 1997). An injected ester is a prodrug released from its oil depot: enzymatic hydrolysis splits the valerate into 17β-estradiol and its fatty acid, handled thereafter as estradiol is after injection (Düsterberg 1985). The depot sets the time course: the cypionate peaks later and lasts longer than the valerate (Oriowo 1980); subcutaneous and intramuscular cypionate give similar exposure (Sierra-Ramírez 2011). Swallowed valerate is mostly lost to first-pass metabolism (Düsterberg 1985).",
     "bindings": [
       {
         "target": "Estrogen receptor α",
@@ -865,7 +865,7 @@
   {
     "name": "Ibogaine",
     "summary": "Multimodal Psychoactive Alkaloid",
-    "description": "Acts on multiple neurotransmitter systems simultaneously. Its highest-affinity interaction is potent non-competitive antagonism of α3β4 nicotinic acetylcholine receptors — a likely key contributor to its anti-addictive effects. It is also a serotonin transporter inhibitor, a κ-opioid receptor agonist, a moderate-affinity NMDA receptor antagonist, and a sigma (notably sigma-2) ligand. The active metabolite noribogaine has prolonged μ-opioid receptor activity. This complex profile may reduce opioid withdrawal and craving but carries significant cardiac risk via hERG potassium-channel inhibition.",
+    "description": "Acts on multiple neurotransmitter systems simultaneously. Its highest-affinity interaction is potent non-competitive antagonism of α3β4 nicotinic acetylcholine receptors, a likely key contributor to its anti-addictive effects. It is also a serotonin transporter inhibitor, a κ-opioid receptor agonist, a moderate-affinity NMDA receptor antagonist, and a sigma (notably sigma-2) ligand. The active metabolite noribogaine has prolonged μ-opioid receptor activity. This complex profile may reduce opioid withdrawal and craving but carries significant cardiac risk via hERG potassium-channel inhibition.",
     "bindings": [
       {
         "target": "α3β4 nAChR",
@@ -902,7 +902,7 @@
   {
     "name": "Ketamine",
     "summary": "NMDA Receptor Antagonist (Open-Channel Blocker)",
-    "description": "Binds inside the NMDA receptor's open pore, so it blocks channels that are already active — preferentially those on tonically firing inhibitory interneurons. Removing that inhibition disinhibits cortical pyramidal cells and produces a glutamate surge, which is a different account of the effect than simple receptor blockade. Downstream AMPA activation and mTOR signaling are the leading explanation for the antidepressant response, which outlasts the drug itself by days. The S-enantiomer is several times more potent at NMDA than the R.",
+    "description": "Binds inside the NMDA receptor's open pore, so it blocks channels that are already active, preferentially those on tonically firing inhibitory interneurons. Removing that inhibition disinhibits cortical pyramidal cells and produces a glutamate surge, which is a different account of the effect than simple receptor blockade. Downstream AMPA activation and mTOR signaling are the leading explanation for the antidepressant response, which outlasts the drug itself by days. The S-enantiomer is several times more potent at NMDA than the R.",
     "bindings": [
       {
         "target": "NMDA",
@@ -1080,7 +1080,7 @@
   {
     "name": "MDMA",
     "summary": "Serotonin-Predominant Monoamine Releasing Agent and Empathogen",
-    "description": "Enters serotonergic, dopaminergic, and noradrenergic nerve terminals via their respective transporters and reverses transporter function to release stored monoamines, with strongest action at SERT — producing pronounced serotonin release that distinguishes it from amphetamine. It also directly inhibits SERT, DAT, and NET reuptake. Downstream serotonergic signaling stimulates oxytocin release from the hypothalamus, contributing to prosocial and empathogenic effects.",
+    "description": "Enters serotonergic, dopaminergic, and noradrenergic nerve terminals via their respective transporters and reverses transporter function to release stored monoamines, with strongest action at SERT. The pronounced serotonin release distinguishes it from amphetamine. It also directly inhibits SERT, DAT, and NET reuptake. Downstream serotonergic signaling stimulates oxytocin release from the hypothalamus, contributing to prosocial and empathogenic effects.",
     "bindings": [
       {
         "target": "SERT",
@@ -1165,7 +1165,7 @@
   {
     "name": "Methamphetamine",
     "summary": "Monoamine-Releasing Stimulant",
-    "description": "Carried into monoaminergic neurons, where it drives reverse transport of norepinephrine, dopamine, and serotonin through NET, DAT, and SERT. In rat synaptosomes it releases norepinephrine most potently, dopamine close behind, and serotonin about 30× weaker — catecholamine-dominant, but more serotonergic than amphetamine. It also agonizes TAAR1 (modulating its own release) and is a VMAT2 substrate that collapses the vesicular gradient, redistributing stored monoamines for efflux.",
+    "description": "Carried into monoaminergic neurons, where it drives reverse transport of norepinephrine, dopamine, and serotonin through NET, DAT, and SERT. In rat synaptosomes it releases norepinephrine most potently, dopamine close behind, and serotonin about 30× weaker: catecholamine-dominant, but more serotonergic than amphetamine. It also agonizes TAAR1 (modulating its own release) and is a VMAT2 substrate that collapses the vesicular gradient, redistributing stored monoamines for efflux.",
     "bindings": [
       {
         "target": "NET",
@@ -1197,7 +1197,7 @@
   {
     "name": "Methaqualone",
     "summary": "GABA-A Positive Allosteric Modulator (Quinazolinone)",
-    "description": "A quinazolinone sedative-hypnotic that acts as a positive allosteric modulator of GABA-A receptors, binding at the transmembrane β(+)/α(–) subunit interface — a site distinct from the benzodiazepine, barbiturate, and neurosteroid sites and overlapping the general-anesthetic (etomidate) site. Potentiation widens the ion-conducting pore and destabilizes the hydrophobic activation gate, enhancing GABAergic inhibition to produce sedative, hypnotic, anxiolytic, and muscle-relaxant effects. Functionality is subtype-dependent.",
+    "description": "A quinazolinone sedative-hypnotic that acts as a positive allosteric modulator of GABA-A receptors, binding at the transmembrane β(+)/α(–) subunit interface, a site distinct from the benzodiazepine, barbiturate, and neurosteroid sites and overlapping the general-anesthetic (etomidate) site. Potentiation widens the ion-conducting pore and destabilizes the hydrophobic activation gate, enhancing GABAergic inhibition to produce sedative, hypnotic, anxiolytic, and muscle-relaxant effects. Functionality is subtype-dependent.",
     "bindings": [
       {
         "target": "GABA-A",
@@ -1209,7 +1209,7 @@
   {
     "name": "Methylphenidate",
     "summary": "Dopamine-Norepinephrine Reuptake Inhibitor",
-    "description": "Blocks the dopamine transporter (DAT) and norepinephrine transporter (NET), increasing synaptic dopamine and norepinephrine. Unlike amphetamines, it is a pure reuptake inhibitor — it does not reverse transporter function or release stored monoamines. Preferentially raises catecholamines in the prefrontal cortex and striatum, enhancing attention, working memory, and executive function.",
+    "description": "Blocks the dopamine transporter (DAT) and norepinephrine transporter (NET), increasing synaptic dopamine and norepinephrine. Unlike amphetamines, it is a pure reuptake inhibitor: it does not reverse transporter function or release stored monoamines. Preferentially raises catecholamines in the prefrontal cortex and striatum, enhancing attention, working memory, and executive function.",
     "bindings": [
       {
         "target": "DAT",
@@ -1285,7 +1285,7 @@
   {
     "name": "Modafinil",
     "summary": "Wakefulness-Promoting Agent (Atypical Stimulant)",
-    "description": "Mechanism not fully established. Weakly inhibits the dopamine transporter (DAT), increasing extracellular dopamine — the only well-validated direct molecular target. Downstream of this it activates hypothalamic orexin/hypocretin neurons and raises histamine release in the tuberomammillary nucleus, both promoting wakefulness, and indirectly modulates norepinephrine, serotonin, and glutamate/GABA balance. Unlike amphetamines, it does not significantly release catecholamines.",
+    "description": "Mechanism not fully established. Weakly inhibits the dopamine transporter (DAT), increasing extracellular dopamine; this is the only well-validated direct molecular target. Downstream of this it activates hypothalamic orexin/hypocretin neurons and raises histamine release in the tuberomammillary nucleus, both promoting wakefulness, and indirectly modulates norepinephrine, serotonin, and glutamate/GABA balance. Unlike amphetamines, it does not significantly release catecholamines.",
     "bindings": [
       {
         "target": "DAT",
@@ -1310,7 +1310,7 @@
   {
     "name": "Montelukast",
     "summary": "Leukotriene Receptor Antagonist",
-    "description": "Selectively antagonizes the cysteinyl leukotriene receptor CysLT1, blocking the bronchoconstrictive and pro-inflammatory effects of the cysteinyl leukotrienes C4, D4, and E4 — potent inflammatory mediators released by mast cells, eosinophils, and other immune cells. Reduces bronchospasm, mucus secretion, and eosinophilic airway inflammation in asthma.",
+    "description": "Selectively antagonizes the cysteinyl leukotriene receptor CysLT1, blocking the bronchoconstrictive and pro-inflammatory effects of the cysteinyl leukotrienes C4, D4, and E4, potent inflammatory mediators released by mast cells, eosinophils, and other immune cells. Reduces bronchospasm, mucus secretion, and eosinophilic airway inflammation in asthma.",
     "bindings": [
       {
         "target": "CysLT1",
@@ -1322,7 +1322,7 @@
   {
     "name": "Morphine",
     "summary": "Mu-Opioid Receptor Agonist",
-    "description": "A full agonist at the mu-opioid receptor and the reference compound the class is measured against, with weaker activity at kappa and delta. Mu activation in the periaqueductal gray and spinal dorsal horn produces analgesia; the same receptor in the brainstem suppresses the drive to breathe, which is the mechanism behind fatal overdose. UGT2B7 conjugates it to morphine-6-glucuronide, which is itself an active agonist, and morphine-3-glucuronide, which is not — and because both are cleared renally, impaired kidneys let the active one accumulate.",
+    "description": "A full agonist at the mu-opioid receptor and the reference compound the class is measured against, with weaker activity at kappa and delta. Mu activation in the periaqueductal gray and spinal dorsal horn produces analgesia; the same receptor in the brainstem suppresses the drive to breathe, which is the mechanism behind fatal overdose. UGT2B7 conjugates it to morphine-6-glucuronide, which is itself an active agonist, and morphine-3-glucuronide, which is not. Because both are cleared renally, impaired kidneys let the active one accumulate.",
     "bindings": [
       {
         "target": "μ-opioid",
@@ -1512,7 +1512,7 @@
   {
     "name": "PCP",
     "summary": "Non-Competitive NMDA Antagonist and Dopamine Reuptake Inhibitor",
-    "description": "Blocks NMDA glutamate receptors as a non-competitive (open-channel) antagonist. Also raises synaptic dopamine — largely through indirect/allosteric effects on monoamine transport rather than high-affinity direct DAT blockade — which distinguishes it from other dissociatives and contributes to its stimulant properties and higher psychosis risk. Additionally interacts with sigma receptors, nicotinic receptors, and voltage-gated sodium channels.",
+    "description": "Blocks NMDA glutamate receptors as a non-competitive (open-channel) antagonist. Also raises synaptic dopamine (largely through indirect/allosteric effects on monoamine transport rather than high-affinity direct DAT blockade), which distinguishes it from other dissociatives and contributes to its stimulant properties and higher psychosis risk. Additionally interacts with sigma receptors, nicotinic receptors, and voltage-gated sodium channels.",
     "bindings": [
       {
         "target": "NMDA",

@@ -20,8 +20,8 @@
     "US Schedule IV and UN 1971 Schedule III; also a phenylpropanolamine stereoisomer, so it turns up in doping tests"
   ],
   "mechanismOfAction": {
-    "summary": "Weak substrate-type releasing agent, NET > DAT — the reduced, β-hydroxy relative of cathinone.",
-    "description": "Cathine is (1S,2S)-2-amino-1-phenylpropan-1-ol: cathinone with the ketone reduced to an alcohol. That reduction costs most of the potency — releasing activity is retained but roughly 7–10× weaker, and skewed toward noradrenaline over dopamine, giving a peripheral sympathomimetic and anorectic profile rather than a euphoriant one. Its much longer half-life is why khat's tail outlasts its peak.",
+    "summary": "Weak substrate-type releasing agent, NET > DAT. The reduced, β-hydroxy relative of cathinone.",
+    "description": "Cathine is (1S,2S)-2-amino-1-phenylpropan-1-ol: cathinone with the ketone reduced to an alcohol. That reduction costs most of the potency. Releasing activity is retained but roughly 7–10× weaker, and skewed toward noradrenaline over dopamine, giving a peripheral sympathomimetic and anorectic profile rather than a euphoriant one. Its much longer half-life is why khat's tail outlasts its peak.",
     "primaryTargets": [
       "NET",
       "DAT"

@@ -477,7 +477,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 216.0,
-    "mechanism_summary": "LSD prodrug — strained cyclobutane ring hydrolyzes to release LSD → 5-HT2A partial agonist.",
+    "mechanism_summary": "LSD prodrug: its strained cyclobutane ring hydrolyzes to release LSD → 5-HT2A partial agonist.",
     "effects": [
       "cognitive amplification",
       "emotional amplification",
@@ -6641,7 +6641,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "A small-molecule agonist of TrkB — the receptor for brain-derived neurotrophic factor (BDNF) — that activates TrkB signaling directly, mimicking BDNF. A synthetic 7,8-DHF derivative with higher potency and longer action than the parent.",
+    "mechanism_summary": "A small-molecule agonist of TrkB, the receptor for brain-derived neurotrophic factor (BDNF), that activates TrkB signaling directly, mimicking BDNF. A synthetic 7,8-DHF derivative with higher potency and longer action than the parent.",
     "effects": [],
     "references": [
       "A Synthetic 7,8-Dihydroxyflavone Derivative Promotes Neurogenesis and Exhibits Potent Antidepressant Effect",
@@ -13872,7 +13872,7 @@
     "mechanism_summary": "Activates 5-HT1B and 5-HT1D receptors, narrowing cranial blood vessels and reducing pain signaling.",
     "effects": [],
     "references": [
-      "FDA label for Almotriptan Malate (almotriptan) tablets, Clinical Pharmacology 12.3 — t½ = 3–4 hours",
+      "FDA label for Almotriptan Malate (almotriptan) tablets, Clinical Pharmacology 12.3: t½ = 3–4 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=27241-041"
     ],
     "data_gaps": [
@@ -13902,7 +13902,7 @@
     "mechanism_summary": "Inhibits the enzyme DPP-4, raising incretin hormone levels and increasing insulin secretion.",
     "effects": [],
     "references": [
-      "FDA label for alogliptin and metformin hydrochloride tablets (alogliptin), Clinical Pharmacology 12.3 — t½ ≈ 21 hours"
+      "FDA label for alogliptin and metformin hydrochloride tablets (alogliptin), Clinical Pharmacology 12.3: t½ ≈ 21 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -14724,7 +14724,7 @@
     "mechanism_summary": "Blocks epithelial sodium channels in the kidney's collecting duct, reducing sodium reabsorption and potassium loss.",
     "effects": [],
     "references": [
-      "FDA label for amiloride hydrochloride, Clinical Pharmacology — plasma half-life 6 to 9 hours",
+      "FDA label for amiloride hydrochloride, Clinical Pharmacology: plasma half-life 6 to 9 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=42291-122"
     ],
     "data_gaps": [
@@ -15057,7 +15057,7 @@
     "mechanism_summary": "β-Lactam Antibiotic (Cell Wall Synthesis Inhibitor)",
     "effects": [],
     "references": [
-      "FDA label for Amoxicillin (amoxicillin), Clinical Pharmacology/Pharmacokinetics — t½ = 61.3 minutes"
+      "FDA label for Amoxicillin (amoxicillin), Clinical Pharmacology/Pharmacokinetics: t½ = 61.3 minutes"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -15313,7 +15313,7 @@
     "mechanism_summary": "Selective non-steroidal aromatase inhibitor, lowering conversion of adrenal androgens to estrone and estradiol.",
     "effects": [],
     "references": [
-      "FDA label for Anastrozole (anastrozole) tablets, Clinical Pharmacology 12.3 — t½ = 50 hours",
+      "FDA label for Anastrozole (anastrozole) tablets, Clinical Pharmacology 12.3: t½ = 50 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0054-0164"
     ],
     "data_gaps": [
@@ -15422,7 +15422,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": true,
     "half_life_minutes": 30.0,
-    "mechanism_summary": "Modified C-terminal HGH fragment — lipolytic, no growth effect.",
+    "mechanism_summary": "Modified C-terminal HGH fragment: lipolytic, no growth effect.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/AOD9604"
@@ -15555,7 +15555,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Apraclonidine Ophthalmic Solution 0.5% (apraclonidine), Clinical Pharmacology — systemic t½ = 8 hours",
+      "FDA label for Apraclonidine Ophthalmic Solution 0.5% (apraclonidine), Clinical Pharmacology: systemic t½ = 8 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=17478-716"
     ],
     "data_gaps": [
@@ -16116,7 +16116,7 @@
     "mechanism_summary": "Inhibits phosphodiesterase type 5, increasing cGMP to relax smooth muscle and increase blood flow to the penis.",
     "effects": [],
     "references": [
-      "FDA label for Avanafil (avanafil), Clinical Pharmacology/Pharmacokinetics — t1/2 ≈ 5 h"
+      "FDA label for Avanafil (avanafil), Clinical Pharmacology/Pharmacokinetics: t1/2 ≈ 5 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -16380,7 +16380,7 @@
     "mechanism_summary": "Macrolide Antibiotic (Protein Synthesis Inhibitor)",
     "effects": [],
     "references": [
-      "FDA label for Zithromax (azithromycin), Clinical Pharmacology 12.3 — terminal t½ ≈ 68 h"
+      "FDA label for Zithromax (azithromycin), Clinical Pharmacology 12.3: terminal t½ ≈ 68 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -16831,7 +16831,7 @@
     "mechanism_summary": "Histone deacetylase inhibitor, causing accumulation of acetylated histones at nanomolar concentrations.",
     "effects": [],
     "references": [
-      "FDA label for Beleodaq (belinostat), Clinical Pharmacology/Pharmacokinetics — t½ = 1.1 h",
+      "FDA label for Beleodaq (belinostat), Clinical Pharmacology/Pharmacokinetics: t½ = 1.1 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=68152-108"
     ],
     "data_gaps": [
@@ -17408,7 +17408,7 @@
     "mechanism_summary": "Selectively binds and activates the retinoid X receptors RXR-alpha, RXR-beta and RXR-gamma, which act as transcription factors.",
     "effects": [],
     "references": [
-      "FDA label for Targretin (bexarotene), Clinical Pharmacology/Pharmacokinetics — terminal t½ ≈ 7 hours",
+      "FDA label for Targretin (bexarotene), Clinical Pharmacology/Pharmacokinetics: terminal t½ ≈ 7 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0378-6955"
     ],
     "data_gaps": [
@@ -17470,7 +17470,7 @@
     "mechanism_summary": "Non-steroidal androgen receptor inhibitor, competitively binding cytosolic androgen receptors in target tissue.",
     "effects": [],
     "references": [
-      "FDA label for bicalutamide tablets, Clinical Pharmacology 12.3, Table 3 — t½ = 5.8 days",
+      "FDA label for bicalutamide tablets, Clinical Pharmacology 12.3, Table 3: t½ = 5.8 days",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0310-0705"
     ],
     "data_gaps": [
@@ -17820,7 +17820,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "DA/NE-releasing stimulant (piperazine class); mechanism based on rodent data only — human receptor binding data absent. NOT a cathinone despite the 'bk' prefix.",
+    "mechanism_summary": "DA/NE-releasing stimulant (piperazine class); mechanism based on rodent data only, and human receptor binding data are absent. NOT a cathinone despite the 'bk' prefix.",
     "effects": [],
     "references": [
       "EUDA BZP drug profile"
@@ -17878,7 +17878,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Bleomycin (bleomycin sulfate), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 2 hours",
+      "FDA label for Bleomycin (bleomycin sulfate), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 2 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=70121-1567"
     ],
     "data_gaps": [
@@ -19222,7 +19222,7 @@
     "mechanism_summary": "Bifunctional alkylating agent that hydrolyzes to reactive carbonium ions which alkylate DNA.",
     "effects": [],
     "references": [
-      "FDA label for Myleran (busulfan), Clinical Pharmacology — t½ ≈ 2.6 hours",
+      "FDA label for Myleran (busulfan), Clinical Pharmacology: t½ ≈ 2.6 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0517-0920"
     ],
     "data_gaps": [
@@ -19832,7 +19832,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 1500.0,
-    "mechanism_summary": "Cannabinoid Mixture — Partial CB1 Agonism (THC)",
+    "mechanism_summary": "Cannabinoid Mixture: Partial CB1 Agonism (THC)",
     "effects": [
       "Acuity enhancement",
       "Acuity suppression",
@@ -20206,7 +20206,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": 312.0,
-    "mechanism_summary": "Weak substrate-type releasing agent, NET > DAT — the reduced, β-hydroxy relative of cathinone.",
+    "mechanism_summary": "Weak substrate-type releasing agent, NET > DAT. The reduced, β-hydroxy relative of cathinone.",
     "effects": [],
     "references": [
       "Pharmacokinetics of cathinone, cathine and norephedrine after the chewing of khat leaves",
@@ -20258,7 +20258,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 90.0,
-    "mechanism_summary": "Substrate-type releasing agent at DAT and NET, weak at SERT — the β-keto analogue of amphetamine.",
+    "mechanism_summary": "Substrate-type releasing agent at DAT and NET, weak at SERT. The β-keto analogue of amphetamine.",
     "effects": [],
     "references": [
       "Pharmacokinetics of cathinone, cathine and norephedrine after the chewing of khat leaves",
@@ -20790,7 +20790,7 @@
     "mechanism_summary": "Inhibits bacterial cell-wall synthesis by binding penicillin-binding proteins.",
     "effects": [],
     "references": [
-      "FDA label for Cefprozil (cefprozil), Clinical Pharmacology — t½ ≈ 1.3 h"
+      "FDA label for Cefprozil (cefprozil), Clinical Pharmacology: t½ ≈ 1.3 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -20819,7 +20819,7 @@
     "mechanism_summary": "Inhibits bacterial cell-wall synthesis by binding penicillin-binding proteins.",
     "effects": [],
     "references": [
-      "FDA label for Cefuroxime Axetil tablets, Clinical Pharmacology 12.3 (Table 8) — mean elimination t½ 1.2 h",
+      "FDA label for Cefuroxime Axetil tablets, Clinical Pharmacology 12.3 (Table 8): mean elimination t½ 1.2 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0143-9567"
     ],
     "data_gaps": [
@@ -21269,7 +21269,7 @@
     "mechanism_summary": "Inhibits sodium-chloride reabsorption in the kidneys, increasing excretion of sodium and water.",
     "effects": [],
     "references": [
-      "FDA label for Diuril (chlorothiazide), Clinical Pharmacology — t½ = 45–120 min"
+      "FDA label for Diuril (chlorothiazide), Clinical Pharmacology: t½ = 45–120 min"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -21541,7 +21541,7 @@
     "mechanism_summary": "Renal dehydropeptidase inhibitor that limits the renal metabolism of imipenem.",
     "effects": [],
     "references": [
-      "FDA label for Imipenem and Cilastatin for Injection (imipenem/cilastatin), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 1 hour"
+      "FDA label for Imipenem and Cilastatin for Injection (imipenem/cilastatin), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 1 hour"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -21839,7 +21839,7 @@
     "mechanism_summary": "Inhibits bacterial protein synthesis by binding the 50S ribosomal subunit.",
     "effects": [],
     "references": [
-      "FDA label for Clarithromycin tablets, Clinical Pharmacology 12.3 — t½ ≈ 3–4 hours (250 mg q12h)",
+      "FDA label for Clarithromycin tablets, Clinical Pharmacology 12.3: t½ ≈ 3–4 hours (250 mg q12h)",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0054-0036"
     ],
     "data_gaps": [
@@ -23930,7 +23930,7 @@
     "mechanism_summary": "Competitive muscarinic antagonist with 9- to 59-fold greater affinity for M3 than for other muscarinic subtypes.",
     "effects": [],
     "references": [
-      "FDA label for darifenacin extended-release tablets, Clinical Pharmacology 12.3 — t½ ≈ 13–19 h",
+      "FDA label for darifenacin extended-release tablets, Clinical Pharmacology 12.3: t½ ≈ 13–19 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0430-0170"
     ],
     "data_gaps": [
@@ -24136,7 +24136,7 @@
     "mechanism_summary": "Chelating agent binding ferric iron in neutral 3:1 complexes stable across a wide pH range.",
     "effects": [],
     "references": [
-      "FDA label for Ferriprox (deferiprone), Clinical Pharmacology/Pharmacokinetics — t½ = 1.8 ± 0.3 h",
+      "FDA label for Ferriprox (deferiprone), Clinical Pharmacology/Pharmacokinetics: t½ = 1.8 ± 0.3 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=52609-0006"
     ],
     "data_gaps": [
@@ -24694,7 +24694,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Volnea (desogestrel and ethinyl estradiol), Clinical Pharmacology/Pharmacokinetics — etonogestrel t½ 27.8±7.2 hours"
+      "FDA label for Volnea (desogestrel and ethinyl estradiol), Clinical Pharmacology/Pharmacokinetics: etonogestrel t½ 27.8±7.2 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -24977,7 +24977,7 @@
     "mechanism_summary": "Relatively selective alpha-2 adrenergic receptor agonist with sedative properties.",
     "effects": [],
     "references": [
-      "FDA label for Dexmedetomidine injection, Clinical Pharmacology 12.3 — terminal t½ ≈ 2 hours",
+      "FDA label for Dexmedetomidine injection, Clinical Pharmacology 12.3: terminal t½ ≈ 2 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=17478-055"
     ],
     "data_gaps": [
@@ -25444,7 +25444,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Dicloxacillin Sodium, Clinical Pharmacology/Pharmacokinetics — t½ ≈ 0.7 hour",
+      "FDA label for Dicloxacillin Sodium, Clinical Pharmacology/Pharmacokinetics: t½ ≈ 0.7 hour",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0093-3123"
     ],
     "data_gaps": [
@@ -25475,7 +25475,7 @@
     "mechanism_summary": "Blocks acetylcholine receptors and acts directly on smooth muscle, relieving gastrointestinal spasms.",
     "effects": [],
     "references": [
-      "FDA label for Dicyclomine hydrochloride, Clinical Pharmacology/Pharmacokinetics — t1/2 approximately 1.8 hours"
+      "FDA label for Dicyclomine hydrochloride, Clinical Pharmacology/Pharmacokinetics: t1/2 approximately 1.8 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -28197,7 +28197,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for efavirenz tablets (efavirenz; Sustiva), Clinical Pharmacology/Pharmacokinetics — t½ 40–55 h after multiple doses"
+      "FDA label for efavirenz tablets (efavirenz; Sustiva), Clinical Pharmacology/Pharmacokinetics: t½ 40–55 h after multiple doses"
     ],
     "data_gaps": [
       "mechanism_of_action"
@@ -28469,7 +28469,7 @@
     "mechanism_summary": "Inhibits the sodium-glucose cotransporter 2 in the kidneys, increasing urinary glucose excretion.",
     "effects": [],
     "references": [
-      "FDA label for Synjardy (empagliflozin and metformin), Clinical Pharmacology/Pharmacokinetics — t1/2 ≈ 12.4 h",
+      "FDA label for Synjardy (empagliflozin and metformin), Clinical Pharmacology/Pharmacokinetics: t1/2 ≈ 12.4 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0597-0152"
     ],
     "data_gaps": [
@@ -28915,7 +28915,7 @@
     "mechanism_summary": "Blocks aldosterone receptors in the kidney, increasing sodium and water excretion while retaining potassium.",
     "effects": [],
     "references": [
-      "FDA label for Inspra (eplerenone), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 3-6 h"
+      "FDA label for Inspra (eplerenone), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 3-6 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -28967,7 +28967,7 @@
     "mechanism_summary": "Reversibly blocks platelet GP IIb/IIIa, keeping fibrinogen and von Willebrand factor from binding.",
     "effects": [],
     "references": [
-      "FDA label for eptifibatide injection, Clinical Pharmacology 12.3 — t½ ≈ 2.5 h",
+      "FDA label for eptifibatide injection, Clinical Pharmacology 12.3: t½ ≈ 2.5 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0085-1136"
     ],
     "data_gaps": [
@@ -29161,7 +29161,7 @@
     "mechanism_summary": "Proton Pump Inhibitor (PPI)",
     "effects": [],
     "references": [
-      "FDA label for esomeprazole magnesium delayed-release capsules (esomeprazole), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 1–1.5 h",
+      "FDA label for esomeprazole magnesium delayed-release capsules (esomeprazole), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 1–1.5 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=41520-727"
     ],
     "data_gaps": [
@@ -29201,7 +29201,7 @@
     "mechanism_summary": "GABA-A Positive Allosteric Modulator (Benzodiazepine)",
     "effects": [],
     "references": [
-      "FDA label for Estazolam (estazolam), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 10–24 h"
+      "FDA label for Estazolam (estazolam), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 10–24 h"
     ],
     "data_gaps": []
   },
@@ -29968,7 +29968,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Etomidate injection, Clinical Pharmacology — t½ ≈ 75 minutes",
+      "FDA label for Etomidate injection, Clinical Pharmacology: t½ ≈ 75 minutes",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0409-6695"
     ],
     "data_gaps": [
@@ -30036,7 +30036,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Etoposide Injection, Clinical Pharmacology/Pharmacokinetics — terminal t½ 4 to 11 hours",
+      "FDA label for Etoposide Injection, Clinical Pharmacology/Pharmacokinetics: terminal t½ 4 to 11 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0378-3266"
     ],
     "data_gaps": [
@@ -30139,7 +30139,7 @@
     "mechanism_summary": "Binds FKBP-12 to form a complex that inhibits mTOR, blocking p70S6K phosphorylation and cell proliferation.",
     "effects": [],
     "references": [
-      "FDA label for Afinitor (everolimus), Clinical Pharmacology/Pharmacokinetics — mean elimination half-life approximately 30 hours",
+      "FDA label for Afinitor (everolimus), Clinical Pharmacology/Pharmacokinetics: mean elimination half-life approximately 30 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0078-0414"
     ],
     "data_gaps": [
@@ -30353,7 +30353,7 @@
     "mechanism_summary": "Converts to penciclovir, which inhibits viral DNA polymerase, blocking viral DNA replication.",
     "effects": [],
     "references": [
-      "FDA label for famciclovir tablets (famciclovir; Famvir generic), Clinical Pharmacology/Pharmacokinetics — penciclovir t½ 2.3 ± 0.4 h after oral famciclovir"
+      "FDA label for famciclovir tablets (famciclovir; Famvir generic), Clinical Pharmacology/Pharmacokinetics: penciclovir t½ 2.3 ± 0.4 h after oral famciclovir"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -30465,7 +30465,7 @@
     "mechanism_summary": "Inhibits xanthine oxidase, reducing uric acid production.",
     "effects": [],
     "references": [
-      "FDA label for Febuxostat (febuxostat), Clinical Pharmacology/Pharmacokinetics — t1/2 ≈ 5-8 h"
+      "FDA label for Febuxostat (febuxostat), Clinical Pharmacology/Pharmacokinetics: t1/2 ≈ 5-8 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -30491,7 +30491,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Felbamate (felbamate), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 20-23 h",
+      "FDA label for Felbamate (felbamate), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 20-23 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0037-0430"
     ],
     "data_gaps": [
@@ -30632,7 +30632,7 @@
     "mechanism_summary": "Reversibly inhibits COX-1 and COX-2 enzymes, reducing prostaglandin production and associated pain and inflammation.",
     "effects": [],
     "references": [
-      "FDA label for fenoprofen calcium, Clinical Pharmacology 12.3 — t½ ≈ 3 h"
+      "FDA label for fenoprofen calcium, Clinical Pharmacology 12.3: t½ ≈ 3 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -30937,7 +30937,7 @@
     "mechanism_summary": "Activates serotonin 5-HT1A receptors while blocking 5-HT2A receptors.",
     "effects": [],
     "references": [
-      "FDA label for Addyi (flibanserin), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 11 h"
+      "FDA label for Addyi (flibanserin), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 11 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -31289,7 +31289,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Fludarabine Phosphate (fludarabine phosphate), Clinical Pharmacology 12.3 Pharmacokinetics — t½ ≈ 20 h",
+      "FDA label for Fludarabine Phosphate (fludarabine phosphate), Clinical Pharmacology 12.3 Pharmacokinetics: t½ ≈ 20 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0069-9321"
     ],
     "data_gaps": [
@@ -31419,7 +31419,7 @@
     "mechanism_summary": "Activates glucocorticoid receptors, reducing local inflammation and immune activity.",
     "effects": [],
     "references": [
-      "FDA label for Flunisolide Nasal Solution (flunisolide), Clinical Pharmacology — plasma t½ 1 to 2 hours"
+      "FDA label for Flunisolide Nasal Solution (flunisolide), Clinical Pharmacology: plasma t½ 1 to 2 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -31843,7 +31843,7 @@
     "mechanism_summary": "Converted to FdUMP, FUTP and FdUTP, inhibiting thymidylate synthase and incorporating into RNA and DNA.",
     "effects": [],
     "references": [
-      "FDA label for Fluorouracil injection, Clinical Pharmacology 12.3 — t½ = 8–20 minutes (dose-dependent)",
+      "FDA label for Fluorouracil injection, Clinical Pharmacology 12.3: t½ = 8–20 minutes (dose-dependent)",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0069-0169"
     ],
     "data_gaps": [
@@ -32287,7 +32287,7 @@
     "mechanism_summary": "Inhibits HMG-CoA reductase, reducing cholesterol synthesis in the liver.",
     "effects": [],
     "references": [
-      "FDA label for Fluvastatin capsules, Clinical Pharmacology 12.3 — t½ ≈ 3 hours",
+      "FDA label for Fluvastatin capsules, Clinical Pharmacology 12.3: t½ ≈ 3 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0093-7442"
     ],
     "data_gaps": [
@@ -32578,7 +32578,7 @@
     "mechanism_summary": "Activates 5-HT1B and 5-HT1D receptors, narrowing cranial blood vessels and reducing pain signaling.",
     "effects": [],
     "references": [
-      "FDA label for frovatriptan succinate, Clinical Pharmacology/Pharmacokinetics — mean terminal elimination half-life approximately 26 hours"
+      "FDA label for frovatriptan succinate, Clinical Pharmacology/Pharmacokinetics: mean terminal elimination half-life approximately 26 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -33817,7 +33817,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Griseofulvin Microsize oral suspension (griseofulvin), Clinical Pharmacology — t½ 9 to 24 hours",
+      "FDA label for Griseofulvin Microsize oral suspension (griseofulvin), Clinical Pharmacology: t½ 9 to 24 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0472-0013"
     ],
     "data_gaps": [
@@ -34545,7 +34545,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": true,
     "half_life_minutes": 30.0,
-    "mechanism_summary": "C-terminal HGH fragment — lipolytic, no growth/IGF effect.",
+    "mechanism_summary": "C-terminal HGH fragment: lipolytic, no growth/IGF effect.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/AOD9604"
@@ -35133,7 +35133,7 @@
     "mechanism_summary": "Inhibits sodium-chloride reabsorption in the kidneys, increasing excretion of sodium and water.",
     "effects": [],
     "references": [
-      "FDA label for Lisinopril and Hydrochlorothiazide (hydrochlorothiazide), Clinical Pharmacology — t1/2 ≈ 5.6-14.8 h"
+      "FDA label for Lisinopril and Hydrochlorothiazide (hydrochlorothiazide), Clinical Pharmacology: t1/2 ≈ 5.6-14.8 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -35599,7 +35599,7 @@
     "mechanism_summary": "DNA-intercalating anthracycline that inhibits nucleic acid synthesis and interacts with topoisomerase II.",
     "effects": [],
     "references": [
-      "FDA label for Idamycin PFS (idarubicin hydrochloride), Clinical Pharmacology 12.3 — mean terminal t½ 22 h",
+      "FDA label for Idamycin PFS (idarubicin hydrochloride), Clinical Pharmacology 12.3: mean terminal t½ 22 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0013-2576"
     ],
     "data_gaps": [
@@ -35730,7 +35730,7 @@
     "mechanism_summary": "Prodrug activated by hepatic cytochrome P450 to isophosphoramide mustard, which crosslinks DNA at guanine N-7.",
     "effects": [],
     "references": [
-      "FDA label for ifosfamide injection (ifosfamide), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 7 h at conventional doses",
+      "FDA label for ifosfamide injection (ifosfamide), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 7 h at conventional doses",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0338-3991"
     ],
     "data_gaps": [
@@ -35759,7 +35759,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": true,
     "half_life_minutes": null,
-    "mechanism_summary": "Truncated IGF-1 (DES 1-3) — IGF-1R agonist.",
+    "mechanism_summary": "Truncated IGF-1 (DES 1-3): IGF-1R agonist.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Insulin-like_growth_factor_1"
@@ -35791,7 +35791,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": true,
     "half_life_minutes": 1500.0,
-    "mechanism_summary": "Modified recombinant IGF-1 (83-aa analog) — IGF-1R agonist.",
+    "mechanism_summary": "Modified recombinant IGF-1 (83-aa analog): IGF-1R agonist.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/IGF-1_LR3"
@@ -36205,7 +36205,7 @@
     "mechanism_summary": "Binds insulin receptors, increasing glucose uptake into muscle and fat and reducing glucose production by the liver.",
     "effects": [],
     "references": [
-      "FDA label for NOVOLOG (insulin aspart), Clinical Pharmacology 12.3 Pharmacokinetics — t½ ≈ 81 min",
+      "FDA label for NOVOLOG (insulin aspart), Clinical Pharmacology 12.3 Pharmacokinetics: t½ ≈ 81 min",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0169-3201"
     ],
     "data_gaps": [
@@ -36325,7 +36325,7 @@
     "mechanism_summary": "Binds insulin receptors, increasing glucose uptake into muscle and fat and reducing glucose production by the liver.",
     "effects": [],
     "references": [
-      "FDA label for Apidra (insulin glulisine), Clinical Pharmacology/Pharmacokinetics — apparent t½ 42 minutes subcutaneous"
+      "FDA label for Apidra (insulin glulisine), Clinical Pharmacology/Pharmacokinetics: apparent t½ 42 minutes subcutaneous"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -36513,7 +36513,7 @@
     "mechanism_summary": "Blocks muscarinic receptors in the airways, relaxing airway smooth muscle.",
     "effects": [],
     "references": [
-      "FDA label for Atrovent HFA (ipratropium bromide), Clinical Pharmacology 12.3 — t½ ≈ 2 h"
+      "FDA label for Atrovent HFA (ipratropium bromide), Clinical Pharmacology 12.3: t½ ≈ 2 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -36571,7 +36571,7 @@
     "mechanism_summary": "Blocks angiotensin II from binding to its receptor, stopping the vasoconstriction it causes.",
     "effects": [],
     "references": [
-      "FDA label for Irbesartan tablets, Clinical Pharmacology 12.3 — terminal t½ = 11–15 hours",
+      "FDA label for Irbesartan tablets, Clinical Pharmacology 12.3: terminal t½ = 11–15 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0024-5850"
     ],
     "data_gaps": [
@@ -37043,7 +37043,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for STROMECTOL (ivermectin), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 18 hours"
+      "FDA label for STROMECTOL (ivermectin), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 18 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -38313,7 +38313,7 @@
     "mechanism_summary": "Rapidly activates beta-2 adrenergic receptors in the airways, relaxing airway smooth muscle.",
     "effects": [],
     "references": [
-      "FDA label for levalbuterol inhalation solution (levalbuterol; Xopenex generic), Clinical Pharmacology/Pharmacokinetics Table 6 — (R)-albuterol t½ 3.3 h after a single 1.25 mg nebulized dose",
+      "FDA label for levalbuterol inhalation solution (levalbuterol; Xopenex generic), Clinical Pharmacology/Pharmacokinetics Table 6: (R)-albuterol t½ 3.3 h after a single 1.25 mg nebulized dose",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=43598-409"
     ],
     "data_gaps": [
@@ -38421,7 +38421,7 @@
     "mechanism_summary": "Bacterial DNA Gyrase and Topoisomerase IV Inhibitor",
     "effects": [],
     "references": [
-      "FDA label for levofloxacin tablets (levofloxacin), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 6–8 h"
+      "FDA label for levofloxacin tablets (levofloxacin), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 6–8 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -38620,7 +38620,7 @@
     "mechanism_summary": "Activates nuclear thyroid hormone receptors, changing the gene transcription that sets metabolic rate.",
     "effects": [],
     "references": [
-      "FDA label for Liothyronine Sodium (liothyronine), Clinical Pharmacology/Pharmacokinetics — biological t½ ≈ 2.5 days",
+      "FDA label for Liothyronine Sodium (liothyronine), Clinical Pharmacology/Pharmacokinetics: biological t½ ≈ 2.5 days",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=42023-120"
     ],
     "data_gaps": [
@@ -39598,7 +39598,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Coartem (artemether and lumefantrine), Clinical Pharmacology/Pharmacokinetics — t½ = 3–6 days"
+      "FDA label for Coartem (artemether and lumefantrine), Clinical Pharmacology/Pharmacokinetics: t½ = 3–6 days"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -41782,7 +41782,7 @@
     "mechanism_summary": "The precise mechanism of action of meprobamate has not been fully elucidated. It is generally believed, however, to act as a positive allosteric modulator of GABA receptors in a manner similar to benzodiazepines and barbiturates. Unlike barbiturates and benzodiazepines, animal studies show that meprobamate retains most of its effects even in the absence of GABA, suggesting it may also act as a direct agonist at GABA receptors. Additional research indicates that meprobamate is an adenosine reuptake inhibitor, a property that distinguishes it considerably among sedative-hypnotics.",
     "effects": [],
     "references": [
-      "FDA label for Carisoprodol tablets, Clinical Pharmacology/Pharmacokinetics — meprobamate half-life approximately 10 hours"
+      "FDA label for Carisoprodol tablets, Clinical Pharmacology/Pharmacokinetics: meprobamate half-life approximately 10 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -41811,7 +41811,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Sodium channel blocker (local anesthetic) + relatively potent monoamine transporter inhibition (DA/NE/5-HT reuptake) — stimulant properties distinguish it from purely local-anesthetic benzoates.",
+    "mechanism_summary": "Sodium channel blocker (local anesthetic) + relatively potent monoamine transporter inhibition (DA/NE/5-HT reuptake). Its stimulant properties distinguish it from purely local-anesthetic benzoates.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Meprylcaine",
@@ -43338,7 +43338,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for PROVAYBLUE (methylene blue), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 24 hours",
+      "FDA label for PROVAYBLUE (methylene blue), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 24 hours",
       "https://en.wikipedia.org/wiki/Methylene_blue"
     ],
     "data_gaps": [
@@ -44190,7 +44190,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Oravig (miconazole), Clinical Pharmacology/Pharmacokinetics — terminal half-life 24 hours following systemic administration"
+      "FDA label for Oravig (miconazole), Clinical Pharmacology/Pharmacokinetics: terminal half-life 24 hours following systemic administration"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -44273,7 +44273,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": 25.0,
-    "mechanism_summary": "Prodrug of desglymidodrine, a selective peripheral α1-adrenergic agonist — vasoconstriction without central or β-adrenergic action.",
+    "mechanism_summary": "Prodrug of desglymidodrine, a selective peripheral α1-adrenergic agonist: vasoconstriction without central or β-adrenergic action.",
     "effects": [],
     "references": [
       "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=03b54024-2a26-4abe-bd8b-b66bb6781fa7"
@@ -44327,7 +44327,7 @@
     "mechanism_summary": "Competitive reversible inhibitor of glucosylceramide synthase, lowering glycosphingolipid synthesis.",
     "effects": [],
     "references": [
-      "FDA label for Yargesa (miglustat), Clinical Pharmacology/Pharmacokinetics — effective t½ ≈ 6–7 hours",
+      "FDA label for Yargesa (miglustat), Clinical Pharmacology/Pharmacokinetics: effective t½ ≈ 6–7 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=10148-201"
     ],
     "data_gaps": [
@@ -45133,7 +45133,7 @@
     "mechanism_summary": "Activates glucocorticoid receptors, reducing local inflammation and immune activity.",
     "effects": [],
     "references": [
-      "FDA label for Asmanex HFA (mometasone furoate), Clinical Pharmacology/Pharmacokinetics — IV terminal t1/2 ≈ 5 h"
+      "FDA label for Asmanex HFA (mometasone furoate), Clinical Pharmacology/Pharmacokinetics: IV terminal t1/2 ≈ 5 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -45228,7 +45228,7 @@
     "mechanism_summary": "Leukotriene Receptor Antagonist",
     "effects": [],
     "references": [
-      "FDA label for montelukast sodium (montelukast), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 2.7-5.5 h"
+      "FDA label for montelukast sodium (montelukast), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 2.7-5.5 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -46598,7 +46598,7 @@
     "mechanism_summary": "Cyclooxygenase (COX) Inhibitor (NSAID)",
     "effects": [],
     "references": [
-      "FDA label for Naproxen (naproxen), Clinical Pharmacology/Pharmacokinetics — t½ 12 to 17 hours",
+      "FDA label for Naproxen (naproxen), Clinical Pharmacology/Pharmacokinetics: t½ 12 to 17 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=46122-101"
     ],
     "data_gaps": []
@@ -46625,7 +46625,7 @@
     "mechanism_summary": "Activates 5-HT1B and 5-HT1D receptors, narrowing cranial blood vessels and reducing pain signaling.",
     "effects": [],
     "references": [
-      "FDA label for naratriptan tablets, Clinical Pharmacology 12.3 — mean t½ 6 h",
+      "FDA label for naratriptan tablets, Clinical Pharmacology 12.3: mean t½ 6 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0574-0214"
     ],
     "data_gaps": [
@@ -46655,7 +46655,7 @@
     "mechanism_summary": "Closes ATP-sensitive potassium channels on pancreatic beta cells, increasing insulin release.",
     "effects": [],
     "references": [
-      "FDA label for nateglinide tablets (nateglinide), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 1.5 h"
+      "FDA label for nateglinide tablets (nateglinide), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 1.5 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -47066,7 +47066,7 @@
     "mechanism_summary": "Blocks calcium channels in vascular and heart muscle, causing blood vessels to widen.",
     "effects": [],
     "references": [
-      "FDA label for Procardia XL (nifedipine), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 2 h",
+      "FDA label for Procardia XL (nifedipine), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 2 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0093-0819"
     ],
     "data_gaps": [
@@ -49341,7 +49341,7 @@
     "mechanism_summary": "Irreversibly inhibits the proton pump in stomach parietal cells, reducing acid secretion.",
     "effects": [],
     "references": [
-      "FDA label for Pantoprazole Sodium for Injection (pantoprazole), Clinical Pharmacology/Pharmacokinetics — terminal t½ ≈ 1 hour",
+      "FDA label for Pantoprazole Sodium for Injection (pantoprazole), Clinical Pharmacology/Pharmacokinetics: terminal t½ ≈ 1 hour",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0904-6235"
     ],
     "data_gaps": [
@@ -49522,7 +49522,7 @@
     "mechanism_summary": "Vitamin D analog binding the vitamin D receptor, inhibiting parathyroid hormone synthesis and secretion.",
     "effects": [],
     "references": [
-      "FDA label for Paricalcitol capsules, Clinical Pharmacology 12.3 — t½ = 4–6 hours (healthy adults)",
+      "FDA label for Paricalcitol capsules, Clinical Pharmacology 12.3: t½ = 4–6 hours (healthy adults)",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0143-9596"
     ],
     "data_gaps": [
@@ -51505,7 +51505,7 @@
     "mechanism_summary": "Cyclooxygenase (COX) Inhibitor (NSAID)",
     "effects": [],
     "references": [
-      "FDA label for Piroxicam capsules, Clinical Pharmacology/Pharmacokinetics — plasma half-life approximately 50 hours"
+      "FDA label for Piroxicam capsules, Clinical Pharmacology/Pharmacokinetics: plasma half-life approximately 50 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -54038,7 +54038,7 @@
     "mechanism_summary": "Quinine is an antimalarial agent.",
     "effects": [],
     "references": [
-      "FDA label for Quinine Sulfate (quinine sulfate), Clinical Pharmacology/Pharmacokinetics — t1/2 ≈ 9.7-12.5 h in healthy subjects",
+      "FDA label for Quinine Sulfate (quinine sulfate), Clinical Pharmacology/Pharmacokinetics: t1/2 ≈ 9.7-12.5 h in healthy subjects",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=13310-153"
     ],
     "data_gaps": [
@@ -54105,7 +54105,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": true,
     "half_life_minutes": null,
-    "mechanism_summary": "Presumed AR agonist prodrug — benzoate ester hydrolysis releases RAD-140-like moiety.",
+    "mechanism_summary": "Presumed AR agonist prodrug: benzoate ester hydrolysis releases RAD-140-like moiety.",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -54238,7 +54238,7 @@
     "mechanism_summary": "Catalyzes enzymatic oxidation of uric acid to the more soluble metabolite allantoin.",
     "effects": [],
     "references": [
-      "FDA label for Elitek (rasburicase), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 15.7-22.5 h",
+      "FDA label for Elitek (rasburicase), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 15.7-22.5 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0024-5150"
     ],
     "data_gaps": [
@@ -54345,7 +54345,7 @@
     "mechanism_summary": "Closes ATP-sensitive potassium channels on pancreatic beta cells, increasing insulin release.",
     "effects": [],
     "references": [
-      "FDA label for repaglinide tablets, Clinical Pharmacology 12.3 — t½ ≈ 1 h"
+      "FDA label for repaglinide tablets, Clinical Pharmacology 12.3: t½ ≈ 1 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -54667,7 +54667,7 @@
     "mechanism_summary": "Blocks the CGRP receptor, stopping CGRP from binding and activating it.",
     "effects": [],
     "references": [
-      "FDA label for Nurtec ODT (rimegepant), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 11 h"
+      "FDA label for Nurtec ODT (rimegepant), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 11 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -54989,7 +54989,7 @@
     "mechanism_summary": "HMG-CoA Reductase Inhibitor (Statin)",
     "effects": [],
     "references": [
-      "FDA label for Crestor (rosuvastatin), Clinical Pharmacology/Pharmacokinetics — elimination t½ ≈ 19 hours"
+      "FDA label for Crestor (rosuvastatin), Clinical Pharmacology/Pharmacokinetics: elimination t½ ≈ 19 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -55321,7 +55321,7 @@
     "mechanism_summary": "β2-Adrenergic Receptor Agonist (Short-Acting Bronchodilator)",
     "effects": [],
     "references": [
-      "FDA label for Albuterol Sulfate Inhalation Aerosol (albuterol sulfate), Clinical Pharmacology 12.2 — terminal t½ ≈ 6 hours"
+      "FDA label for Albuterol Sulfate Inhalation Aerosol (albuterol sulfate), Clinical Pharmacology 12.2: terminal t½ ≈ 6 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -55384,7 +55384,7 @@
     "mechanism_summary": "Activates beta-2 adrenergic receptors in the airways, relaxing airway smooth muscle.",
     "effects": [],
     "references": [
-      "FDA label for Serevent Diskus (salmeterol xinafoate), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 5.5 hours"
+      "FDA label for Serevent Diskus (salmeterol xinafoate), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 5.5 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -57249,7 +57249,7 @@
     "mechanism_summary": "Modified gamma cyclodextrin that complexes rocuronium and vecuronium, lowering the amount free to bind nicotinic cholinergic receptors.",
     "effects": [],
     "references": [
-      "FDA label for sugammadex sodium injection (sugammadex; Bridion generic), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 2 hours",
+      "FDA label for sugammadex sodium injection (sugammadex; Bridion generic), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 2 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0006-5423"
     ],
     "data_gaps": [
@@ -58795,7 +58795,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Thiotepa for Injection (thiotepa), Clinical Pharmacology — parent t½ 2.4±0.3 h (60 mg) and 2.3±0.3 h (80 mg) IV",
+      "FDA label for Thiotepa for Injection (thiotepa), Clinical Pharmacology: parent t½ 2.4±0.3 h (60 mg) and 2.3±0.3 h (80 mg) IV",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0143-9565"
     ],
     "data_gaps": [
@@ -59759,7 +59759,7 @@
     "mechanism_summary": "",
     "effects": [],
     "references": [
-      "FDA label for Tasmar (tolcapone), Clinical Pharmacology, Pharmacokinetics of Tolcapone — t½ = 2–3 hours",
+      "FDA label for Tasmar (tolcapone), Clinical Pharmacology, Pharmacokinetics of Tolcapone: t½ = 2–3 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=49884-254"
     ],
     "data_gaps": [
@@ -59917,7 +59917,7 @@
     "mechanism_summary": "Binds the topoisomerase I-DNA complex and blocks religation of single-strand DNA breaks.",
     "effects": [],
     "references": [
-      "FDA label for Topotecan Injection, Clinical Pharmacology 12.3 — terminal t½ 2 to 3 hours",
+      "FDA label for Topotecan Injection, Clinical Pharmacology 12.3: terminal t½ 2 to 3 hours",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0007-4205"
     ],
     "data_gaps": [
@@ -60829,7 +60829,7 @@
     "mechanism_summary": "Blocks the CGRP receptor, stopping CGRP from binding and activating it.",
     "effects": [],
     "references": [
-      "FDA label for Ubrelvy (ubrogepant), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 5-7 h"
+      "FDA label for Ubrelvy (ubrogepant), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 5-7 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -60857,7 +60857,7 @@
     "mechanism_summary": "Blocks muscarinic receptors in the airways, relaxing airway smooth muscle.",
     "effects": [],
     "references": [
-      "FDA label for Anoro Ellipta (umeclidinium and vilanterol), Clinical Pharmacology 12.3 — effective t½ 11 h"
+      "FDA label for Anoro Ellipta (umeclidinium and vilanterol), Clinical Pharmacology 12.3: effective t½ 11 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -61081,7 +61081,7 @@
     "mechanism_summary": "Angiotensin II Receptor Blocker (ARB)",
     "effects": [],
     "references": [
-      "FDA label for Diovan (valsartan), Clinical Pharmacology/Pharmacokinetics — t½ ≈ 6 h"
+      "FDA label for Diovan (valsartan), Clinical Pharmacology/Pharmacokinetics: t½ ≈ 6 h"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -61996,10 +61996,10 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 300.0,
-    "mechanism_summary": "Muscarinic acetylcholine receptor agonist functionally selective for the M1 and M4 subtypes — the CNS-active component of Cobenfy, paired with trospium, a peripheral antimuscarinic that blunts cholinergic side effects without entering the brain. The first antipsychotic that works without blocking dopamine D2 receptors.",
+    "mechanism_summary": "Muscarinic acetylcholine receptor agonist functionally selective for the M1 and M4 subtypes. It is the CNS-active component of Cobenfy, paired with trospium, a peripheral antimuscarinic that blunts cholinergic side effects without entering the brain. The first antipsychotic that works without blocking dopamine D2 receptors.",
     "effects": [],
     "references": [
-      "FDA/DailyMed Cobenfy prescribing information §12.3 — xanomeline t½ ≈ 5 h",
+      "FDA/DailyMed Cobenfy prescribing information §12.3: xanomeline t½ ≈ 5 h",
       "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=8f0e73bf-6025-44f6-ab64-0983322de0df",
       "Muscarinic Cholinergic Receptor Agonist and Peripheral Antagonist for Schizophrenia",
       "https://en.wikipedia.org/wiki/Xanomeline/trospium_chloride"
@@ -62206,7 +62206,7 @@
     "mechanism_summary": "Blocks leukotriene CysLT1 receptors, reducing airway inflammation and smooth muscle contraction.",
     "effects": [],
     "references": [
-      "FDA label for Zafirlukast (zafirlukast), Clinical Pharmacology/Pharmacokinetics — mean terminal t½ ≈ 10 hours"
+      "FDA label for Zafirlukast (zafirlukast), Clinical Pharmacology/Pharmacokinetics: mean terminal t½ ≈ 10 hours"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -62276,7 +62276,7 @@
     "mechanism_summary": "Inhibits influenza neuraminidase, blocking release of new viral particles from infected cells.",
     "effects": [],
     "references": [
-      "FDA label for RELENZA (zanamivir), Clinical Pharmacology 12.3 — serum t½ = 2.5–5.1 hours (oral inhalation)"
+      "FDA label for RELENZA (zanamivir), Clinical Pharmacology 12.3: serum t½ = 2.5–5.1 hours (oral inhalation)"
     ],
     "data_gaps": [
       "dose_ranges_by_route",
@@ -62476,7 +62476,7 @@
     "mechanism_summary": "Bisphosphonate binding mineralized bone and inhibiting the osteoclast enzyme farnesyl pyrophosphate synthase.",
     "effects": [],
     "references": [
-      "FDA label for Zoledronic acid (zoledronic acid injection), Clinical Pharmacology/Pharmacokinetics — terminal t1/2 = 146 h",
+      "FDA label for Zoledronic acid (zoledronic acid injection), Clinical Pharmacology/Pharmacokinetics: terminal t1/2 = 146 h",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0078-0435"
     ],
     "data_gaps": [
@@ -63128,7 +63128,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Methylnaphthidate is believed to act primarily as a monoamine triple reuptake inhibitor—that is, it binds to and partially blocks the transporter proteins normally responsible for clearing dopamine, norepinephrine, and serotonin from the synaptic cleft, raising levels of these neurotransmitters throughout the brain and central nervous system. This leads to an accumulation of these molecules in the brain, particularly within reward pathways, producing stimulant and euphoric effects.",
+    "mechanism_summary": "Methylnaphthidate is believed to act primarily as a monoamine triple reuptake inhibitor: it binds to and partially blocks the transporter proteins normally responsible for clearing dopamine, norepinephrine, and serotonin from the synaptic cleft, raising levels of these neurotransmitters throughout the brain and central nervous system. This leads to an accumulation of these molecules in the brain, particularly within reward pathways, producing stimulant and euphoric effects.",
     "effects": [],
     "references": [],
     "data_gaps": [
