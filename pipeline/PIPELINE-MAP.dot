@@ -199,11 +199,6 @@ digraph piru_pipeline {
     d_slc  [label="source_link_check.py\n(1,738 lines, has a --gate)"];
     d_acf  [label="apply_citation_fixes.py"];
     d_vm   [label="validate_metabolites.py"];
-    d_rm   [label="remove_members.py"];
-    d_sd   [label="split_decls.py"];
-    d_pr   [label="promote.sh"];
-    node [shape=folder, fillcolor="#ffecec"];
-    d_val  [label="pipeline/validator/\n(empty dir, untracked)"];
     node [shape=box, style="rounded,filled", fillcolor="#ffecec"];
     d_merged [label="data/enrichment/\nmerged.json, class-context.json,\ncoverage.csv"];
   }

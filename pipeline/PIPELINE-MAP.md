@@ -527,10 +527,6 @@ excluded.
 | `pipeline/audit/validate_metabolites.py` (410 lines) | Validates per-class LLM batches of active metabolites and merges survivors into `data/enrichment/raw/metabolites-active.json`. | `rg -n --hidden 'validate_metabolites.py' . --glob '!pipeline/audit/validate_metabolites.py'` → **zero hits**. | Scope unclear — it is a tool for a research pass that may recur. |
 | `pipeline/fetch/brushers/fix_enrichment_inchikeys.py` (152 lines) | Recomputes hallucinated InChIKeys in `data/enrichment/raw/*.json` from their SMILES, in place. | `rg -n 'fix_enrichment_inchikeys' . --glob '!…/fix_enrichment_inchikeys.py'` → `(no matches)`. | Scope unclear. A one-off repair whose damage class (LLM-fabricated identifiers) can recur. |
 | `pipeline/fetch/brushers/freeodwiki_translate.py` (165 lines) | Stage 1 of 2 of a FreeOD English-prose recovery pass. Writes to `/tmp/freeod-trans/`, which nothing reads. Has no `main()` — it executes at import. | `rg -n 'freeodwiki_translate' . --glob '!…/freeodwiki_translate.py'` → `(no matches)`. | **Yes** — it writes only to `/tmp` and its stage 2 does not exist in the repo. |
-| `pipeline/remove_members.py` (103 lines) | One-off Swift refactoring tool: brace-aware removal of named type members. | `rg -n 'remove_members' . --glob '!pipeline/remove_members.py'` → `(no matches)`. | **Yes.** A Swift-editing script in a data pipeline directory, used once. |
-| `pipeline/split_decls.py` (182 lines) | One-off Swift refactoring tool: splits a `.swift` into header + relocated decl chunks per a `spec.json`. | `rg -n 'split_decls' . --glob '!pipeline/split_decls.py'` → `(no matches)`. | **Yes**, same reasoning. |
-| `pipeline/promote.sh` (22 lines) | Companion to `split_decls.py` — strips `private`/`fileprivate` from just-split-out top-level types. | `rg -n 'promote\.sh' .` → only its own line 2. | **Yes**, same reasoning. |
-| `pipeline/validator/` | Empty directory containing only a `.DS_Store`. `git ls-files pipeline/validator` → empty; `git log -- pipeline/validator` → empty. It is the shell of the `SubstanceValidator` SPM package deleted in `888f3f31`. | `rg -n 'pipeline/validator' .` → no code hits. | **Yes** — untracked, empty, and nothing knows it exists. |
 
 ### f.2 Manual-but-load-bearing — the script is never invoked, its output *is* on the build path
 
@@ -593,13 +589,6 @@ existed since `888f3f31`.
   insert-time value could survive on are rows from a source absent from
   `DOSE_CONTEXT_BY_SOURCE`, for which it returns `"unknown"` — the same value the
   column already defaults to.
-- `pipeline/build/sqlite.py:296-308` — a comment block explaining that
-  `data/curated/overlay.json` is baked into `sourced-substances.json` by the
-  collector and that "new curated overrides go into data/curated/overlay.json".
-  That file does not exist, the mechanism was replaced by
-  `data/curated/substances/`, and `pipeline/README.md:31` says so explicitly. The
-  comment describes something that is gone, which the repo's own CLAUDE.md
-  forbids.
 
 ### f.5 Data files under `data/` that no script reads
 
@@ -612,7 +601,7 @@ existed since `888f3f31`.
 | `data/sources/drug-community-names.json` | zero readers **and zero writers** — not produced by `fetch_drug_community.py` |
 | `data/sources/drug-community-combinations.json` | written by `fetch_drug_community.py:56`, read by nothing |
 | `data/sources/product-codes-openfda.meta.json`, `product-codes-bdpm.meta.json` | zero readers; provenance sidecars by design (the other `.meta.json` files are the same, each referenced only by its own writer) |
-| `data/enrichment/merged.json`, `class-context.json`, `coverage.csv` | zero readers. `.gitignore:75-79` says so outright: "pure derivatives of `data/enrichment/raw/*.json` … **not consumed by any downstream pipeline step**". **README stale** — `pipeline/README.md:180-182` says `merge.py` produces "the three artifacts the inspectors and the SQLite build care about". The build reads `data/enrichment/raw/*.json` directly (`main()`'s `ENRICHMENT_DIR.glob`). |
+| `data/enrichment/merged.json`, `class-context.json`, `coverage.csv` | zero readers. `.gitignore:75-79` says so outright: "pure derivatives of `data/enrichment/raw/*.json` … **not consumed by any downstream pipeline step**". The build reads `data/enrichment/raw/*.json` directly (`main()`'s `ENRICHMENT_DIR.glob`). |
 
 The four `citation-*-2026-08-04*.json` files are exactly the inputs
 `apply_citation_fixes.py` takes — an orphan script and its four orphan inputs,
@@ -623,12 +612,11 @@ deletion, or a coherent five-file `DELETE-CANDIDATES.md` entry.
 
 | Class | Count |
 |---|---|
-| Whole orphan scripts (zero references) | 8 + 1 empty directory |
+| Whole orphan scripts (zero references) | 5 |
 | Dead data files (zero readers) | 7 (+3 `.meta.json` sidecars by design) |
 | Manual-but-load-bearing fetchers | 13 |
 | Manual audit tools (docs-only references) | 13 |
 | Dead function inside a live module | 1 (`dose_context_for`) |
-| Stale comment blocks describing removed mechanisms | 3 (`sqlite.py:296`, `data/snapshots/README.md`, `build.sh:32`) |
 | Never-run gates that exist and work | 1 (`source_link_check.py --gate`) |
 | Audit tests not in CI | 1 (`test_adjudicate.py`) |
 
@@ -715,13 +703,6 @@ but `validate_links.py` opens sockets and rewrites `link-cache.json`. Since
 makes it neither.
 
 **12. Documentation drift, itemized.**
-`pipeline/README.md:180-182` credits `merge.py`'s outputs to the build (they are
-read by nothing, per `.gitignore`).
-`data/snapshots/README.md:9-11` says the snapshots are generated "from the same
-SubstanceCollector outputs that feed the SQLite build" — `snapshots.py` reads
-the built SQLite, which `pipeline/README.md:112` gets right.
-`data/snapshots/README.md`'s diagram names `data/curated/overlay.json`, which
-does not exist.
 `build.sh`'s step denominators change from `/8` to `/10` halfway down.
 `pipeline/README.md` does not mention `pubmed_pubtypes.py`, `chem_ids.py`,
 `collision_registry.py`, `psid.py`, `product_codes.py`, `ci_local.py`,

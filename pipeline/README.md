@@ -167,9 +167,9 @@ LLM-assisted research used to fill gaps external sources don't cover
    prompts in `prompts/system.md` (general agent) or `prompts/kimi.md`
    (Kimi-specific). Each agent writes its output to
    `data/enrichment/raw/<group-slug>.json`.
-3. **`merge.py`** — merges all `raw/*.json` into the three artifacts the
-   inspectors and the SQLite build care about (`merged.json`,
-   `class-context.json`, `coverage.csv`).
+3. **`merge.py`** — merges all `raw/*.json` into three gitignored files for
+   inspection by hand (`merged.json`, `class-context.json`, `coverage.csv`).
+   The SQLite build reads `raw/*.json` directly.
 
 ### `build/`
 - **`validate_curated.py`** — stdlib validator for `data/curated/substances/`.
