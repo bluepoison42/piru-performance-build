@@ -146,7 +146,7 @@ struct StagedDoseStepperBlock: View {
                 .snappy(duration: 0.15)
             }
             if item.isUnknownAmount {
-                Text("Logged with no number. Stays out of curves, totals, and tolerance.")
+                Text("Logged with no number, so it stays out of curves, totals, and tolerance.")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(Theme.secondaryLabel)
                     .multilineTextAlignment(.center)

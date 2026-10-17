@@ -80,7 +80,7 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Pethidine",
             metabolite: "normeperidine",
-            note: "Normeperidine isn't a painkiller. It's a stimulating metabolite that builds up with repeated or high doses and lowers the seizure threshold. It's why meperidine isn't used for long-term pain.",
+            note: "Normeperidine is a stimulating metabolite, not a painkiller. It builds up with repeated or high doses and lowers the seizure threshold, which is why meperidine isn't used for long-term pain.",
         ),
         // Dextrorphan is the stronger NMDA blocker — the dissociative axis.
         .init(
@@ -98,7 +98,7 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Amitriptyline",
             metabolite: "nortriptyline",
-            note: "Nortriptyline is a marketed antidepressant in its own right, and it leans more on noradrenaline than amitriptyline does. The metabolite's character is more activating than the parent's.",
+            note: "Nortriptyline is a marketed antidepressant in its own right and leans more on noradrenaline than amitriptyline, so it feels more activating than the parent.",
         ),
         // Desipramine, same shape.
         .init(
@@ -115,7 +115,7 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Quetiapine",
             metabolite: "norquetiapine",
-            note: "Norquetiapine adds effects quetiapine largely lacks, noradrenaline reuptake inhibition and antidepressant-like activity, so it contributes a different character than the parent's sedation.",
+            note: "Norquetiapine adds noradrenaline reuptake inhibition and antidepressant-like activity, which quetiapine largely lacks, so it brings a different character than the parent's sedation.",
         ),
         // HNK barely touches NMDA; separate, non-dissociative axis.
         .init(
@@ -127,7 +127,7 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "MDMA",
             metabolite: "MDA",
-            note: "MDA is an active drug of its own: more amphetamine-like and more hallucinogenic than MDMA, and longer-lived. So the later hours can feel qualitatively different from the peak.",
+            note: "MDA is an active drug of its own, more amphetamine-like, more hallucinogenic and longer-lived than MDMA, so the later hours can feel qualitatively different from the peak.",
         ),
         // Norbuprenorphine acts more like a full agonist and drives respiratory effect.
         .init(
@@ -153,7 +153,7 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Clonazepam",
             metabolite: "7-aminoclonazepam",
-            note: "7-aminoclonazepam has no meaningful activity at GABA-A. It's an inactive metabolite used as a urinary marker for clonazepam exposure, not a contributor to the drug's effect.",
+            note: "7-aminoclonazepam has no meaningful activity at GABA-A. It is used as a urine marker for clonazepam exposure.",
         ),
         // Norfenfluramine is the serotonin releaser that drove fenfluramine's
         // weight-loss action (and its cardiac valve damage).
@@ -172,13 +172,13 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Nicotine",
             metabolite: "cotinine",
-            note: "Cotinine has negligible nicotinic activity. It's the standard biomarker for tobacco exposure, not a continuation of nicotine's effect. Its long half-life (~16 hours) is why it's detectable in blood and urine days after the last cigarette.",
+            note: "Cotinine has negligible nicotinic activity. It is the standard biomarker for tobacco exposure, and its long half-life (~16 hours) keeps it detectable in blood and urine days after the last cigarette.",
         ),
         // EDDP is inactive — the standard urinary marker for methadone.
         .init(
             parent: "Methadone",
             metabolite: "EDDP",
-            note: "EDDP has no opioid activity. It's the primary urinary marker for methadone compliance monitoring, not a contributor to the drug's effect or duration.",
+            note: "EDDP has no opioid activity. It is the main urine marker for methadone compliance monitoring.",
         ),
         // M3G is the major morphine metabolite (~60%) and is neuroexcitatory,
         // not analgesic — the reason high-dose or renally impaired patients

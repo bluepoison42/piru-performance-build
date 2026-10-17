@@ -106,7 +106,7 @@ struct PharmacologyGlossarySheet: View {
         case .pharmacokinetics:
             "These are population averages from research. Your own values vary with genetics, body size, and how the drug is taken."
         case .receptor:
-            "Stronger doesn't mean more dangerous. It's just how tightly the drug grips that one target in the lab."
+            "Stronger doesn't mean more dangerous. It only measures how tightly the drug grips that one target in the lab."
         case .metabolism:
             "Estimates from primary literature."
         case .mechanism, .monoamine:
@@ -203,7 +203,7 @@ struct PharmacologyGlossarySheet: View {
             id: "species",
             term: "Human vs animal",
             symbol: nil,
-            explanation: "Many values come from animal or lab-dish studies. Human data is the most reliable. The source tag tells you which it is.",
+            explanation: "Many values come from animal or lab-dish studies. The source tag says which; human data is the most reliable.",
         ),
     ]
 }

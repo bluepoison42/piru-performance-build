@@ -248,7 +248,7 @@
   {
     "name": "Alpha-GPC",
     "summary": "Cholinergic Precursor",
-    "description": "A choline-containing phospholipid that serves as a precursor to acetylcholine. Crosses the blood-brain barrier and supplies free choline for central acetylcholine synthesis, and glycerophosphate for membrane phospholipid synthesis. Supports cholinergic neurotransmission, which is involved in memory formation, attention, and learning.",
+    "description": "A choline-containing phospholipid and acetylcholine precursor. Crosses the blood-brain barrier and supplies free choline for central acetylcholine synthesis, and glycerophosphate for membrane phospholipid synthesis. Supports cholinergic neurotransmission, which is involved in memory formation, attention, and learning.",
     "bindings": []
   },
   {
@@ -730,7 +730,7 @@
   {
     "name": "DMT",
     "summary": "Serotonin 5-HT2A Agonist and Sigma-1 Receptor Agonist",
-    "description": "Acts as an agonist at serotonin 5-HT2A receptors (the primary psychedelic mechanism) and also activates sigma-1 receptors, which may modulate ion channels, ER stress responses, and neuroplasticity. Additionally interacts with trace amine-associated receptors. Rapidly metabolized by monoamine oxidase (MAO), so oral activity requires an MAO inhibitor (as in ayahuasca).",
+    "description": "Acts as an agonist at serotonin 5-HT2A receptors (the primary psychedelic mechanism) and also activates sigma-1 receptors, which may modulate ion channels, ER stress responses, and neuroplasticity. Also interacts with trace amine-associated receptors. Rapidly metabolized by monoamine oxidase (MAO), so oral activity requires an MAO inhibitor (as in ayahuasca).",
     "bindings": [
       {
         "target": "5-HT2A",
@@ -796,7 +796,7 @@
   {
     "name": "Diazepam",
     "summary": "GABA-A Positive Allosteric Modulator",
-    "description": "Binds the benzodiazepine site of the GABA-A receptor and enhances the inhibitory effect of GABA, increasing the frequency of chloride-channel opening and neuronal hyperpolarization. This produces anxiolytic, sedative, muscle-relaxant, and anticonvulsant effects. It does not open the channel on its own. It only potentiates GABA already present, which is why it is comparatively safe in isolated overdose but dangerous combined with other CNS depressants.",
+    "description": "Binds the benzodiazepine site of the GABA-A receptor and enhances the inhibitory effect of GABA, increasing the frequency of chloride-channel opening and neuronal hyperpolarization. This produces anxiolytic, sedative, muscle-relaxant, and anticonvulsant effects. It only potentiates GABA already present rather than opening the channel itself, which is why it is comparatively safe in isolated overdose but dangerous combined with other CNS depressants.",
     "bindings": [
       {
         "target": "GABA-A",
@@ -1512,7 +1512,7 @@
   {
     "name": "PCP",
     "summary": "Non-Competitive NMDA Antagonist and Dopamine Reuptake Inhibitor",
-    "description": "Blocks NMDA glutamate receptors as a non-competitive (open-channel) antagonist. Also raises synaptic dopamine (largely through indirect/allosteric effects on monoamine transport rather than high-affinity direct DAT blockade), which distinguishes it from other dissociatives and contributes to its stimulant properties and higher psychosis risk. Additionally interacts with sigma receptors, nicotinic receptors, and voltage-gated sodium channels.",
+    "description": "Blocks NMDA glutamate receptors as a non-competitive (open-channel) antagonist. Also raises synaptic dopamine (largely through indirect/allosteric effects on monoamine transport rather than high-affinity direct DAT blockade), which distinguishes it from other dissociatives and contributes to its stimulant properties and higher psychosis risk. Also interacts with sigma receptors, nicotinic receptors, and voltage-gated sodium channels.",
     "bindings": [
       {
         "target": "NMDA",

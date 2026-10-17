@@ -671,7 +671,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Duplicate of MDE: see MDE record for full data.",
+      "downstream_signalling": "Same compound as MDE.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2531,7 +2531,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Positional isomer of α-methyltryptamine (AMT). Acts as both monoamine releaser AND potent MAO-A inhibitor: a chemically guaranteed serotonin syndrome generator at supratherapeutic doses. Self-MAO-inhibition prolongs its own half-life. The combination accounts for the cluster of fatalities reported when 5-IT entered EU markets 2011-2013.",
+      "downstream_signalling": "Positional isomer of α-methyltryptamine (AMT). Acts as both monoamine releaser AND potent MAO-A inhibitor, so serotonin syndrome is likely at supratherapeutic doses. Self-MAO-inhibition prolongs its own half-life. The combination accounts for the cluster of fatalities reported when 5-IT entered EU markets 2011-2013.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2911,7 +2911,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "DUPLICATE of MDA: see MDA record for full data.",
+      "downstream_signalling": "Same compound as MDA.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5015,7 +5015,7 @@
     "class_name": "α-Methyltryptamine and 5-(2-aminopropyl)indole derivatives",
     "shared_mechanism": "α-methyl tryptamines combine 5-HT2A agonism (psychedelic) with monoamine releaser activity AND MAO-A inhibition. The MAO-A inhibition is the dangerous feature: it is built into the compound's own pharmacology, so the released 5-HT cannot be metabolised. 5-IT (5-API, the indole positional isomer of AMT) is a particularly potent MAO-A inhibitor. 5-MeO-AMT adds 5-methoxy substitution that boosts 5-HT2A agonism markedly (Shulgin's α,O-DMS), extremely potent at 2.5-5 mg active dose.",
     "shared_pk_summary": "Very long duration (12-18 h for 5-MeO-AMT) reflecting MAO inhibition prolonging the compound's own half-life.",
-    "shared_safety": "Built-in pharmacological foot-gun. The MAO-A inhibition guarantees fatal serotonin syndrome with any additional serotonergic input. Multiple fatality clusters: 5-MeO-AMT in US 2003-2004, 5-IT in EU 2011-2013 (>20 confirmed deaths). MISCATEGORIZED in this group: these are tryptamine psychedelics, not entactogens.",
+    "shared_safety": "The built-in MAO-A inhibition makes fatal serotonin syndrome likely with any additional serotonergic input. Multiple fatality clusters: 5-MeO-AMT in US 2003-2004, 5-IT in EU 2011-2013 (>20 confirmed deaths). These are tryptamine psychedelics rather than entactogens.",
     "sar_summary": "Adding 5-methoxy boosts 5-HT2A. Moving the 2-aminopropyl from indole-3 (true tryptamines) to indole-5 (5-IT/5-API) shifts activity from receptor agonism to MAO inhibition.",
     "key_references": []
   },

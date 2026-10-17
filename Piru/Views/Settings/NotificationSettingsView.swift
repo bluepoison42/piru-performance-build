@@ -568,7 +568,7 @@ extension NotificationType {
         case .inventory:
             "A heads-up when something you track runs low or out, before the empty bottle surprises you."
         case .checkIn:
-            "\"How is it going?\" at set points in a session, opening a timestamped note. Turned on per session; off unless you ask."
+            "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on for that session."
         }
     }
 }

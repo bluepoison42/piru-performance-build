@@ -67,7 +67,7 @@ struct ToleranceExplainerView: View {
                 icon: "gauge.with.dots.needle.33percent",
                 tint: .orange,
                 title: "With heavy, prolonged use",
-                body: "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses. Steady use doesn't reach it.",
+                body: "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses.",
             )
         } header: {
             Text("Three timescales")
@@ -151,7 +151,7 @@ struct ToleranceExplainerView: View {
                 icon: "ruler",
                 tint: Theme.secondaryLabel,
                 title: "What this number does not include",
-                body: "Every layer above is pharmacodynamic: it is computed from your dose log and the clock. A large part of real tolerance is associative and context-specific: it attaches to the setting, the ritual and the cues around a dose, which is why tolerance measured in a familiar context can be substantially higher than tolerance in an unfamiliar one, and why the same cues without the dose can produce the opposite of the drug's effect. Piru cannot see any of that, because it does not record where you were or what you were doing. Treat the shift as a pharmacological estimate, not a total.",
+                body: "Every layer above is computed from your dose log and the clock. Much of real tolerance is associative: it attaches to the setting, the ritual and the cues around a dose. That is why tolerance in a familiar context can be much higher than in an unfamiliar one, and why the cues without the dose can produce the opposite of the drug's effect. Piru does not record where you were or what you were doing, so treat the shift as a pharmacological estimate, not a total.",
             )
         } header: {
             Text("Model boundary")

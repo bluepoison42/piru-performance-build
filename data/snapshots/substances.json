@@ -15656,7 +15656,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "The psychedelic effects of 4C-D are believed to arise from its activity as a partial agonist at 5-HT receptors. The precise role of these interactions, and the exact mechanism by which they produce a psychedelic experience, has not yet been fully elucidated.\n\nIn a forum discussion, users have proposed that 4C-D may function as a monoamine oxidase inhibitor (MAOI), based on its structural resemblance to 5-MeO-7-Me-AET or 7-Me-AET, the latter of which has been demonstrated to be a potent MAOI and serotonin releasing agent. No evidence supports this property for 4C-D.",
+    "mechanism_summary": "The psychedelic effects of 4C-D are believed to arise from its activity as a partial agonist at 5-HT receptors. How they produce the psychedelic experience is not yet known.\n\nIn a forum discussion, users have proposed that 4C-D may function as a monoamine oxidase inhibitor (MAOI), based on its structural resemblance to 5-MeO-7-Me-AET or 7-Me-AET, the latter of which has been demonstrated to be a potent MAOI and serotonin releasing agent. No evidence supports this property for 4C-D.",
     "effects": [],
     "references": [
       "https://erowid.org/library/books_online/pihkal/pihkal008.shtml"
@@ -53617,7 +53617,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 900.0,
-    "mechanism_summary": "Benzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on γ-aminobutyric acid (GABA) receptors, thereby amplifying the efficiency and potency of the neurotransmitter GABA. Because this site is the most prolific inhibitory receptor complex in the brain, its modulation accounts for the sedative (or depressant) effects of pyrazolam on the nervous system.\n\nThe anticonvulsant properties of benzodiazepines may be attributable in part or in full to binding at voltage-dependent sodium channels rather than at benzodiazepine receptors.\n\nPyrazolam is most selective for the α2 and α3 receptor subtypes. It is excreted unchanged and therefore does not interact with hepatic enzymes in the way other benzodiazepines do.\n\nPyrazolam is structurally similar to alprazolam and bromazepam. Unlike most benzodiazepines, pyrazolam does not appear to undergo metabolism and is instead excreted unchanged in urine.",
+    "mechanism_summary": "Benzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on γ-aminobutyric acid (GABA) receptors, thereby amplifying the efficiency and potency of the neurotransmitter GABA. Because this site is the most prolific inhibitory receptor complex in the brain, its modulation accounts for the sedative (or depressant) effects of pyrazolam on the nervous system.\n\nThe anticonvulsant properties of benzodiazepines may be attributable in part or in full to binding at voltage-dependent sodium channels rather than at benzodiazepine receptors.\n\nPyrazolam is most selective for the α2 and α3 receptor subtypes. It is excreted unchanged and therefore does not interact with hepatic enzymes in the way other benzodiazepines do.\n\nPyrazolam is structurally similar to alprazolam and bromazepam.",
     "effects": [
       "Amnesia",
       "Analysis suppression",
@@ -62147,7 +62147,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 36.0,
-    "mechanism_summary": "Yohimbine's primary and most well-studied mechanism of action is antagonism of a class of receptors known as alpha-2 adrenergic receptors, thereby elevating norepinephrine release by blocking the presynaptic autoreceptors that normally damp it. Blockade of alpha-2 adrenergic receptors raises blood pressure, releases insulin, and lowers blood glucose levels. Yohimbine also blocks alpha-1 adrenergic receptors, albeit with lower affinity. Research has additionally shown that it weakly inhibits monoamine oxidase.\n\nAt higher concentrations, yohimbine acts as an antagonist at dopamine D2 and D3 receptors, serotonin 5-HT1A, 5-HT1B, and 5-HT2A receptors, and as a partial agonist at 5-HT1A receptors.",
+    "mechanism_summary": "Yohimbine mainly blocks alpha-2 adrenergic receptors, raising norepinephrine release by removing the presynaptic autoreceptor brake on it. Blockade of alpha-2 adrenergic receptors raises blood pressure, releases insulin, and lowers blood glucose levels. Yohimbine also blocks alpha-1 adrenergic receptors, albeit with lower affinity. It also weakly inhibits monoamine oxidase.\n\nAt higher concentrations, yohimbine acts as an antagonist at dopamine D2 and D3 receptors, serotonin 5-HT1A, 5-HT1B, and 5-HT2A receptors, and as a partial agonist at 5-HT1A receptors.",
     "effects": [],
     "references": [
       "The pharmacokinetics of yohimbine in man."
@@ -63128,7 +63128,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Methylnaphthidate is believed to act primarily as a monoamine triple reuptake inhibitor: it binds to and partially blocks the transporter proteins normally responsible for clearing dopamine, norepinephrine, and serotonin from the synaptic cleft, raising levels of these neurotransmitters throughout the brain and central nervous system. This leads to an accumulation of these molecules in the brain, particularly within reward pathways, producing stimulant and euphoric effects.",
+    "mechanism_summary": "Methylnaphthidate is believed to act primarily as a monoamine triple reuptake inhibitor: it binds to and partially blocks the transporter proteins normally responsible for clearing dopamine, norepinephrine, and serotonin from the synaptic cleft. The resulting rise, particularly in reward pathways, produces stimulant and euphoric effects.",
     "effects": [],
     "references": [],
     "data_gaps": [

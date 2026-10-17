@@ -48,7 +48,7 @@ enum CompanionMeasurement: String, Identifiable, CaseIterable {
         case .testosterone:
             "Your measured testosterone. On estradiol, T usually falls; Piru plots your points rather than modeling suppression."
         case .estradiol:
-            "Testosterone aromatizes to estradiol, so E2 often rises on T. Piru plots your measured points. The conversion is person-specific, not modeled."
+            "Testosterone aromatizes to estradiol, so E2 often rises on T. The conversion is person-specific, so Piru plots your measured points rather than modeling it."
         case .hematocrit:
             "Testosterone raises red-cell production, so hematocrit is monitored on T (largest rise in the first year). These are your measured points, plotted, not a prediction."
         case .hemoglobin:

@@ -180,7 +180,7 @@ struct MyMedsHubView: View {
                 ContentUnavailableView(
                     "No Meds Yet",
                     systemImage: "pills",
-                    description: Text("Keep track of what you take and when. One tap to set up gentle reminders. Prescriptions, supplements, vitamins: anything on a schedule."),
+                    description: Text("Keep track of what you take and when, with gentle reminders set up in one tap. Prescriptions, supplements, vitamins: anything on a schedule."),
                 )
                 addMedButton
             }

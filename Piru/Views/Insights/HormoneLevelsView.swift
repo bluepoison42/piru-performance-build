@@ -554,7 +554,7 @@ private struct HormoneLevelsProvenanceCard: View {
 private struct HormoneLevelsExplanationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
-            Text("An injected ester releases slowly from the oil depot, splits into the free hormone, and clears. This curve sums your logged esters into an illustrative serum estimate. It is not a laboratory result.")
+            Text("An injected ester releases slowly from the oil depot, splits into the free hormone, and clears. This curve sums your logged esters into an illustrative serum estimate, not a lab result.")
                 .captionSecondary()
             Text("It estimates a level. It never suggests a dose or a target. Your lab results fit the model to your measurements, which doesn't establish accuracy between them. The reference lines are your own.")
                 .captionSecondary()

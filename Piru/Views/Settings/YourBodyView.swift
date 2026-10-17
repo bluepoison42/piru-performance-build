@@ -70,11 +70,11 @@ struct YourBodyView: View {
     private var weightFootnote: LocalizedStringResource {
         switch profile.weightSource {
         case .healthKit:
-            "Synced from Apple Health. Your weight sizes every dose estimate. The same dose hits harder the less you weigh."
+            "Synced from Apple Health. Your weight sizes every dose estimate, since the same dose hits harder the less you weigh."
         case .manual:
-            "Entered manually. Your weight sizes every dose estimate. The same dose hits harder the less you weigh."
+            "Entered manually. Your weight sizes every dose estimate, since the same dose hits harder the less you weigh."
         case .estimated:
-            "Using the average 60 kg. Set yours above so estimates fit your body. The same dose hits harder the less you weigh."
+            "Using the average 60 kg. Set yours above so estimates fit your body, since the same dose hits harder the less you weigh."
         }
     }
 

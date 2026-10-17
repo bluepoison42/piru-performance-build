@@ -204,9 +204,9 @@ T = {
         "这一类药在起效期间会阻止记忆形成，所以空白就是空白。你现在写下的就是记录。",
         "這一類藥在起效期間會阻止記憶形成，所以空白就是空白。你現在寫下的就是記錄。",
     ),
-    "Coordination can be impaired before you notice it. This increases the risk of accidents on stairs and in the kitchen.": (
-        "协调性可能在你察觉之前就已受损。这会增加在楼梯上和厨房里发生意外的风险。",
-        "協調性可能在你察覺之前就已受損。這會增加在樓梯上和廚房裡發生意外的風險。",
+    "Coordination can slip before you notice it, raising the risk of accidents on stairs and in the kitchen.": (
+        "协调性可能在你察觉之前就已下降，增加在楼梯上和厨房里发生意外的风险。",
+        "協調性可能在你察覺之前就已下降，增加在樓梯上和廚房裡發生意外的風險。",
     ),
     "Vision softening at this dose is usual, and it clears as the dose does.": (
         "这个剂量下视觉发虚很常见，会随着剂量一起消退。",
@@ -456,9 +456,9 @@ T = {
         "陰影部分：300–1000 ng/dL 的男性參考範圍（FDA 說明書；Wang 2010）。這是參考，不是目標。",
     ),
     "Testosterone (suppression)": ("睾酮（抑制）", "睪固酮（抑制）"),
-    "Testosterone aromatizes to estradiol, so E2 often rises on T. Piru plots your measured points. The conversion is person-specific, not modeled.": (
-        "睾酮会芳香化为雌二醇，所以用 T 期间 E2 常会上升。Piru 绘制你的实测点。这种转化因人而异，未被建模。",
-        "睪固酮會芳香化為雌二醇，所以用 T 期間 E2 常會上升。Piru 繪製你的實測點。這種轉化因人而異，未被建模。",
+    "Testosterone aromatizes to estradiol, so E2 often rises on T. The conversion is person-specific, so Piru plots your measured points rather than modeling it.": (
+        "睾酮会芳香化为雌二醇，所以用 T 期间 E2 常会上升。这种转化因人而异，所以 Piru 绘制你的实测点，而不对其建模。",
+        "睪固酮會芳香化為雌二醇，所以用 T 期間 E2 常會上升。這種轉化因人而異，所以 Piru 繪製你的實測點，而不對其建模。",
     ),
     "Testosterone ester curves are fit from label and primary-literature half-lives. There is no community PK simulator for them, so the band stays wide until your lab results calibrate the model.": (
         "睾酮酯曲线根据说明书和原始文献中的半衰期拟合而成。由于没有适用的社区药代动力学模拟器，在用你的化验结果校准模型前，误差带会较宽。",
@@ -632,7 +632,7 @@ T = {
         "梅紫與紫紅，來自開放百科",
     ),
     "In partnership with dose.wiki ↗": ("与 dose.wiki 合作 ↗", "與 dose.wiki 合作 ↗"),
-    "A skin changes the app's colors, cards, and type. Your substance colors, the timeline, and every chart stay exactly as they are.": (
+    "A skin changes the app's colors, cards, and type. Your substance colors, the timeline, and every chart stay as they are.": (
         "皮肤会改变应用的颜色、卡片和字体。你的物质颜色、时间轴和所有图表都保持原样。",
         "皮膚會改變應用程式的顏色、卡片和字體。你的物質顏色、時間軸和所有圖表都保持原樣。",
     ),
@@ -1145,15 +1145,15 @@ T = {
     "Star a substance to keep it here": ("给物质加星即可收藏在此", "為物質加星即可收藏於此"),
     "Substances you added or customized": ("你添加或自定义的物质", "你新增或自訂的物質"),
     # b46 feature batches (2026-09-02)
-    '"How is it going?" at set points in a session, opening a timestamped note. Turned on per session; off unless you ask.': (
-        "在场次中的几个时点提示“现在感觉如何？”，并打开一条带时间戳的笔记。按场次开启；默认关闭。",
-        "在場次中的幾個時點提示「現在感覺如何？」，並開啟一則帶時間戳的筆記。按場次開啟；預設關閉。",
+    '"How is it going?" at set points in a session, each opening a timestamped note. Off unless you turn it on for that session.': (
+        "在场次中的几个时点提示“现在感觉如何？”，每次打开一条带时间戳的笔记。默认关闭，需为该场次开启。",
+        "在場次中的幾個時點提示「現在感覺如何？」，每次開啟一則帶時間戳的筆記。預設關閉，需為該場次開啟。",
     ),
     "%lld notes": ("%lld 条笔记", "%lld 則筆記"),
     "1 note": ("1 条笔记", "1 則筆記"),
-    "A rare, peak, transcendental state: a serene and all-encompassing experience. The person, and the rating, are describing something outside the ordinary scale.": (
-        "罕见的巅峰、超越性状态：宁静而包容一切的体验。这个人和这个评级描述的都是常规量表之外的东西。",
-        "罕見的巔峰、超越性狀態：寧靜而包容一切的體驗。這個人和這個評級描述的都是常規量表之外的東西。",
+    "A rare, transcendental peak state: serene, all-encompassing, and outside the ordinary scale.": (
+        "罕见的超越性巅峰状态：宁静、包容一切，超出常规量表。",
+        "罕見的超越性巔峰狀態：寧靜、包容一切，超出常規量表。",
     ),
     "About the Shulgin scale": ("关于舒尔金量表", "關於舒爾金量表"),
     "Add Summary": ("添加总结", "新增總結"),
@@ -1723,9 +1723,9 @@ T = {
         "不记录数值；这条记录不会计入曲线、总量和耐受性。",
         "不記錄數值；這條記錄不會計入曲線、總量和耐受性。",
     ),
-    "Logged with no number. Stays out of curves, totals, and tolerance.": (
-        "已记录，但未填数值。不计入曲线、总量和耐受性。",
-        "已記錄，但未填數值。不計入曲線、總量和耐受性。",
+    "Logged with no number, so it stays out of curves, totals, and tolerance.": (
+        "已记录，但未填数值，因此不计入曲线、总量和耐受性。",
+        "已記錄，但未填數值，因此不計入曲線、總量和耐受性。",
     ),
     "Shows the dose with a ~; the estimate still drives the curves.": (
         "剂量会显示为 ~；这个估计值仍会用于绘制曲线。",
@@ -2295,17 +2295,17 @@ T = {
     "See your heart rate here": ("在这里查看你的心率", "在這裡查看你的心率"),
     "Turn On Apple Health": ("开启“健康”", "開啟「健康」"),
     # Redesigned unified Apple Health settings — weight footnotes by source (2026-07-07).
-    "Synced from Apple Health. Your weight sizes every dose estimate. The same dose hits harder the less you weigh.": (
-        "已从“健康”同步。体重决定每项剂量估算。越轻，同样的剂量作用越强。",
-        "已從「健康」同步。體重決定每項劑量估算。越輕，同樣的劑量作用越強。",
+    "Synced from Apple Health. Your weight sizes every dose estimate, since the same dose hits harder the less you weigh.": (
+        "已从“健康”同步。体重决定每项剂量估算，因为越轻，同样的剂量作用越强。",
+        "已從「健康」同步。體重決定每項劑量估算，因為越輕，同樣的劑量作用越強。",
     ),
-    "Entered manually. Your weight sizes every dose estimate. The same dose hits harder the less you weigh.": (
-        "已手动输入。体重决定每项剂量估算。越轻，同样的剂量作用越强。",
-        "已手動輸入。體重決定每項劑量估算。越輕，同樣的劑量作用越強。",
+    "Entered manually. Your weight sizes every dose estimate, since the same dose hits harder the less you weigh.": (
+        "已手动输入。体重决定每项剂量估算，因为越轻，同样的剂量作用越强。",
+        "已手動輸入。體重決定每項劑量估算，因為越輕，同樣的劑量作用越強。",
     ),
-    "Using the average 60 kg. Set yours above so estimates fit your body. The same dose hits harder the less you weigh.": (
-        "正使用平均值 60 kg。在上方设置你的体重，让估算贴合你自己。越轻，同样的剂量作用越强。",
-        "正使用平均值 60 kg。在上方設定你的體重，讓估算貼合你自己。越輕，同樣的劑量作用越強。",
+    "Using the average 60 kg. Set yours above so estimates fit your body, since the same dose hits harder the less you weigh.": (
+        "正使用平均值 60 kg。在上方设置你的体重，让估算贴合你自己，因为越轻，同样的剂量作用越强。",
+        "正使用平均值 60 kg。在上方設定你的體重，讓估算貼合你自己，因為越輕，同樣的劑量作用越強。",
     ),
     "Use the average (60 kg)": ("使用平均值（60 kg）", "使用平均值（60 kg）"),
     "Show heart data on sessions": (
@@ -2813,9 +2813,9 @@ T = {
         "这些是研究得出的群体平均值。你的实际数值会因遗传、体型以及用药方式而不同。",
         "這些是研究得出的群體平均值。你的實際數值會因遺傳、體型以及用藥方式而不同。",
     ),
-    "Stronger doesn't mean more dangerous. It's just how tightly the drug grips that one target in the lab.": (
-        "更强并不代表更危险。它只是表示在实验室中药物与该靶点结合的紧密程度。",
-        "更強並不代表更危險。它只是表示在實驗室中藥物與該靶點結合的緊密程度。",
+    "Stronger doesn't mean more dangerous. It only measures how tightly the drug grips that one target in the lab.": (
+        "更强并不代表更危险。它只衡量在实验室中药物与该靶点结合的紧密程度。",
+        "更強並不代表更危險。它只衡量在實驗室中藥物與該靶點結合的緊密程度。",
     ),
     "How much of a dose actually reaches your bloodstream. Swallowing a drug usually delivers less than injecting it.": (
         "一次用药中真正进入血液的比例。口服通常比注射进入血液的量更少。",
@@ -2853,9 +2853,9 @@ T = {
         "这些数值所用的浓度单位。数字越小，表示药物在更低的量下就能起作用。",
         "這些數值所用的濃度單位。數字越小，表示藥物在更低的量下就能起作用。",
     ),
-    "Many values come from animal or lab-dish studies. Human data is the most reliable. The source tag tells you which it is.": (
-        "许多数值来自动物或体外（培养皿）实验。人体数据最为可靠。来源标签会标明属于哪一种。",
-        "許多數值來自動物或體外（培養皿）實驗。人體資料最為可靠。來源標籤會標明屬於哪一種。",
+    "Many values come from animal or lab-dish studies. The source tag says which; human data is the most reliable.": (
+        "许多数值来自动物或体外（培养皿）实验。来源标签会标明属于哪一种；人体数据最为可靠。",
+        "許多數值來自動物或體外（培養皿）實驗。來源標籤會標明屬於哪一種；人體資料最為可靠。",
     ),
     # Pharmacology axis — RC-expansion UI: monoamine profile / provenance / contraceptive
     # caution / gabapentinoid ceiling (2026-06-24). Terminology grounded in a Chinese
@@ -3054,13 +3054,13 @@ T = {
         "用着用着会减弱，要好几周才回得来。MDMA 这类更慢，因为它除了受体，还会消耗血清素的储备。",
         "用著用著會減弱，要好幾週才回得來。MDMA 這類更慢，因為它除了受體，還會消耗血清素的儲備。",
     ),
-    "These values were not measured together. Each is its own study. Ranked here for scale.": (
-        "这些数值并非在同一实验中测得。每个都来自各自的研究。此处排列只为呈现量级。",
-        "這些數值並非在同一實驗中測得。每個都來自各自的研究。此處排列只為呈現量級。",
+    "Each value comes from its own study, ranked here for scale.": (
+        "每个数值都来自各自的研究，此处排列只为呈现量级。",
+        "每個數值都來自各自的研究，此處排列只為呈現量級。",
     ),
-    "MDA is an active drug of its own: more amphetamine-like and more hallucinogenic than MDMA, and longer-lived. So the later hours can feel qualitatively different from the peak.": (
-        "MDA 本身就是一种活性药物：比 MDMA 更像苯丙胺、致幻性更强，也更持久。因此后段时间的体验在性质上会与高峰期不同。",
-        "MDA 本身就是一種活性藥物：比 MDMA 更像安非他命、致幻性更強，也更持久。因此後段時間的體驗在性質上會與高峰期不同。",
+    "MDA is an active drug of its own, more amphetamine-like, more hallucinogenic and longer-lived than MDMA, so the later hours can feel qualitatively different from the peak.": (
+        "MDA 本身就是一种活性药物，比 MDMA 更像苯丙胺、致幻性更强，也更持久，因此后段时间的体验在性质上会与高峰期不同。",
+        "MDA 本身就是一種活性藥物，比 MDMA 更像安非他命、致幻性更強，也更持久，因此後段時間的體驗在性質上會與高峰期不同。",
     ),
     "Model estimates from population half-lives and your logged doses. Individual clearance varies. Intensity is relative to each dose's own peak. Not medical advice.": (
         "基于群体半衰期与你记录的剂量的模型估算。个体清除速度各异。强度相对于每次剂量自身的峰值。不构成医疗建议。",
@@ -3118,9 +3118,9 @@ T = {
         "不在 Ashton 手册的等效剂量表中，也没有其他来源——这个数字只能当作粗略参考，请按这个药自身的阈值来把握剂量。",
         "不在 Ashton 手冊的等效劑量表中，也沒有其他來源——這個數字只能當作粗略參考，請按這個藥自身的閾值來拿捏劑量。",
     ),
-    "Which class this belongs in is argued over. The label is the conventional one, not a settled one.": (
-        "它该归到哪一类是有争议的。这个标签是约定俗成的说法，而不是定论。",
-        "它該歸到哪一類是有爭議的。這個標籤是約定俗成的說法，而不是定論。",
+    "Which class this belongs in is argued over; the label is the conventional one.": (
+        "它该归到哪一类是有争议的；这个标签是约定俗成的说法。",
+        "它該歸到哪一類是有爭議的；這個標籤是約定俗成的說法。",
     ),
     "Selective serotonin reuptake inhibitor": (
         "选择性血清素再摄取抑制剂",
@@ -3164,9 +3164,9 @@ T = {
         "只阻断去甲肾上腺素转运体，另外两种不动。在前额叶皮层，清除多巴胺的正是同一个转运体，所以那里的作用并不像名字读起来那样纯粹是去甲肾上腺素性的。",
         "只阻斷正腎上腺素轉運體，另外兩種不動。在前額葉皮質，清除多巴胺的正是同一個轉運體，所以那裡的作用並不像名字讀起來那樣純粹是正腎上腺素性的。",
     ),
-    "Blocks noradrenaline and dopamine reuptake, leaving serotonin alone. The activating end of the family.": (
-        "阻断去甲肾上腺素和多巴胺的再摄取，不动血清素。这一类里偏兴奋的一端。",
-        "阻斷正腎上腺素和多巴胺的再攝取，不動血清素。這一類裡偏興奮的一端。",
+    "Blocks noradrenaline and dopamine reuptake and leaves serotonin alone, which puts it at the activating end of the family.": (
+        "阻断去甲肾上腺素和多巴胺的再摄取，不动血清素，因此处于这一类里偏兴奋的一端。",
+        "阻斷正腎上腺素和多巴胺的再攝取，不動血清素，因此處於這一類裡偏興奮的一端。",
     ),
     "Blocks serotonin reuptake and acts on several serotonin receptors directly, agonist at some and antagonist at others. The receptor work is what separates it from an SSRI, not the transporter block they share.": (
         "既阻断血清素再摄取，又直接作用于多个血清素受体，对一些是激动，对另一些是拮抗。把它和SSRI区分开的是受体上的这部分作用，而不是两者共有的转运体阻断。",
@@ -3228,7 +3228,7 @@ T = {
         "镇静与低血压叠加。困倦和头晕增加。",
         "鎮靜與低血壓疊加。睏倦和頭暈增加。",
     ),
-    "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. A medical issue more than an overdose risk.": (
+    "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. That is a medical issue more than an overdose risk.": (
         "三环类抗抑郁药可能抵消可乐定类药物的降压作用，使血压升高。这更多是医疗问题，而非过量风险。",
         "三環類抗憂鬱藥可能抵消可樂定類藥物的降壓作用，使血壓升高。這更多是醫療問題，而非過量風險。",
     ),
@@ -3281,9 +3281,9 @@ T = {
         "受體和酶會做出調整，你的基線也往下移。大多數人說的耐受就是這種，每張卡片上那條進度條顯示的也是它。停用後基線就會回升，快慢由受體決定。",
     ),
     "With heavy, prolonged use": ("长期大量使用之后", "長期大量使用之後"),
-    "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses. Steady use doesn't reach it.": (
-        "这会留下一种更深的变化，要好几个月才松得下来。它只在远超日常或治疗剂量时才出现。持续稳定地用也碰不到它。",
-        "這會留下一種更深的變化，要好幾個月才鬆得下來。它只在遠超日常或治療劑量時才出現。持續穩定地用也碰不到它。",
+    "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses.": (
+        "这会留下一种更深的变化，要好几个月才松得下来。它只在远超日常或治疗剂量时才出现。",
+        "這會留下一種更深的變化，要好幾個月才鬆得下來。它只在遠超日常或治療劑量時才出現。",
     ),
     "Three timescales": ("三种时间尺度", "三種時間尺度"),
     "Two different drugs that hit the same receptor share tolerance. Recent LSD blunts a mushroom trip because both work at 5-HT2A; one benzodiazepine carries to another; one opioid to the next. That's why tolerance is tracked per receptor here, and why a “new” drug in the same family can still feel weak.": (
@@ -3319,9 +3319,9 @@ T = {
     "The learned part of tolerance": ("耐受中学习来的部分", "耐受中學習來的部分"),
     "Model boundary": ("模型边界", "模型邊界"),
     "What this number does not include": ("这个数字没有包含的部分", "這個數字沒有包含的部分"),
-    "Every layer above is pharmacodynamic: it is computed from your dose log and the clock. A large part of real tolerance is associative and context-specific: it attaches to the setting, the ritual and the cues around a dose, which is why tolerance measured in a familiar context can be substantially higher than tolerance in an unfamiliar one, and why the same cues without the dose can produce the opposite of the drug's effect. Piru cannot see any of that, because it does not record where you were or what you were doing. Treat the shift as a pharmacological estimate, not a total.": (
-        "上面所有层级都是药效动力学层面的：根据你的剂量记录和时间来计算。真实耐受中有很大一部分是联结性的、跟环境绑定的：它和用药时的地点、仪式、周围的线索绑在一起。这就是为什么在熟悉环境下测到的耐受可以远高于陌生环境，也是为什么同样的线索、没有药物时，身体可以产生药效的反面。Piru 看不到这些，因为它不记录你在哪里、在做什么。把这个数字当作药理学估计来看，不是总量。",
-        "上面所有層級都是藥效學層面的：根據你的劑量記錄和時間來計算。真實耐受中有很大一部分是聯結性的、跟環境綁定的：它和用藥時的地點、儀式、周圍的線索綁在一起。這就是為什麼在熟悉環境下測到的耐受可以遠高於陌生環境，也是為什麼同樣的線索、沒有藥物時，身體可以產生藥效的反面。Piru 看不到這些，因為它不記錄你在哪裡、在做什麼。把這個數字當作藥理學估計來看，不是總量。",
+    "Every layer above is computed from your dose log and the clock. Much of real tolerance is associative: it attaches to the setting, the ritual and the cues around a dose. That is why tolerance in a familiar context can be much higher than in an unfamiliar one, and why the cues without the dose can produce the opposite of the drug's effect. Piru does not record where you were or what you were doing, so treat the shift as a pharmacological estimate, not a total.": (
+        "上面所有层级都根据你的剂量记录和时间来计算。真实耐受中有很大一部分是联结性的：它和用药时的地点、仪式、周围的线索绑在一起。这就是为什么熟悉环境下的耐受可以远高于陌生环境，也是为什么同样的线索、没有药物时，身体可以产生药效的反面。Piru 不记录你在哪里、在做什么，所以请把这个数字当作药理学估计，而不是总量。",
+        "上面所有層級都根據你的劑量記錄和時間來計算。真實耐受中有很大一部分是聯結性的：它和用藥時的地點、儀式、周圍的線索綁在一起。這就是為什麼熟悉環境下的耐受可以遠高於陌生環境，也是為什麼同樣的線索、沒有藥物時，身體可以產生藥效的反面。Piru 不記錄你在哪裡、在做什麼，所以請把這個數字當作藥理學估計，而不是總量。",
     ),
     "Real tolerance that drops after a break or a change of setting, which is exactly what makes returning to an old dose dangerous.": (
         "实打实的耐受，停一阵子或换了环境就会掉，这正是为什么回到以前的剂量会很危险。",
@@ -3944,7 +3944,7 @@ T = {
         "双重食欲素受体拮抗剂（DORA）",
         "雙重食慾素受體拮抗劑（DORA）",
     ),
-    'Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific "stay awake" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability characteristic of benzodiazepines, Z-drugs, and other GABAergic sedatives.': (
+    'Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific "stay awake" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability of benzodiazepines, Z-drugs, and other GABAergic sedatives.': (
         "竞争性阻断食欲素（下丘脑分泌素）受体 OX1R 和 OX2R，这两种受体是外侧下丘脑释放的促醒神经肽食欲素-A 和食欲素-B 的作用靶点。它不像 GABA 能催眠药那样广泛抑制大脑，而是撤除一种维持觉醒的特定“保持清醒”驱动力，让人自然过渡到睡眠，同时基本保留睡眠结构和可唤醒性。由于它既不增强 GABA，也不抑制脑干呼吸中枢，因此没有苯二氮䓬类、Z 类药物及其他 GABA 能镇静剂所特有的呼吸抑制协同作用和依赖风险。",
         "競爭性阻斷食慾素（下視丘分泌素）受體 OX1R 和 OX2R，這兩種受體是外側下視丘釋放的促醒神經肽食慾素-A 和食慾素-B 的作用標的。它不像 GABA 能催眠藥那樣廣泛抑制大腦，而是撤除一種維持覺醒的特定「保持清醒」驅動力，讓人自然過渡到睡眠，同時基本保留睡眠結構和可喚醒性。由於它既不增強 GABA，也不抑制腦幹呼吸中樞，因此沒有苯二氮平類、Z 類藥物及其他 GABA 能鎮靜劑所特有的呼吸抑制協同作用和依賴風險。",
     ),
@@ -4340,9 +4340,9 @@ T = {
         "照顧好自己——吃飯、補水、休息。效果會隨時間消退。",
     ),
     # Cumulative tips
-    "Remember to hydrate, eat, and try to get some sleep. Your heart has been working hard.": (
-        "记得补水、吃饭并尝试入睡。你的心脏一直在努力工作。",
-        "記得補水、吃飯並嘗試入睡。你的心臟一直在努力工作。",
+    "Hydrate, eat, and try to get some sleep. Your heart has been working hard.": (
+        "补水、吃饭并尝试入睡。你的心脏一直在努力工作。",
+        "補水、吃飯並嘗試入睡。你的心臟一直在努力工作。",
     ),
     "Your serotonin system is taking a hit. Rest.": (
         "你的血清素系统正承受压力。休息。",
@@ -4532,9 +4532,9 @@ T = {
         "去甲伊博加因半衰期长，作用方式与伊博加因不同。它更依赖血清素再摄取和 κ-阿片信号传导，构成延长后效应的重要部分，而非高峰期的延续。",
         "去甲伊博加因半衰期長，作用方式與伊博加因不同。它更依賴血清素再攝取和 κ-鴉片訊號傳導，構成延長後效應的重要部分，而非高峰期的延續。",
     ),
-    "Normeperidine isn't a painkiller. It's a stimulating metabolite that builds up with repeated or high doses and lowers the seizure threshold. It's why meperidine isn't used for long-term pain.": (
-        "去甲哌替啶不是止痛药。它是一种兴奋性代谢物，在反复或大剂量使用时蓄积，降低癫痫发作阈值。这是哌替啶不用于长期镇痛的原因。",
-        "去甲哌替啶不是止痛藥。它是一種興奮性代謝物，在反覆或大劑量使用時蓄積，降低癲癇發作閾值。這是哌替啶不用於長期鎮痛的原因。",
+    "Normeperidine is a stimulating metabolite, not a painkiller. It builds up with repeated or high doses and lowers the seizure threshold, which is why meperidine isn't used for long-term pain.": (
+        "去甲哌替啶是一种兴奋性代谢物，不是止痛药。它在反复或大剂量使用时蓄积，降低癫痫发作阈值，这就是哌替啶不用于长期镇痛的原因。",
+        "去甲哌替啶是一種興奮性代謝物，不是止痛藥。它在反覆或大劑量使用時蓄積，降低癲癇發作閾值，這就是哌替啶不用於長期鎮痛的原因。",
     ),
     "Dextrorphan blocks NMDA receptors more strongly than DXM itself does. It's the more dissociative species, and the main reason the character shifts at higher doses rather than simply lasting longer.": (
         "右啡烷对 NMDA 受体的阻断作用强于右美沙芬本身。它是更具解离性的活性种，也是高剂量时体验特征转变而非仅仅持续更久的主要原因。",
@@ -4544,9 +4544,9 @@ T = {
         "美普罗巴酯本身就是一种长效的类巴比妥镇静剂。它比卡立普多更像经典的镇静药物，大部分镇静作用和依赖潜力来自于它而非母体药物。",
         "美普羅巴酯本身就是一種長效的類巴比妥鎮靜劑。它比卡立普多更像經典的鎮靜藥物，大部分鎮靜作用和依賴潛力來自於它而非母體藥物。",
     ),
-    "Nortriptyline is a marketed antidepressant in its own right, and it leans more on noradrenaline than amitriptyline does. The metabolite's character is more activating than the parent's.": (
-        "去甲替林本身就是一种上市的抗抑郁药，比阿米替林更偏向去甲肾上腺素。代谢物的特征比母体药物更具激活性。",
-        "去甲替林本身就是一種上市的抗憂鬱藥，比阿米替林更偏向正腎上腺素。代謝物的特徵比母體藥物更具活化性。",
+    "Nortriptyline is a marketed antidepressant in its own right and leans more on noradrenaline than amitriptyline, so it feels more activating than the parent.": (
+        "去甲替林本身就是一种上市的抗抑郁药，比阿米替林更偏向去甲肾上腺素，因此感觉比母体药物更具激活性。",
+        "去甲替林本身就是一種上市的抗憂鬱藥，比阿米替林更偏向正腎上腺素，因此感覺比母體藥物更具活化性。",
     ),
     "Desipramine is a marketed antidepressant in its own right, and more noradrenergic than imipramine. As it forms, the effect shifts toward the more activating end.": (
         "地昔帕明本身就是一种上市的抗抑郁药，比丙咪嗪更偏向去甲肾上腺素能。随着它的生成，效应向更具激活性的方向转移。",
@@ -4556,9 +4556,9 @@ T = {
         "去甲基代谢物将氯丙咪嗪强烈的血清素能作用向去甲肾上腺素方向转移，因此两者的作用并不完全相同。随着代谢物蓄积，平衡发生变化。",
         "去甲基代謝物將氯丙咪嗪強烈的血清素能作用向正腎上腺素方向轉移，因此兩者的作用並不完全相同。隨著代謝物蓄積，平衡發生變化。",
     ),
-    "Norquetiapine adds effects quetiapine largely lacks, noradrenaline reuptake inhibition and antidepressant-like activity, so it contributes a different character than the parent's sedation.": (
-        "去甲喹硫平增加了喹硫平基本不具备的作用，即去甲肾上腺素再摄取抑制和抗抑郁样活性，因此它贡献的特征不同于母体药物的镇静作用。",
-        "去甲喹硫平增加了喹硫平基本不具備的作用，即正腎上腺素再攝取抑制和抗憂鬱樣活性，因此它貢獻的特徵不同於母體藥物的鎮靜作用。",
+    "Norquetiapine adds noradrenaline reuptake inhibition and antidepressant-like activity, which quetiapine largely lacks, so it brings a different character than the parent's sedation.": (
+        "去甲喹硫平增加了去甲肾上腺素再摄取抑制和抗抑郁样活性，这些是喹硫平基本不具备的，因此它带来的特征不同于母体药物的镇静作用。",
+        "去甲喹硫平增加了正腎上腺素再攝取抑制和抗憂鬱樣活性，這些是喹硫平基本不具備的，因此它帶來的特徵不同於母體藥物的鎮靜作用。",
     ),
     "This metabolite (HNK) barely touches the NMDA receptor ketamine acts on. It's studied for a separate, non-dissociative antidepressant effect, so it isn't simply ketamine continuing.": (
         "这种代谢物（HNK）几乎不作用于氯胺酮所靶向的 NMDA 受体。它被研究的是一种独立的、非解离性的抗抑郁效应，因此并非氯胺酮效果的简单延续。",
@@ -4576,9 +4576,9 @@ T = {
         "去甲麻黄碱（苯丙醇胺）是一种外周拟交感神经药。它升高血压和收缩血管的程度超过苯丙胺的中枢作用所能预测的，增加了母体药物 CNS 特征所未提示的心血管负荷。",
         "去甲麻黃鹼（苯丙醇胺）是一種周邊擬交感神經藥。它升高血壓和收縮血管的程度超過安非他命的中樞作用所能預測的，增加了母體藥物 CNS 特徵所未提示的心血管負荷。",
     ),
-    "7-aminoclonazepam has no meaningful activity at GABA-A. It's an inactive metabolite used as a urinary marker for clonazepam exposure, not a contributor to the drug's effect.": (
-        "7-氨基氯硝西泮在 GABA-A 上无显著活性。它是一种无活性代谢物，用作氯硝西泮暴露的尿液标志物，不参与药物效应。",
-        "7-胺基氯硝西泮在 GABA-A 上無顯著活性。它是一種無活性代謝物，用作氯硝西泮暴露的尿液標誌物，不參與藥物效應。",
+    "7-aminoclonazepam has no meaningful activity at GABA-A. It is used as a urine marker for clonazepam exposure.": (
+        "7-氨基氯硝西泮在 GABA-A 上无显著活性。它用作氯硝西泮暴露的尿液标志物。",
+        "7-胺基氯硝西泮在 GABA-A 上無顯著活性。它用作氯硝西泮暴露的尿液標誌物。",
     ),
     "Norfenfluramine is a more potent serotonin releaser than fenfluramine itself. It drives much of the pharmacological effect, including the 5-HT₂B agonism linked to cardiac valve damage in the 1990s weight-loss era.": (
         "去甲芬氟拉明是比芬氟拉明更强效的血清素释放剂。它驱动了大部分药理效应，包括与 1990 年代减肥时期心脏瓣膜损伤相关的 5-HT₂B 激动作用。",
@@ -4588,13 +4588,13 @@ T = {
         "这种不寻常的 II 相结合物保留了去甲甲卡西酮的核心结构。是否具有药理活性尚不明确，但其较长的血浆半衰期意味着它在甲卡西酮的短暂作用期过后仍会存留。",
         "這種不尋常的 II 相結合物保留了去甲甲卡西酮的核心結構。是否具有藥理活性尚不明確，但其較長的血漿半衰期意味著它在甲卡西酮的短暫作用期過後仍會存留。",
     ),
-    "Cotinine has negligible nicotinic activity. It's the standard biomarker for tobacco exposure, not a continuation of nicotine's effect. Its long half-life (~16 hours) is why it's detectable in blood and urine days after the last cigarette.": (
-        "可替宁的烟碱活性可忽略。它是烟草暴露的标准生物标志物，而非尼古丁效应的延续。其约 16 小时的长半衰期是最后一支烟后数天仍可在血液和尿液中检出的原因。",
-        "可替寧的菸鹼活性可忽略。它是菸草暴露的標準生物標誌物，而非尼古丁效應的延續。其約 16 小時的長半衰期是最後一支菸後數天仍可在血液和尿液中檢出的原因。",
+    "Cotinine has negligible nicotinic activity. It is the standard biomarker for tobacco exposure, and its long half-life (~16 hours) keeps it detectable in blood and urine days after the last cigarette.": (
+        "可替宁的烟碱活性可忽略。它是烟草暴露的标准生物标志物，约 16 小时的长半衰期使其在最后一支烟后数天仍可在血液和尿液中检出。",
+        "可替寧的菸鹼活性可忽略。它是菸草暴露的標準生物標誌物，約 16 小時的長半衰期使其在最後一支菸後數天仍可在血液和尿液中檢出。",
     ),
-    "EDDP has no opioid activity. It's the primary urinary marker for methadone compliance monitoring, not a contributor to the drug's effect or duration.": (
-        "EDDP 无阿片活性。它是美沙酮依从性监测的主要尿液标志物，不参与药物效应或持续时间。",
-        "EDDP 無鴉片活性。它是美沙酮依從性監測的主要尿液標誌物，不參與藥物效應或持續時間。",
+    "EDDP has no opioid activity. It is the main urine marker for methadone compliance monitoring.": (
+        "EDDP 无阿片活性。它是美沙酮依从性监测的主要尿液标志物。",
+        "EDDP 無鴉片活性。它是美沙酮依從性監測的主要尿液標誌物。",
     ),
     "M3G is morphine's major metabolite (~60% of the dose) and has no analgesic activity. At high concentrations it's neuroexcitatory, contributing to myoclonus and paradoxical pain increase rather than pain relief. It accumulates in renal impairment, which is why morphine dosing needs adjustment when kidneys are compromised.": (
         "M3G 是吗啡的主要代谢物（约占剂量的 60%），无镇痛活性。高浓度时具有神经兴奋性，导致肌阵挛和矛盾性疼痛加重而非缓解。它在肾功能损害时蓄积，这是肾功能不全时需要调整吗啡剂量的原因。",
@@ -4919,13 +4919,13 @@ T = {
         "SSRI 抑制 TCA 代谢。有 TCA 中毒和血清素综合征的风险。",
         "SSRI 抑制 TCA 代謝。有 TCA 中毒和血清素症候群的風險。",
     ),
-    "Increased heart rate and blood pressure. Cardiovascular strain.": (
-        "心率和血压增加。心血管压力。",
-        "心率和血壓增加。心血管壓力。",
+    "Increased heart rate and blood pressure: cardiovascular strain.": (
+        "心率和血压增加：心血管压力。",
+        "心率和血壓增加：心血管壓力。",
     ),
-    "Stimulants mask alcohol impairment. Risk of overconsumption.": (
-        "兴奋剂会掩盖酒精损害。有过量饮用的风险。",
-        "興奮劑會掩蓋酒精損害。有過量飲用的風險。",
+    "Stimulants mask alcohol impairment, so it is easy to drink too much.": (
+        "兴奋剂会掩盖酒精损害，因此很容易喝得过量。",
+        "興奮劑會掩蓋酒精損害，因此很容易喝得過量。",
     ),
     "Compounded drowsiness and impaired coordination.": (
         "叠加的嗜睡和协调受损。",
@@ -6075,9 +6075,9 @@ T = {
     "10 and 30 min later": ("10 分钟和 30 分钟后", "10 分鐘和 30 分鐘後"),
     "Reminders on": ("提醒已开启", "提醒已開啟"),
     "Reminders off": ("提醒已关闭", "提醒已關閉"),
-    "Keep track of what you take and when. One tap to set up gentle reminders. Prescriptions, supplements, vitamins: anything on a schedule.": (
-        "记录你服用了什么、何时服用。轻点一下即可设置温和的提醒。处方药、补剂、维生素：任何按计划服用的东西。",
-        "記錄你服用了什麼、何時服用。點一下即可設定溫和的提醒。處方藥、補劑、維生素：任何按計劃服用的東西。",
+    "Keep track of what you take and when, with gentle reminders set up in one tap. Prescriptions, supplements, vitamins: anything on a schedule.": (
+        "记录你服用了什么、何时服用，轻点一下即可设置温和的提醒。处方药、补剂、维生素：任何按计划服用的东西。",
+        "記錄你服用了什麼、何時服用，點一下即可設定溫和的提醒。處方藥、補劑、維生素：任何按計劃服用的東西。",
     ),
     "Quiet meds' reminders arrive silently: no buzz, no lock-screen wake. If you use iOS Scheduled Summary, they batch there.": (
         "静默用药的提醒会无声送达：不震动，也不点亮锁定屏幕。如果你使用 iOS 的定时摘要，它们会汇总到那里。",
@@ -6510,9 +6510,9 @@ T = {
         "只有在你要求时才会生成导出或备份，并保存到你选择的位置。",
         "只有在你要求時才會生成匯出或備份，並儲存到你選擇的位置。",
     ),
-    "An injected ester releases slowly from the oil depot, splits into the free hormone, and clears. This curve sums your logged esters into an illustrative serum estimate. It is not a laboratory result.": (
-        "注射的酯从油性储库中缓慢释放，分解为游离激素，然后被清除。这条曲线把你记录的各种酯汇总为一个示意性的血清估计值。它不是化验结果。",
-        "注射的酯從油性儲庫中緩慢釋放，分解為游離激素，然後被清除。這條曲線把你記錄的各種酯彙總為一個示意性的血清估計值。它不是化驗結果。",
+    "An injected ester releases slowly from the oil depot, splits into the free hormone, and clears. This curve sums your logged esters into an illustrative serum estimate, not a lab result.": (
+        "注射的酯从油性储库中缓慢释放，分解为游离激素，然后被清除。这条曲线把你记录的各种酯汇总为一个示意性的血清估计值，而非化验结果。",
+        "注射的酯從油性儲庫中緩慢釋放，分解為游離激素，然後被清除。這條曲線把你記錄的各種酯彙總為一個示意性的血清估計值，而非化驗結果。",
     ),
     "Any": ("任意", "任意"),
     "You may need food and rest after several hours without them.": (
@@ -6584,9 +6584,9 @@ T = {
         "这里很常见。有些人觉得稍微动一动比坐着不动更好受。",
         "這裡很常見。有些人覺得稍微動一動比坐著不動更好受。",
     ),
-    "Commonly reported on the way down. Worth noting when it started.": (
-        "下行阶段常见。值得记下它是什么时候开始的。",
-        "下行階段常見。值得記下它是什麼時候開始的。",
+    "Commonly reported on the way down. Note when it started.": (
+        "下行阶段常见。记下它是什么时候开始的。",
+        "下行階段常見。記下它是什麼時候開始的。",
     ),
     "Commonly reported while a stimulating dose is active. The curve is an estimate and can't say when you will sleep.": (
         "在有兴奋作用的剂量仍然活跃期间很常见。曲线只是估计，无法说明你什么时候能睡着。",
@@ -6604,9 +6604,9 @@ T = {
         "这一类常见的报告。时间线无法说明你的会持续多久。有人陪伴、换个安静点的房间都值得。",
         "這一類常見的報告。時間線無法說明你的會持續多久。有人陪伴、換個安靜點的房間都值得。",
     ),
-    "Compounded sedation. Stronger, deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice.": (
-        "镇静叠加。更强、更深的困倦。GHB 本身就会抑制呼吸，而额外的镇静会让这一点更难被察觉。",
-        "鎮靜疊加。更強、更深的睏倦。GHB 本身就會抑制呼吸，而額外的鎮靜會讓這一點更難被察覺。",
+    "Compounded sedation and deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice.": (
+        "镇静叠加，困倦更深。GHB 本身就会抑制呼吸，而额外的镇静会让这一点更难被察觉。",
+        "鎮靜疊加，睏倦更深。GHB 本身就會抑制呼吸，而額外的鎮靜會讓這一點更難被察覺。",
     ),
     "Concentration and solvent volume for a solution": (
         "溶液的浓度与溶剂体积",
@@ -6737,9 +6737,9 @@ T = {
     ),
     "Export Failed": ("导出失败", "匯出失敗"),
     "Exports and backups": ("导出与备份", "匯出與備份"),
-    "Feeling bad is a listed effect of this class. It still deserves attention. Piru can't tell whether a symptom is harmless.": (
-        "感觉糟糕是这一类列出的效应。它仍然值得重视。Piru 无法判断一个症状是否无害。",
-        "感覺糟糕是這一類列出的效應。它仍然值得重視。Piru 無法判斷一個症狀是否無害。",
+    "Feeling bad is a listed effect of this class. It still deserves attention, because Piru can't tell whether a symptom is harmless.": (
+        "感觉糟糕是这一类列出的效应。它仍然值得重视，因为 Piru 无法判断一个症状是否无害。",
+        "感覺糟糕是這一類列出的效應。它仍然值得重視，因為 Piru 無法判斷一個症狀是否無害。",
     ),
     "Feeling emotionally open, contemplative, or just tired afterwards is commonly reported.": (
         "事后常有人感到情感开放、若有所思，或只是疲惫。",
@@ -6776,9 +6776,9 @@ T = {
     "Half-Life Calculator": ("半衰期计算器", "半衰期計算器"),
     "Half-life": ("半衰期", "半衰期"),
     "Handling & storage": ("处理与储存", "處理與儲存"),
-    "Have feedback, questions, or want to discuss the app? Join our Discord. We'd love to hear from you.": (
-        "有反馈、疑问，或想讨论这款应用？加入我们的 Discord。期待听到你的声音。",
-        "有回饋、疑問，或想討論這款應用程式？加入我們的 Discord。期待聽到你的聲音。",
+    "Have feedback, questions, or want to discuss the app? Join our Discord.": (
+        "有反馈、疑问，或想讨论这款应用？加入我们的 Discord。",
+        "有回饋、疑問，或想討論這款應用程式？加入我們的 Discord。",
     ),
     "Headaches and fatigue are common.": ("头痛和疲劳很常见。", "頭痛和疲勞很常見。"),
     "Help": ("帮助", "說明"),
@@ -7208,9 +7208,9 @@ T = {
         "模型估计你 %3$@ %4$@ 的剂量（%5$@）中约有 ≈%1$@ %2$@ 仍在活跃，约 %6$lld%%",
         "模型估計你 %3$@ %4$@ 的劑量（%5$@）中約有 ≈%1$@ %2$@ 仍在活躍，約 %6$lld%%",
     ),
-    "The old “never mix” warning rests on little. Large reviews did not find the harm it predicts. Both still strain the heart.": (
-        "过去那条“绝不可混用”的警告依据很少。大型综述并未发现它所预言的危害。两者仍然都会给心脏增加负担。",
-        "過去那條「絕不可混用」的警告依據很少。大型綜述並未發現它所預言的危害。兩者仍然都會給心臟增加負擔。",
+    "The old “never mix” warning rests on little: large reviews did not find the harm it predicts. Both still strain the heart.": (
+        "过去那条“绝不可混用”的警告依据很少：大型综述并未发现它所预言的危害。两者仍然都会给心脏增加负担。",
+        "過去那條「絕不可混用」的警告依據很少：大型綜述並未發現它所預言的危害。兩者仍然都會給心臟增加負擔。",
     ),
     "The protocol below reflects community or investigational use, not validated human dosing or medical advice. Many of these compounds are WADA-prohibited and lack human safety data.": (
         "下方方案反映社区或试验性用途，并非经过验证的人体剂量或医疗建议。其中许多化合物被 WADA 禁用，且缺乏人体安全数据。",
@@ -7232,9 +7232,9 @@ T = {
         "这一类会升高体温。感觉非常热、意识混乱或肌肉僵直属于急症。降温并呼叫救助。",
         "這一類會升高體溫。感覺非常熱、意識混亂或肌肉僵直屬於急症。降溫並呼叫救助。",
     ),
-    "This compound has no validated human dose data. Information below is for reference only. See the linked sources for primary literature. Do not extrapolate doses from related compounds.": (
-        "该化合物没有经过验证的人体剂量数据。以下信息仅供参考。原始文献请参阅所链接的来源。请勿根据相关化合物推算剂量。",
-        "該化合物沒有經過驗證的人體劑量資料。以下資訊僅供參考。原始文獻請參閱所連結的來源。請勿根據相關化合物推算劑量。",
+    "This compound has no validated human dose data. The information below is for reference only, with primary literature in the linked sources. Do not extrapolate doses from related compounds.": (
+        "该化合物没有经过验证的人体剂量数据。以下信息仅供参考，原始文献见所链接的来源。请勿根据相关化合物推算剂量。",
+        "該化合物沒有經過驗證的人體劑量資料。以下資訊僅供參考，原始文獻見所連結的來源。請勿根據相關化合物推算劑量。",
     ),
     "This device's backup key isn't available yet. If you just signed in, give iCloud Keychain a moment to sync.": (
         "此设备的备份密钥尚不可用。如果你刚刚登录，请稍候让 iCloud 钥匙串完成同步。",
@@ -7265,9 +7265,9 @@ T = {
         "Tryptamines I Have Known and Loved，Shulgin & Shulgin (1997)",
         "Tryptamines I Have Known and Loved，Shulgin & Shulgin (1997)",
     ),
-    "Two sleep-promoting drugs stacked. Additive next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants.": (
-        "两种助眠药叠加。次日镇静、跌倒风险和协调性受损都会叠加。说明书对与其他中枢抑制剂合用提出了警示。",
-        "兩種助眠藥疊加。次日鎮靜、跌倒風險和協調性受損都會疊加。說明書對與其他中樞抑制劑合用提出了警示。",
+    "Stacking two sleep-promoting drugs adds next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants.": (
+        "叠加两种助眠药会增加次日镇静、跌倒风险和协调性受损。说明书对与其他中枢抑制剂合用提出了警示。",
+        "疊加兩種助眠藥會增加次日鎮靜、跌倒風險和協調性受損。說明書對與其他中樞抑制劑合用提出了警示。",
     ),
     "Typical protocol": ("典型方案", "典型方案"),
     "Unknown": ("未知", "未知"),
@@ -7432,9 +7432,9 @@ T = {
         "幾乎不產生耐受；突然停用可能讓心率和血壓反彈。",
     ),
     "Biomedical literature index.": ("生物医学文献索引。", "生物醫學文獻索引。"),
-    "Both cause drowsiness. Additive next-day sedation and grogginess.": (
-        "两者都会引起困倦。次日的镇静和昏沉会叠加。",
-        "兩者都會引起睏倦。次日的鎮靜和昏沉會疊加。",
+    "Both cause drowsiness, so next-day sedation and grogginess add up.": (
+        "两者都会引起困倦，因此次日的镇静和昏沉会叠加。",
+        "兩者都會引起睏倦，因此次日的鎮靜和昏沉會疊加。",
     ),
     "CDC excludes buprenorphine from MME.": (
         "CDC 未将丁丙诺啡纳入 MME。",
@@ -7480,9 +7480,9 @@ T = {
         "詳情見「設定」中的「關於 Piru」。",
     ),
     "Diazepam Equivalence": ("地西泮等效量", "地西泮等效量"),
-    "Dosing shown reflects published or community protocols, not medical advice. Peptides are injected from reconstituted powder. Handle and store as noted below.": (
-        "此处所示剂量反映的是已发表或社区的方案，不是医疗建议。肽类由复溶的粉末注射。请按下文说明处理和储存。",
-        "此處所示劑量反映的是已發表或社群的方案，不是醫療建議。胜肽由復溶的粉末注射。請按下文說明處理和儲存。",
+    "Dosing shown reflects published or community protocols, not medical advice. Peptides are injected from reconstituted powder; handle and store it as noted below.": (
+        "此处所示剂量反映的是已发表或社区的方案，不是医疗建议。肽类由复溶的粉末注射；请按下文说明处理和储存。",
+        "此處所示劑量反映的是已發表或社群的方案，不是醫療建議。胜肽由復溶的粉末注射；請按下文說明處理和儲存。",
     ),
     "Each substance page names the source of each field. Text from PsychonautWiki and FreeOD Wiki is used under CC BY-SA 4.0, edited and merged with other sources, and remains available under that license.": (
         "每个物质页面都会标明每个字段的来源。来自 PsychonautWiki 和 FreeOD Wiki 的文本依 CC BY-SA 4.0 使用，经编辑并与其他来源合并，并继续依该许可提供。",
@@ -8610,7 +8610,7 @@ if __name__ == "__main__":
         "dose.wiki",
         "Plum and fuchsia, from the open encyclopedia",
         "In partnership with dose.wiki ↗",
-        "A skin changes the app's colors, cards, and type. Your substance colors, the timeline, and every chart stay exactly as they are.",
+        "A skin changes the app's colors, cards, and type. Your substance colors, the timeline, and every chart stay as they are.",
         "Follow System",
         "Light Mode",
         "Dark Mode",
@@ -8792,7 +8792,7 @@ if __name__ == "__main__":
         "MDMA releases serotonin in bulk and lithium adds to it, so serotonin syndrome is the main risk. Seizures are reported for lithium with classic psychedelics; MDMA has not been looked at the same way.",
         "Source: the Ashton Manual's equivalence table, which calls these doses approximate and notes that not every clinician agrees with them.",
         "One of these is from the Ashton Manual's equivalence table; the other is not in it and is not sourced elsewhere. Equivalences are approximate either way.",
-        "Which class this belongs in is argued over. The label is the conventional one, not a settled one.",
+        "Which class this belongs in is argued over; the label is the conventional one.",
         "Noradrenaline reuptake inhibitor",
         "Serotonin modulator and stimulator",
         "Blocks the noradrenaline transporter and leaves the other two. In the prefrontal cortex that same transporter is what clears dopamine, so the effect there is not as purely noradrenergic as the name reads.",
@@ -8965,7 +8965,7 @@ if __name__ == "__main__":
         "Unknown amount",
         "unknown amount",
         "Logs the dose with no number; it stays out of curves, totals, and tolerance.",
-        "Logged with no number. Stays out of curves, totals, and tolerance.",
+        "Logged with no number, so it stays out of curves, totals, and tolerance.",
         # Label scanner strings (CLI-added; Xcode hasn't extracted them yet).
         "Scan a label",
         "Close scanner",
@@ -9004,7 +9004,7 @@ if __name__ == "__main__":
         "Noradrenergic and specific serotonergic antidepressant",
         "Blocks the serotonin transporter and little else, which is why its effects and its side effects are both mostly serotonergic.",
         "Blocks serotonin and noradrenaline reuptake together. The noradrenaline share grows with dose, so a low dose can behave much like an SSRI.",
-        "Blocks noradrenaline and dopamine reuptake, leaving serotonin alone. The activating end of the family.",
+        "Blocks noradrenaline and dopamine reuptake and leaves serotonin alone, which puts it at the activating end of the family.",
         "Blocks serotonin and noradrenaline reuptake like an SNRI, and also histamine, muscarinic and α₁ receptors. That extra binding is the sedation, the dry mouth, and the narrow margin in overdose.",
         "Blocks the enzyme that breaks monoamines down, rather than the transporters that recycle them, so all three rise. The tyramine restriction and the long interaction list both follow from that.",
         "Blocks 5-HT₂A while weakly inhibiting serotonin reuptake. The receptor block dominates at low doses, which is why trazodone reached far more people as a sleep drug than as an antidepressant.",

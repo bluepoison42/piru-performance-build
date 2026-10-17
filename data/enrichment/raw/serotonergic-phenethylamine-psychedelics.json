@@ -5097,7 +5097,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Psilocybin is a prodrug: alkaline phosphatase (gut and tissue) dephosphorylates to psilocin, which is the pharmacologically active 5-HT2A agonist. Tryptamine class, not phenethylamine: included here for tag-corrigenda.",
+      "downstream_signalling": "Psilocybin is a prodrug: alkaline phosphatase (gut and tissue) dephosphorylates to psilocin, which is the pharmacologically active 5-HT2A agonist. A tryptamine.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5179,7 +5179,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Sedating antihistamine; no 5-HT2A agonism. Source tagging as '5-HT2A-agonist / DOx / phenethylamine' is incorrect.",
+      "downstream_signalling": "Sedating antihistamine; no 5-HT2A agonism.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5283,7 +5283,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "SARI (serotonin antagonist and reuptake inhibitor): sedating antidepressant. Not a 5-HT2A agonist.",
+      "downstream_signalling": "SARI (serotonin antagonist and reuptake inhibitor): sedating antidepressant.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5393,7 +5393,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "SSRI + 5-HT1A partial agonist (SPARI). Not a 5-HT2A agonist.",
+      "downstream_signalling": "SSRI + 5-HT1A partial agonist (SPARI).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -6664,7 +6664,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Cannabinoid CB1 agonist. Not a 5-HT2A psychedelic.",
+      "downstream_signalling": "Cannabinoid CB1 agonist.",
       "neuroimaging": []
     },
     "human_pk": {

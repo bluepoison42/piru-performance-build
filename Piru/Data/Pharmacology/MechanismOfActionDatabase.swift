@@ -160,7 +160,7 @@ enum MechanismOfActionDatabase {
         ),
         .orexinAntagonist: moa(
             "Dual Orexin Receptor Antagonist (DORA)",
-            "Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific \"stay awake\" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability characteristic of benzodiazepines, Z-drugs, and other GABAergic sedatives.",
+            "Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific \"stay awake\" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability of benzodiazepines, Z-drugs, and other GABAergic sedatives.",
             [b("OX1R", .antagonist, .primary), b("OX2R", .antagonist, .primary)],
         ),
         .antidepressant: moa(
@@ -212,7 +212,7 @@ enum MechanismOfActionDatabase {
         ),
         .other: moa(
             "Pharmacological Agent",
-            "This substance's mechanism of action may involve multiple pharmacological targets or may not be fully characterized. Consult specific pharmacological references for detailed mechanistic information.",
+            "This substance's mechanism may involve several targets or may not be fully known. For detail, see a pharmacology reference.",
             [],
         ),
     ]

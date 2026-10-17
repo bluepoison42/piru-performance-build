@@ -85,7 +85,7 @@ enum AntidepressantClass: String, CaseIterable, Hashable, Sendable {
         case .nri:
             "Blocks the noradrenaline transporter and leaves the other two. In the prefrontal cortex that same transporter is what clears dopamine, so the effect there is not as purely noradrenergic as the name reads."
         case .ndri:
-            "Blocks noradrenaline and dopamine reuptake, leaving serotonin alone. The activating end of the family."
+            "Blocks noradrenaline and dopamine reuptake and leaves serotonin alone, which puts it at the activating end of the family."
         case .tca:
             "Blocks serotonin and noradrenaline reuptake like an SNRI, and also histamine, muscarinic and α₁ receptors. That extra binding is the sedation, the dry mouth, and the narrow margin in overdose."
         case .maoi:

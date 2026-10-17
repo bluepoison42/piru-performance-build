@@ -353,30 +353,30 @@
         }
       }
     },
-    "\"How is it going?\" at set points in a session, opening a timestamped note. Turned on per session; off unless you ask." : {
+    "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on for that session." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "«¿Cómo va?» en puntos fijos de una sesión, abriendo una nota con marca de tiempo. Se activa por sesión; desactivado a menos que lo pidas."
+            "value" : "«¿Cómo va?» en puntos fijos de una sesión, cada uno abriendo una nota con marca de tiempo. Desactivado a menos que lo actives para esa sesión."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "«¿Cómo va?» en puntos fijos de una sesión, abriendo una nota con marca de tiempo. Se activa por sesión; desactivado a menos que lo pidas."
+            "value" : "«¿Cómo va?» en puntos fijos de una sesión, cada uno abriendo una nota con marca de tiempo. Desactivado a menos que lo actives para esa sesión."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在场次中的几个时点提示“现在感觉如何？”，并打开一条带时间戳的笔记。按场次开启；默认关闭。"
+            "value" : "在场次中的几个时点提示“现在感觉如何？”，每次打开一条带时间戳的笔记。默认关闭，需为该场次开启。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在場次中的幾個時點提示「現在感覺如何？」，並開啟一則帶時間戳的筆記。按場次開啟；預設關閉。"
+            "value" : "在場次中的幾個時點提示「現在感覺如何？」，每次開啟一則帶時間戳的筆記。預設關閉，需為該場次開啟。"
           }
         }
       }
@@ -8426,30 +8426,30 @@
         }
       }
     },
-    "7-aminoclonazepam has no meaningful activity at GABA-A. It's an inactive metabolite used as a urinary marker for clonazepam exposure, not a contributor to the drug's effect." : {
+    "7-aminoclonazepam has no meaningful activity at GABA-A. It is used as a urine marker for clonazepam exposure." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El 7-aminoclonazepam no tiene actividad significativa en GABA-A. Es un metabolito inactivo que se usa como marcador urinario de exposición al clonazepam, no contribuye al efecto del fármaco."
+            "value" : "El 7-aminoclonazepam no tiene actividad significativa en GABA-A. Se usa como marcador urinario de exposición al clonazepam."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El 7-aminoclonazepam no tiene actividad significativa en GABA-A. Es un metabolito inactivo que se usa como marcador urinario de exposición al clonazepam, no contribuye al efecto del fármaco."
+            "value" : "El 7-aminoclonazepam no tiene actividad significativa en GABA-A. Se usa como marcador urinario de exposición al clonazepam."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "7-氨基氯硝西泮在 GABA-A 上无显著活性。它是一种无活性代谢物，用作氯硝西泮暴露的尿液标志物，不参与药物效应。"
+            "value" : "7-氨基氯硝西泮在 GABA-A 上无显著活性。它用作氯硝西泮暴露的尿液标志物。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "7-胺基氯硝西泮在 GABA-A 上無顯著活性。它是一種無活性代謝物，用作氯硝西泮暴露的尿液標誌物，不參與藥物效應。"
+            "value" : "7-胺基氯硝西泮在 GABA-A 上無顯著活性。它用作氯硝西泮暴露的尿液標誌物。"
           }
         }
       }
@@ -9858,30 +9858,30 @@
         }
       }
     },
-    "A rare, peak, transcendental state: a serene and all-encompassing experience. The person, and the rating, are describing something outside the ordinary scale." : {
+    "A rare, transcendental peak state: serene, all-encompassing, and outside the ordinary scale." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un estado raro, máximo, trascendental: una experiencia serena que lo abarca todo. La persona, y la valoración, describen algo fuera de la escala ordinaria."
+            "value" : "Un estado máximo, raro y trascendental: sereno, que lo abarca todo y fuera de la escala ordinaria."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un estado raro, máximo, trascendental: una experiencia serena que lo abarca todo. La persona, y la valoración, describen algo fuera de la escala ordinaria."
+            "value" : "Un estado máximo, raro y trascendental: sereno, que lo abarca todo y fuera de la escala ordinaria."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "罕见的巅峰、超越性状态：宁静而包容一切的体验。这个人和这个评级描述的都是常规量表之外的东西。"
+            "value" : "罕见的超越性巅峰状态：宁静、包容一切，超出常规量表。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "罕見的巔峰、超越性狀態：寧靜而包容一切的體驗。這個人和這個評級描述的都是常規量表之外的東西。"
+            "value" : "罕見的超越性巔峰狀態：寧靜、包容一切，超出常規量表。"
           }
         }
       }
@@ -10167,18 +10167,18 @@
         }
       }
     },
-    "A skin changes the app's colors, cards, and type. Your substance colors, the timeline, and every chart stay exactly as they are." : {
+    "A skin changes the app's colors, cards, and type. Your substance colors, the timeline, and every chart stay as they are." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un tema cambia los colores, las tarjetas y la tipografía de la app. Los colores de tus sustancias, la línea de tiempo y todos los gráficos se quedan exactamente como están."
+            "value" : "Un tema cambia los colores, las tarjetas y la tipografía de la app. Los colores de tus sustancias, la línea de tiempo y todos los gráficos se quedan como están."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un tema cambia los colores, las tarjetas y la tipografía de la app. Los colores de tus sustancias, la línea de tiempo y todos los gráficos se quedan exactamente como están."
+            "value" : "Un tema cambia los colores, las tarjetas y la tipografía de la app. Los colores de tus sustancias, la línea de tiempo y todos los gráficos se quedan como están."
           }
         },
         "zh-Hans" : {
@@ -15749,30 +15749,30 @@
         }
       }
     },
-    "An injected ester releases slowly from the oil depot, splits into the free hormone, and clears. This curve sums your logged esters into an illustrative serum estimate. It is not a laboratory result." : {
+    "An injected ester releases slowly from the oil depot, splits into the free hormone, and clears. This curve sums your logged esters into an illustrative serum estimate, not a lab result." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un éster inyectado se libera lentamente desde el depósito oleoso, se escinde en la hormona libre y se elimina. Esta curva suma los ésteres que has registrado en una estimación sérica ilustrativa. No es un resultado de laboratorio."
+            "value" : "Un éster inyectado se libera lentamente desde el depósito oleoso, se escinde en la hormona libre y se elimina. Esta curva suma los ésteres que has registrado en una estimación sérica ilustrativa, no en un resultado de laboratorio."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un éster inyectado se libera lentamente desde el depósito oleoso, se escinde en la hormona libre y se elimina. Esta curva suma los ésteres que has registrado en una estimación sérica ilustrativa. No es un resultado de laboratorio."
+            "value" : "Un éster inyectado se libera lentamente desde el depósito oleoso, se escinde en la hormona libre y se elimina. Esta curva suma los ésteres que has registrado en una estimación sérica ilustrativa, no en un resultado de laboratorio."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "注射的酯从油性储库中缓慢释放，分解为游离激素，然后被清除。这条曲线把你记录的各种酯汇总为一个示意性的血清估计值。它不是化验结果。"
+            "value" : "注射的酯从油性储库中缓慢释放，分解为游离激素，然后被清除。这条曲线把你记录的各种酯汇总为一个示意性的血清估计值，而非化验结果。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "注射的酯從油性儲庫中緩慢釋放，分解為游離激素，然後被清除。這條曲線把你記錄的各種酯彙總為一個示意性的血清估計值。它不是化驗結果。"
+            "value" : "注射的酯從油性儲庫中緩慢釋放，分解為游離激素，然後被清除。這條曲線把你記錄的各種酯彙總為一個示意性的血清估計值，而非化驗結果。"
           }
         }
       }
@@ -19543,30 +19543,30 @@
         }
       }
     },
-    "Blocks noradrenaline and dopamine reuptake, leaving serotonin alone. The activating end of the family." : {
+    "Blocks noradrenaline and dopamine reuptake and leaves serotonin alone, which puts it at the activating end of the family." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bloquea la recaptación de noradrenalina y dopamina sin tocar la serotonina. El extremo activador de la familia."
+            "value" : "Bloquea la recaptación de noradrenalina y dopamina sin tocar la serotonina, lo que la sitúa en el extremo activador de la familia."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bloquea la recaptación de noradrenalina y dopamina sin tocar la serotonina. El extremo activador de la familia."
+            "value" : "Bloquea la recaptación de noradrenalina y dopamina sin tocar la serotonina, lo que la sitúa en el extremo activador de la familia."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "阻断去甲肾上腺素和多巴胺的再摄取，不动血清素。这一类里偏兴奋的一端。"
+            "value" : "阻断去甲肾上腺素和多巴胺的再摄取，不动血清素，因此处于这一类里偏兴奋的一端。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "阻斷正腎上腺素和多巴胺的再攝取，不動血清素。這一類裡偏興奮的一端。"
+            "value" : "阻斷正腎上腺素和多巴胺的再攝取，不動血清素，因此處於這一類裡偏興奮的一端。"
           }
         }
       }
@@ -20055,30 +20055,30 @@
         }
       }
     },
-    "Both cause drowsiness. Additive next-day sedation and grogginess." : {
+    "Both cause drowsiness, so next-day sedation and grogginess add up." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ambos causan somnolencia. Sedación y aturdimiento aditivos al día siguiente."
+            "value" : "Ambos causan somnolencia, así que la sedación y el aturdimiento del día siguiente se suman."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ambos causan somnolencia. Sedación y aturdimiento aditivos al día siguiente."
+            "value" : "Ambos causan somnolencia, así que la sedación y el aturdimiento del día siguiente se suman."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "两者都会引起困倦。次日的镇静和昏沉会叠加。"
+            "value" : "两者都会引起困倦，因此次日的镇静和昏沉会叠加。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "兩者都會引起睏倦。次日的鎮靜和昏沉會疊加。"
+            "value" : "兩者都會引起睏倦，因此次日的鎮靜和昏沉會疊加。"
           }
         }
       }
@@ -24724,30 +24724,30 @@
         }
       }
     },
-    "Commonly reported on the way down. Worth noting when it started." : {
+    "Commonly reported on the way down. Note when it started." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se describe con frecuencia durante la bajada. Vale la pena anotar cuándo empezó."
+            "value" : "Se describe con frecuencia durante la bajada. Anota cuándo empezó."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se describe con frecuencia durante la bajada. Vale la pena anotar cuándo empezó."
+            "value" : "Se describe con frecuencia durante la bajada. Anota cuándo empezó."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "下行阶段常见。值得记下它是什么时候开始的。"
+            "value" : "下行阶段常见。记下它是什么时候开始的。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "下行階段常見。值得記下它是什麼時候開始的。"
+            "value" : "下行階段常見。記下它是什麼時候開始的。"
           }
         }
       }
@@ -25174,7 +25174,7 @@
         }
       }
     },
-    "Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific \"stay awake\" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability characteristic of benzodiazepines, Z-drugs, and other GABAergic sedatives." : {
+    "Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific \"stay awake\" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability of benzodiazepines, Z-drugs, and other GABAergic sedatives." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -25286,6 +25286,34 @@
         }
       }
     },
+    "Compounded sedation and deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sedación agravada y somnolencia más profunda. El GHB suprime la respiración por sí solo, y la sedación adicional hace que eso sea más difícil de notar."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sedación agravada y somnolencia más profunda. El GHB suprime la respiración por sí solo, y la sedación adicional hace que eso sea más difícil de notar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "镇静叠加，困倦更深。GHB 本身就会抑制呼吸，而额外的镇静会让这一点更难被察觉。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鎮靜疊加，睏倦更深。GHB 本身就會抑制呼吸，而額外的鎮靜會讓這一點更難被察覺。"
+          }
+        }
+      }
+    },
     "Compounded sedation and low blood pressure. Stronger drowsiness and dizziness." : {
       "localizations" : {
         "es" : {
@@ -25310,34 +25338,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "鎮靜與低血壓疊加。睏倦和頭暈加重。"
-          }
-        }
-      }
-    },
-    "Compounded sedation. Stronger, deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sedación agravada. Somnolencia más fuerte y profunda. El GHB suprime la respiración por sí solo, y la sedación adicional hace que eso sea más difícil de notar."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sedación agravada. Somnolencia más fuerte y profunda. El GHB suprime la respiración por sí solo, y la sedación adicional hace que eso sea más difícil de notar."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "镇静叠加。更强、更深的困倦。GHB 本身就会抑制呼吸，而额外的镇静会让这一点更难被察觉。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "鎮靜疊加。更強、更深的睏倦。GHB 本身就會抑制呼吸，而額外的鎮靜會讓這一點更難被察覺。"
           }
         }
       }
@@ -25958,30 +25958,30 @@
         }
       }
     },
-    "Coordination can be impaired before you notice it. This increases the risk of accidents on stairs and in the kitchen." : {
+    "Coordination can slip before you notice it, raising the risk of accidents on stairs and in the kitchen." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La coordinación puede verse afectada antes de que lo notes. Esto aumenta el riesgo de accidentes en escaleras y en la cocina."
+            "value" : "La coordinación puede fallar antes de que lo notes, lo que aumenta el riesgo de accidentes en escaleras y en la cocina."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La coordinación puede verse afectada antes de que lo notes. Esto aumenta el riesgo de accidentes en escaleras y en la cocina."
+            "value" : "La coordinación puede fallar antes de que lo notes, lo que aumenta el riesgo de accidentes en escaleras y en la cocina."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "协调性可能在你察觉之前就已受损。这会增加在楼梯上和厨房里发生意外的风险。"
+            "value" : "协调性可能在你察觉之前就已下降，增加在楼梯上和厨房里发生意外的风险。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "協調性可能在你察覺之前就已受損。這會增加在樓梯上和廚房裡發生意外的風險。"
+            "value" : "協調性可能在你察覺之前就已下降，增加在樓梯上和廚房裡發生意外的風險。"
           }
         }
       }
@@ -26154,30 +26154,30 @@
         }
       }
     },
-    "Cotinine has negligible nicotinic activity. It's the standard biomarker for tobacco exposure, not a continuation of nicotine's effect. Its long half-life (~16 hours) is why it's detectable in blood and urine days after the last cigarette." : {
+    "Cotinine has negligible nicotinic activity. It is the standard biomarker for tobacco exposure, and its long half-life (~16 hours) keeps it detectable in blood and urine days after the last cigarette." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La cotinina tiene una actividad nicotínica insignificante. Es el biomarcador estándar de exposición al tabaco, no una continuación del efecto de la nicotina. Su larga vida media (~16 horas) es la razón de que sea detectable en sangre y orina días después del último cigarrillo."
+            "value" : "La cotinina tiene una actividad nicotínica insignificante. Es el biomarcador estándar de exposición al tabaco, y su larga vida media (~16 horas) la mantiene detectable en sangre y orina días después del último cigarrillo."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La cotinina tiene una actividad nicotínica insignificante. Es el biomarcador estándar de exposición al tabaco, no una continuación del efecto de la nicotina. Su larga vida media (~16 horas) es la razón de que sea detectable en sangre y orina días después del último cigarrillo."
+            "value" : "La cotinina tiene una actividad nicotínica insignificante. Es el biomarcador estándar de exposición al tabaco, y su larga vida media (~16 horas) la mantiene detectable en sangre y orina días después del último cigarrillo."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "可替宁的烟碱活性可忽略。它是烟草暴露的标准生物标志物，而非尼古丁效应的延续。其约 16 小时的长半衰期是最后一支烟后数天仍可在血液和尿液中检出的原因。"
+            "value" : "可替宁的烟碱活性可忽略。它是烟草暴露的标准生物标志物，约 16 小时的长半衰期使其在最后一支烟后数天仍可在血液和尿液中检出。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "可替寧的菸鹼活性可忽略。它是菸草暴露的標準生物標誌物，而非尼古丁效應的延續。其約 16 小時的長半衰期是最後一支菸後數天仍可在血液和尿液中檢出的原因。"
+            "value" : "可替寧的菸鹼活性可忽略。它是菸草暴露的標準生物標誌物，約 16 小時的長半衰期使其在最後一支菸後數天仍可在血液和尿液中檢出。"
           }
         }
       }
@@ -31324,30 +31324,30 @@
         }
       }
     },
-    "Dosing shown reflects published or community protocols, not medical advice. Peptides are injected from reconstituted powder. Handle and store as noted below." : {
+    "Dosing shown reflects published or community protocols, not medical advice. Peptides are injected from reconstituted powder; handle and store it as noted below." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La dosificación mostrada refleja protocolos publicados o de la comunidad; no es consejo médico. Los péptidos se inyectan a partir de polvo reconstituido. Manipúlalos y guárdalos como se indica abajo."
+            "value" : "La dosificación mostrada refleja protocolos publicados o de la comunidad; no es consejo médico. Los péptidos se inyectan a partir de polvo reconstituido; manipúlalos y guárdalos como se indica abajo."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La dosificación mostrada refleja protocolos publicados o de la comunidad; no es consejo médico. Los péptidos se inyectan a partir de polvo reconstituido. Manipúlalos y guárdalos como se indica abajo."
+            "value" : "La dosificación mostrada refleja protocolos publicados o de la comunidad; no es consejo médico. Los péptidos se inyectan a partir de polvo reconstituido; manipúlalos y guárdalos como se indica abajo."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此处所示剂量反映的是已发表或社区的方案，不是医疗建议。肽类由复溶的粉末注射。请按下文说明处理和储存。"
+            "value" : "此处所示剂量反映的是已发表或社区的方案，不是医疗建议。肽类由复溶的粉末注射；请按下文说明处理和储存。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此處所示劑量反映的是已發表或社群的方案，不是醫療建議。胜肽由復溶的粉末注射。請按下文說明處理和儲存。"
+            "value" : "此處所示劑量反映的是已發表或社群的方案，不是醫療建議。胜肽由復溶的粉末注射；請按下文說明處理和儲存。"
           }
         }
       }
@@ -32616,6 +32616,34 @@
         }
       }
     },
+    "Each value comes from its own study, ranked here for scale." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada valor proviene de su propio estudio; se ordenan aquí para dar escala."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada valor proviene de su propio estudio; se ordenan aquí para dar escala."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每个数值都来自各自的研究，此处排列只为呈现量级。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每個數值都來自各自的研究，此處排列只為呈現量級。"
+          }
+        }
+      }
+    },
     "Eat light foods: fruit, toast, soup." : {
       "localizations" : {
         "es" : {
@@ -32812,30 +32840,30 @@
         }
       }
     },
-    "EDDP has no opioid activity. It's the primary urinary marker for methadone compliance monitoring, not a contributor to the drug's effect or duration." : {
+    "EDDP has no opioid activity. It is the main urine marker for methadone compliance monitoring." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El EDDP no tiene actividad opioide. Es el principal marcador urinario para el control del cumplimiento con metadona, no contribuye al efecto ni a la duración del fármaco."
+            "value" : "El EDDP no tiene actividad opioide. Es el principal marcador urinario para el control del cumplimiento con metadona."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El EDDP no tiene actividad opioide. Es el principal marcador urinario para el control del cumplimiento con metadona, no contribuye al efecto ni a la duración del fármaco."
+            "value" : "El EDDP no tiene actividad opioide. Es el principal marcador urinario para el control del cumplimiento con metadona."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EDDP 无阿片活性。它是美沙酮依从性监测的主要尿液标志物，不参与药物效应或持续时间。"
+            "value" : "EDDP 无阿片活性。它是美沙酮依从性监测的主要尿液标志物。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EDDP 無鴉片活性。它是美沙酮依從性監測的主要尿液標誌物，不參與藥物效應或持續時間。"
+            "value" : "EDDP 無鴉片活性。它是美沙酮依從性監測的主要尿液標誌物。"
           }
         }
       }
@@ -35045,30 +35073,30 @@
         }
       }
     },
-    "Entered manually. Your weight sizes every dose estimate. The same dose hits harder the less you weigh." : {
+    "Entered manually. Your weight sizes every dose estimate, since the same dose hits harder the less you weigh." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indicado manualmente. Tu peso ajusta cada estimación de dosis. La misma dosis pega más fuerte cuanto menos pesas."
+            "value" : "Indicado manualmente. Tu peso ajusta cada estimación de dosis, porque la misma dosis pega más fuerte cuanto menos pesas."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indicado manualmente. Tu peso ajusta cada estimación de dosis. La misma dosis pega más fuerte cuanto menos pesas."
+            "value" : "Indicado manualmente. Tu peso ajusta cada estimación de dosis, porque la misma dosis pega más fuerte cuanto menos pesas."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已手动输入。体重决定每项剂量估算。越轻，同样的剂量作用越强。"
+            "value" : "已手动输入。体重决定每项剂量估算，因为越轻，同样的剂量作用越强。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已手動輸入。體重決定每項劑量估算。越輕，同樣的劑量作用越強。"
+            "value" : "已手動輸入。體重決定每項劑量估算，因為越輕，同樣的劑量作用越強。"
           }
         }
       }
@@ -36829,30 +36857,30 @@
         }
       }
     },
-    "Every layer above is pharmacodynamic: it is computed from your dose log and the clock. A large part of real tolerance is associative and context-specific: it attaches to the setting, the ritual and the cues around a dose, which is why tolerance measured in a familiar context can be substantially higher than tolerance in an unfamiliar one, and why the same cues without the dose can produce the opposite of the drug's effect. Piru cannot see any of that, because it does not record where you were or what you were doing. Treat the shift as a pharmacological estimate, not a total." : {
+    "Every layer above is computed from your dose log and the clock. Much of real tolerance is associative: it attaches to the setting, the ritual and the cues around a dose. That is why tolerance in a familiar context can be much higher than in an unfamiliar one, and why the cues without the dose can produce the opposite of the drug's effect. Piru does not record where you were or what you were doing, so treat the shift as a pharmacological estimate, not a total." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cada capa de arriba es farmacodinámica: se calcula a partir de tu registro de dosis y del reloj. Una gran parte de la tolerancia real es asociativa y depende del contexto: se liga al entorno, al ritual y a las señales que rodean una dosis, y por eso la tolerancia medida en un contexto familiar puede ser bastante mayor que en uno desconocido, y por eso las mismas señales sin la dosis pueden producir lo contrario del efecto de la sustancia. Piru no ve nada de eso, porque no registra dónde estabas ni qué hacías. Toma el desplazamiento como una estimación farmacológica, no como un total."
+            "value" : "Cada capa de arriba se calcula a partir de tu registro de dosis y del reloj. Gran parte de la tolerancia real es asociativa: se liga al entorno, al ritual y a las señales que rodean una dosis. Por eso la tolerancia en un contexto familiar puede ser mucho mayor que en uno desconocido, y por eso las señales sin la dosis pueden producir lo contrario del efecto de la sustancia. Piru no registra dónde estabas ni qué hacías, así que toma el desplazamiento como una estimación farmacológica, no como un total."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cada capa de arriba es farmacodinámica: se calcula a partir de tu registro de dosis y del reloj. Una gran parte de la tolerancia real es asociativa y depende del contexto: se liga al entorno, al ritual y a las señales que rodean una dosis, y por eso la tolerancia medida en un contexto familiar puede ser bastante mayor que en uno desconocido, y por eso las mismas señales sin la dosis pueden producir lo contrario del efecto de la sustancia. Piru no ve nada de eso, porque no registra dónde estabas ni qué hacías. Toma el desplazamiento como una estimación farmacológica, no como un total."
+            "value" : "Cada capa de arriba se calcula a partir de tu registro de dosis y del reloj. Gran parte de la tolerancia real es asociativa: se liga al entorno, al ritual y a las señales que rodean una dosis. Por eso la tolerancia en un contexto familiar puede ser mucho mayor que en uno desconocido, y por eso las señales sin la dosis pueden producir lo contrario del efecto de la sustancia. Piru no registra dónde estabas ni qué hacías, así que toma el desplazamiento como una estimación farmacológica, no como un total."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "上面所有层级都是药效动力学层面的：根据你的剂量记录和时间来计算。真实耐受中有很大一部分是联结性的、跟环境绑定的：它和用药时的地点、仪式、周围的线索绑在一起。这就是为什么在熟悉环境下测到的耐受可以远高于陌生环境，也是为什么同样的线索、没有药物时，身体可以产生药效的反面。Piru 看不到这些，因为它不记录你在哪里、在做什么。把这个数字当作药理学估计来看，不是总量。"
+            "value" : "上面所有层级都根据你的剂量记录和时间来计算。真实耐受中有很大一部分是联结性的：它和用药时的地点、仪式、周围的线索绑在一起。这就是为什么熟悉环境下的耐受可以远高于陌生环境，也是为什么同样的线索、没有药物时，身体可以产生药效的反面。Piru 不记录你在哪里、在做什么，所以请把这个数字当作药理学估计，而不是总量。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "上面所有層級都是藥效學層面的：根據你的劑量記錄和時間來計算。真實耐受中有很大一部分是聯結性的、跟環境綁定的：它和用藥時的地點、儀式、周圍的線索綁在一起。這就是為什麼在熟悉環境下測到的耐受可以遠高於陌生環境，也是為什麼同樣的線索、沒有藥物時，身體可以產生藥效的反面。Piru 看不到這些，因為它不記錄你在哪裡、在做什麼。把這個數字當作藥理學估計來看，不是總量。"
+            "value" : "上面所有層級都根據你的劑量記錄和時間來計算。真實耐受中有很大一部分是聯結性的：它和用藥時的地點、儀式、周圍的線索綁在一起。這就是為什麼熟悉環境下的耐受可以遠高於陌生環境，也是為什麼同樣的線索、沒有藥物時，身體可以產生藥效的反面。Piru 不記錄你在哪裡、在做什麼，所以請把這個數字當作藥理學估計，而不是總量。"
           }
         }
       }
@@ -38260,30 +38288,30 @@
         }
       }
     },
-    "Feeling bad is a listed effect of this class. It still deserves attention. Piru can't tell whether a symptom is harmless." : {
+    "Feeling bad is a listed effect of this class. It still deserves attention, because Piru can't tell whether a symptom is harmless." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sentirse mal es un efecto listado de esta clase. Aun así merece atención. Piru no puede saber si un síntoma es inofensivo."
+            "value" : "Sentirse mal es un efecto listado de esta clase. Aun así merece atención, porque Piru no puede saber si un síntoma es inofensivo."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sentirse mal es un efecto listado de esta clase. Aun así merece atención. Piru no puede saber si un síntoma es inofensivo."
+            "value" : "Sentirse mal es un efecto listado de esta clase. Aun así merece atención, porque Piru no puede saber si un síntoma es inofensivo."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "感觉糟糕是这一类列出的效应。它仍然值得重视。Piru 无法判断一个症状是否无害。"
+            "value" : "感觉糟糕是这一类列出的效应。它仍然值得重视，因为 Piru 无法判断一个症状是否无害。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "感覺糟糕是這一類列出的效應。它仍然值得重視。Piru 無法判斷一個症狀是否無害。"
+            "value" : "感覺糟糕是這一類列出的效應。它仍然值得重視，因為 Piru 無法判斷一個症狀是否無害。"
           }
         }
       }
@@ -41634,30 +41662,30 @@
         }
       }
     },
-    "Have feedback, questions, or want to discuss the app? Join our Discord. We'd love to hear from you." : {
+    "Have feedback, questions, or want to discuss the app? Join our Discord." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Tienes comentarios, preguntas o quieres hablar de la app? Únete a nuestro Discord. Nos encantaría saber de ti."
+            "value" : "¿Tienes comentarios, preguntas o quieres hablar de la app? Únete a nuestro Discord."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Tienes comentarios, preguntas o quieres hablar de la app? Únete a nuestro Discord. Nos encantaría saber de ti."
+            "value" : "¿Tienes comentarios, preguntas o quieres hablar de la app? Únete a nuestro Discord."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "有反馈、疑问，或想讨论这款应用？加入我们的 Discord。期待听到你的声音。"
+            "value" : "有反馈、疑问，或想讨论这款应用？加入我们的 Discord。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "有回饋、疑問，或想討論這款應用程式？加入我們的 Discord。期待聽到你的聲音。"
+            "value" : "有回饋、疑問，或想討論這款應用程式？加入我們的 Discord。"
           }
         }
       }
@@ -43636,6 +43664,34 @@
         }
       }
     },
+    "Hydrate, eat, and try to get some sleep. Your heart has been working hard." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hidrátate, come e intenta dormir un poco. Tu corazón ha trabajado mucho."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hidrátate, come e intenta dormir un poco. Tu corazón ha trabajado mucho."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "补水、吃饭并尝试入睡。你的心脏一直在努力工作。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "補水、吃飯並嘗試入睡。你的心臟一直在努力工作。"
+          }
+        }
+      }
+    },
     "Hydrate: water or electrolyte drinks, sip steadily" : {
       "localizations" : {
         "es" : {
@@ -45494,30 +45550,30 @@
         }
       }
     },
-    "Increased heart rate and blood pressure. Cardiovascular strain." : {
+    "Increased heart rate and blood pressure: cardiovascular strain." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aumento de la frecuencia cardíaca y la presión arterial. Sobrecarga cardiovascular."
+            "value" : "Aumento de la frecuencia cardíaca y la presión arterial: sobrecarga cardiovascular."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aumento de la frecuencia cardíaca y la presión arterial. Sobrecarga cardiovascular."
+            "value" : "Aumento de la frecuencia cardíaca y la presión arterial: sobrecarga cardiovascular."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "心率和血压增加。心血管压力。"
+            "value" : "心率和血压增加：心血管压力。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "心率和血壓增加。心血管壓力。"
+            "value" : "心率和血壓增加：心血管壓力。"
           }
         }
       }
@@ -46926,30 +46982,30 @@
         }
       }
     },
-    "Keep track of what you take and when. One tap to set up gentle reminders. Prescriptions, supplements, vitamins: anything on a schedule." : {
+    "Keep track of what you take and when, with gentle reminders set up in one tap. Prescriptions, supplements, vitamins: anything on a schedule." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lleva el control de qué tomas y cuándo. Un toque para configurar recordatorios discretos. Medicamentos recetados, suplementos, vitaminas: cualquier cosa con horario."
+            "value" : "Lleva el control de qué tomas y cuándo, con recordatorios discretos que se configuran con un toque. Medicamentos recetados, suplementos, vitaminas: cualquier cosa con horario."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lleva el control de qué tomas y cuándo. Un toque para configurar recordatorios discretos. Medicamentos recetados, suplementos, vitaminas: cualquier cosa con horario."
+            "value" : "Lleva el control de qué tomas y cuándo, con recordatorios discretos que se configuran con un toque. Medicamentos recetados, suplementos, vitaminas: cualquier cosa con horario."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "记录你服用了什么、何时服用。轻点一下即可设置温和的提醒。处方药、补剂、维生素：任何按计划服用的东西。"
+            "value" : "记录你服用了什么、何时服用，轻点一下即可设置温和的提醒。处方药、补剂、维生素：任何按计划服用的东西。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "記錄你服用了什麼、何時服用。點一下即可設定溫和的提醒。處方藥、補劑、維生素：任何按計劃服用的東西。"
+            "value" : "記錄你服用了什麼、何時服用，點一下即可設定溫和的提醒。處方藥、補劑、維生素：任何按計劃服用的東西。"
           }
         }
       }
@@ -49752,30 +49808,30 @@
         }
       }
     },
-    "Logged with no number. Stays out of curves, totals, and tolerance." : {
+    "Logged with no number, so it stays out of curves, totals, and tolerance." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Registrada sin cantidad. Queda fuera de curvas, totales y tolerancia."
+            "value" : "Registrada sin cantidad, así que queda fuera de curvas, totales y tolerancia."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Registrada sin cantidad. Queda fuera de curvas, totales y tolerancia."
+            "value" : "Registrada sin cantidad, así que queda fuera de curvas, totales y tolerancia."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已记录，但未填数值。不计入曲线、总量和耐受性。"
+            "value" : "已记录，但未填数值，因此不计入曲线、总量和耐受性。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已記錄，但未填數值。不計入曲線、總量和耐受性。"
+            "value" : "已記錄，但未填數值，因此不計入曲線、總量和耐受性。"
           }
         }
       }
@@ -50621,30 +50677,30 @@
         }
       }
     },
-    "Many values come from animal or lab-dish studies. Human data is the most reliable. The source tag tells you which it is." : {
+    "Many values come from animal or lab-dish studies. The source tag says which; human data is the most reliable." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Muchos valores provienen de estudios en animales o in vitro. Los datos humanos son los más confiables. La etiqueta de fuente te dice de cuál se trata."
+            "value" : "Muchos valores provienen de estudios en animales o in vitro. La etiqueta de fuente indica cuál; los datos humanos son los más confiables."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Muchos valores provienen de estudios en animales o in vitro. Los datos humanos son los más confiables. La etiqueta de fuente te dice de cuál se trata."
+            "value" : "Muchos valores provienen de estudios en animales o in vitro. La etiqueta de fuente indica cuál; los datos humanos son los más confiables."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "许多数值来自动物或体外（培养皿）实验。人体数据最为可靠。来源标签会标明属于哪一种。"
+            "value" : "许多数值来自动物或体外（培养皿）实验。来源标签会标明属于哪一种；人体数据最为可靠。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "許多數值來自動物或體外（培養皿）實驗。人體資料最為可靠。來源標籤會標明屬於哪一種。"
+            "value" : "許多數值來自動物或體外（培養皿）實驗。來源標籤會標明屬於哪一種；人體資料最為可靠。"
           }
         }
       }
@@ -50873,30 +50929,30 @@
         }
       }
     },
-    "MDA is an active drug of its own: more amphetamine-like and more hallucinogenic than MDMA, and longer-lived. So the later hours can feel qualitatively different from the peak." : {
+    "MDA is an active drug of its own, more amphetamine-like, more hallucinogenic and longer-lived than MDMA, so the later hours can feel qualitatively different from the peak." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La MDA es una sustancia activa por sí misma: más anfetamínica y más alucinógena que la MDMA, y de mayor duración. Así que las últimas horas pueden sentirse cualitativamente distintas del pico."
+            "value" : "La MDA es una sustancia activa por sí misma, más anfetamínica, más alucinógena y de mayor duración que la MDMA, así que las últimas horas pueden sentirse cualitativamente distintas del pico."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La MDA es una sustancia activa por sí misma: más anfetamínica y más alucinógena que la MDMA, y de mayor duración. Así que las últimas horas pueden sentirse cualitativamente distintas del pico."
+            "value" : "La MDA es una sustancia activa por sí misma, más anfetamínica, más alucinógena y de mayor duración que la MDMA, así que las últimas horas pueden sentirse cualitativamente distintas del pico."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MDA 本身就是一种活性药物：比 MDMA 更像苯丙胺、致幻性更强，也更持久。因此后段时间的体验在性质上会与高峰期不同。"
+            "value" : "MDA 本身就是一种活性药物，比 MDMA 更像苯丙胺、致幻性更强，也更持久，因此后段时间的体验在性质上会与高峰期不同。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MDA 本身就是一種活性藥物：比 MDMA 更像安非他命、致幻性更強，也更持久。因此後段時間的體驗在性質上會與高峰期不同。"
+            "value" : "MDA 本身就是一種活性藥物，比 MDMA 更像安非他命、致幻性更強，也更持久，因此後段時間的體驗在性質上會與高峰期不同。"
           }
         }
       }
@@ -58458,86 +58514,86 @@
         }
       }
     },
-    "Normeperidine isn't a painkiller. It's a stimulating metabolite that builds up with repeated or high doses and lowers the seizure threshold. It's why meperidine isn't used for long-term pain." : {
+    "Normeperidine is a stimulating metabolite, not a painkiller. It builds up with repeated or high doses and lowers the seizure threshold, which is why meperidine isn't used for long-term pain." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La normeperidina no es un analgésico. Es un metabolito estimulante que se acumula con dosis repetidas o altas y baja el umbral convulsivo. Por eso la meperidina no se usa para el dolor a largo plazo."
+            "value" : "La normeperidina es un metabolito estimulante, no un analgésico. Se acumula con dosis repetidas o altas y baja el umbral convulsivo, y por eso la meperidina no se usa para el dolor a largo plazo."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La normeperidina no es un analgésico. Es un metabolito estimulante que se acumula con dosis repetidas o altas y baja el umbral convulsivo. Por eso la meperidina no se usa para el dolor a largo plazo."
+            "value" : "La normeperidina es un metabolito estimulante, no un analgésico. Se acumula con dosis repetidas o altas y baja el umbral convulsivo, y por eso la meperidina no se usa para el dolor a largo plazo."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "去甲哌替啶不是止痛药。它是一种兴奋性代谢物，在反复或大剂量使用时蓄积，降低癫痫发作阈值。这是哌替啶不用于长期镇痛的原因。"
+            "value" : "去甲哌替啶是一种兴奋性代谢物，不是止痛药。它在反复或大剂量使用时蓄积，降低癫痫发作阈值，这就是哌替啶不用于长期镇痛的原因。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "去甲哌替啶不是止痛藥。它是一種興奮性代謝物，在反覆或大劑量使用時蓄積，降低癲癇發作閾值。這是哌替啶不用於長期鎮痛的原因。"
+            "value" : "去甲哌替啶是一種興奮性代謝物，不是止痛藥。它在反覆或大劑量使用時蓄積，降低癲癇發作閾值，這就是哌替啶不用於長期鎮痛的原因。"
           }
         }
       }
     },
-    "Norquetiapine adds effects quetiapine largely lacks, noradrenaline reuptake inhibition and antidepressant-like activity, so it contributes a different character than the parent's sedation." : {
+    "Norquetiapine adds noradrenaline reuptake inhibition and antidepressant-like activity, which quetiapine largely lacks, so it brings a different character than the parent's sedation." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La norquetiapina agrega efectos de los que la quetiapina en gran medida carece (inhibición de la recaptación de noradrenalina y actividad de tipo antidepresivo), así que aporta un carácter distinto a la sedación del compuesto original."
+            "value" : "La norquetiapina agrega inhibición de la recaptación de noradrenalina y actividad de tipo antidepresivo, de las que la quetiapina en gran medida carece, así que aporta un carácter distinto a la sedación del compuesto original."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La norquetiapina agrega efectos de los que la quetiapina en gran medida carece (inhibición de la recaptación de noradrenalina y actividad de tipo antidepresivo), así que aporta un carácter distinto a la sedación del compuesto original."
+            "value" : "La norquetiapina agrega inhibición de la recaptación de noradrenalina y actividad de tipo antidepresivo, de las que la quetiapina en gran medida carece, así que aporta un carácter distinto a la sedación del compuesto original."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "去甲喹硫平增加了喹硫平基本不具备的作用，即去甲肾上腺素再摄取抑制和抗抑郁样活性，因此它贡献的特征不同于母体药物的镇静作用。"
+            "value" : "去甲喹硫平增加了去甲肾上腺素再摄取抑制和抗抑郁样活性，这些是喹硫平基本不具备的，因此它带来的特征不同于母体药物的镇静作用。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "去甲喹硫平增加了喹硫平基本不具備的作用，即正腎上腺素再攝取抑制和抗憂鬱樣活性，因此它貢獻的特徵不同於母體藥物的鎮靜作用。"
+            "value" : "去甲喹硫平增加了正腎上腺素再攝取抑制和抗憂鬱樣活性，這些是喹硫平基本不具備的，因此它帶來的特徵不同於母體藥物的鎮靜作用。"
           }
         }
       }
     },
-    "Nortriptyline is a marketed antidepressant in its own right, and it leans more on noradrenaline than amitriptyline does. The metabolite's character is more activating than the parent's." : {
+    "Nortriptyline is a marketed antidepressant in its own right and leans more on noradrenaline than amitriptyline, so it feels more activating than the parent." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La nortriptilina es un antidepresivo comercializado por derecho propio, y se apoya más en la noradrenalina que la amitriptilina. El carácter del metabolito es más activador que el del compuesto original."
+            "value" : "La nortriptilina es un antidepresivo comercializado por derecho propio y se apoya más en la noradrenalina que la amitriptilina, así que resulta más activadora que el compuesto original."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La nortriptilina es un antidepresivo comercializado por derecho propio, y se apoya más en la noradrenalina que la amitriptilina. El carácter del metabolito es más activador que el del compuesto original."
+            "value" : "La nortriptilina es un antidepresivo comercializado por derecho propio y se apoya más en la noradrenalina que la amitriptilina, así que resulta más activadora que el compuesto original."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "去甲替林本身就是一种上市的抗抑郁药，比阿米替林更偏向去甲肾上腺素。代谢物的特征比母体药物更具激活性。"
+            "value" : "去甲替林本身就是一种上市的抗抑郁药，比阿米替林更偏向去甲肾上腺素，因此感觉比母体药物更具激活性。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "去甲替林本身就是一種上市的抗憂鬱藥，比阿米替林更偏向正腎上腺素。代謝物的特徵比母體藥物更具活化性。"
+            "value" : "去甲替林本身就是一種上市的抗憂鬱藥，比阿米替林更偏向正腎上腺素，因此感覺比母體藥物更具活化性。"
           }
         }
       }
@@ -69717,34 +69773,6 @@
         }
       }
     },
-    "Remember to hydrate, eat, and try to get some sleep. Your heart has been working hard." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recuerda hidratarte, comer e intentar dormir un poco. Tu corazón ha trabajado mucho."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recuerda hidratarte, comer e intentar dormir un poco. Tu corazón ha trabajado mucho."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "记得补水、吃饭并尝试入睡。你的心脏一直在努力工作。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "記得補水、吃飯並嘗試入睡。你的心臟一直在努力工作。"
-          }
-        }
-      }
-    },
     "Remind Me" : {
       "localizations" : {
         "es" : {
@@ -79549,6 +79577,34 @@
         }
       }
     },
+    "Stacking two sleep-promoting drugs adds next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combinar dos fármacos que favorecen el sueño suma sedación al día siguiente, riesgo de caídas y deterioro de la coordinación. Las fichas técnicas advierten sobre combinarlos con otros depresores del SNC."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combinar dos fármacos que favorecen el sueño suma sedación al día siguiente, riesgo de caídas y deterioro de la coordinación. Las fichas técnicas advierten sobre combinarlos con otros depresores del SNC."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "叠加两种助眠药会增加次日镇静、跌倒风险和协调性受损。说明书对与其他中枢抑制剂合用提出了警示。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "疊加兩種助眠藥會增加次日鎮靜、跌倒風險和協調性受損。說明書對與其他中樞抑制劑合用提出了警示。"
+          }
+        }
+      }
+    },
     "Stage a Substance" : {
       "localizations" : {
         "es" : {
@@ -80671,30 +80727,30 @@
         }
       }
     },
-    "Stimulants mask alcohol impairment. Risk of overconsumption." : {
+    "Stimulants mask alcohol impairment, so it is easy to drink too much." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los estimulantes enmascaran el deterioro por alcohol. Riesgo de consumo excesivo."
+            "value" : "Los estimulantes enmascaran el deterioro por alcohol, así que es fácil beber de más."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los estimulantes enmascaran el deterioro por alcohol. Riesgo de consumo excesivo."
+            "value" : "Los estimulantes enmascaran el deterioro por alcohol, así que es fácil beber de más."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "兴奋剂会掩盖酒精损害。有过量饮用的风险。"
+            "value" : "兴奋剂会掩盖酒精损害，因此很容易喝得过量。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "興奮劑會掩蓋酒精損害。有過量飲用的風險。"
+            "value" : "興奮劑會掩蓋酒精損害，因此很容易喝得過量。"
           }
         }
       }
@@ -81204,30 +81260,30 @@
         }
       }
     },
-    "Stronger doesn't mean more dangerous. It's just how tightly the drug grips that one target in the lab." : {
+    "Stronger doesn't mean more dangerous. It only measures how tightly the drug grips that one target in the lab." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Más fuerte no significa más peligroso. Es solo la fuerza con la que la sustancia se agarra a ese sitio de acción en el laboratorio."
+            "value" : "Más fuerte no significa más peligroso. Solo mide con qué fuerza la sustancia se agarra a ese sitio de acción en el laboratorio."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Más fuerte no significa más peligroso. Es solo la fuerza con la que la sustancia se agarra a ese sitio de acción en el laboratorio."
+            "value" : "Más fuerte no significa más peligroso. Solo mide con qué fuerza la sustancia se agarra a ese sitio de acción en el laboratorio."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更强并不代表更危险。它只是表示在实验室中药物与该靶点结合的紧密程度。"
+            "value" : "更强并不代表更危险。它只衡量在实验室中药物与该靶点结合的紧密程度。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更強並不代表更危險。它只是表示在實驗室中藥物與該靶點結合的緊密程度。"
+            "value" : "更強並不代表更危險。它只衡量在實驗室中藥物與該靶點結合的緊密程度。"
           }
         }
       }
@@ -82522,30 +82578,30 @@
         }
       }
     },
-    "Synced from Apple Health. Your weight sizes every dose estimate. The same dose hits harder the less you weigh." : {
+    "Synced from Apple Health. Your weight sizes every dose estimate, since the same dose hits harder the less you weigh." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sincronizado desde Apple Salud. Tu peso calibra cada estimación de dosis. La misma dosis pega más fuerte cuanto menos pesas."
+            "value" : "Sincronizado desde Apple Salud. Tu peso calibra cada estimación de dosis, porque la misma dosis pega más fuerte cuanto menos pesas."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sincronizado desde Apple Salud. Tu peso calibra cada estimación de dosis. La misma dosis pega más fuerte cuanto menos pesas."
+            "value" : "Sincronizado desde Apple Salud. Tu peso calibra cada estimación de dosis, porque la misma dosis pega más fuerte cuanto menos pesas."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已从“健康”同步。体重决定每项剂量估算。越轻，同样的剂量作用越强。"
+            "value" : "已从“健康”同步。体重决定每项剂量估算，因为越轻，同样的剂量作用越强。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已從「健康」同步。體重決定每項劑量估算。越輕，同樣的劑量作用越強。"
+            "value" : "已從「健康」同步。體重決定每項劑量估算，因為越輕，同樣的劑量作用越強。"
           }
         }
       }
@@ -83758,30 +83814,30 @@
         }
       }
     },
-    "Testosterone aromatizes to estradiol, so E2 often rises on T. Piru plots your measured points. The conversion is person-specific, not modeled." : {
+    "Testosterone aromatizes to estradiol, so E2 often rises on T. The conversion is person-specific, so Piru plots your measured points rather than modeling it." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La testosterona se aromatiza a estradiol, así que el E2 suele subir con la T. Piru traza tus puntos medidos. La conversión depende de cada persona y no está modelada."
+            "value" : "La testosterona se aromatiza a estradiol, así que el E2 suele subir con la T. La conversión depende de cada persona, así que Piru traza tus puntos medidos en lugar de modelarla."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La testosterona se aromatiza a estradiol, así que el E2 suele subir con la T. Piru traza tus puntos medidos. La conversión depende de cada persona y no está modelada."
+            "value" : "La testosterona se aromatiza a estradiol, así que el E2 suele subir con la T. La conversión depende de cada persona, así que Piru traza tus puntos medidos en lugar de modelarla."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "睾酮会芳香化为雌二醇，所以用 T 期间 E2 常会上升。Piru 绘制你的实测点。这种转化因人而异，未被建模。"
+            "value" : "睾酮会芳香化为雌二醇，所以用 T 期间 E2 常会上升。这种转化因人而异，所以 Piru 绘制你的实测点，而不对其建模。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "睪固酮會芳香化為雌二醇，所以用 T 期間 E2 常會上升。Piru 繪製你的實測點。這種轉化因人而異，未被建模。"
+            "value" : "睪固酮會芳香化為雌二醇，所以用 T 期間 E2 常會上升。這種轉化因人而異，所以 Piru 繪製你的實測點，而不對其建模。"
           }
         }
       }
@@ -85089,30 +85145,30 @@
         }
       }
     },
-    "The old “never mix” warning rests on little. Large reviews did not find the harm it predicts. Both still strain the heart." : {
+    "The old “never mix” warning rests on little: large reviews did not find the harm it predicts. Both still strain the heart." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La vieja advertencia de “nunca mezclar” se apoya en poco. Grandes revisiones no encontraron el daño que predice. Ambos siguen exigiendo al corazón."
+            "value" : "La vieja advertencia de “nunca mezclar” se apoya en poco: grandes revisiones no encontraron el daño que predice. Ambos siguen exigiendo al corazón."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La vieja advertencia de “nunca mezclar” se apoya en poco. Grandes revisiones no encontraron el daño que predice. Ambos siguen exigiendo al corazón."
+            "value" : "La vieja advertencia de “nunca mezclar” se apoya en poco: grandes revisiones no encontraron el daño que predice. Ambos siguen exigiendo al corazón."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "过去那条“绝不可混用”的警告依据很少。大型综述并未发现它所预言的危害。两者仍然都会给心脏增加负担。"
+            "value" : "过去那条“绝不可混用”的警告依据很少：大型综述并未发现它所预言的危害。两者仍然都会给心脏增加负担。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "過去那條「絕不可混用」的警告依據很少。大型綜述並未發現它所預言的危害。兩者仍然都會給心臟增加負擔。"
+            "value" : "過去那條「絕不可混用」的警告依據很少：大型綜述並未發現它所預言的危害。兩者仍然都會給心臟增加負擔。"
           }
         }
       }
@@ -85597,34 +85653,6 @@
         }
       }
     },
-    "These values were not measured together. Each is its own study. Ranked here for scale." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estos valores no se midieron juntos. Cada uno es su propio estudio. Se ordenan aquí para dar escala."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estos valores no se midieron juntos. Cada uno es su propio estudio. Se ordenan aquí para dar escala."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这些数值并非在同一实验中测得。每个都来自各自的研究。此处排列只为呈现量级。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "這些數值並非在同一實驗中測得。每個都來自各自的研究。此處排列只為呈現量級。"
-          }
-        }
-      }
-    },
     "Things feeling 'weird' for a while is commonly reported." : {
       "localizations" : {
         "es" : {
@@ -85737,30 +85765,30 @@
         }
       }
     },
-    "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses. Steady use doesn't reach it." : {
+    "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esto puede afianzar un cambio más profundo que tarda meses en relajarse. Solo aparece muy por encima de las dosis cotidianas o terapéuticas. El uso estable no llega a él."
+            "value" : "Esto puede afianzar un cambio más profundo que tarda meses en relajarse. Solo aparece muy por encima de las dosis cotidianas o terapéuticas."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esto puede afianzar un cambio más profundo que tarda meses en relajarse. Solo aparece muy por encima de las dosis cotidianas o terapéuticas. El uso estable no llega a él."
+            "value" : "Esto puede afianzar un cambio más profundo que tarda meses en relajarse. Solo aparece muy por encima de las dosis cotidianas o terapéuticas."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这会留下一种更深的变化，要好几个月才松得下来。它只在远超日常或治疗剂量时才出现。持续稳定地用也碰不到它。"
+            "value" : "这会留下一种更深的变化，要好几个月才松得下来。它只在远超日常或治疗剂量时才出现。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "這會留下一種更深的變化，要好幾個月才鬆得下來。它只在遠超日常或治療劑量時才出現。持續穩定地用也碰不到它。"
+            "value" : "這會留下一種更深的變化，要好幾個月才鬆得下來。它只在遠超日常或治療劑量時才出現。"
           }
         }
       }
@@ -85849,30 +85877,30 @@
         }
       }
     },
-    "This compound has no validated human dose data. Information below is for reference only. See the linked sources for primary literature. Do not extrapolate doses from related compounds." : {
+    "This compound has no validated human dose data. The information below is for reference only, with primary literature in the linked sources. Do not extrapolate doses from related compounds." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Este compuesto no tiene datos validados de dosis en humanos. La información de abajo es solo de referencia. Consulta las fuentes enlazadas para la literatura primaria. No extrapoles dosis de compuestos relacionados."
+            "value" : "Este compuesto no tiene datos validados de dosis en humanos. La información de abajo es solo de referencia, con la literatura primaria en las fuentes enlazadas. No extrapoles dosis de compuestos relacionados."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Este compuesto no tiene datos validados de dosis en humanos. La información de abajo es solo de referencia. Consulta las fuentes enlazadas para la literatura primaria. No extrapoles dosis de compuestos relacionados."
+            "value" : "Este compuesto no tiene datos validados de dosis en humanos. La información de abajo es solo de referencia, con la literatura primaria en las fuentes enlazadas. No extrapoles dosis de compuestos relacionados."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "该化合物没有经过验证的人体剂量数据。以下信息仅供参考。原始文献请参阅所链接的来源。请勿根据相关化合物推算剂量。"
+            "value" : "该化合物没有经过验证的人体剂量数据。以下信息仅供参考，原始文献见所链接的来源。请勿根据相关化合物推算剂量。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "該化合物沒有經過驗證的人體劑量資料。以下資訊僅供參考。原始文獻請參閱所連結的來源。請勿根據相關化合物推算劑量。"
+            "value" : "該化合物沒有經過驗證的人體劑量資料。以下資訊僅供參考，原始文獻見所連結的來源。請勿根據相關化合物推算劑量。"
           }
         }
       }
@@ -86495,30 +86523,30 @@
         }
       }
     },
-    "This substance's mechanism of action may involve multiple pharmacological targets or may not be fully characterized. Consult specific pharmacological references for detailed mechanistic information." : {
+    "This substance's mechanism may involve several targets or may not be fully known. For detail, see a pharmacology reference." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El mecanismo de acción de esta sustancia puede implicar varios sitios de acción farmacológicos o no estar del todo caracterizado. Consulta referencias farmacológicas específicas para información mecanística detallada."
+            "value" : "El mecanismo de esta sustancia puede implicar varios sitios de acción o no conocerse del todo. Para más detalle, consulta una referencia farmacológica."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El mecanismo de acción de esta sustancia puede implicar varios sitios de acción farmacológicos o no estar del todo caracterizado. Consulta referencias farmacológicas específicas para información mecanística detallada."
+            "value" : "El mecanismo de esta sustancia puede implicar varios sitios de acción o no conocerse del todo. Para más detalle, consulta una referencia farmacológica."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此物质的作用机制可能涉及多个药理靶点，或尚未完全表征。请参阅具体的药理学参考资料以获取详细的机制信息。"
+            "value" : "此物质的作用机制可能涉及多个靶点，或尚未完全明确。详情请参阅药理学参考资料。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此物質的作用機制可能涉及多個藥理靶點，或尚未完全表徵。請參閱具體的藥理學參考資料以獲取詳細的機制資訊。"
+            "value" : "此物質的作用機制可能涉及多個靶點，或尚未完全明確。詳情請參閱藥理學參考資料。"
           }
         }
       }
@@ -88410,18 +88438,18 @@
         }
       }
     },
-    "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. A medical issue more than an overdose risk." : {
+    "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. That is a medical issue more than an overdose risk." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los tricíclicos pueden anular la bajada de presión arterial de fármacos tipo clonidina, así que la presión puede subir. Más una cuestión médica que un riesgo de sobredosis."
+            "value" : "Los tricíclicos pueden anular la bajada de presión arterial de fármacos tipo clonidina, así que la presión puede subir. Es más una cuestión médica que un riesgo de sobredosis."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los tricíclicos pueden anular la bajada de presión arterial de fármacos tipo clonidina, así que la presión puede subir. Más una cuestión médica que un riesgo de sobredosis."
+            "value" : "Los tricíclicos pueden anular la bajada de presión arterial de fármacos tipo clonidina, así que la presión puede subir. Es más una cuestión médica que un riesgo de sobredosis."
           }
         },
         "zh-Hans" : {
@@ -88800,34 +88828,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "兩種不同的藥只要作用在同一個受體上，就會共享耐受。最近用過 LSD 會讓蘑菇的體驗變弱，因為兩者都作用在 5-HT2A 上；一種苯二氮平會帶到另一種；一種鴉片類藥物會帶到下一種。所以這裡的耐受是按受體來算的，也是為什麼同一類裡一種「新」藥用起來還是可能很弱。"
-          }
-        }
-      }
-    },
-    "Two sleep-promoting drugs stacked. Additive next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dos fármacos que favorecen el sueño combinados. Se suman la sedación al día siguiente, el riesgo de caídas y el deterioro de la coordinación. Las fichas técnicas advierten sobre combinarlos con otros depresores del SNC."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dos fármacos que favorecen el sueño combinados. Se suman la sedación al día siguiente, el riesgo de caídas y el deterioro de la coordinación. Las fichas técnicas advierten sobre combinarlos con otros depresores del SNC."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "两种助眠药叠加。次日镇静、跌倒风险和协调性受损都会叠加。说明书对与其他中枢抑制剂合用提出了警示。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "兩種助眠藥疊加。次日鎮靜、跌倒風險和協調性受損都會疊加。說明書對與其他中樞抑制劑合用提出了警示。"
           }
         }
       }
@@ -90680,30 +90680,30 @@
         }
       }
     },
-    "Using the average 60 kg. Set yours above so estimates fit your body. The same dose hits harder the less you weigh." : {
+    "Using the average 60 kg. Set yours above so estimates fit your body, since the same dose hits harder the less you weigh." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usando el promedio de 60 kg. Indica el tuyo arriba para que las estimaciones se ajusten a tu cuerpo. La misma dosis pega más fuerte cuanto menos pesas."
+            "value" : "Usando el promedio de 60 kg. Indica el tuyo arriba para que las estimaciones se ajusten a tu cuerpo, porque la misma dosis pega más fuerte cuanto menos pesas."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usando el promedio de 60 kg. Indica el tuyo arriba para que las estimaciones se ajusten a tu cuerpo. La misma dosis pega más fuerte cuanto menos pesas."
+            "value" : "Usando el promedio de 60 kg. Indica el tuyo arriba para que las estimaciones se ajusten a tu cuerpo, porque la misma dosis pega más fuerte cuanto menos pesas."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正使用平均值 60 kg。在上方设置你的体重，让估算贴合你自己。越轻，同样的剂量作用越强。"
+            "value" : "正使用平均值 60 kg。在上方设置你的体重，让估算贴合你自己，因为越轻，同样的剂量作用越强。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正使用平均值 60 kg。在上方設定你的體重，讓估算貼合你自己。越輕，同樣的劑量作用越強。"
+            "value" : "正使用平均值 60 kg。在上方設定你的體重，讓估算貼合你自己，因為越輕，同樣的劑量作用越強。"
           }
         }
       }
@@ -92476,31 +92476,31 @@
         }
       }
     },
-    "Which class this belongs in is argued over. The label is the conventional one, not a settled one." : {
+    "Which class this belongs in is argued over; the label is the conventional one." : {
       "comment" : "Shown under a drug's own class when the classification is contested",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A qué clase pertenece es objeto de debate. La etiqueta es la convencional, no una definitiva."
+            "value" : "A qué clase pertenece es objeto de debate; la etiqueta es la convencional."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A qué clase pertenece es objeto de debate. La etiqueta es la convencional, no una definitiva."
+            "value" : "A qué clase pertenece es objeto de debate; la etiqueta es la convencional."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "它该归到哪一类是有争议的。这个标签是约定俗成的说法，而不是定论。"
+            "value" : "它该归到哪一类是有争议的；这个标签是约定俗成的说法。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "它該歸到哪一類是有爭議的。這個標籤是約定俗成的說法，而不是定論。"
+            "value" : "它該歸到哪一類是有爭議的；這個標籤是約定俗成的說法。"
           }
         }
       }

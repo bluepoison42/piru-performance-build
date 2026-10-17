@@ -445,7 +445,7 @@ enum SessionNotificationScheduler {
     private static func cumulativeTip(for category: SubstanceCategory?) -> String {
         switch category {
         case .stimulant:
-            String(localized: "Remember to hydrate, eat, and try to get some sleep. Your heart has been working hard.")
+            String(localized: "Hydrate, eat, and try to get some sleep. Your heart has been working hard.")
         case .empathogen:
             String(localized: "That total is in the heavy range of the sources. Overheating, confusion or rigid muscles need emergency help.")
         case .opioid:

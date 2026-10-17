@@ -251,7 +251,7 @@
       "classA": "alpha2Agonist",
       "classB": "tca",
       "severity": "caution",
-      "note": "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. A medical issue more than an overdose risk."
+      "note": "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. That is a medical issue more than an overdose risk."
     },
     {
       "classA": "betaBlocker",
@@ -263,7 +263,7 @@
       "classA": "betaBlocker",
       "classB": "stimulant",
       "severity": "caution",
-      "note": "The old “never mix” warning rests on little. Large reviews did not find the harm it predicts. Both still strain the heart."
+      "note": "The old “never mix” warning rests on little: large reviews did not find the harm it predicts. Both still strain the heart."
     },
     {
       "classA": "betaBlocker",
@@ -288,7 +288,7 @@
       "classA": "orexinAntagonist",
       "classB": "benzodiazepine",
       "severity": "caution",
-      "note": "Two sleep-promoting drugs stacked. Additive next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants."
+      "note": "Stacking two sleep-promoting drugs adds next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants."
     },
     {
       "classA": "orexinAntagonist",
@@ -300,13 +300,13 @@
       "classA": "orexinAntagonist",
       "classB": "ghb",
       "severity": "caution",
-      "note": "Compounded sedation. Stronger, deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice."
+      "note": "Compounded sedation and deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice."
     },
     {
       "classA": "orexinAntagonist",
       "classB": "antihistamine",
       "severity": "caution",
-      "note": "Both cause drowsiness. Additive next-day sedation and grogginess."
+      "note": "Both cause drowsiness, so next-day sedation and grogginess add up."
     },
     {
       "classA": "dissociative",
@@ -447,13 +447,13 @@
       "classA": "stimulant",
       "classB": "dissociative",
       "severity": "caution",
-      "note": "Increased heart rate and blood pressure. Cardiovascular strain."
+      "note": "Increased heart rate and blood pressure: cardiovascular strain."
     },
     {
       "classA": "alcohol",
       "classB": "stimulant",
       "severity": "caution",
-      "note": "Stimulants mask alcohol impairment. Risk of overconsumption."
+      "note": "Stimulants mask alcohol impairment, so it is easy to drink too much."
     },
     {
       "classA": "alcohol",

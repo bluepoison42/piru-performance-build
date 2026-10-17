@@ -1044,7 +1044,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Mechanism is poorly defined. Sikiric group attributes effects to angiogenesis (VEGF upregulation), NO system modulation, and growth-hormone receptor effects. Notably stable in gastric juice (>24 h): claimed oral bioavailability is plausible structurally but not formally documented in humans.",
+      "downstream_signalling": "Mechanism is poorly defined. Sikiric group attributes effects to angiogenesis (VEGF upregulation), NO system modulation, and growth-hormone receptor effects. Stable in gastric juice (>24 h): claimed oral bioavailability is plausible structurally but not formally documented in humans.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1297,7 +1297,7 @@
       "binding": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Dual mechanism debated. Pereira's work claimed positive allosteric modulation of α4β2 and α7 nAChRs at the 'APL' site, but Kowal et al. 2018 (doi:10.1111/bph.14329) reported negative results in carefully controlled assays on human α4β2 and α7 nAChRs; calling the PAM mechanism into question. AChE inhibition remains the universally accepted dominant mechanism.",
+      "downstream_signalling": "Dual mechanism debated. Pereira's work claimed positive allosteric modulation of α4β2 and α7 nAChRs at the 'APL' site, but Kowal et al. 2018 (doi:10.1111/bph.14329) reported negative results in carefully controlled assays on human α4β2 and α7 nAChRs, calling the PAM mechanism into question. AChE inhibition remains the universally accepted dominant mechanism.",
       "neuroimaging": []
     },
     "human_pk": {

@@ -368,7 +368,7 @@ private struct ShulginInfoView: View {
                 row("+", "Definite, but the nature or duration not yet clear; ordinary activity possible.")
                 row("++", "Unmistakable effect and duration; ordinary activity possible but disinclined.")
                 row("+++", "Full effect; the experience is the thing, ordinary activity set aside.")
-                row("++++", "A rare, peak, transcendental state: a serene and all-encompassing experience. The person, and the rating, are describing something outside the ordinary scale.")
+                row("++++", "A rare, transcendental peak state: serene, all-encompassing, and outside the ordinary scale.")
             }
             Text("Shulgin & Shulgin, PiHKAL: A Chemical Love Story (1991), \"The Shulgin Rating Scale\".")
                 .captionSecondary()

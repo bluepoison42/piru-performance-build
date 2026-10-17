@@ -4017,7 +4017,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "3-MeO-2'-oxo-PCP. Combines the 3-MeO substitution of 3-MeO-PCP with the 2'-oxo of ketamine: predicted highest NMDA affinity in the class per the task brief class context ('2'-Oxo + 3-MeO hits the highest affinity'). No published Ki.",
+      "downstream_signalling": "3-MeO-2'-oxo-PCP. Combines the 3-MeO substitution of 3-MeO-PCP with the 2'-oxo of ketamine: predicted highest NMDA affinity in the class. No published Ki.",
       "neuroimaging": []
     },
     "human_pk": {
