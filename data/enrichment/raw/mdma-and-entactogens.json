@@ -172,7 +172,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "MDMA is primarily a transporter substrate, not a GPCR agonist of significance. It enters cells via DAT/NET/SERT, then triggers reverse transport (efflux) of monoamines through the same transporters. Inside the neuron, it also disrupts VMAT2 vesicular storage. The 5-HT release dominates the SSC subjective profile; concurrent NE release drives cardiovascular effects; weak DA release (low at human DAT) contributes to reinforcement. The mechanism-based inhibition of CYP2D6 — via reactive quinone/quinone-methide intermediates from the catechol metabolite HHMA — irreversibly inactivates the enzyme that clears MDMA itself, producing the well-documented nonlinear PK.",
+      "downstream_signalling": "MDMA is primarily a transporter substrate, not a GPCR agonist of significance. It enters cells via DAT/NET/SERT, then triggers reverse transport (efflux) of monoamines through the same transporters. Inside the neuron, it also disrupts VMAT2 vesicular storage. The 5-HT release dominates the SSC subjective profile; concurrent NE release drives cardiovascular effects; weak DA release (low at human DAT) contributes to reinforcement. The mechanism-based inhibition of CYP2D6 (via reactive quinone/quinone-methide intermediates from the catechol metabolite HHMA) irreversibly inactivates the enzyme that clears MDMA itself, producing the well-documented nonlinear PK.",
       "neuroimaging": [
         {
           "modality": "fMRI BOLD",
@@ -234,7 +234,7 @@
         "with": "paroxetine",
         "mechanism": "CYP2D6 inhibition (paroxetine inhibits, MDMA is a 2D6 substrate)",
         "ki_um": null,
-        "clinical_effect": "Paroxetine pretreatment increases MDMA AUC by ~30% but blunts subjective effects via SSRI block of SERT — net effect is reduced euphoria with higher exposure.",
+        "clinical_effect": "Paroxetine pretreatment increases MDMA AUC by ~30% but blunts subjective effects via SSRI block of SERT: net effect is reduced euphoria with higher exposure.",
         "reference": null
       },
       {
@@ -264,7 +264,7 @@
         "COMT",
         "5-HTTLPR"
       ],
-      "phenotype_effects": "CYP2D6 PM status modestly increases MDMA exposure (~30% higher Cmax) and prolongs half-life, but the effect is much smaller than expected because MDMA itself rapidly inhibits CYP2D6 — within 1 h of a 100 mg dose, even EMs are functionally phenoconverted to PM status. The auto-inhibition takes ~10 days to resolve (slow CYP2D6 resynthesis). Practical implication: re-dosing within a week stacks exposure unpredictably regardless of genotype. COMT Val/Met polymorphism affects HMMA formation kinetics. 5-HTTLPR short/short carriers report stronger subjective effects.",
+      "phenotype_effects": "CYP2D6 PM status modestly increases MDMA exposure (~30% higher Cmax) and prolongs half-life, but the effect is much smaller than expected because MDMA itself rapidly inhibits CYP2D6: within 1 h of a 100 mg dose, even EMs are functionally phenoconverted to PM status. The auto-inhibition takes ~10 days to resolve (slow CYP2D6 resynthesis). Practical implication: re-dosing within a week stacks exposure unpredictably regardless of genotype. COMT Val/Met polymorphism affects HMMA formation kinetics. 5-HTTLPR short/short carriers report stronger subjective effects.",
       "reference": "doi:10.3389/fgene.2012.00235"
     },
     "tolerance_and_dependence": {
@@ -301,7 +301,7 @@
         "target": "5-HT2B",
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
-        "clinical_consequence": "MDMA and its metabolite MDA agonise 5-HT2B and drive fenfluramine-like proliferation of heart-valve cells in vitro — the same mechanism that made fen-phen cause valvulopathy. A small echocardiographic study of regular users found more mild-to-moderate valvular regurgitation than in controls. The concern is chronic, frequent use; a single or occasional dose is not implicated.",
+        "clinical_consequence": "MDMA and its metabolite MDA agonise 5-HT2B and drive fenfluramine-like proliferation of heart-valve cells in vitro: the same mechanism that made fen-phen cause valvulopathy. A small echocardiographic study of regular users found more mild-to-moderate valvular regurgitation than in controls. The concern is chronic, frequent use; a single or occasional dose is not implicated.",
         "reference": "doi:10.1124/mol.63.6.1223"
       }
     ],
@@ -446,7 +446,7 @@
       {
         "with": "MAOIs",
         "mechanism": "MAO inhibition",
-        "clinical_effect": "Contraindicated — serotonin syndrome risk identical to MDMA.",
+        "clinical_effect": "Contraindicated: serotonin syndrome risk identical to MDMA.",
         "reference": null
       }
     ],
@@ -671,7 +671,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Duplicate of MDE — see MDE record for full data.",
+      "downstream_signalling": "Duplicate of MDE: see MDE record for full data.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1088,7 +1088,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Conformationally constrained 2-aminoindane — the rigid indane ring locks the geometry that drives SERT selectivity. Acts predominantly as SERT-selective releaser/reuptake inhibitor with minimal DA effect. Nichols' original goal was a 'non-neurotoxic MDMA' — animal data shows much-reduced serotonergic terminal damage vs MDMA, but cases of fatal hyperthermia in users have been reported. Not as safe as the 'non-neurotoxic' label implies clinically.",
+      "downstream_signalling": "Conformationally constrained 2-aminoindane: the rigid indane ring locks the geometry that drives SERT selectivity. Acts predominantly as SERT-selective releaser/reuptake inhibitor with minimal DA effect. Nichols' original goal was a 'non-neurotoxic MDMA': animal data shows much-reduced serotonergic terminal damage vs MDMA, but cases of fatal hyperthermia in users have been reported. Not as safe as the 'non-neurotoxic' label implies clinically.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1100,7 +1100,7 @@
       {
         "with": "MAOIs",
         "mechanism": "MAO inhibition",
-        "clinical_effect": "Serotonin syndrome risk — multiple fatalities reported from MDAI + serotonergic combinations.",
+        "clinical_effect": "Serotonin syndrome risk: multiple fatalities reported from MDAI + serotonergic combinations.",
         "reference": "doi:10.1002/hup.2298"
       }
     ],
@@ -1264,7 +1264,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Benzofuran replacement of methylenedioxy ring shifts pharmacology toward more balanced SNDR release (less SERT-selective than MDMA). Combined with potent 5-HT2B agonism, this drives the documented cardiotoxicity in fatal cases — fenfluramine-like proliferative effects on heart valves.",
+      "downstream_signalling": "Benzofuran replacement of methylenedioxy ring shifts pharmacology toward more balanced SNDR release (less SERT-selective than MDMA). Combined with potent 5-HT2B agonism, this drives the documented cardiotoxicity in fatal cases: fenfluramine-like proliferative effects on heart valves.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1276,7 +1276,7 @@
       {
         "with": "MAOIs",
         "mechanism": "MAO inhibition",
-        "clinical_effect": "Serotonin syndrome — multiple fatalities documented in 5-APB users with concurrent serotonergic agents.",
+        "clinical_effect": "Serotonin syndrome: multiple fatalities documented in 5-APB users with concurrent serotonergic agents.",
         "reference": null
       }
     ],
@@ -1301,7 +1301,7 @@
         "target": "5-HT2B",
         "ki_or_ic50_nm": 280,
         "concern_level": "high",
-        "clinical_consequence": "Potent full agonist at nM concentrations — substantial cardiac valvulopathy risk. Fenfluramine-class flag.",
+        "clinical_consequence": "Potent full agonist at nM concentrations: substantial cardiac valvulopathy risk. Fenfluramine-class flag.",
         "reference": "doi:10.1111/bph.13128"
       }
     ],
@@ -1419,7 +1419,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "More balanced SNDR profile than 5-APB but with shifted DAT/SERT ratio favouring DA release — more stimulant, more reinforcing. Combined with 5-HT2B agonism: cardiotoxic at exposures users seek.",
+      "downstream_signalling": "More balanced SNDR profile than 5-APB but with shifted DAT/SERT ratio favouring DA release: more stimulant, more reinforcing. Combined with 5-HT2B agonism: cardiotoxic at exposures users seek.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1502,7 +1502,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "N-methyl version of 5-APB — analogous to MDMA/MDA relationship. Slightly longer half-life, more SERT-selective release than 5-APB. Inherits the 5-HT2B agonism / cardiotoxicity flag of the parent. Iversen 2013 data shows similar nanomolar 5-HT2B agonism.",
+      "downstream_signalling": "N-methyl version of 5-APB: analogous to MDMA/MDA relationship. Slightly longer half-life, more SERT-selective release than 5-APB. Inherits the 5-HT2B agonism / cardiotoxicity flag of the parent. Iversen 2013 data shows similar nanomolar 5-HT2B agonism.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1587,7 +1587,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "N-methyl variant of 6-APB. Same class-level mechanism. Brandt 2020 release data: S-6-MABB (the S-N-methyl-α-methyl variant) DAT EC50=41 nM, NET EC50=77 nM, SERT EC50=54 nM in rat synaptosomes — balanced SNDRA. 5-HT2B agonism inherited from 6-APB scaffold.",
+      "downstream_signalling": "N-methyl variant of 6-APB. Same class-level mechanism. Brandt 2020 release data: S-6-MABB (the S-N-methyl-α-methyl variant) DAT EC50=41 nM, NET EC50=77 nM, SERT EC50=54 nM in rat synaptosomes; balanced SNDRA. 5-HT2B agonism inherited from 6-APB scaffold.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1663,7 +1663,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "N-ethyl-5-APB. By analogy to MDE vs MDMA, N-ethyl substitution should reduce DA release relative to 5-HT release — i.e. less stimulant. Direct pharmacology data sparse.",
+      "downstream_signalling": "N-ethyl-5-APB. By analogy to MDE vs MDMA, N-ethyl substitution should reduce DA release relative to 5-HT release, i.e. less stimulant. Direct pharmacology data sparse.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1826,7 +1826,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Saturated benzofuran (dihydrobenzofuran) ring. Lower DA release than 5-APB — more selectively serotonergic.",
+      "downstream_signalling": "Saturated benzofuran (dihydrobenzofuran) ring. Lower DA release than 5-APB: more selectively serotonergic.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1854,7 +1854,7 @@
         "target": "5-HT2B",
         "ki_or_ic50_nm": 1200,
         "concern_level": "moderate",
-        "clinical_consequence": "5-HT2B partial agonist — moderate cardiac concern.",
+        "clinical_consequence": "5-HT2B partial agonist: moderate cardiac concern.",
         "reference": "doi:10.1111/bph.13128"
       }
     ],
@@ -2039,7 +2039,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "N-methyl-5-APDB — like other N-methyl substitutions in this class, slightly shifts the DAT/SERT balance.",
+      "downstream_signalling": "N-methyl-5-APDB: like other N-methyl substitutions in this class, slightly shifts the DAT/SERT balance.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2113,7 +2113,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Highly potent and well-balanced SNDRA — single-digit-nM at DAT, ~20 nM at SERT and NET. The aminorex parent (1960s anorectic) was withdrawn for pulmonary hypertension; the dimethyl analogues retain this risk profile plus add serotonergic toxicity. The serotonergic component (5-HT2B + massive 5-HT release) is the proposed mechanism of the >30 fatal serotonin-syndrome-like cases reported in Europe 2013-2014.",
+      "downstream_signalling": "Highly potent and well-balanced SNDRA: single-digit-nM at DAT, ~20 nM at SERT and NET. The aminorex parent (1960s anorectic) was withdrawn for pulmonary hypertension; the dimethyl analogues retain this risk profile plus add serotonergic toxicity. The serotonergic component (5-HT2B + massive 5-HT release) is the proposed mechanism of the >30 fatal serotonin-syndrome-like cases reported in Europe 2013-2014.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2125,7 +2125,7 @@
       {
         "with": "MAOIs / SSRIs",
         "mechanism": "serotonergic",
-        "clinical_effect": "Lethal serotonin syndrome — multiple confirmed fatalities.",
+        "clinical_effect": "Lethal serotonin syndrome: multiple confirmed fatalities.",
         "reference": "doi:10.1111/bcpt.12399"
       }
     ],
@@ -2316,7 +2316,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "β-methoxy modification of mephedrone scaffold collapses transporter activity — only weak SERT release remains, with no DA/NE release. Subjective effects in users are weak compared to mephedrone, consistent with this. Sold as a 'legal' mephedrone replacement; actually weakly active.",
+      "downstream_signalling": "β-methoxy modification of mephedrone scaffold collapses transporter activity: only weak SERT release remains, with no DA/NE release. Subjective effects in users are weak compared to mephedrone, consistent with this. Sold as a 'legal' mephedrone replacement; actually weakly active.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2531,7 +2531,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Positional isomer of α-methyltryptamine (AMT). Acts as both monoamine releaser AND potent MAO-A inhibitor — a chemically guaranteed serotonin syndrome generator at supratherapeutic doses. Self-MAO-inhibition prolongs its own half-life. The combination accounts for the cluster of fatalities reported when 5-IT entered EU markets 2011-2013.",
+      "downstream_signalling": "Positional isomer of α-methyltryptamine (AMT). Acts as both monoamine releaser AND potent MAO-A inhibitor: a chemically guaranteed serotonin syndrome generator at supratherapeutic doses. Self-MAO-inhibition prolongs its own half-life. The combination accounts for the cluster of fatalities reported when 5-IT entered EU markets 2011-2013.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2542,7 +2542,7 @@
     "drug_interactions_pk": [
       {
         "with": "any serotonergic agent or sympathomimetic",
-        "mechanism": "self-MAOI plus releaser — fatal stack",
+        "mechanism": "self-MAOI plus releaser: fatal stack",
         "clinical_effect": "Fatal in combination: four UK deaths reported with 5-IT at 0.4-1.2 mg/L femoral blood, three of them alongside other serotonergic drugs (MDMA, methylone, 6-APB, MDA, BZP) and attributed to the combined 'cocktail effect'.",
         "reference": "pmid:23861338"
       }
@@ -2564,7 +2564,7 @@
       {
         "target": "MAO-A",
         "concern_level": "high",
-        "clinical_consequence": "Built-in MAO-A inhibition while releasing 5-HT — fatal interaction with own pharmacology and any other serotonergic input.",
+        "clinical_consequence": "Built-in MAO-A inhibition while releasing 5-HT: fatal interaction with own pharmacology and any other serotonergic input.",
         "reference": "pmid:24115740"
       }
     ],
@@ -2648,7 +2648,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Dominant pharmacology is 5-HT2A agonism (psychedelic) — the releaser activity is secondary. Shulgin TIHKAL dose 2.5-4.5 mg; duration 12-18 h. NOT an entactogen — this is misclassified.",
+      "downstream_signalling": "Dominant pharmacology is 5-HT2A agonism (psychedelic): the releaser activity is secondary. Shulgin TIHKAL dose 2.5-4.5 mg; duration 12-18 h. NOT an entactogen: this is misclassified.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2660,7 +2660,7 @@
       {
         "with": "MAOIs",
         "mechanism": "serotonergic",
-        "clinical_effect": "Fatal serotonin syndrome — multiple deaths reported in 2003-2004 US cluster.",
+        "clinical_effect": "Fatal serotonin syndrome: multiple deaths reported in 2003-2004 US cluster.",
         "reference": null
       }
     ],
@@ -2723,7 +2723,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "N-hydroxy variant of MDA. The N-OH is metabolically labile and rapidly reduced to MDA in vivo — MDOH effectively acts as a prodrug of MDA. PIHKAL #114; dose 100-160 mg, duration 3-6 h.",
+      "downstream_signalling": "N-hydroxy variant of MDA. The N-OH is metabolically labile and rapidly reduced to MDA in vivo: MDOH effectively acts as a prodrug of MDA. PIHKAL #114; dose 100-160 mg, duration 3-6 h.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2795,7 +2795,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "N-propyl extension of MDA scaffold. Per Shulgin SAR — extension beyond N-ethyl progressively kills monoamine release activity at the human transporters. PIHKAL describes weak activity at ~200 mg.",
+      "downstream_signalling": "N-propyl extension of MDA scaffold. Per Shulgin SAR: extension beyond N-ethyl progressively kills monoamine release activity at the human transporters. PIHKAL describes weak activity at ~200 mg.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2911,7 +2911,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "DUPLICATE of MDA — see MDA record for full data.",
+      "downstream_signalling": "DUPLICATE of MDA: see MDA record for full data.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2974,7 +2974,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Methoxy substitution on the methylenedioxyamphetamine ring shifts pharmacology from entactogen toward psychedelic — more 5-HT2A agonism, less monoamine release. MMDA is the proposed active metabolite of myristicin (nutmeg).",
+      "downstream_signalling": "Methoxy substitution on the methylenedioxyamphetamine ring shifts pharmacology from entactogen toward psychedelic: more 5-HT2A agonism, less monoamine release. MMDA is the proposed active metabolite of myristicin (nutmeg).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3204,7 +3204,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "PIHKAL #62. Di-methoxy version of MMDA — pushed further toward psychedelic/2C-x-like profile. Shulgin reported active at 30-75 mg.",
+      "downstream_signalling": "PIHKAL #62. Di-methoxy version of MMDA: pushed further toward psychedelic/2C-x-like profile. Shulgin reported active at 30-75 mg.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3321,7 +3321,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Ortho-bromo MDA — by 2C-B/DOB analogy, 6-bromo substitution markedly increases 5-HT2A binding affinity. Likely shifts pharmacology toward psychedelic. PIHKAL.",
+      "downstream_signalling": "Ortho-bromo MDA: by 2C-B/DOB analogy, 6-bromo substitution markedly increases 5-HT2A binding affinity. Likely shifts pharmacology toward psychedelic. PIHKAL.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3492,7 +3492,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Sulfur-bridged ring variant — benzoxathiol replaces methylenedioxy. PIHKAL/SAR exploration; no clinical data.",
+      "downstream_signalling": "Sulfur-bridged ring variant: benzoxathiol replaces methylenedioxy. PIHKAL/SAR exploration; no clinical data.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3831,7 +3831,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Itself an aromatic ether with no primary amine — not a classical entactogen. Hypothesised to be metabolised in humans to MMDA (3-methoxy-4,5-MDA) via an aminotransferase/CYP-mediated process that adds an amine to the allyl side chain — this proposed amphetamine metabolite would then act on 5-HT2A. The metabolic conversion has been demonstrated in rodent in vitro systems but the in vivo human conversion is debated and quantitatively small. Nutmeg's psychoactivity probably stems from a combination of weak MAO inhibition, slow generation of trace amphetamine metabolites, and CNS effects of other constituents (elemicin, safrole).",
+      "downstream_signalling": "Itself an aromatic ether with no primary amine: not a classical entactogen. Hypothesised to be metabolised in humans to MMDA (3-methoxy-4,5-MDA) via an aminotransferase/CYP-mediated process that adds an amine to the allyl side chain: this proposed amphetamine metabolite would then act on 5-HT2A. The metabolic conversion has been demonstrated in rodent in vitro systems but the in vivo human conversion is debated and quantitatively small. Nutmeg's psychoactivity probably stems from a combination of weak MAO inhibition, slow generation of trace amphetamine metabolites, and CNS effects of other constituents (elemicin, safrole).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3969,7 +3969,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "MISCATEGORIZED: Psilocin is the active metabolite of psilocybin and a classical 5-HT2A agonist psychedelic. NOT an entactogen — does not significantly release monoamines. Recategorize as Psychedelic.",
+      "downstream_signalling": "MISCATEGORIZED: Psilocin is the active metabolite of psilocybin and a classical 5-HT2A agonist psychedelic. NOT an entactogen: does not significantly release monoamines. Recategorize as Psychedelic.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4805,7 +4805,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "4-Fluorophenylpiperazine. Piperazine class — 5-HT1A and 5-HT2A activity with weak SERT inhibition. Not a true entactogen; more of a fenfluramine-like serotonergic. Recategorize.",
+      "downstream_signalling": "4-Fluorophenylpiperazine. Piperazine class: 5-HT1A and 5-HT2A activity with weak SERT inhibition. Not a true entactogen; more of a fenfluramine-like serotonergic. Recategorize.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4956,9 +4956,9 @@
     "is_class_context": true,
     "class_context_id": "methylenedioxy-entactogens",
     "class_name": "Methylenedioxy phenethylamine entactogens (MDxx and SAR-related)",
-    "shared_mechanism": "Substrate-type monoamine releasers at SERT, NET, and DAT. Compound enters the neuron via the same transporter it will then reverse — once inside, it triggers efflux of stored monoamines, with VMAT2 inhibition contributing to cytosolic monoamine availability. The 3,4-methylenedioxy ring is the entactogen signature: it shifts SERT selectivity above DAT (the opposite of methamphetamine). The α-methyl group protects against MAO oxidation, doubling duration vs the deaminated phenethylamines. The N-substituent modulates the DAT:SERT release ratio: N-H (MDA) gives broad release with some 5-HT2A agonism; N-methyl (MDMA) is the prototypical entactogen with strong SERT/NET, modest DAT; N-ethyl (MDE) collapses DA release; N-propyl/N-allyl further reduce all activity. Ring substitution (e.g., 5-methoxy → MMDA, 6-bromo → 2-Br-MDA) shifts pharmacology from releaser toward direct 5-HT2A agonist psychedelic. The class is also defined by potent 5-HT2B agonism (MDA Ki ≈100 nM, MDMA ≈500 nM), responsible for the cardiac valvular fibrosis risk shared by all members at heavy chronic exposure.",
-    "shared_pk_summary": "Oral bioavailability ~70%, Tmax 1.5-2.5 h, half-life 6-10 h for the prototypical MDxx compounds. Metabolism is primarily CYP2D6 (O-demethylenation of the catechol — generating reactive ortho-quinones that mechanism-based-inhibit the enzyme) and CYP2B6 (N-dealkylation). The mechanism-based inhibition of CYP2D6 is the source of MDMA's characteristic nonlinear PK: doubling the dose more than doubles AUC, half-life lengthens at higher doses, and the inhibited CYP2D6 takes ~10 days to recover via de novo protein synthesis. This means CYP2D6 polymorphism has less impact than predicted from first principles, but co-administration of other CYP2D6 substrates is dangerous — repeat-dosing within a week stacks exposure unpredictably regardless of genotype. Major active metabolites are MDA from MDMA (N-demethylation, half-life ~12 h — explains next-day stimulant tail). HMMA via COMT methylation of HHMA is the major urinary metabolite. Phase II glucuronide/sulfate conjugation of HMMA dominates elimination.",
-    "shared_safety": "Acute: serotonin syndrome (with any MAOI / serotonergic agent — absolute contraindication for MAOIs); SIADH-mediated hyponatremia (especially with the polydipsia typical of recreational use; women at higher risk); hyperthermia driven by NE release + skeletal muscle activity + impaired heat dissipation, capable of causing rhabdomyolysis, DIC, multi-organ failure. Cardiovascular: dose-dependent HR and BP increases. Chronic: 5-HT2B-mediated cardiac valvular fibrosis (fenfluramine-class concern); serotonergic axonal pruning at heavy repeated doses (animal evidence robust; human imaging with [11C]-DASB PET shows reduced SERT availability in heavy users with partial recovery on abstinence). Lifetime exposure matters more than single-dose intensity for valve disease and SERT downregulation. Re-dosing within a session is particularly inefficient and increases risk because CYP2D6 is already inhibited and 5-HT pools are depleted — gives more side effects without more euphoria.",
+    "shared_mechanism": "Substrate-type monoamine releasers at SERT, NET, and DAT. Compound enters the neuron via the same transporter it will then reverse: once inside, it triggers efflux of stored monoamines, with VMAT2 inhibition contributing to cytosolic monoamine availability. The 3,4-methylenedioxy ring is the entactogen signature: it shifts SERT selectivity above DAT (the opposite of methamphetamine). The α-methyl group protects against MAO oxidation, doubling duration vs the deaminated phenethylamines. The N-substituent modulates the DAT:SERT release ratio: N-H (MDA) gives broad release with some 5-HT2A agonism; N-methyl (MDMA) is the prototypical entactogen with strong SERT/NET, modest DAT; N-ethyl (MDE) collapses DA release; N-propyl/N-allyl further reduce all activity. Ring substitution (e.g., 5-methoxy → MMDA, 6-bromo → 2-Br-MDA) shifts pharmacology from releaser toward direct 5-HT2A agonist psychedelic. The class is also defined by potent 5-HT2B agonism (MDA Ki ≈100 nM, MDMA ≈500 nM), responsible for the cardiac valvular fibrosis risk shared by all members at heavy chronic exposure.",
+    "shared_pk_summary": "Oral bioavailability ~70%, Tmax 1.5-2.5 h, half-life 6-10 h for the prototypical MDxx compounds. Metabolism is primarily CYP2D6 (O-demethylenation of the catechol; generating reactive ortho-quinones that mechanism-based-inhibit the enzyme) and CYP2B6 (N-dealkylation). The mechanism-based inhibition of CYP2D6 is the source of MDMA's characteristic nonlinear PK: doubling the dose more than doubles AUC, half-life lengthens at higher doses, and the inhibited CYP2D6 takes ~10 days to recover via de novo protein synthesis. This means CYP2D6 polymorphism has less impact than predicted from first principles, but co-administration of other CYP2D6 substrates is dangerous: repeat-dosing within a week stacks exposure unpredictably regardless of genotype. Major active metabolites are MDA from MDMA (N-demethylation, half-life ~12 h; explains next-day stimulant tail). HMMA via COMT methylation of HHMA is the major urinary metabolite. Phase II glucuronide/sulfate conjugation of HMMA dominates elimination.",
+    "shared_safety": "Acute: serotonin syndrome (with any MAOI / serotonergic agent; absolute contraindication for MAOIs); SIADH-mediated hyponatremia (especially with the polydipsia typical of recreational use; women at higher risk); hyperthermia driven by NE release + skeletal muscle activity + impaired heat dissipation, capable of causing rhabdomyolysis, DIC, multi-organ failure. Cardiovascular: dose-dependent HR and BP increases. Chronic: 5-HT2B-mediated cardiac valvular fibrosis (fenfluramine-class concern); serotonergic axonal pruning at heavy repeated doses (animal evidence robust; human imaging with [11C]-DASB PET shows reduced SERT availability in heavy users with partial recovery on abstinence). Lifetime exposure matters more than single-dose intensity for valve disease and SERT downregulation. Re-dosing within a session is particularly inefficient and increases risk because CYP2D6 is already inhibited and 5-HT pools are depleted: gives more side effects without more euphoria.",
     "sar_summary": "α-methyl: protects from MAO oxidation, doubles duration relative to phenethylamine. N-substituent: H = MDA (broad release + 5-HT2A agonist character); methyl = MDMA (canonical entactogen, balanced SERT/NET, weaker DA); ethyl = MDE (collapses DA, pure entactogen); larger N-alkyls progressively kill activity. Ring substitution: 3,4-methylenedioxy = entactogen signature (SERT-selective); halogenation (Br, I) on the ring increases 5-HT2A binding (psychedelic shift); methoxy substitution (e.g., MMDA) increases 5-HT2A agonism at the cost of release; benzofuran ring-replacement (5-APB/6-APB) gives single-digit-nM SNDRA potency with high 5-HT2B agonism (more dangerous); 2-aminoindane scaffold (MDAI) constrains geometry for SERT-selectivity (less neurotoxic per Nichols' design but still capable of fatal hyperthermia). β-keto (cathinone) ring shifts toward stimulant character with VMAT2 inactivity (methylone is 4-5× less potent at SERT release than MDMA). Lysine-amide prodrugs (Lys-MDA, Lys-MDMA) extend onset/duration with no intrinsic activity until peptidase cleavage.",
     "key_references": [
       "doi:10.1111/j.1476-5381.2012.02145.x",
@@ -4975,10 +4975,10 @@
     "is_class_context": true,
     "class_context_id": "benzofuran-entactogens",
     "class_name": "Benzofuran and dihydrobenzofuran amphetamines (APB/APDB family)",
-    "shared_mechanism": "The benzofuran ring (and its saturated dihydrobenzofuran analogue) replaces the methylenedioxy of MDxx with a furan oxygen, while keeping the α-methyl phenethylamine pharmacophore. The substitution dramatically increases potency at human monoamine transporters: 5-APB and 6-APB are 3-10× more potent than MDA at every transporter (single-digit nM EC50 at rat DAT/NET/SERT). The class-defining liability is potent agonism at 5-HT2B (5-APB EC50 280 nM Emax 61%, 6-APB EC50 140 nM Emax 70% — both full agonists in the nanomolar range), which substantially exceeds MDMA's 5-HT2B affinity. This explains the higher rate of fatal cardiac events seen with APB-class drugs at recreational doses. The 5- and 6-positional isomers differ: 5-APB is more SERT-selective; 6-APB is more potent at DAT. Dihydrobenzofuran (APDB) variants have weaker DAT activity and shift toward NRI/SSRA profile. N-methyl substitution (MAPB) gives MDMA-like profile shifts (less DAT release). N-ethyl (EAPB) collapses DA release further.",
-    "shared_pk_summary": "Longer half-lives than MDMA (8-12 h reported for APBs vs 6-8 h MDMA). Slower onset (~2 h vs ~1 h for MDMA). Hepatic metabolism via CYP2D6 (analogous to MDMA) plus likely furan ring oxidation (epoxide intermediates — potential hepatotoxic mechanism not well-characterised). No controlled human PK studies published.",
-    "shared_safety": "Acute: same serotonin syndrome risks as MDMA but multiplied by higher transporter potency. Multiple fatalities documented in UK 2012-2014 ('benzofury'), prompting UK ban. The potent 5-HT2B agonism makes chronic use highly likely to cause cardiac valvular fibrosis (fenfluramine-class concern, but more potent than fenfluramine on a molar basis). Furan ring metabolism may generate reactive epoxides — hepatotoxicity signal in case reports. Long duration combined with vasoconstriction makes hyperthermia/cardiotoxicity worse than equivalent MDMA dose.",
-    "sar_summary": "Furan O position (5 vs 6) determines DAT:SERT ratio. Dihydro- (saturated) form weakens DAT. Same N-substitution effects as MDxx family: H = APB (SNDRA), methyl = MAPB, ethyl = EAPB. All retain potent 5-HT2B agonism — there is no published structural modification that decouples desirable release activity from this cardiotoxic off-target in this scaffold.",
+    "shared_mechanism": "The benzofuran ring (and its saturated dihydrobenzofuran analogue) replaces the methylenedioxy of MDxx with a furan oxygen, while keeping the α-methyl phenethylamine pharmacophore. The substitution dramatically increases potency at human monoamine transporters: 5-APB and 6-APB are 3-10× more potent than MDA at every transporter (single-digit nM EC50 at rat DAT/NET/SERT). The class-defining liability is potent agonism at 5-HT2B (5-APB EC50 280 nM Emax 61%, 6-APB EC50 140 nM Emax 70%; both full agonists in the nanomolar range), which substantially exceeds MDMA's 5-HT2B affinity. This explains the higher rate of fatal cardiac events seen with APB-class drugs at recreational doses. The 5- and 6-positional isomers differ: 5-APB is more SERT-selective; 6-APB is more potent at DAT. Dihydrobenzofuran (APDB) variants have weaker DAT activity and shift toward NRI/SSRA profile. N-methyl substitution (MAPB) gives MDMA-like profile shifts (less DAT release). N-ethyl (EAPB) collapses DA release further.",
+    "shared_pk_summary": "Longer half-lives than MDMA (8-12 h reported for APBs vs 6-8 h MDMA). Slower onset (~2 h vs ~1 h for MDMA). Hepatic metabolism via CYP2D6 (analogous to MDMA) plus likely furan ring oxidation (epoxide intermediates; potential hepatotoxic mechanism not well-characterised). No controlled human PK studies published.",
+    "shared_safety": "Acute: same serotonin syndrome risks as MDMA but multiplied by higher transporter potency. Multiple fatalities documented in UK 2012-2014 ('benzofury'), prompting UK ban. The potent 5-HT2B agonism makes chronic use highly likely to cause cardiac valvular fibrosis (fenfluramine-class concern, but more potent than fenfluramine on a molar basis). Furan ring metabolism may generate reactive epoxides: hepatotoxicity signal in case reports. Long duration combined with vasoconstriction makes hyperthermia/cardiotoxicity worse than equivalent MDMA dose.",
+    "sar_summary": "Furan O position (5 vs 6) determines DAT:SERT ratio. Dihydro- (saturated) form weakens DAT. Same N-substitution effects as MDxx family: H = APB (SNDRA), methyl = MAPB, ethyl = EAPB. All retain potent 5-HT2B agonism: there is no published structural modification that decouples desirable release activity from this cardiotoxic off-target in this scaffold.",
     "key_references": [
       "doi:10.1002/dta.1389"
     ]
@@ -4987,9 +4987,9 @@
     "is_class_context": true,
     "class_context_id": "aminoindane-entactogens",
     "class_name": "2-Aminoindane entactogens (MDAI family)",
-    "shared_mechanism": "The 2-aminoindane scaffold conformationally constrains the phenethylamine into a rigid 'extended' geometry. This geometry is favourable for SERT activity but disfavours DAT — yielding selective serotonin releasers/reuptake inhibitors with minimal dopamine effect. MDAI (5,6-methylenedioxy-2-aminoindane) is the prototype, developed by David Nichols at Purdue as a 'non-neurotoxic MDMA' research tool. SERT IC50 512 nM, DAT IC50 5920 nM (~12-fold SERT-selective) in rat synaptosomes (Johnson et al 1991). The reduced neurotoxicity in animals stems from low DA-mediated oxidative stress; serotonergic axonal pruning is still possible but markedly reduced.",
+    "shared_mechanism": "The 2-aminoindane scaffold conformationally constrains the phenethylamine into a rigid 'extended' geometry. This geometry is favourable for SERT activity but disfavours DAT: yielding selective serotonin releasers/reuptake inhibitors with minimal dopamine effect. MDAI (5,6-methylenedioxy-2-aminoindane) is the prototype, developed by David Nichols at Purdue as a 'non-neurotoxic MDMA' research tool. SERT IC50 512 nM, DAT IC50 5920 nM (~12-fold SERT-selective) in rat synaptosomes (Johnson et al 1991). The reduced neurotoxicity in animals stems from low DA-mediated oxidative stress; serotonergic axonal pruning is still possible but markedly reduced.",
     "shared_pk_summary": "Limited published human PK. Onset 1-2 h, duration 4-6 h reported by users. Hepatic metabolism with CYP2D6 contribution presumed.",
-    "shared_safety": "The 'non-neurotoxic' label has been misleading in practice — Corkery 2013 documented fatalities, and Pálenicek 2016 rat LD50 work demonstrated a narrow safety margin with severe hyperthermia. SERT-selective release still produces serotonin syndrome with MAOIs and SSRIs. 5-HT2B agonism — likely retained by class — adds cardiac concern.",
+    "shared_safety": "The 'non-neurotoxic' label has been misleading in practice: Corkery 2013 documented fatalities, and Pálenicek 2016 rat LD50 work demonstrated a narrow safety margin with severe hyperthermia. SERT-selective release still produces serotonin syndrome with MAOIs and SSRIs. 5-HT2B agonism (likely retained by class) adds cardiac concern.",
     "sar_summary": "Aminoindane core (2-aminopropyl built into a cyclopentane ring fused to benzene) gives rigidity. 5,6-methylenedioxy = MDAI; 5-iodo = 5-IAI (similar profile, halogenated); 5-amino (unsubstituted) = 5-APDI = IAP. Without ring substitution, the parent 2-aminoindane is itself a selective NRI used as a research reference. N-methylation reduces serotonergic potency.",
     "key_references": [
       "doi:10.1002/hup.2298",
@@ -5003,7 +5003,7 @@
     "shared_mechanism": "2-amino-oxazoline ring system. Parent aminorex was a 1960s anorectic (withdrawn for pulmonary arterial hypertension). The dimethyl/methyl analogues retain release activity at all three monoamine transporters; 4,4'-DMAR is a single-digit-nM SNDRA (DAT EC50 8.6 nM, SERT 18.5 nM, NET 26.9 nM) and a VMAT2 inhibitor.",
     "shared_pk_summary": "Limited published human PK.",
     "shared_safety": "The most dangerous compounds in the entactogen/empathogen-adjacent space by user-fatality ratio. 4,4'-DMAR caused >30 fatal cases in EU 2013-2014 (cluster in Northern Ireland alone: 19 deaths). Mechanism: serotonin syndrome from massive 5-HT release, plus retained aminorex pulmonary toxicity, plus VMAT2-mediated neurotoxicity. Avoid entirely.",
-    "sar_summary": "Methylation at the 4-position of the oxazoline (cis-4-methyl) and on the phenyl ring (4'-methyl) gives 4,4'-DMAR — the most active and most fatal variant. 3,4-DMAR (3'-methyl instead of 4'-methyl) is somewhat less potent.",
+    "sar_summary": "Methylation at the 4-position of the oxazoline (cis-4-methyl) and on the phenyl ring (4'-methyl) gives 4,4'-DMAR: the most active and most fatal variant. 3,4-DMAR (3'-methyl instead of 4'-methyl) is somewhat less potent.",
     "key_references": [
       "doi:10.1016/j.neuropharm.2018.06.025",
       "doi:10.1111/bcpt.12399"
@@ -5013,7 +5013,7 @@
     "is_class_context": true,
     "class_context_id": "alpha-methyltryptamine-derivatives",
     "class_name": "α-Methyltryptamine and 5-(2-aminopropyl)indole derivatives",
-    "shared_mechanism": "α-methyl tryptamines combine 5-HT2A agonism (psychedelic) with monoamine releaser activity AND MAO-A inhibition. The MAO-A inhibition is the dangerous feature: it is built into the compound's own pharmacology, so the released 5-HT cannot be metabolised. 5-IT (5-API, the indole positional isomer of AMT) is a particularly potent MAO-A inhibitor. 5-MeO-AMT adds 5-methoxy substitution that boosts 5-HT2A agonism markedly — Shulgin's α,O-DMS — extremely potent at 2.5-5 mg active dose.",
+    "shared_mechanism": "α-methyl tryptamines combine 5-HT2A agonism (psychedelic) with monoamine releaser activity AND MAO-A inhibition. The MAO-A inhibition is the dangerous feature: it is built into the compound's own pharmacology, so the released 5-HT cannot be metabolised. 5-IT (5-API, the indole positional isomer of AMT) is a particularly potent MAO-A inhibitor. 5-MeO-AMT adds 5-methoxy substitution that boosts 5-HT2A agonism markedly (Shulgin's α,O-DMS), extremely potent at 2.5-5 mg active dose.",
     "shared_pk_summary": "Very long duration (12-18 h for 5-MeO-AMT) reflecting MAO inhibition prolonging the compound's own half-life.",
     "shared_safety": "Built-in pharmacological foot-gun. The MAO-A inhibition guarantees fatal serotonin syndrome with any additional serotonergic input. Multiple fatality clusters: 5-MeO-AMT in US 2003-2004, 5-IT in EU 2011-2013 (>20 confirmed deaths). MISCATEGORIZED in this group: these are tryptamine psychedelics, not entactogens.",
     "sar_summary": "Adding 5-methoxy boosts 5-HT2A. Moving the 2-aminopropyl from indole-3 (true tryptamines) to indole-5 (5-IT/5-API) shifts activity from receptor agonism to MAO inhibition.",
@@ -5023,9 +5023,9 @@
     "is_class_context": true,
     "class_context_id": "cathinone-entactogens",
     "class_name": "Cathinone-class entactogens (β-keto amphetamines)",
-    "shared_mechanism": "β-keto (cathinone) shifts the amphetamine scaffold toward stimulant character. Methylone (3,4-methylenedioxymethcathinone) is the β-keto MDMA — much weaker SERT release (~5× less than MDMA) but retains stimulant-like DAT activity, no VMAT2 inhibition (lower neurotoxicity). Mephedrone and 4-MEC inherit similar profiles. The cathinone class is generally less SERT-selective than the MDxx amphetamines, more reinforcing, and shorter-acting. β-methoxy modifications (mexedrone) collapse activity.",
+    "shared_mechanism": "β-keto (cathinone) shifts the amphetamine scaffold toward stimulant character. Methylone (3,4-methylenedioxymethcathinone) is the β-keto MDMA: much weaker SERT release (~5× less than MDMA) but retains stimulant-like DAT activity, no VMAT2 inhibition (lower neurotoxicity). Mephedrone and 4-MEC inherit similar profiles. The cathinone class is generally less SERT-selective than the MDxx amphetamines, more reinforcing, and shorter-acting. β-methoxy modifications (mexedrone) collapse activity.",
     "shared_pk_summary": "Shorter half-lives than MDxx (mephedrone ~2-3 h). Hepatic metabolism via CYP2D6 (analogous demethylenation). Cathinones generally have lower oral bioavailability than amphetamines.",
-    "shared_safety": "Lower serotonergic neurotoxicity than MDMA at equivalent doses but higher abuse potential due to DAT activity. Cardiotoxicity from sympathomimetic load. Methylone cleared US Phase 1 trials for PTSD — apparently safer subjective profile than MDMA at equivalent serotonergic effect.",
+    "shared_safety": "Lower serotonergic neurotoxicity than MDMA at equivalent doses but higher abuse potential due to DAT activity. Cardiotoxicity from sympathomimetic load. Methylone cleared US Phase 1 trials for PTSD: apparently safer subjective profile than MDMA at equivalent serotonergic effect.",
     "sar_summary": "β-keto = stimulant shift, VMAT2-inactive. N-methyl vs N-ethyl: same dose-shifting as MDxx. Ring substitution: 3,4-methylenedioxy = methylone/butylone family; 4-methyl = mephedrone.",
     "key_references": [
       "doi:10.1111/j.1476-5381.2012.02145.x",
@@ -5036,7 +5036,7 @@
     "is_class_context": true,
     "class_context_id": "naphthyl-entactogens",
     "class_name": "Naphthyl amphetamines (PAL-287 / methamnetamine family)",
-    "shared_mechanism": "Naphthalene ring replacement of phenyl. PAL-287 (naphthylaminopropane) is a balanced SNDRA with single-digit-nM potency at all three monoamine transporters (5-HT 3.4 nM, NE 11.1 nM, DA 12.6 nM) — originally developed as a candidate stimulant-use-disorder treatment because the balanced release dampens DA reinforcement. Methamnetamine is the N-methyl analogue (similar profile).",
+    "shared_mechanism": "Naphthalene ring replacement of phenyl. PAL-287 (naphthylaminopropane) is a balanced SNDRA with single-digit-nM potency at all three monoamine transporters (5-HT 3.4 nM, NE 11.1 nM, DA 12.6 nM): originally developed as a candidate stimulant-use-disorder treatment because the balanced release dampens DA reinforcement. Methamnetamine is the N-methyl analogue (similar profile).",
     "shared_pk_summary": "Limited human PK.",
     "shared_safety": "Serotonin syndrome with MAOIs. No published fatalities cluster, but research-chemical exposure is low.",
     "sar_summary": "Naphthyl ring boosts potency at all transporters. N-methylation and N-ethylation shift the DAT:SERT ratio analogously to phenethylamine families.",
@@ -5078,7 +5078,7 @@
     "is_class_context": true,
     "class_context_id": "piperazine-entactogens",
     "class_name": "Phenylpiperazines (BZP / mCPP / pFPP)",
-    "shared_mechanism": "5-HT1A, 5-HT2A, 5-HT2C agonism plus weak SERT inhibition. Fenfluramine-like serotonergic profile. Not strictly entactogens — produce dysphoric serotonergic effects more than empathy.",
+    "shared_mechanism": "5-HT1A, 5-HT2A, 5-HT2C agonism plus weak SERT inhibition. Fenfluramine-like serotonergic profile. Not strictly entactogens: produce dysphoric serotonergic effects more than empathy.",
     "shared_pk_summary": null,
     "shared_safety": "Headache, nausea, anxiety. mCPP is the active metabolite of trazodone.",
     "sar_summary": null,

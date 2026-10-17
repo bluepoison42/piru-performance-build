@@ -133,7 +133,7 @@
           "reference": "doi:10.1126/scisignal.2000807"
         }
       ],
-      "downstream_signalling": "Gαi/o coupling → inhibition of adenylyl cyclase (decreased cAMP), activation of GIRK potassium channels (hyperpolarisation), inhibition of N/P/Q-type Cav channels (decreased neurotransmitter release). Repeated activation drives GRK-mediated phosphorylation, β-arrestin-2 recruitment, receptor desensitisation and internalisation (morphine internalises MOR poorly compared with DAMGO/etorphine — the 'RAVE' paradox).",
+      "downstream_signalling": "Gαi/o coupling → inhibition of adenylyl cyclase (decreased cAMP), activation of GIRK potassium channels (hyperpolarisation), inhibition of N/P/Q-type Cav channels (decreased neurotransmitter release). Repeated activation drives GRK-mediated phosphorylation, β-arrestin-2 recruitment, receptor desensitisation and internalisation (morphine internalises MOR poorly compared with DAMGO/etorphine; the 'RAVE' paradox).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -576,7 +576,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Partial Gαi activation, very slow MOR dissociation (>2 h), poor internalisation. Norbuprenorphine metabolite is a FULL agonist at MOR, DOR, NOP — and 10× more respiratory-depressant than parent in rats (Brown 2011, doi:10.1016/j.taap.2011.02.014) — BUT does not cross the human BBB efficiently, which is why buprenorphine's clinical respiratory ceiling holds. Buprenorphine itself competitively blocks norbuprenorphine from CNS MOR (Brown 2011).",
+      "downstream_signalling": "Partial Gαi activation, very slow MOR dissociation (>2 h), poor internalisation. Norbuprenorphine metabolite is a FULL agonist at MOR, DOR, NOP, and 10× more respiratory-depressant than parent in rats (Brown 2011, doi:10.1016/j.taap.2011.02.014), BUT does not cross the human BBB efficiently, which is why buprenorphine's clinical respiratory ceiling holds. Buprenorphine itself competitively blocks norbuprenorphine from CNS MOR (Brown 2011).",
       "neuroimaging": [
         {
           "modality": "PET",
@@ -1019,7 +1019,7 @@
         "CYP2D6",
         "OPRM1"
       ],
-      "phenotype_effects": "CYP2D6 UM (≥3 functional copies, ~1-2% Caucasian, 30% Ethiopian): risk of fatal morphine intoxication from standard doses — multiple infant deaths reported in breastfeeding UM mothers and post-tonsillectomy children → FDA contraindicated codeine <12 yo (2017). CYP2D6 PM (~5-10% Caucasian): no analgesia. CPIC strongly recommends genotype-guided dosing or alternative.",
+      "phenotype_effects": "CYP2D6 UM (≥3 functional copies, ~1-2% Caucasian, 30% Ethiopian): risk of fatal morphine intoxication from standard doses; multiple infant deaths reported in breastfeeding UM mothers and post-tonsillectomy children → FDA contraindicated codeine <12 yo (2017). CYP2D6 PM (~5-10% Caucasian): no analgesia. CPIC strongly recommends genotype-guided dosing or alternative.",
       "reference": "doi:10.1038/clpt.2011.287"
     },
     "tolerance_and_dependence": {
@@ -1888,12 +1888,12 @@
           ],
           "bias_factor_log": null,
           "bias_reference_compound": "DAMGO",
-          "interpretation": "Mitragynine is G-protein biased (recruits β-arrestin-2 essentially not at all), which is the proposed mechanism for kratom's apparently lower respiratory depression at equianalgesic doses vs morphine. The 'biased agonism = safer opioid' hypothesis is now controversial (Conibear & Kelly 2019 / doi:10.1016/j.tips.2019.04.002) — much of the safety may come from low intrinsic efficacy / partial agonism, not bias per se.",
+          "interpretation": "Mitragynine is G-protein biased (recruits β-arrestin-2 essentially not at all), which is the proposed mechanism for kratom's apparently lower respiratory depression at equianalgesic doses vs morphine. The 'biased agonism = safer opioid' hypothesis is now controversial (Conibear & Kelly 2019 / doi:10.1016/j.tips.2019.04.002); much of the safety may come from low intrinsic efficacy / partial agonism, not bias per se.",
           "reference": "doi:10.1021/jacs.6b00360"
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "MOR partial Gαi without β-arrestin-2; some α2-adrenergic and weak 5-HT2 activity contribute to subjective profile. CYP3A4 converts mitragynine to 7-hydroxymitragynine in vivo — 7-OH-MG is the dominant pharmacologically active species after oral kratom (Kruegel 2019).",
+      "downstream_signalling": "MOR partial Gαi without β-arrestin-2; some α2-adrenergic and weak 5-HT2 activity contribute to subjective profile. CYP3A4 converts mitragynine to 7-hydroxymitragynine in vivo: 7-OH-MG is the dominant pharmacologically active species after oral kratom (Kruegel 2019).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1934,7 +1934,7 @@
         "with": "itraconazole / ketoconazole",
         "mechanism": "CYP3A4 inhibition",
         "ki_um": null,
-        "clinical_effect": "Tanna 2024 — itraconazole ↑ mitragynine AUC ~3× and reduces 7-OH-MG (less bioactivation).",
+        "clinical_effect": "Tanna 2024: itraconazole ↑ mitragynine AUC ~3× and reduces 7-OH-MG (less bioactivation).",
         "reference": "doi:10.1021/acsptsci.3c00335"
       },
       {
@@ -2081,7 +2081,7 @@
           ],
           "bias_factor_log": null,
           "bias_reference_compound": "DAMGO",
-          "interpretation": "Strongly G-protein biased; in mice, 7-OH-MG produces analgesia with reduced respiratory depression and constipation vs morphine at equianalgesic doses (Chakraborty 2019/2021). However, abuse liability is real — case reports of physical dependence and overdose are accumulating as concentrated 7-OH products proliferate on the market.",
+          "interpretation": "Strongly G-protein biased; in mice, 7-OH-MG produces analgesia with reduced respiratory depression and constipation vs morphine at equianalgesic doses (Chakraborty 2019/2021). However, abuse liability is real: case reports of physical dependence and overdose are accumulating as concentrated 7-OH products proliferate on the market.",
           "reference": "doi:10.1021/acscentsci.9b00141"
         }
       ],
@@ -2206,7 +2206,7 @@
       },
       {
         "with": "serotonergics, tramadol, fentanyl, alcohol, benzodiazepines",
-        "mechanism": "pharmacodynamic — additive CNS depression / serotonergic",
+        "mechanism": "pharmacodynamic: additive CNS depression / serotonergic",
         "clinical_effect": "Most kratom-related fatalities involve polypharmacy.",
         "reference": "pmid:31429622"
       }
@@ -2355,7 +2355,7 @@
     "drug_interactions_pk": [
       {
         "with": "MAOIs / strong serotonergics",
-        "mechanism": "pharmacodynamic — NE excess",
+        "mechanism": "pharmacodynamic: NE excess",
         "clinical_effect": "Hypertensive crisis with MAOIs (contraindicated). Serotonin syndrome risk lower than tramadol because SERT activity minimal.",
         "reference": null
       }
@@ -2365,7 +2365,7 @@
         "UGT2B7",
         "OPRM1"
       ],
-      "phenotype_effects": "Unlike tramadol/codeine, tapentadol does NOT depend on CYP2D6 bioactivation — no PM/UM dichotomy. UGT2B7 polymorphisms produce modest exposure differences.",
+      "phenotype_effects": "Unlike tramadol/codeine, tapentadol does NOT depend on CYP2D6 bioactivation: no PM/UM dichotomy. UGT2B7 polymorphisms produce modest exposure differences.",
       "reference": "pmid:27580162"
     },
     "tolerance_and_dependence": {
@@ -2714,7 +2714,7 @@
       {
         "with": "MAOIs (linezolid, phenelzine)",
         "mechanism": "SERT block + MAO inhibition",
-        "clinical_effect": "Severe serotonin syndrome, hyperpyrexia, death — ABSOLUTE contraindication.",
+        "clinical_effect": "Severe serotonin syndrome, hyperpyrexia, death: ABSOLUTE contraindication.",
         "reference": "pmid:16051647"
       }
     ],
@@ -2754,7 +2754,7 @@
         "target": "seizure threshold (normeperidine)",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Repeated dosing → normeperidine accumulation → tremor, myoclonus, generalised seizures — naloxone does NOT reverse.",
+        "clinical_consequence": "Repeated dosing → normeperidine accumulation → tremor, myoclonus, generalised seizures: naloxone does NOT reverse.",
         "reference": "pmid:6187275"
       }
     ],
@@ -2965,7 +2965,7 @@
         "target": "tissue toxicity (illicit krokodil preparation)",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Devastating necrotising soft-tissue lesions in krokodil users are caused by reactive impurities (phosphorus, iodine, hydrochloric acid) from clandestine codeine→desomorphine synthesis — NOT desomorphine itself.",
+        "clinical_consequence": "Devastating necrotising soft-tissue lesions in krokodil users are caused by reactive impurities (phosphorus, iodine, hydrochloric acid) from clandestine codeine→desomorphine synthesis: NOT desomorphine itself.",
         "reference": null
       }
     ],
@@ -3197,7 +3197,7 @@
         "target": "hERG / Na+ channel",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Same cardiotoxicity profile as dextropropoxyphene — withdrawn from market.",
+        "clinical_consequence": "Same cardiotoxicity profile as dextropropoxyphene: withdrawn from market.",
         "reference": "pmid:10690289"
       }
     ],
@@ -3709,7 +3709,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Aqueous extract of poppy seeds (Papaver somniferum) — pharmacology is morphine + codeine + thebaine eluted from seed-coat residue. Highly variable: morphine 1-2788 mg/kg of seed, codeine <1-248 mg/kg, thebaine <1-124 mg/kg (Powers 2018).",
+      "downstream_signalling": "Aqueous extract of poppy seeds (Papaver somniferum): pharmacology is morphine + codeine + thebaine eluted from seed-coat residue. Highly variable: morphine 1-2788 mg/kg of seed, codeine <1-248 mg/kg, thebaine <1-124 mg/kg (Powers 2018).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3884,8 +3884,8 @@
     "drug_interactions_pk": [
       {
         "with": "5-HT3 antagonists (ondansetron)",
-        "mechanism": "pharmacodynamic — additive QT + severe hypotension",
-        "clinical_effect": "Profound hypotension/syncope reported — CONTRAINDICATED.",
+        "mechanism": "pharmacodynamic: additive QT + severe hypotension",
+        "clinical_effect": "Profound hypotension/syncope reported: CONTRAINDICATED.",
         "reference": null
       }
     ],
@@ -4003,7 +4003,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Dual MOR agonist + NMDA antagonist + σ1 binding — the combination of opioid analgesia and NMDA-mediated dissociation makes 3-HO-PCP qualitatively different from other PCP analogues.",
+      "downstream_signalling": "Dual MOR agonist + NMDA antagonist + σ1 binding: the combination of opioid analgesia and NMDA-mediated dissociation makes 3-HO-PCP qualitatively different from other PCP analogues.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4034,7 +4034,7 @@
         "target": "respiratory depression",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "MOR agonism means overdoses produce opioid-type respiratory depression — UNLIKE pure NMDA antagonists like ketamine. Naloxone-reversible respiratory depression has been reported in fatalities.",
+        "clinical_consequence": "MOR agonism means overdoses produce opioid-type respiratory depression: UNLIKE pure NMDA antagonists like ketamine. Naloxone-reversible respiratory depression has been reported in fatalities.",
         "reference": null
       }
     ],
@@ -5088,7 +5088,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Dual μ/δ Gαi full agonist with high oral bioavailability — pharmacology of an addictive opioid despite the kratom-natural-product framing.",
+      "downstream_signalling": "Dual μ/δ Gαi full agonist with high oral bioavailability: pharmacology of an addictive opioid despite the kratom-natural-product framing.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5151,7 +5151,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "PIHKAL #25 (Shulgin). Threshold dose ~60 mg PO, weak +1 effects only. Shulgin abandoned the 2C-O series as 'uninteresting'. NOT an opioid — mis-categorised in input.",
+      "downstream_signalling": "PIHKAL #25 (Shulgin). Threshold dose ~60 mg PO, weak +1 effects only. Shulgin abandoned the 2C-O series as 'uninteresting'. NOT an opioid: mis-categorised in input.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5225,7 +5225,7 @@
     "drug_interactions_pk": [
       {
         "with": "alcohol / benzodiazepines / other CNS depressants",
-        "mechanism": "pharmacodynamic — additive respiratory depression + QT prolongation (promethazine)",
+        "mechanism": "pharmacodynamic: additive respiratory depression + QT prolongation (promethazine)",
         "clinical_effect": "Multiple celebrity deaths.",
         "reference": "pmid:24648790"
       }
@@ -5276,9 +5276,9 @@
     "class_context_id": "classical-opioids",
     "class_name": "Classical opioids and kratom-derived opioid alkaloids",
     "shared_mechanism": "Agonism (or antagonism) at the μ-opioid receptor (OPRM1), with variable activity at δ (OPRD1), κ (OPRK1), and NOP (OPRL1) receptors. Activated MOR couples Gαi/o → inhibits adenylyl cyclase (↓cAMP), activates GIRK potassium channels (hyperpolarisation), inhibits N/P/Q-type voltage-gated calcium channels (↓neurotransmitter release). Repeated activation drives GRK phosphorylation, β-arrestin-2 recruitment, desensitisation, and internalisation. 'Biased agonism' (G-protein > β-arrestin) was hypothesised to dissociate analgesia from respiratory depression (TRV130/oliceridine, kratom alkaloids) but the hypothesis is now contested (Conibear & Kelly 2019, doi:10.1016/j.tips.2019.04.002): much of the apparent safety of G-biased agonists like 7-OH-mitragynine and PZM21 derives from low intrinsic efficacy / partial agonism, not bias per se.",
-    "shared_pk_summary": "Morphinans typically undergo UGT2B7 glucuronidation (morphine M3G/M6G, hydromorphone H3G, oxymorphone) — minimal CYP dependence. Codeine/hydrocodone/tramadol are CYP2D6 prodrugs — PMs get reduced effect, UMs get supratherapeutic active metabolite (codeine→morphine, hydrocodone→hydromorphone, tramadol→O-DSMT) and risk fatal respiratory depression at standard doses (FDA contraindicates codeine and tramadol <12 y, post-tonsillectomy adolescents). Oxycodone is primarily CYP3A4 (→inactive noroxycodone) with CYP2D6 minor (→oxymorphone). Methadone is mainly CYP2B6, with huge inter-individual half-life variability (8-59 h). Buprenorphine is CYP3A4 + UGT (very long t½, sublingual bioavailability ~30%). Mitragynine is CYP3A4-bioactivated to 7-OH-mitragynine in vivo.",
+    "shared_pk_summary": "Morphinans typically undergo UGT2B7 glucuronidation (morphine M3G/M6G, hydromorphone H3G, oxymorphone): minimal CYP dependence. Codeine/hydrocodone/tramadol are CYP2D6 prodrugs: PMs get reduced effect, UMs get supratherapeutic active metabolite (codeine→morphine, hydrocodone→hydromorphone, tramadol→O-DSMT) and risk fatal respiratory depression at standard doses (FDA contraindicates codeine and tramadol <12 y, post-tonsillectomy adolescents). Oxycodone is primarily CYP3A4 (→inactive noroxycodone) with CYP2D6 minor (→oxymorphone). Methadone is mainly CYP2B6, with huge inter-individual half-life variability (8-59 h). Buprenorphine is CYP3A4 + UGT (very long t½, sublingual bioavailability ~30%). Mitragynine is CYP3A4-bioactivated to 7-OH-mitragynine in vivo.",
     "shared_safety": "Respiratory depression at supratherapeutic doses is the proximal cause of death. Naloxone reverses MOR-mediated opioid overdose; reversal of buprenorphine requires higher doses (slow off-rate), reversal of methadone may require multiple doses or infusion (long t½), reversal of meperidine does NOT prevent normeperidine seizures, and KOR-selective designer opioids (U-51754) are less responsive. Methadone uniquely carries hERG/QT risk (S-enantiomer ~3.5× more potent than R at hERG block). Dextropropoxyphene was withdrawn worldwide for cardiotoxicity (norpropoxyphene Na+/K+ channel block). Tramadol and tapentadol add SNRI/NRI activity → serotonin syndrome (tramadol > tapentadol) and lowered seizure threshold (tramadol particularly). Codeine/tramadol respiratory deaths in CYP2D6 UMs are the canonical pharmacogenetics safety case. OPRM1 A118G (rs1799971) G-carriers have ~30% higher morphine requirement and are paradoxically protected from morphine-induced respiratory depression.",
-    "sar_summary": "Within the morphinan core: 3-OH free phenol (morphine) → CYP2D6 substrate; 3-O-methyl (codeine) → CYP2D6 prodrug (200× lower MOR affinity than morphine); 14-OH (oxycodone, oxymorphone, naloxone, naltrexone) → increased MOR affinity and altered receptor selectivity; 6-keto reduction (hydromorphone vs morphine) → 5-10× potency increase; 6-deoxy + 7,8-saturation (desomorphine) → 8-10× lipophilic potency increase; N-cyclopropylmethyl / N-allyl (naloxone, naltrexone, nalbuphine, buprenorphine, butorphanol) → switches efficacy toward antagonism or partial agonism; 6,14-endoetheno + thevinol/orvinol side chain (buprenorphine, etorphine, acetorphine) → sub-nanomolar MOR affinity, slow off-rate, and sometimes mixed efficacy (buprenorphine partial agonist; etorphine full agonist with 1000-3000× morphine potency). Outside morphinans: methadone/diphenylpropylamine class → MOR + NMDA + monoamine reuptake; piperidines (fentanyl, meperidine, ketobemidone) → variable; arylcyclohexylamines mostly NMDA (3-HO-PCP is the rare arylcyclohexylamine with high MOR affinity). Mitragynine indole alkaloids — biased G-protein signalling; bioactivated by CYP3A4 to 7-OH-mitragynine, the dominant in-vivo MOR effector; further N1-rearrangement gives mitragynine pseudoindoxyl (also biased).",
+    "sar_summary": "Within the morphinan core: 3-OH free phenol (morphine) → CYP2D6 substrate; 3-O-methyl (codeine) → CYP2D6 prodrug (200× lower MOR affinity than morphine); 14-OH (oxycodone, oxymorphone, naloxone, naltrexone) → increased MOR affinity and altered receptor selectivity; 6-keto reduction (hydromorphone vs morphine) → 5-10× potency increase; 6-deoxy + 7,8-saturation (desomorphine) → 8-10× lipophilic potency increase; N-cyclopropylmethyl / N-allyl (naloxone, naltrexone, nalbuphine, buprenorphine, butorphanol) → switches efficacy toward antagonism or partial agonism; 6,14-endoetheno + thevinol/orvinol side chain (buprenorphine, etorphine, acetorphine) → sub-nanomolar MOR affinity, slow off-rate, and sometimes mixed efficacy (buprenorphine partial agonist; etorphine full agonist with 1000-3000× morphine potency). Outside morphinans: methadone/diphenylpropylamine class → MOR + NMDA + monoamine reuptake; piperidines (fentanyl, meperidine, ketobemidone) → variable; arylcyclohexylamines mostly NMDA (3-HO-PCP is the rare arylcyclohexylamine with high MOR affinity). Mitragynine indole alkaloids: biased G-protein signalling; bioactivated by CYP3A4 to 7-OH-mitragynine, the dominant in-vivo MOR effector; further N1-rearrangement gives mitragynine pseudoindoxyl (also biased).",
     "key_references": [
       "doi:10.1016/j.yrtph.2010.12.007",
       "doi:10.1021/jacs.6b00360",

@@ -85,11 +85,11 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Multi-target depressant. Direct effects: NMDA inhibition (IC50 ~30 mM, threshold ~5 mM), glycine PAM, 5-HT3 PAM, and GABA-A potentiation whose concentration dependence is unsettled — the δ-subunit sensitivity reported at 3 mM failed to replicate in four laboratories, which saw responses only at 100 mM and above. Indirect: ethanol induces neurosteroid (allopregnanolone) synthesis via HPA axis activation, and allopregnanolone is a much more potent GABA-A PAM (nM) than ethanol itself — this neurosteroid loop explains why GABA-A involvement persists at conc where direct ethanol PAM is undetectable. Chronic exposure → adaptive NMDA upregulation (NR2B subunit), GABA-A α4/γ2 switching, and cAMP/PKA signalling rearrangement, all of which underlie tolerance and the withdrawal/seizure phenotype.",
+      "downstream_signalling": "Multi-target depressant. Direct effects: NMDA inhibition (IC50 ~30 mM, threshold ~5 mM), glycine PAM, 5-HT3 PAM, and GABA-A potentiation whose concentration dependence is unsettled; the δ-subunit sensitivity reported at 3 mM failed to replicate in four laboratories, which saw responses only at 100 mM and above. Indirect: ethanol induces neurosteroid (allopregnanolone) synthesis via HPA axis activation, and allopregnanolone is a much more potent GABA-A PAM (nM) than ethanol itself; this neurosteroid loop explains why GABA-A involvement persists at conc where direct ethanol PAM is undetectable. Chronic exposure → adaptive NMDA upregulation (NR2B subunit), GABA-A α4/γ2 switching, and cAMP/PKA signalling rearrangement, all of which underlie tolerance and the withdrawal/seizure phenotype.",
       "neuroimaging": [
         {
           "modality": "PET",
-          "finding": "Acute alcohol (0.75 g/kg) increases [11C]raclopride displacement in ventral striatum, indicating ~5-15% dopamine release — much smaller than psychostimulants.",
+          "finding": "Acute alcohol (0.75 g/kg) increases [11C]raclopride displacement in ventral striatum, indicating ~5-15% dopamine release: much smaller than psychostimulants.",
           "reference": null
         },
         {
@@ -113,7 +113,7 @@
           "protein_binding_pct": 0,
           "dose_in_study_mg": null,
           "subject_n": null,
-          "subject_demographics": "Mixed populations; Vd ~0.55 L/kg males, ~0.50 L/kg females (less body water). This row carried an oral F of 80% that its citation does not state — the abstract gives Km, elimination rates and Vd only, and the full text is unreachable. F is carried by the Levitt row instead.",
+          "subject_demographics": "Mixed populations; Vd ~0.55 L/kg males, ~0.50 L/kg females (less body water). This row carried an oral F of 80% that its citation does not state: the abstract gives Km, elimination rates and Vd only, and the full text is unreachable. F is carried by the Levitt row instead.",
           "reference": "pmid:26231237"
         }
       ],
@@ -158,7 +158,7 @@
         "with": "disulfiram",
         "mechanism": "ALDH2 inhibition + CYP2E1 mechanism-based inactivation",
         "ki_um": null,
-        "clinical_effect": "Acetaldehyde accumulates 5-10x → flushing, tachycardia, vomiting, hypotension. Onset within 10 min, lasts hours. Inhibition irreversible — effect persists ~1-2 wks after last disulfiram dose.",
+        "clinical_effect": "Acetaldehyde accumulates 5-10x → flushing, tachycardia, vomiting, hypotension. Onset within 10 min, lasts hours. Inhibition irreversible: effect persists ~1-2 wks after last disulfiram dose.",
         "reference": "pmid:9105402"
       },
       {
@@ -190,7 +190,7 @@
         "ALDH2",
         "CYP2E1"
       ],
-      "phenotype_effects": "ADH1B*2 (rs1229984, Arg47His) — ~40x increased Vmax, common in East Asians, protective against AUD. ALDH2*2 (rs671, Glu487Lys) — heterozygotes ~30% activity, homozygotes ~0%; strong AUD protection via flush. CYP2E1*5B (c1/c2) — moderately inducible variant, weak AUD association.",
+      "phenotype_effects": "ADH1B*2 (rs1229984, Arg47His): ~40x increased Vmax, common in East Asians, protective against AUD. ALDH2*2 (rs671, Glu487Lys): heterozygotes ~30% activity, homozygotes ~0%; strong AUD protection via flush. CYP2E1*5B (c1/c2): moderately inducible variant, weak AUD association.",
       "reference": "pmid:17718394"
     },
     "tolerance_and_dependence": {
@@ -456,7 +456,7 @@
       "relevant_genes": [
         "PON1"
       ],
-      "phenotype_effects": "PON1 Q192R polymorphism alters lactonase activity — may modestly affect onset speed, but conversion is so fast that polymorphism likely has limited clinical impact.",
+      "phenotype_effects": "PON1 Q192R polymorphism alters lactonase activity: may modestly affect onset speed, but conversion is so fast that polymorphism likely has limited clinical impact.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -475,7 +475,7 @@
         "target": "skin/mucosal corrosion",
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
-        "clinical_consequence": "Pure GBL is caustic at high concentrations — oral/oesophageal burns reported with undiluted ingestion.",
+        "clinical_consequence": "Pure GBL is caustic at high concentrations: oral/oesophageal burns reported with undiluted ingestion.",
         "reference": null
       }
     ],
@@ -517,7 +517,7 @@
       ],
       "binding": [
         {
-          "target": "(prodrug — no direct affinity)",
+          "target": "(prodrug; no direct affinity)",
           "ki_nm": null,
           "ki_ci_nm": null,
           "kd_nm": null,
@@ -809,7 +809,7 @@
         "with": "opioids (morphine, oxycodone)",
         "mechanism": "Pharmacodynamic synergy at respiratory depression; mild PK interaction (morphine ↑gabapentin AUC ~44%)",
         "ki_um": null,
-        "clinical_effect": "Major OD-risk amplifier — multiple coronial reports of gabapentinoid-opioid combined deaths.",
+        "clinical_effect": "Major OD-risk amplifier: multiple coronial reports of gabapentinoid-opioid combined deaths.",
         "reference": "pmid:28972983"
       }
     ],
@@ -834,7 +834,7 @@
         "target": "thrombospondin / α2δ-1 interaction (developmental)",
         "ki_or_ic50_nm": null,
         "concern_level": "low",
-        "clinical_consequence": "Disruption of excitatory synaptogenesis — relevant to in-utero exposure and developing CNS.",
+        "clinical_consequence": "Disruption of excitatory synaptogenesis: relevant to in-utero exposure and developing CNS.",
         "reference": "pmid:19818485"
       }
     ],
@@ -1142,7 +1142,7 @@
       ],
       "binding": [
         {
-          "target": "GABA-B + α2δ-1 (rat brain) — by close analogy to phenibut",
+          "target": "GABA-B + α2δ-1 (rat brain), by close analogy to phenibut",
           "ki_nm": null,
           "ki_ci_nm": null,
           "kd_nm": null,
@@ -1585,7 +1585,7 @@
         "CYP2C9",
         "CYP2C19"
       ],
-      "phenotype_effects": "CYP2C9 poor metabolisers (~5% Caucasians) have reduced clearance — risk of accumulation.",
+      "phenotype_effects": "CYP2C9 poor metabolisers (~5% Caucasians) have reduced clearance: risk of accumulation.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -2031,7 +2031,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Thiobarbiturate — sulfur substitution at C2 increases lipophilicity and rapid CNS onset. Used for induction of general anaesthesia (IV). Ultra-short clinical effect (5-10 min) due to redistribution rather than metabolism.",
+      "downstream_signalling": "Thiobarbiturate: sulfur substitution at C2 increases lipophilicity and rapid CNS onset. Used for induction of general anaesthesia (IV). Ultra-short clinical effect (5-10 min) due to redistribution rather than metabolism.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2152,7 +2152,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Short-acting barbiturate. Historic. R-(–)-hexobarbital and S-(+)-hexobarbital are pharmacokinetically distinct (CYP2C19 probe drug — hexobarbital hydroxylation was a classical CYP2C19 phenotyping assay).",
+      "downstream_signalling": "Short-acting barbiturate. Historic. R-(–)-hexobarbital and S-(+)-hexobarbital are pharmacokinetically distinct (CYP2C19 probe drug; hexobarbital hydroxylation was a classical CYP2C19 phenotyping assay).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2174,7 +2174,7 @@
       "relevant_genes": [
         "CYP2C19"
       ],
-      "phenotype_effects": "CYP2C19 PMs have markedly prolonged sleep duration after hexobarbital — landmark observation of pharmacogenetic clinical relevance.",
+      "phenotype_effects": "CYP2C19 PMs have markedly prolonged sleep duration after hexobarbital: landmark observation of pharmacogenetic clinical relevance.",
       "reference": "pmid:3385644"
     },
     "tolerance_and_dependence": {
@@ -2295,7 +2295,7 @@
       "neuroimaging": [
         {
           "modality": "EEG",
-          "finding": "Frontal alpha (8-12 Hz) coherence increase and slow-delta dominance characteristic of propofol unconsciousness — Purdon spectrogram signature.",
+          "finding": "Frontal alpha (8-12 Hz) coherence increase and slow-delta dominance characteristic of propofol unconsciousness: Purdon spectrogram signature.",
           "reference": null
         }
       ]
@@ -2367,7 +2367,7 @@
     },
     "off_targets": [
       {
-        "target": "PRIS — propofol infusion syndrome (mitochondrial fatty acid oxidation impairment)",
+        "target": "PRIS: propofol infusion syndrome (mitochondrial fatty acid oxidation impairment)",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
         "clinical_consequence": "Lactic acidosis, rhabdomyolysis, cardiac failure with prolonged high-dose (>4 mg/kg/h >48 h) infusion.",
@@ -2428,7 +2428,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Prodrug → TCE via ADH (very rapid, t1/2 minutes). TCE is the active GABA-A PAM and also a TTX-resistant Na+ channel modulator (BMC Anesth 2023). Chloral hydrate is genotoxic in itself (formaldehyde-like aldehyde) — chronic use linked to hepatic/renal toxicity.",
+      "downstream_signalling": "Prodrug → TCE via ADH (very rapid, t1/2 minutes). TCE is the active GABA-A PAM and also a TTX-resistant Na+ channel modulator (BMC Anesth 2023). Chloral hydrate is genotoxic in itself (formaldehyde-like aldehyde): chronic use linked to hepatic/renal toxicity.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2469,7 +2469,7 @@
         "with": "ethanol",
         "mechanism": "ADH competition + PD synergy",
         "ki_um": null,
-        "clinical_effect": "'Mickey Finn' — alcohol slows TCE clearance and TCE displaces ethanol from albumin → marked sedation.",
+        "clinical_effect": "'Mickey Finn': alcohol slows TCE clearance and TCE displaces ethanol from albumin → marked sedation.",
         "reference": null
       },
       {
@@ -2593,7 +2593,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Complex of chloral hydrate with betaine — gastric dissociation releases chloral hydrate. All subsequent PK/PD is chloral-hydrate pharmacology.",
+      "downstream_signalling": "Complex of chloral hydrate with betaine: gastric dissociation releases chloral hydrate. All subsequent PK/PD is chloral-hydrate pharmacology.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2793,7 +2793,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Ethchlorvynol — tertiary alcohol hypnotic. GABA-A PAM at a site overlapping the alcohol/anaesthetic pocket. Severe overdose has prolonged coma (5-15 days). Withdrawn 1999.",
+      "downstream_signalling": "Ethchlorvynol: tertiary alcohol hypnotic. GABA-A PAM at a site overlapping the alcohol/anaesthetic pocket. Severe overdose has prolonged coma (5-15 days). Withdrawn 1999.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2960,7 +2960,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "5-HT2A antagonism at brainstem reticular formation reduces α-motoneuron tone — primary mechanism of muscle relaxation. NOT a true muscle relaxant (no direct neuromuscular junction effect). Anticholinergic, antihistaminic, anti-α1 effects underlie side effects.",
+      "downstream_signalling": "5-HT2A antagonism at brainstem reticular formation reduces α-motoneuron tone: primary mechanism of muscle relaxation. NOT a true muscle relaxant (no direct neuromuscular junction effect). Anticholinergic, antihistaminic, anti-α1 effects underlie side effects.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3157,7 +3157,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Low-dose pharmacology (25-200 mg) is dominated by H1 and α1 antagonism → sedation, hypotension. Antipsychotic effect requires ≥300 mg for sufficient D2 occupancy. Norquetiapine (active metabolite, CYP3A4-generated) is a potent NET inhibitor (Ki ~12 nM) and 5-HT1A partial agonist — contributes to antidepressant/anxiolytic effects at higher doses.",
+      "downstream_signalling": "Low-dose pharmacology (25-200 mg) is dominated by H1 and α1 antagonism → sedation, hypotension. Antipsychotic effect requires ≥300 mg for sufficient D2 occupancy. Norquetiapine (active metabolite, CYP3A4-generated) is a potent NET inhibitor (Ki ~12 nM) and 5-HT1A partial agonist: contributes to antidepressant/anxiolytic effects at higher doses.",
       "neuroimaging": [
         {
           "modality": "PET",
@@ -3201,7 +3201,7 @@
         "with": "ketoconazole, ritonavir, clarithromycin",
         "mechanism": "CYP3A4 inhibition",
         "ki_um": null,
-        "clinical_effect": "5-6x AUC increase — markedly higher sedation, hypotension, QT.",
+        "clinical_effect": "5-6x AUC increase: markedly higher sedation, hypotension, QT.",
         "reference": "pmid:16390352"
       },
       {
@@ -3382,7 +3382,7 @@
         "target": "hERG / Na+ channels",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Overdose: QRS widening, QT prolongation, ventricular arrhythmia — TCA-like cardiotoxicity profile.",
+        "clinical_consequence": "Overdose: QRS widening, QT prolongation, ventricular arrhythmia; TCA-like cardiotoxicity profile.",
         "reference": null
       }
     ],
@@ -3541,7 +3541,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "H1 dominant sedation + 5-HT2A anxiolysis. Less anticholinergic than DPH. Major active metabolite = cetirizine (CYP3A4-mediated oxidation) — non-sedating peripheral H1 antagonist responsible for most steady-state H1 effect at the systemic level but not in CNS (cetirizine is P-gp substrate, low BBB penetration).",
+      "downstream_signalling": "H1 dominant sedation + 5-HT2A anxiolysis. Less anticholinergic than DPH. Major active metabolite = cetirizine (CYP3A4-mediated oxidation): non-sedating peripheral H1 antagonist responsible for most steady-state H1 effect at the systemic level but not in CNS (cetirizine is P-gp substrate, low BBB penetration).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3807,7 +3807,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Non-selective β-blocker; lipophilic, crosses BBB → useful for performance anxiety (peripheral somatic symptom suppression — tremor, tachycardia, sweating). Membrane-stabilising (Na+ channel) action at high conc explains overdose cardiotoxicity (similar to TCAs/cocaine).",
+      "downstream_signalling": "Non-selective β-blocker; lipophilic, crosses BBB → useful for performance anxiety (peripheral somatic symptom suppression; tremor, tachycardia, sweating). Membrane-stabilising (Na+ channel) action at high conc explains overdose cardiotoxicity (similar to TCAs/cocaine).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3968,7 +3968,7 @@
         "target": "hepatocytes (flavokavain B)",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Rare fulminant hepatitis; 60+ case reports — leaf/stem-derived preparations and ethanol extraction implicated.",
+        "clinical_consequence": "Rare fulminant hepatitis; 60+ case reports: leaf/stem-derived preparations and ethanol extraction implicated.",
         "reference": null
       }
     ],
@@ -4443,7 +4443,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Racetam derivative. Originally developed by Nippon Shinyaku for vascular dementia; failed Phase III. Investigated for ADHD with mGluR-network gene variants (Aevi Medical). Mechanism: chronic dosing upregulates mGluR2/3 and GABA-B in rats — no validated acute receptor binding.",
+      "downstream_signalling": "Racetam derivative. Originally developed by Nippon Shinyaku for vascular dementia; failed Phase III. Investigated for ADHD with mGluR-network gene variants (Aevi Medical). Mechanism: chronic dosing upregulates mGluR2/3 and GABA-B in rats; no validated acute receptor binding.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4669,7 +4669,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Thienotriazolodiazepine — fluoro analog of brotizolam (4'-fluoro substitution). RC; potent BZ-like PAM by class analogy. See benzos enrichment file for thienodiazepine class context.",
+      "downstream_signalling": "Thienotriazolodiazepine: fluoro analog of brotizolam (4'-fluoro substitution). RC; potent BZ-like PAM by class analogy. See benzos enrichment file for thienodiazepine class context.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4752,7 +4752,7 @@
         "with": "ethanol",
         "mechanism": "Both PD + PK (ethanol inhibits clomethiazole metabolism)",
         "ki_um": null,
-        "clinical_effect": "Markedly enhanced sedation/respiratory depression — actively dangerous in active drinkers.",
+        "clinical_effect": "Markedly enhanced sedation/respiratory depression: actively dangerous in active drinkers.",
         "reference": null
       }
     ],
@@ -4851,7 +4851,7 @@
     },
     "off_targets": [
       {
-        "target": "ryanodine receptor (RYR1) — MH trigger",
+        "target": "ryanodine receptor (RYR1): MH trigger",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
         "clinical_consequence": "Malignant hyperthermia in susceptible individuals.",
@@ -5015,7 +5015,7 @@
     },
     "off_targets": [
       {
-        "target": "myocardial Na+/Ca2+ — catecholamine sensitisation",
+        "target": "myocardial Na+/Ca2+: catecholamine sensitisation",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
         "clinical_consequence": "Sudden cardiac death from VF with even minor adrenergic stress.",
@@ -5121,7 +5121,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Quinoline antimalarial. Not intentionally psychoactive but causes neuropsychiatric AEs (anxiety, depression, paranoia, vivid dreams) in 0.5-25% depending on series — FDA black-box 2013. Mechanism for AEs: connexin-43 gap-junction inhibition in brain, adenosine A2A binding, calcium dysregulation.",
+      "downstream_signalling": "Quinoline antimalarial. Not intentionally psychoactive but causes neuropsychiatric AEs (anxiety, depression, paranoia, vivid dreams) in 0.5-25% depending on series: FDA black-box 2013. Mechanism for AEs: connexin-43 gap-junction inhibition in brain, adenosine A2A binding, calcium dysregulation.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5155,7 +5155,7 @@
         "target": "connexin-43, adenosine A2A",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Neuropsychiatric AEs (psychosis, suicidality) — FDA black-box 2013.",
+        "clinical_consequence": "Neuropsychiatric AEs (psychosis, suicidality): FDA black-box 2013.",
         "reference": null
       }
     ],
@@ -5432,7 +5432,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "6-amino-2-fluoromethyl analog of methaqualone. Marketed in Japan as a centrally acting muscle relaxant. Less hypnotic than methaqualone — substituents shift the profile toward muscle relaxation.",
+      "downstream_signalling": "6-amino-2-fluoromethyl analog of methaqualone. Marketed in Japan as a centrally acting muscle relaxant. Less hypnotic than methaqualone: substituents shift the profile toward muscle relaxation.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5609,7 +5609,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Tertiary aliphatic alcohol. Sedative-hypnotic profile resembles ethanol but more potent and less metabolised by ADH (tertiary alcohol cannot be oxidised by alcohol dehydrogenase — extends t1/2 and increases hangover-like effects).",
+      "downstream_signalling": "Tertiary aliphatic alcohol. Sedative-hypnotic profile resembles ethanol but more potent and less metabolised by ADH (tertiary alcohol cannot be oxidised by alcohol dehydrogenase; extends t1/2 and increases hangover-like effects).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -6287,7 +6287,7 @@
     "is_class_context": true,
     "class_context_id": "gaba-depressants-other",
     "class_name": "Other GABAergic depressants (alcohol, GHB family, gabapentinoids, phenibut, baclofen, barbiturates, quinazolinones)",
-    "shared_mechanism": "This is a heterogeneous group united by clinical CNS depressant effect rather than a shared receptor target. Mechanisms diverge wildly: (1) Ethanol acts at NMDA (channel blocker, IC50 ~50 mM), GABA-A δ-subunit, glycine receptors, 5-HT3, nAChR, GIRK — and indirectly via neurosteroid (allopregnanolone) induction. (2) GHB has a high-affinity 'GHB receptor' (Maitre site, ~580 nM) plus low-affinity GABA-B partial agonism (~200 μM) — this dual-site pharmacology underlies the biphasic dose response (low dose stimulant, high dose sedative-coma). GBL and 1,4-butanediol are GHB prodrugs (lactonase and ADH/ALDH respectively). (3) Gabapentinoids (gabapentin, pregabalin) are NOT GABA receptor ligands despite the name — they bind the α2δ-1 auxiliary subunit of voltage-gated Ca2+ channels, reducing presynaptic Ca2+ entry and transmitter release. Pregabalin has ~6x higher α2δ-1 affinity than gabapentin. (4) Phenibut combines GABA-B partial agonism (like baclofen) with weak α2δ binding (like gabapentin) — a dual mechanism shared with no other widely used compound. (5) Baclofen is the prototype selective GABA-B agonist (R1/R2 obligate heterodimer). (6) Barbiturates bind a β+/α- pocket on GABA-A and at high concentrations DIRECTLY open the chloride channel without GABA — this distinguishes them from benzodiazepines and explains higher overdose lethality. (7) Methaqualone-family quinazolinones bind the etomidate/propofol pocket on GABA-A (distinct from both BZ and barbiturate sites).",
+    "shared_mechanism": "This is a heterogeneous group united by clinical CNS depressant effect rather than a shared receptor target. Mechanisms diverge wildly: (1) Ethanol acts at NMDA (channel blocker, IC50 ~50 mM), GABA-A δ-subunit, glycine receptors, 5-HT3, nAChR, GIRK, and indirectly via neurosteroid (allopregnanolone) induction. (2) GHB has a high-affinity 'GHB receptor' (Maitre site, ~580 nM) plus low-affinity GABA-B partial agonism (~200 μM): this dual-site pharmacology underlies the biphasic dose response (low dose stimulant, high dose sedative-coma). GBL and 1,4-butanediol are GHB prodrugs (lactonase and ADH/ALDH respectively). (3) Gabapentinoids (gabapentin, pregabalin) are NOT GABA receptor ligands despite the name: they bind the α2δ-1 auxiliary subunit of voltage-gated Ca2+ channels, reducing presynaptic Ca2+ entry and transmitter release. Pregabalin has ~6x higher α2δ-1 affinity than gabapentin. (4) Phenibut combines GABA-B partial agonism (like baclofen) with weak α2δ binding (like gabapentin): a dual mechanism shared with no other widely used compound. (5) Baclofen is the prototype selective GABA-B agonist (R1/R2 obligate heterodimer). (6) Barbiturates bind a β+/α- pocket on GABA-A and at high concentrations DIRECTLY open the chloride channel without GABA: this distinguishes them from benzodiazepines and explains higher overdose lethality. (7) Methaqualone-family quinazolinones bind the etomidate/propofol pocket on GABA-A (distinct from both BZ and barbiturate sites).",
     "shared_pk_summary": "PK varies dramatically. Ethanol: zero-order elimination via ADH (Km ~2 mM = ~0.02 g/dL BAC), inducible CYP2E1 minor path. GHB: capacity-limited absorption AND elimination, dose-dependent t1/2 (~30-90 min), 95% metabolised to succinate via SSADH (Krebs cycle). Gabapentin: saturable LAT1 absorption (F% drops 60→25% across 300→3600 mg), 100% renal unchanged. Pregabalin: linear PK, 98% renal unchanged. Phenibut: ~65% renal unchanged, t1/2 ~5 h. Baclofen: 70-85% renal unchanged, t1/2 2-6 h PO. Barbiturates: extensive hepatic CYP oxidation, very long t1/2 (phenobarb ~100 h, pentobarb ~20 h), PXR/CAR pan-CYP inducers. Methaqualone: lipophilic, large Vd, hepatic clearance.",
     "shared_safety": "Universal feature: dose-dependent respiratory depression. Synergy with other GABA-A PAMs (BZs, Z-drugs), opioids, and ethanol → leading cause of accidental overdose death. Barbiturates lethal via direct GABA-A channel opening at supratherapeutic doses (no ceiling). Gabapentinoids implicated in opioid-overdose deaths (UK Schedule 3 reclassification 2019). Withdrawal mechanisms: GABA-A downregulation + NMDA upregulation (ethanol, BZs, barbiturates) → seizures, delirium tremens. GABA-B receptor downregulation (GHB, phenibut, chronic baclofen) → protracted withdrawal with psychiatric sequelae. GHB has a narrow therapeutic index (sedative dose ~250-500 μM brain conc; coma at 600-800 μM).",
     "sar_summary": "GABA-B: β-aryl GABA scaffold (phenibut → baclofen p-chloro → 4-F phenibut). para-chloro (baclofen) gives highest selectivity and potency; para-F (4-F phenibut) gives lipophilicity boost + duration. α2δ ligands: β-amino acid scaffold, cyclohexyl ring (gabapentin) vs isobutyl (pregabalin) vs bicyclic (mirogabalin). Pregabalin's stereochemistry and methyl branching give ~6x α2δ-1 affinity boost. Barbiturates: 5,5-disubstitution at the pyrimidinetrione ring; alkyl side chains (pentobarb) give anaesthesia (higher direct activation), aryl side chain (phenobarb) gives anticonvulsant efficacy with less direct activation. Quinazolinones (methaqualone, mecloqualone, etaqualone, mebroqualone, methylmethaqualone, SL-164): substitution on the 3-aryl group and the 2-methyl/ethyl modulates potency at the etomidate-site GABA-A pocket. GHB analogues: 4-OH on butyric acid is essential; GBL (lactone) is prodrug; 1,4-BD (diol) is two-step prodrug.",

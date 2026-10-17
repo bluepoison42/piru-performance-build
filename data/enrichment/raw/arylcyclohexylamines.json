@@ -605,7 +605,7 @@
       "neuroimaging": [
         {
           "modality": "EEG (rat)",
-          "finding": "(R)-ketamine produces distinctly different theta power changes vs (S)-ketamine — possibly tied to differential σ1 engagement",
+          "finding": "(R)-ketamine produces distinctly different theta power changes vs (S)-ketamine: possibly tied to differential σ1 engagement",
           "reference": "pmc:PMC10893209"
         }
       ]
@@ -2208,7 +2208,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Thiophene-2 in place of phenyl ring. Functional in vivo profile similar to ketamine — used as Telazol (with zolazepam) in veterinary anesthesia.",
+      "downstream_signalling": "Thiophene-2 in place of phenyl ring. Functional in vivo profile similar to ketamine: used as Telazol (with zolazepam) in veterinary anesthesia.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3220,7 +3220,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Methylenedioxy in 3,4-position. No published binding data. Methylenedioxy substitution often introduces 5-HT2/SERT activity in other drug classes (MDMA vs methamphetamine) — possible additional serotonergic component vs PCP.",
+      "downstream_signalling": "Methylenedioxy in 3,4-position. No published binding data. Methylenedioxy substitution often introduces 5-HT2/SERT activity in other drug classes (MDMA vs methamphetamine): possible additional serotonergic component vs PCP.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3797,7 +3797,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "3-OH analogue of MXE. By analogy to 3-HO-PCP (μ-opioid Ki 39-60 nM) — likely μ-opioid agonist + NMDA antagonist. Could be hazardous combination.",
+      "downstream_signalling": "3-OH analogue of MXE. By analogy to 3-HO-PCP (μ-opioid Ki 39-60 nM): likely μ-opioid agonist + NMDA antagonist. Could be hazardous combination.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4017,7 +4017,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "3-MeO-2'-oxo-PCP. Combines the 3-MeO substitution of 3-MeO-PCP with the 2'-oxo of ketamine — predicted highest NMDA affinity in the class per the task brief class context ('2'-Oxo + 3-MeO hits the highest affinity'). No published Ki.",
+      "downstream_signalling": "3-MeO-2'-oxo-PCP. Combines the 3-MeO substitution of 3-MeO-PCP with the 2'-oxo of ketamine: predicted highest NMDA affinity in the class per the task brief class context ('2'-Oxo + 3-MeO hits the highest affinity'). No published Ki.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4399,7 +4399,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "2'-oxo (ketone) analogue of PCP. The β-keto group restricts conformation similar to ketamine. By Abelian 2024 SAR analysis, 2'-oxo substitution shifts subjective profile toward 'heavier/holier' character vs non-keto PCP — possibly via preferential occupation of one of the two PCP-site binding poses (Zhang 2021).",
+      "downstream_signalling": "2'-oxo (ketone) analogue of PCP. The β-keto group restricts conformation similar to ketamine. By Abelian 2024 SAR analysis, 2'-oxo substitution shifts subjective profile toward 'heavier/holier' character vs non-keto PCP: possibly via preferential occupation of one of the two PCP-site binding poses (Zhang 2021).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4557,10 +4557,10 @@
     "is_class_context": true,
     "class_context_id": "arylcyclohexylamines",
     "class_name": "Arylcyclohexylamines (NMDA antagonists at the PCP binding site)",
-    "shared_mechanism": "Arylcyclohexylamines are use-dependent, voltage-sensitive, non-competitive blockers of the NMDA receptor channel at the PCP binding site within the central vestibule. Channel block requires the channel to be open (agonist-bound, depolarized). Cryo-EM structures of S-ketamine bound to GluN1/GluN2A and GluN1/GluN2B (Zhang 2021, doi:10.1038/s41586-021-03769-9) revealed two distinct sub-poses within the binding pocket, mediated primarily by hydrophobic and hydrogen-bond interactions with GluN2A-L642 (≡ GluN2B-L643) and GluN1-N616. The two-pose model rationalizes apparent SAR discrepancies. Beyond NMDA blockade, members of the class engage σ1 receptors (PCP, 3-MeO-PCP strongly; ketamine weakly), serotonin and other monoamine transporters (MXE family especially SERT; 3-MeO-PCP SERT; PCP weakly DAT), HCN1 channels (ketamine, anesthetic relevance), and μ/κ-opioid receptors (3-HO-PCP strongly; ketamine weakly — debated as functional contributor to antidepressant action). The major ketamine metabolite (2R,6R)-hydroxynorketamine does NOT block NMDA at antidepressant-relevant concentrations and instead acts via α7-nAChR-dependent presynaptic glutamate release plus AMPA potentiation (Marcantoni 2024, Suzuki 2017).",
+    "shared_mechanism": "Arylcyclohexylamines are use-dependent, voltage-sensitive, non-competitive blockers of the NMDA receptor channel at the PCP binding site within the central vestibule. Channel block requires the channel to be open (agonist-bound, depolarized). Cryo-EM structures of S-ketamine bound to GluN1/GluN2A and GluN1/GluN2B (Zhang 2021, doi:10.1038/s41586-021-03769-9) revealed two distinct sub-poses within the binding pocket, mediated primarily by hydrophobic and hydrogen-bond interactions with GluN2A-L642 (≡ GluN2B-L643) and GluN1-N616. The two-pose model rationalizes apparent SAR discrepancies. Beyond NMDA blockade, members of the class engage σ1 receptors (PCP, 3-MeO-PCP strongly; ketamine weakly), serotonin and other monoamine transporters (MXE family especially SERT; 3-MeO-PCP SERT; PCP weakly DAT), HCN1 channels (ketamine, anesthetic relevance), and μ/κ-opioid receptors (3-HO-PCP strongly; ketamine weakly; debated as functional contributor to antidepressant action). The major ketamine metabolite (2R,6R)-hydroxynorketamine does NOT block NMDA at antidepressant-relevant concentrations and instead acts via α7-nAChR-dependent presynaptic glutamate release plus AMPA potentiation (Marcantoni 2024, Suzuki 2017).",
     "shared_pk_summary": "Hepatic CYP-mediated metabolism dominates the class. Ketamine cleared predominantly by CYP2B6 and CYP3A4 to norketamine (active, 3× less potent at NMDA), then to (2R,6R)-HNK and dehydronorketamine. Oral routes give norketamine >> parent drug due to first-pass (norketamine/ketamine plasma ratio ~6:1). Bioavailability: IV 100%, IM ~93%, intranasal 25-50%, sublingual ~25-30%, oral ~17-25%. Half-lives 2-4 h for ketamine class; PCP is an outlier at 1-3 days due to high lipophilicity. Protein binding 12-50% across the class. CYP2B6*6/*6 PMs show ~50% reduction in oral ketamine clearance with implications for TRD therapy.",
-    "shared_safety": "Acute risk: respiratory depression at high doses (potentiated when combined with opioids or alcohol). Cardiovascular sympathomimetic effects (HR/BP increase). Emergence delirium, dissociation, occasional violent psychomotor agitation (highest for 3-MeO-PCP, 3-MeO-PCE, PCP). Hepatic toxicity — case reports for some research chemicals. Chronic risk: ulcerative cystitis (norketamine implicated) in heavy daily users; cognitive impairment; psychological dependence. Key off-targets: HCN1 (ketamine hypnosis), σ1 (3-MeO-PCP psychosis profile), μ-opioid (3-HO-PCP/E respiratory depression). Fatal blood concentrations: PCP >200 ng/mL, 3-MeO-PCP 50-3,525 ng/mL (very narrow window), ketamine >1,000 ng/mL (very wide therapeutic index).",
-    "sar_summary": "Core scaffold: phenyl + cyclohexyl + amine. SAR principles, with primary literature: (1) Aryl ring substitution dominates NMDA affinity: 3-methoxy > 3-ethoxy > 3-methyl > 3-fluoro > H > 2-chloro (ketamine); 4-position less effective than 3-position (Roth 2013 doi:10.1371/journal.pone.0059334). (2) 2'-oxo (β-keto) substitution: shortens duration, restricts conformation, shifts pose preference at PCP site (Zhang 2021), produces 'heavier' subjective profile per Abelian 2024 SAR analysis. (3) N-amine: N-methyl (ketamine) > N-ethyl (MXE/O-PCE) > N-propyl > N-cyclopropyl; primary amine (norketamine) ~3× less potent than N-methyl. Piperidine (PCP) and pyrrolidine (rolicyclidine) typically more potent at NMDA than secondary amines but with different σ1 and PK profiles. (4) Combining 2'-oxo + 3-MeO + piperidine (MXPCP-like) predicted maximum NMDA affinity. (5) Aryl ring replacement: thiophene-2 (tiletamine) retains NMDA activity; benzothiophene-2 (BTCP) eliminates NMDA and switches to DAT-selective. (6) Meta-OH (3-HO-PCP/E series) introduces μ-opioid agonism alongside NMDA blockade — major safety implication.",
+    "shared_safety": "Acute risk: respiratory depression at high doses (potentiated when combined with opioids or alcohol). Cardiovascular sympathomimetic effects (HR/BP increase). Emergence delirium, dissociation, occasional violent psychomotor agitation (highest for 3-MeO-PCP, 3-MeO-PCE, PCP). Hepatic toxicity: case reports for some research chemicals. Chronic risk: ulcerative cystitis (norketamine implicated) in heavy daily users; cognitive impairment; psychological dependence. Key off-targets: HCN1 (ketamine hypnosis), σ1 (3-MeO-PCP psychosis profile), μ-opioid (3-HO-PCP/E respiratory depression). Fatal blood concentrations: PCP >200 ng/mL, 3-MeO-PCP 50-3,525 ng/mL (very narrow window), ketamine >1,000 ng/mL (very wide therapeutic index).",
+    "sar_summary": "Core scaffold: phenyl + cyclohexyl + amine. SAR principles, with primary literature: (1) Aryl ring substitution dominates NMDA affinity: 3-methoxy > 3-ethoxy > 3-methyl > 3-fluoro > H > 2-chloro (ketamine); 4-position less effective than 3-position (Roth 2013 doi:10.1371/journal.pone.0059334). (2) 2'-oxo (β-keto) substitution: shortens duration, restricts conformation, shifts pose preference at PCP site (Zhang 2021), produces 'heavier' subjective profile per Abelian 2024 SAR analysis. (3) N-amine: N-methyl (ketamine) > N-ethyl (MXE/O-PCE) > N-propyl > N-cyclopropyl; primary amine (norketamine) ~3× less potent than N-methyl. Piperidine (PCP) and pyrrolidine (rolicyclidine) typically more potent at NMDA than secondary amines but with different σ1 and PK profiles. (4) Combining 2'-oxo + 3-MeO + piperidine (MXPCP-like) predicted maximum NMDA affinity. (5) Aryl ring replacement: thiophene-2 (tiletamine) retains NMDA activity; benzothiophene-2 (BTCP) eliminates NMDA and switches to DAT-selective. (6) Meta-OH (3-HO-PCP/E series) introduces μ-opioid agonism alongside NMDA blockade: major safety implication.",
     "key_references": [
       "doi:10.1371/journal.pone.0059334",
       "doi:10.1038/s41586-021-03769-9",

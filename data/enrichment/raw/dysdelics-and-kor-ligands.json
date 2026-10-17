@@ -134,11 +134,11 @@
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "KOR Gαi/o coupling → adenylyl cyclase inhibition (decreased cAMP) and Gβγ-mediated GIRK channel activation and N/P/Q-type calcium channel inhibition. Salvinorin A also robustly activates β-arrestin-2 recruitment with subsequent JNK activation and KOR desensitisation/internalisation — these pathways underlie the rapid tachyphylaxis and dysphoric/aversive component characteristic of unbiased KOR agonism.",
+      "downstream_signalling": "KOR Gαi/o coupling → adenylyl cyclase inhibition (decreased cAMP) and Gβγ-mediated GIRK channel activation and N/P/Q-type calcium channel inhibition. Salvinorin A also robustly activates β-arrestin-2 recruitment with subsequent JNK activation and KOR desensitisation/internalisation: these pathways underlie the rapid tachyphylaxis and dysphoric/aversive component characteristic of unbiased KOR agonism.",
       "neuroimaging": [
         {
           "modality": "PET ([11C]-salvinorin A)",
-          "finding": "Baboon brain uptake peaked at ~40 s after IV bolus reaching 3.3% of injected dose; brain clearance half-life ~8 min — matches the <10-min behavioural duration after smoking in humans.",
+          "finding": "Baboon brain uptake peaked at ~40 s after IV bolus reaching 3.3% of injected dose; brain clearance half-life ~8 min: matches the <10-min behavioural duration after smoking in humans.",
           "reference": "pmid:18434204"
         },
         {
@@ -262,7 +262,7 @@
       "relevant_genes": [
         "CYP2D6"
       ],
-      "phenotype_effects": "CYP2D6 contributes ~15% of in-vitro metabolism — theoretically PMs could see slightly higher exposure but the dominant clearance pathway is plasma esterase hydrolysis (independent of CYP), so PM/UM status is unlikely to change clinical PK meaningfully.",
+      "phenotype_effects": "CYP2D6 contributes ~15% of in-vitro metabolism: theoretically PMs could see slightly higher exposure but the dominant clearance pathway is plasma esterase hydrolysis (independent of CYP), so PM/UM status is unlikely to change clinical PK meaningfully.",
       "reference": "pmid:19462483"
     },
     "tolerance_and_dependence": {
@@ -288,7 +288,7 @@
         "target": "5-HT2A",
         "ki_or_ic50_nm": null,
         "concern_level": "low",
-        "clinical_consequence": "No appreciable binding (PDSP screen, Roth 2002) — mechanistically distinguishes Sal A from classical psychedelics.",
+        "clinical_consequence": "No appreciable binding (PDSP screen, Roth 2002): mechanistically distinguishes Sal A from classical psychedelics.",
         "reference": "doi:10.1073/pnas.182234399"
       }
     ],
@@ -360,7 +360,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Negligible KOR engagement — its biological role is as the inactive principal metabolite of salvinorin A and as a synthetic precursor to the C-2 ether analogues (MOM-Sal B, EOM-Sal B, mesyl Sal B).",
+      "downstream_signalling": "Negligible KOR engagement: its biological role is as the inactive principal metabolite of salvinorin A and as a synthetic precursor to the C-2 ether analogues (MOM-Sal B, EOM-Sal B, mesyl Sal B).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1086,7 +1086,7 @@
           ],
           "bias_factor_log": null,
           "bias_reference_compound": "DAMGO",
-          "interpretation": "Originally reported as a strongly G-protein-biased MOR agonist (Groer et al. 2007 — induces MAPK signalling but does not recruit β-arrestin-2 or internalise MOR even with GRK2 overexpression). Later studies (Manglik/Shoichet group) reported similar β-arrestin recruitment to DAMGO depending on assay/cell-system — bias is contested. The original observation made herkinorin a landmark tool compound for MOR-biased agonism research.",
+          "interpretation": "Originally reported as a strongly G-protein-biased MOR agonist (Groer et al. 2007; induces MAPK signalling but does not recruit β-arrestin-2 or internalise MOR even with GRK2 overexpression). Later studies (Manglik/Shoichet group) reported similar β-arrestin recruitment to DAMGO depending on assay/cell-system: bias is contested. The original observation made herkinorin a landmark tool compound for MOR-biased agonism research.",
           "reference": "pmid:17090705"
         }
       ],
@@ -1238,7 +1238,7 @@
           ],
           "bias_factor_log": 1.98,
           "bias_reference_compound": "Salvinorin A (bias factor 1)",
-          "interpretation": "Bias factor 96 toward G-protein over β-arrestin-2 (relative to Sal A as the unbiased reference). One of the most strongly G-protein-biased KOR agonists ever reported — the prototype for the 'Gi-biased KOR agonist = non-dysphoric analgesic' hypothesis. In vivo: analgesic without the locomotor incoordination seen with unbiased KOR agonists; retains aversion (so Gi bias does not fully eliminate dysphoria).",
+          "interpretation": "Bias factor 96 toward G-protein over β-arrestin-2 (relative to Sal A as the unbiased reference). One of the most strongly G-protein-biased KOR agonists ever reported: the prototype for the 'Gi-biased KOR agonist = non-dysphoric analgesic' hypothesis. In vivo: analgesic without the locomotor incoordination seen with unbiased KOR agonists; retains aversion (so Gi bias does not fully eliminate dysphoria).",
           "reference": "doi:10.1124/jpet.114.216820"
         }
       ],
@@ -1362,7 +1362,7 @@
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Same as Mesyl Sal B entry — covalent irreversible KOR agonism; very long apparent duration.",
+      "downstream_signalling": "Same as Mesyl Sal B entry: covalent irreversible KOR agonism; very long apparent duration.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1438,7 +1438,7 @@
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "KOR Gαi/o (cAMP↓, GIRK↑) with reduced β-arrestin-2 recruitment and reduced JNK activation. In MS preclinical models (EAE) shows KOR-dependent disease modification — possibly via myelin-OL-progenitor effects.",
+      "downstream_signalling": "KOR Gαi/o (cAMP↓, GIRK↑) with reduced β-arrestin-2 recruitment and reduced JNK activation. In MS preclinical models (EAE) shows KOR-dependent disease modification: possibly via myelin-OL-progenitor effects.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1534,7 +1534,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full-agonist KOR activation, ~5–7× more potent than U50488 / Sal A in GTPγS. Internalises and downregulates KOR similarly to Sal A and U50488 — so unlike EOM Sal B or RB-64, MOM Sal B is not biased; it's a balanced KOR full agonist with extended duration.",
+      "downstream_signalling": "Full-agonist KOR activation, ~5–7× more potent than U50488 / Sal A in GTPγS. Internalises and downregulates KOR similarly to Sal A and U50488, so unlike EOM Sal B or RB-64, MOM Sal B is not biased; it's a balanced KOR full agonist with extended duration.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1658,7 +1658,7 @@
           ],
           "bias_factor_log": null,
           "bias_reference_compound": "Sal A / 16-ethynyl Sal A",
-          "interpretation": "Reported as G-protein-biased KOR agonist, contrasting with the more balanced 16-ethynyl Sal A. Anti-cocaine efficacy without significant effects on locomotion, food reward, learning/memory, anxiety, or depression — supports the hypothesis that KOR G-bias drives the desirable effects.",
+          "interpretation": "Reported as G-protein-biased KOR agonist, contrasting with the more balanced 16-ethynyl Sal A. Anti-cocaine efficacy without significant effects on locomotion, food reward, learning/memory, anxiety, or depression: supports the hypothesis that KOR G-bias drives the desirable effects.",
           "reference": "pmid:37375403"
         }
       ],
@@ -1728,7 +1728,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "MISCLASSIFIED FOR THIS GROUP. Ibogaine is an iboga-alkaloid tabernanthe constituent (indole alkaloid, complex polypharmacology at NMDA / κ-opioid / 5-HT2A / 5-HT-transporter / sigma-2 / nAChR α3β4) — it is not a salvinorin neoclerodane diterpene and does not belong in the 'dysdelics and KOR ligands (salvinorin family)' group as a salvinorin sibling. Ibogaine does have weak KOR agonism, but its primary mechanism of action is debated and most studied as a polypharmacological agent. Recommend reassigning to an iboga / atypical-psychedelic group for proper enrichment.",
+      "downstream_signalling": "MISCLASSIFIED FOR THIS GROUP. Ibogaine is an iboga-alkaloid tabernanthe constituent (indole alkaloid, complex polypharmacology at NMDA / κ-opioid / 5-HT2A / 5-HT-transporter / sigma-2 / nAChR α3β4): it is not a salvinorin neoclerodane diterpene and does not belong in the 'dysdelics and KOR ligands (salvinorin family)' group as a salvinorin sibling. Ibogaine does have weak KOR agonism, but its primary mechanism of action is debated and most studied as a polypharmacological agent. Recommend reassigning to an iboga / atypical-psychedelic group for proper enrichment.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1771,10 +1771,10 @@
     "is_class_context": true,
     "class_context_id": "neoclerodane-kor-ligands",
     "class_name": "Salvinorin neoclerodane diterpenes (κ-opioid receptor ligands — 'dysdelics')",
-    "shared_mechanism": "Neoclerodane diterpenes from Salvia divinorum and their semi-synthetic analogues are the only known non-nitrogenous agonists of the κ-opioid receptor (KOR). They bind KOR in a binding pocket distinct from the classical morphinan/peptide site: salvinorin A occupies the extracellular portion of the KOR cavity, with the C-4 methyl ester hydrogen-bonding to Glu297(ECL2), the C-1 carbonyl to Tyr312(7.35), and the C-2 acetoxy to Tyr313(7.36), with the furan ring pointing down into the morphinan pocket (PDB 6B73 / Roth 2021). Crucially they lack the protonatable amine that all classical opioids use to engage Asp138(3.32). Downstream they couple via Gαi/o to cAMP inhibition and GIRK activation, with substantial β-arrestin-2 recruitment that drives KOR desensitisation, JNK activation, and the dysphoric/aversive component of the subjective experience. The phenomenology produced — rapid dissociation, intense 'shifting reality' visuals, dysphoria — does not involve 5-HT2A (no classical-psychedelic mechanism) or NMDA (no classical-dissociative mechanism), making the class mechanistically third-kind. The term 'dysdelic' coined to capture this neither-psychedelic-nor-dissociative phenomenology.",
-    "shared_pk_summary": "All members of this class are highly lipophilic, non-ionisable, and bind plasma albumin tightly. Smoked/inhaled, salvinorin A reaches Cmax in 2 min (mean ~19 ng/mL after 21 µg/kg) and plasma levels return to baseline within 90 min; brain uptake peaks within 40 s (baboon PET) and clears with t½ ~8 min — explaining the <10 min subjective duration. Oral bioavailability is essentially zero due to rapid GI esterase hydrolysis of the C-2 acetate to inactive salvinorin B. The C-2 acetate is the metabolically labile group — replacing it with C-2 ether (MOM, EOM), sulfonate (mesyl), or other ester (benzoate — herkinorin) dramatically extends duration (≥100-fold in some cases) by preventing esterase hydrolysis. In vitro: salvinorin A is metabolised by plasma carboxylesterase (dominant), with secondary contributions from CYP2D6, CYP1A1, CYP2C18, CYP2E1, and UGT2B7. P-gp is an efflux substrate at the BBB. Sublingual/buccal absorption needs DMSO/PEG vehicle; aqueous vehicles fail (logP ~2.5 but poor water solubility).",
-    "shared_safety": "Cardiopulmonary safety appears favourable in clinical doses studied (modest, transient increases in HR/BP at peak effect). The principal acute harm-reduction concerns are: (1) profound dissociation/loss of body awareness within seconds of smoking — risk of physical injury / wandering / unintended self-harm — making a tripsitter essential; (2) acute dysphoria and lasting emotional residue from intense β-arrestin-driven KOR signalling; (3) lack of cross-tolerance with classical psychedelics — even experienced psychedelic users are caught off-guard by Sal A's intensity and short rebuild time; (4) seizure-like motor phenomena documented at high doses. Hormonal: increases prolactin (peaks ~15 min after inhalation) and inconsistently cortisol. The semi-synthetic C-2-modified analogues (MOM Sal B, RB-64, 16-Br Sal A) have markedly extended duration — same dose intensity but lasting hours rather than minutes, magnifying all harms.",
-    "sar_summary": "The Sal A pharmacophore requires: (1) the C-4 methyl ester (loss → loss of activity); (2) the furan ring at C-12 (loss → near-complete loss of activity; halogenation at C-16 of furan tolerated and even extends duration without losing potency — see 16-Br Sal A); (3) the C-2 ester/ether on the alpha-face (de-acetylation → Sal B, essentially inactive); the C-1 carbonyl is NOT strictly required (the 1-deoxy analogue is well-tolerated); the C-2 hydroxyl orientation matters — beta-epimer dramatically less active. The C-2 acetoxy is the key modifiable position for therapeutic engineering: methyl ester (Sal A) → 100× extended duration as methoxymethyl ether (MOM Sal B / SymBMS) → biased agonist as ethoxymethyl ether (EOM Sal B) → biased irreversible agonist as 22-thiocyanate/sulfonate (RB-64). Replacement of acetate with benzoate (herkinorin) inverts receptor selectivity from KOR to MOR. C-1, C-12, C-16, and C-22 modifications all generate distinct G-protein-bias profiles, making the salvinorin scaffold one of the richest classes for biased-agonism SAR alongside the morphinan/MOR field. Salvinicin A/B (cyclic 12,17-rearrangements) demonstrate further plasticity — Sal A becomes a KOR partial agonist, Sal B a MOR antagonist.",
+    "shared_mechanism": "Neoclerodane diterpenes from Salvia divinorum and their semi-synthetic analogues are the only known non-nitrogenous agonists of the κ-opioid receptor (KOR). They bind KOR in a binding pocket distinct from the classical morphinan/peptide site: salvinorin A occupies the extracellular portion of the KOR cavity, with the C-4 methyl ester hydrogen-bonding to Glu297(ECL2), the C-1 carbonyl to Tyr312(7.35), and the C-2 acetoxy to Tyr313(7.36), with the furan ring pointing down into the morphinan pocket (PDB 6B73 / Roth 2021). Crucially they lack the protonatable amine that all classical opioids use to engage Asp138(3.32). Downstream they couple via Gαi/o to cAMP inhibition and GIRK activation, with substantial β-arrestin-2 recruitment that drives KOR desensitisation, JNK activation, and the dysphoric/aversive component of the subjective experience. The phenomenology produced (rapid dissociation, intense 'shifting reality' visuals, dysphoria) does not involve 5-HT2A (no classical-psychedelic mechanism) or NMDA (no classical-dissociative mechanism), making the class mechanistically third-kind. The term 'dysdelic' coined to capture this neither-psychedelic-nor-dissociative phenomenology.",
+    "shared_pk_summary": "All members of this class are highly lipophilic, non-ionisable, and bind plasma albumin tightly. Smoked/inhaled, salvinorin A reaches Cmax in 2 min (mean ~19 ng/mL after 21 µg/kg) and plasma levels return to baseline within 90 min; brain uptake peaks within 40 s (baboon PET) and clears with t½ ~8 min: explaining the <10 min subjective duration. Oral bioavailability is essentially zero due to rapid GI esterase hydrolysis of the C-2 acetate to inactive salvinorin B. The C-2 acetate is the metabolically labile group: replacing it with C-2 ether (MOM, EOM), sulfonate (mesyl), or other ester (benzoate; herkinorin) dramatically extends duration (≥100-fold in some cases) by preventing esterase hydrolysis. In vitro: salvinorin A is metabolised by plasma carboxylesterase (dominant), with secondary contributions from CYP2D6, CYP1A1, CYP2C18, CYP2E1, and UGT2B7. P-gp is an efflux substrate at the BBB. Sublingual/buccal absorption needs DMSO/PEG vehicle; aqueous vehicles fail (logP ~2.5 but poor water solubility).",
+    "shared_safety": "Cardiopulmonary safety appears favourable in clinical doses studied (modest, transient increases in HR/BP at peak effect). The principal acute harm-reduction concerns are: (1) profound dissociation/loss of body awareness within seconds of smoking (risk of physical injury / wandering / unintended self-harm), making a tripsitter essential; (2) acute dysphoria and lasting emotional residue from intense β-arrestin-driven KOR signalling; (3) lack of cross-tolerance with classical psychedelics: even experienced psychedelic users are caught off-guard by Sal A's intensity and short rebuild time; (4) seizure-like motor phenomena documented at high doses. Hormonal: increases prolactin (peaks ~15 min after inhalation) and inconsistently cortisol. The semi-synthetic C-2-modified analogues (MOM Sal B, RB-64, 16-Br Sal A) have markedly extended duration: same dose intensity but lasting hours rather than minutes, magnifying all harms.",
+    "sar_summary": "The Sal A pharmacophore requires: (1) the C-4 methyl ester (loss → loss of activity); (2) the furan ring at C-12 (loss → near-complete loss of activity; halogenation at C-16 of furan tolerated and even extends duration without losing potency; see 16-Br Sal A); (3) the C-2 ester/ether on the alpha-face (de-acetylation → Sal B, essentially inactive); the C-1 carbonyl is NOT strictly required (the 1-deoxy analogue is well-tolerated); the C-2 hydroxyl orientation matters: beta-epimer dramatically less active. The C-2 acetoxy is the key modifiable position for therapeutic engineering: methyl ester (Sal A) → 100× extended duration as methoxymethyl ether (MOM Sal B / SymBMS) → biased agonist as ethoxymethyl ether (EOM Sal B) → biased irreversible agonist as 22-thiocyanate/sulfonate (RB-64). Replacement of acetate with benzoate (herkinorin) inverts receptor selectivity from KOR to MOR. C-1, C-12, C-16, and C-22 modifications all generate distinct G-protein-bias profiles, making the salvinorin scaffold one of the richest classes for biased-agonism SAR alongside the morphinan/MOR field. Salvinicin A/B (cyclic 12,17-rearrangements) demonstrate further plasticity: Sal A becomes a KOR partial agonist, Sal B a MOR antagonist.",
     "key_references": [
       "doi:10.1073/pnas.182234399",
       "doi:10.1021/jm049438q",

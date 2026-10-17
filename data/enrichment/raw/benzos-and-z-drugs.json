@@ -266,7 +266,7 @@
           "protein_binding_pct": 98,
           "dose_in_study_mg": 10,
           "subject_n": null,
-          "subject_demographics": "Healthy adults — Greenblatt clinical pharmacokinetics review",
+          "subject_demographics": "Healthy adults: Greenblatt clinical pharmacokinetics review",
           "reference": "doi:10.2165/00003088-197803010-00005"
         },
         {
@@ -450,7 +450,7 @@
           "protein_binding_pct": 92,
           "dose_in_study_mg": 10,
           "subject_n": null,
-          "subject_demographics": "Healthy adults — Ambien FDA label",
+          "subject_demographics": "Healthy adults: Ambien FDA label",
           "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/019908s027lbl.pdf"
         }
       ],
@@ -649,7 +649,7 @@
           "protein_binding_pct": 55,
           "dose_in_study_mg": 2,
           "subject_n": null,
-          "subject_demographics": "Healthy adults — Lunesta FDA label",
+          "subject_demographics": "Healthy adults: Lunesta FDA label",
           "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/021476s030lbl.pdf"
         }
       ],
@@ -703,7 +703,7 @@
         "target": "Unidentified taste receptor",
         "ki_or_ic50_nm": null,
         "concern_level": "low",
-        "clinical_consequence": "Characteristic metallic/bitter aftertaste (dysgeusia) is its most common side effect — occurs in ~34% of users and is thought to relate to salivary secretion of the parent drug.",
+        "clinical_consequence": "Characteristic metallic/bitter aftertaste (dysgeusia) is its most common side effect: occurs in ~34% of users and is thought to relate to salivary secretion of the parent drug.",
         "reference": "Lunesta FDA label"
       }
     ],
@@ -779,7 +779,7 @@
           "protein_binding_pct": 91,
           "dose_in_study_mg": 2,
           "subject_n": 6,
-          "subject_demographics": "Healthy adults — Greenblatt 1979",
+          "subject_demographics": "Healthy adults: Greenblatt 1979",
           "reference": "doi:10.1002/jps.2600680119"
         },
         {
@@ -992,7 +992,7 @@
         "CYP3A4",
         "CYP3A5"
       ],
-      "phenotype_effects": "CYP3A5 expressers (CYP3A5*1 carriers) clear midazolam ~25% faster than non-expressers. Population-level variability in CYP3A4 activity manifests as 5–10× variation in midazolam clearance — why midazolam is the gold-standard CYP3A4 probe substrate.",
+      "phenotype_effects": "CYP3A5 expressers (CYP3A5*1 carriers) clear midazolam ~25% faster than non-expressers. Population-level variability in CYP3A4 activity manifests as 5–10× variation in midazolam clearance: why midazolam is the gold-standard CYP3A4 probe substrate.",
       "reference": "pmc:PMC6096899"
     },
     "tolerance_and_dependence": {
@@ -1040,7 +1040,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Non-selective high-affinity benzodiazepine-site PAM. The 7-nitro group is metabolically reduced to 7-amino-clonazepam — pharmacologically inactive in vivo but accumulates and may compete for binding after chronic dosing.",
+      "downstream_signalling": "Non-selective high-affinity benzodiazepine-site PAM. The 7-nitro group is metabolically reduced to 7-amino-clonazepam: pharmacologically inactive in vivo but accumulates and may compete for binding after chronic dosing.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1057,7 +1057,7 @@
           "protein_binding_pct": 86,
           "dose_in_study_mg": 2,
           "subject_n": null,
-          "subject_demographics": "Healthy adults — Klonopin FDA label",
+          "subject_demographics": "Healthy adults: Klonopin FDA label",
           "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/017533s059lbl.pdf"
         }
       ],
@@ -1376,7 +1376,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Non-selective benzodiazepine-site PAM; the 3-hydroxy group eliminates need for CYP-mediated metabolism — directly glucuronidated.",
+      "downstream_signalling": "Non-selective benzodiazepine-site PAM; the 3-hydroxy group eliminates need for CYP-mediated metabolism: directly glucuronidated.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1801,7 +1801,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Non-selective benzodiazepine-site PAM with pyridyl ring substituting phenyl. Metabolism is unusual for a benzo — mainly CYP1A2 (not CYP3A4).",
+      "downstream_signalling": "Non-selective benzodiazepine-site PAM with pyridyl ring substituting phenyl. Metabolism is unusual for a benzo: mainly CYP1A2 (not CYP3A4).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2488,7 +2488,7 @@
         "CYP2C19",
         "CYP3A4"
       ],
-      "phenotype_effects": "Inherited via nordazepam — CYP2C19 PMs accumulate more.",
+      "phenotype_effects": "Inherited via nordazepam: CYP2C19 PMs accumulate more.",
       "reference": null
     },
     "tolerance_and_dependence": null,
@@ -2542,7 +2542,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Prodrug — N-dealkylated by CYP3A4 to nordazepam. Smoother onset than diazepam.",
+      "downstream_signalling": "Prodrug: N-dealkylated by CYP3A4 to nordazepam. Smoother onset than diazepam.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2595,7 +2595,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Prodrug — N-dealkylated to nordazepam.",
+      "downstream_signalling": "Prodrug: N-dealkylated to nordazepam.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2649,7 +2649,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Prodrug — metabolized to diazepam, nordazepam, and finally oxazepam. Lacks 2-oxo group of diazepam.",
+      "downstream_signalling": "Prodrug: metabolized to diazepam, nordazepam, and finally oxazepam. Lacks 2-oxo group of diazepam.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2781,7 +2781,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Thienotriazolodiazepine — like etizolam structurally. Very potent hypnotic.",
+      "downstream_signalling": "Thienotriazolodiazepine: like etizolam structurally. Very potent hypnotic.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2855,7 +2855,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Thienotriazolodiazepine — replaces benzo ring with thiophene. Sanna 2005 reports lower Emax than alprazolam at α1, hypothesized to underlie its 'lower tolerance liability' (a contested claim in the recreational use literature).",
+      "downstream_signalling": "Thienotriazolodiazepine: replaces benzo ring with thiophene. Sanna 2005 reports lower Emax than alprazolam at α1, hypothesized to underlie its 'lower tolerance liability' (a contested claim in the recreational use literature).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2872,7 +2872,7 @@
           "protein_binding_pct": 93,
           "dose_in_study_mg": 0.5,
           "subject_n": null,
-          "subject_demographics": "Healthy adults — Sanna 2005",
+          "subject_demographics": "Healthy adults: Sanna 2005",
           "reference": "pmid:2065698"
         }
       ],
@@ -3230,7 +3230,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Triazolobenzodiazepine — alprazolam analogue with 8-bromo + 2'-fluoro substitution. Predicted GABA-A binding affinity exceptionally high (log 1/c ~10 by Manchester 2022 QSAR). High intrinsic activity contributes to rapid tolerance.",
+      "downstream_signalling": "Triazolobenzodiazepine: alprazolam analogue with 8-bromo + 2'-fluoro substitution. Predicted GABA-A binding affinity exceptionally high (log 1/c ~10 by Manchester 2022 QSAR). High intrinsic activity contributes to rapid tolerance.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3459,7 +3459,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Alprazolam's 8-bromo analogue (vs 8-chloro). Synthesized 1976 (Hester) but never marketed. Late-2010s/2020s NPS — increasingly common in North American post-mortem case series, often as a fentanyl adulterant.",
+      "downstream_signalling": "Alprazolam's 8-bromo analogue (vs 8-chloro). Synthesized 1976 (Hester) but never marketed. Late-2010s/2020s NPS: increasingly common in North American post-mortem case series, often as a fentanyl adulterant.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3622,7 +3622,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Triazolobenzodiazepine prodrug — N-desmethyladinazolam (NDMAD) is ~25× more potent at benzodiazepine receptors than parent. Extensive first-pass conversion.",
+      "downstream_signalling": "Triazolobenzodiazepine prodrug: N-desmethyladinazolam (NDMAD) is ~25× more potent at benzodiazepine receptors than parent. Extensive first-pass conversion.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3706,7 +3706,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Triazolobenzodiazepine with 2-pyridyl (like bromazepam) replacing 2-chlorophenyl of alprazolam. Some literature suggests α2/α3 selectivity but data are sparse. Distinct in that it does NOT undergo Phase I metabolism — directly glucuronidated.",
+      "downstream_signalling": "Triazolobenzodiazepine with 2-pyridyl (like bromazepam) replacing 2-chlorophenyl of alprazolam. Some literature suggests α2/α3 selectivity but data are sparse. Distinct in that it does NOT undergo Phase I metabolism: directly glucuronidated.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4035,7 +4035,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Water-soluble peptidic prodrug of diazepam — L-lysyl-substituted, cleaved by plasma aminopeptidases. Designed for IM/IV bioterrorism antidote use (nerve-agent-induced status epilepticus). All pharmacology = diazepam.",
+      "downstream_signalling": "Water-soluble peptidic prodrug of diazepam: L-lysyl-substituted, cleaved by plasma aminopeptidases. Designed for IM/IV bioterrorism antidote use (nerve-agent-induced status epilepticus). All pharmacology = diazepam.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4394,7 +4394,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Austrian-marketed hypnotic (Gerodorm). Pre-drug-like — 3-hydroxylated to active metabolite.",
+      "downstream_signalling": "Austrian-marketed hypnotic (Gerodorm). Pre-drug-like: 3-hydroxylated to active metabolite.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4437,7 +4437,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Oxazolam-type prodrug — opens the oxazoline ring to release delorazepam.",
+      "downstream_signalling": "Oxazolam-type prodrug: opens the oxazoline ring to release delorazepam.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4492,7 +4492,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Oxazolobenzodiazepine prodrug — releases nordazepam upon gastric hydrolysis.",
+      "downstream_signalling": "Oxazolobenzodiazepine prodrug: releases nordazepam upon gastric hydrolysis.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4544,7 +4544,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Oxazinobenzodiazepine prodrug — opens to diazepam, then nordazepam.",
+      "downstream_signalling": "Oxazinobenzodiazepine prodrug: opens to diazepam, then nordazepam.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5058,7 +5058,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Triazolo + nitro + fluoro — combines features of flunitrazepam and clonazolam. Extreme potency expected.",
+      "downstream_signalling": "Triazolo + nitro + fluoro: combines features of flunitrazepam and clonazolam. Extreme potency expected.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5245,7 +5245,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Desmethyletizolam = metizolam — etizolam analogue with methyl in place of ethyl. Reduced potency.",
+      "downstream_signalling": "Desmethyletizolam = metizolam: etizolam analogue with methyl in place of ethyl. Reduced potency.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -5578,9 +5578,9 @@
     "is_class_context": true,
     "class_context_id": "benzos-z-drugs",
     "class_name": "Benzodiazepines (classical and designer) + Z-drugs",
-    "shared_mechanism": "All compounds are positive allosteric modulators (PAMs) at the GABA-A receptor benzodiazepine binding site, located at the α/γ subunit interface (α+ side, γ2- side). Binding enhances GABA-induced Cl- channel opening frequency at GABA-bound receptors, hyperpolarising neurons. Pharmacological subunit selectivity defines clinical/recreational profile: α1-containing GABA-A receptors mediate sedation, anterograde amnesia, ataxia, and reinforcement (abuse liability); α2/α3-containing receptors mediate anxiolysis and muscle relaxation; α5-containing receptors mediate cognitive effects (memory, learning). Classical 1,4-benzodiazepines (diazepam, lorazepam, clonazepam) bind α1/α2/α3/α5 with roughly equal nanomolar affinity. Zolpidem and zaleplon are α1-preferring (>20× vs other subtypes); eszopiclone is non-selective like classical benzos. The benzodiazepine site has no GABA-A receptor-mediated activity in the absence of GABA — these are not direct agonists. The closely related TSPO ('peripheral benzodiazepine receptor') is structurally distinct and not GABA-A; compounds like Ro5-4864 (4'-chlorodiazepam) bind TSPO selectively and produce no benzodiazepine-like effects.",
-    "shared_pk_summary": "Most classical benzodiazepines (diazepam, alprazolam, clonazepam, triazolam, midazolam, flunitrazepam, clobazam) are CYP3A4 substrates (some additionally CYP2C19, especially diazepam and flunitrazepam). The 'LOT' rule — lorazepam, oxazepam, temazepam — identifies benzos cleared by direct UGT2B7/UGT2B15 glucuronidation without Phase I metabolism, making them preferred in hepatic impairment and resistant to CYP-mediated drug-drug interactions. Active metabolites dominate the clinical pharmacology of multiple parent compounds: diazepam → nordazepam (t1/2 50–100 h) → oxazepam; flurazepam/quazepam → N-desalkylflurazepam (norflurazepam, t1/2 47–150 h); alprazolam → α-hydroxyalprazolam; midazolam → 1-OH-midazolam (~20% potency); clobazam → norclobazam (8–20× plasma vs parent on chronic dosing). Plasma protein binding is generally 80–97%, dominated by albumin. Volume of distribution 0.5–3 L/kg (lipid-soluble). Z-drugs zolpidem and zaleplon have very short t1/2 (1.5–3 h) and are 80–95% protein-bound. Pyrazolam is unusual in having NO Phase I metabolism (direct glucuronidation only). Designer benzos with very long t1/2 include flubromazepam (~106 h), diclazepam (~42 h), and phenazepam (~60 h) — these dramatically prolong effects of single doses to weeks. CYP3A4 inhibitors (ketoconazole, itraconazole, erythromycin, ritonavir, grapefruit juice) markedly elevate exposure of CYP3A4-cleared benzos; inducers (rifampin, carbamazepine, phenytoin, St John's wort) markedly reduce it.",
-    "shared_safety": "The signal harm of benzodiazepines is RESPIRATORY DEPRESSION when combined with other CNS depressants — especially opioids, alcohol, GHB/GBL, and Z-drugs themselves. Alone, benzodiazepines are remarkably non-lethal: documented LD50 ratios are extraordinary (the original Roche estimates put diazepam's LD50/ED50 at >100). Almost all benzodiazepine-attributed deaths involve concurrent CNS depressants. The 2010s/2020s overdose epidemic in North America/Europe with designer benzos (clonazolam, flualprazolam, bromazolam) overwhelmingly involves co-ingestion of fentanyl or its analogues. Specific risks: (1) anterograde amnesia (more pronounced with triazolam, alprazolam, midazolam, flunitrazepam → DFSA potential); (2) paradoxical disinhibition / behavioural disinhibition (~1–2% incidence, more common in elderly, children, alcoholics, those with personality disorders); (3) physical dependence and withdrawal, with seizure risk on abrupt cessation from high doses of short-acting compounds (alprazolam, triazolam, oxazepam) — withdrawal can be fatal without taper; (4) increased fall/fracture risk in elderly; (5) cognitive impairment with chronic use; (6) tolerance to anticonvulsant/hypnotic effects more rapid than to anxiolytic effects. Flumazenil is a competitive antagonist at the benzodiazepine site and reverses sedation acutely (1–2 h duration); not used in chronic users because it can precipitate withdrawal seizures. Z-drugs additionally carry a recognized risk of complex sleep-related behaviours (sleep-driving, sleep-eating, sleep-sex) prompting an FDA boxed warning in 2019 for zolpidem, zaleplon, eszopiclone.",
+    "shared_mechanism": "All compounds are positive allosteric modulators (PAMs) at the GABA-A receptor benzodiazepine binding site, located at the α/γ subunit interface (α+ side, γ2- side). Binding enhances GABA-induced Cl- channel opening frequency at GABA-bound receptors, hyperpolarising neurons. Pharmacological subunit selectivity defines clinical/recreational profile: α1-containing GABA-A receptors mediate sedation, anterograde amnesia, ataxia, and reinforcement (abuse liability); α2/α3-containing receptors mediate anxiolysis and muscle relaxation; α5-containing receptors mediate cognitive effects (memory, learning). Classical 1,4-benzodiazepines (diazepam, lorazepam, clonazepam) bind α1/α2/α3/α5 with roughly equal nanomolar affinity. Zolpidem and zaleplon are α1-preferring (>20× vs other subtypes); eszopiclone is non-selective like classical benzos. The benzodiazepine site has no GABA-A receptor-mediated activity in the absence of GABA: these are not direct agonists. The closely related TSPO ('peripheral benzodiazepine receptor') is structurally distinct and not GABA-A; compounds like Ro5-4864 (4'-chlorodiazepam) bind TSPO selectively and produce no benzodiazepine-like effects.",
+    "shared_pk_summary": "Most classical benzodiazepines (diazepam, alprazolam, clonazepam, triazolam, midazolam, flunitrazepam, clobazam) are CYP3A4 substrates (some additionally CYP2C19, especially diazepam and flunitrazepam). The 'LOT' rule (lorazepam, oxazepam, temazepam) identifies benzos cleared by direct UGT2B7/UGT2B15 glucuronidation without Phase I metabolism, making them preferred in hepatic impairment and resistant to CYP-mediated drug-drug interactions. Active metabolites dominate the clinical pharmacology of multiple parent compounds: diazepam → nordazepam (t1/2 50–100 h) → oxazepam; flurazepam/quazepam → N-desalkylflurazepam (norflurazepam, t1/2 47–150 h); alprazolam → α-hydroxyalprazolam; midazolam → 1-OH-midazolam (~20% potency); clobazam → norclobazam (8–20× plasma vs parent on chronic dosing). Plasma protein binding is generally 80–97%, dominated by albumin. Volume of distribution 0.5–3 L/kg (lipid-soluble). Z-drugs zolpidem and zaleplon have very short t1/2 (1.5–3 h) and are 80–95% protein-bound. Pyrazolam is unusual in having NO Phase I metabolism (direct glucuronidation only). Designer benzos with very long t1/2 include flubromazepam (~106 h), diclazepam (~42 h), and phenazepam (~60 h): these dramatically prolong effects of single doses to weeks. CYP3A4 inhibitors (ketoconazole, itraconazole, erythromycin, ritonavir, grapefruit juice) markedly elevate exposure of CYP3A4-cleared benzos; inducers (rifampin, carbamazepine, phenytoin, St John's wort) markedly reduce it.",
+    "shared_safety": "The signal harm of benzodiazepines is RESPIRATORY DEPRESSION when combined with other CNS depressants: especially opioids, alcohol, GHB/GBL, and Z-drugs themselves. Alone, benzodiazepines are remarkably non-lethal: documented LD50 ratios are extraordinary (the original Roche estimates put diazepam's LD50/ED50 at >100). Almost all benzodiazepine-attributed deaths involve concurrent CNS depressants. The 2010s/2020s overdose epidemic in North America/Europe with designer benzos (clonazolam, flualprazolam, bromazolam) overwhelmingly involves co-ingestion of fentanyl or its analogues. Specific risks: (1) anterograde amnesia (more pronounced with triazolam, alprazolam, midazolam, flunitrazepam → DFSA potential); (2) paradoxical disinhibition / behavioural disinhibition (~1–2% incidence, more common in elderly, children, alcoholics, those with personality disorders); (3) physical dependence and withdrawal, with seizure risk on abrupt cessation from high doses of short-acting compounds (alprazolam, triazolam, oxazepam): withdrawal can be fatal without taper; (4) increased fall/fracture risk in elderly; (5) cognitive impairment with chronic use; (6) tolerance to anticonvulsant/hypnotic effects more rapid than to anxiolytic effects. Flumazenil is a competitive antagonist at the benzodiazepine site and reverses sedation acutely (1–2 h duration); not used in chronic users because it can precipitate withdrawal seizures. Z-drugs additionally carry a recognized risk of complex sleep-related behaviours (sleep-driving, sleep-eating, sleep-sex) prompting an FDA boxed warning in 2019 for zolpidem, zaleplon, eszopiclone.",
     "sar_summary": "Core 1,4-benzodiazepin-2-one scaffold: 7-substituent on the fused benzene determines potency (7-Cl in diazepam, 7-Br in phenazepam/flubromazepam → more potent than unsubstituted; 7-NO2 in clonazepam/flunitrazepam/nitrazepam → very high affinity); 5-aryl group is essential (phenyl = standard; 2'-Cl in lorazepam/clonazepam/diclazepam → potency boost; 2'-F in flunitrazepam/midazolam → metabolic stability + potency; 2-pyridyl in bromazepam/pyrazolam → different metabolic fate). N1-substitution: H = standard (nordazepam); methyl (diazepam) → modest change; 2,2,2-trifluoroethyl (halazepam, quazepam) → α1-selectivity hint; diethylaminoethyl (flurazepam) → prodrug-like, parent inactive, all activity from N-dealkylation. 3-position: 3-OH (oxazepam, lorazepam, temazepam, lormetazepam) → bypasses CYP, direct glucuronidation, no active metabolites, hepatic-safe; 3-methyl (meclonazepam) → adds stereochemistry. RING MODIFICATIONS: triazolo-annulation [1,2,4-triazolo[4,3-a]] (alprazolam, triazolam, estazolam, clonazolam, flubromazolam, flualprazolam, bromazolam, adinazolam) → markedly increases intrinsic activity at the benzodiazepine site → higher potency, faster tolerance, more severe withdrawal; thieno-replacement of the benzene (etizolam, brotizolam, clotiazepam, deschloroetizolam, metizolam) → thienodiazepine, faster onset, slightly different binding kinetics; 1,5-benzodiazepine ring rearrangement (clobazam) → mild α2-preference, less sedation. PRO-DRUGS exploit aminopeptidase cleavage (avizafone → diazepam; rilmazafone → triazolobenzodiazepine metabolite) or gastric chemical hydrolysis (clorazepate → nordazepam; ketazolam → diazepam; oxazolam → nordazepam) or CYP-mediated N-dealkylation (prazepam → nordazepam; flurazepam → norflurazepam; quazepam → 2-oxoquazepam; medazepam → diazepam). Z-DRUGS occupy the benzodiazepine site without sharing the benzo scaffold: imidazopyridine (zolpidem, α1-preferring), pyrazolopyrimidine (zaleplon, highly α1-preferring), cyclopyrrolone (zopiclone/eszopiclone, non-selective like classical benzos). The α1G201 residue (Pritchett & Seeburg 1991) is the structural determinant for zolpidem's α1 selectivity. TSPO ligands (Ro5-4864 = 4'-chlorodiazepam) share the benzodiazepine scaffold but bind a structurally unrelated mitochondrial protein and have no GABA-A activity.",
     "key_references": [
       "doi:10.1021/jm800889m",

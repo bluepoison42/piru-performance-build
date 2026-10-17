@@ -83,7 +83,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist; activates Gi/o → adenylyl-cyclase inhibition → reduced cAMP. Kozell 2024 GTPγS Emax 99% of DAMGO. No bias data published; β-arrestin recruitment of nitazenes is broadly similar to morphine — they are NOT β-arrestin–biased per Connors/Vandeputte HEK293T assays (Vandeputte 2022 Arch Toxicol).",
+      "downstream_signalling": "Full MOR agonist; activates Gi/o → adenylyl-cyclase inhibition → reduced cAMP. Kozell 2024 GTPγS Emax 99% of DAMGO. No bias data published; β-arrestin recruitment of nitazenes is broadly similar to morphine: they are NOT β-arrestin–biased per Connors/Vandeputte HEK293T assays (Vandeputte 2022 Arch Toxicol).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -248,7 +248,7 @@
         "metabolite_mechanism_vs_parent": "scaled"
       },
       {
-        "enzyme": "CYP2D6 (dominant; CYP2C8/CYP2E1/CYP2A6 minor — CYP1A2 contribution is negligible)",
+        "enzyme": "CYP2D6 (dominant; CYP2C8/CYP2E1/CYP2A6 minor; CYP1A2 contribution is negligible)",
         "fraction_of_clearance_pct": null,
         "metabolite_name": "O-deisopropyl isotonitazene",
         "metabolite_active": true,
@@ -486,7 +486,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist (Emax 104%). Less potent than ethoxy/isopropoxy isomers due to butoxy chain length — exceeds optimal binding-pocket geometry (Vandeputte 2023 SAR).",
+      "downstream_signalling": "Full MOR agonist (Emax 104%). Less potent than ethoxy/isopropoxy isomers due to butoxy chain length: exceeds optimal binding-pocket geometry (Vandeputte 2023 SAR).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -596,7 +596,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist but markedly less potent than alkoxy nitazenes — para-F substituent loses the H-bond acceptor that the alkoxy oxygen provides (binding-pocket SAR).",
+      "downstream_signalling": "Full MOR agonist but markedly less potent than alkoxy nitazenes: para-F substituent loses the H-bond acceptor that the alkoxy oxygen provides (binding-pocket SAR).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -706,7 +706,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist. Propoxy chain length close to optimum — Ki ~5× weaker than etonitazene but functionally comparable.",
+      "downstream_signalling": "Full MOR agonist. Propoxy chain length close to optimum: Ki ~5× weaker than etonitazene but functionally comparable.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -997,7 +997,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist but ~40× weaker than metonitazene at binding — combined loss of 5-nitro and methoxy (vs ethoxy) chain.",
+      "downstream_signalling": "Full MOR agonist but ~40× weaker than metonitazene at binding: combined loss of 5-nitro and methoxy (vs ethoxy) chain.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1090,7 +1090,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "MOR superagonist. Kozell 2024 reports DEI Emax 111% vs DAMGO at GTPγS, EC50 53 pM — i.e. functionally MORE efficacious than the natural ligand peptide. β-arrestin recruitment also elevated (Malcolm 2023).",
+      "downstream_signalling": "MOR superagonist. Kozell 2024 reports DEI Emax 111% vs DAMGO at GTPγS, EC50 53 pM, i.e. functionally MORE efficacious than the natural ligand peptide. β-arrestin recruitment also elevated (Malcolm 2023).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1323,7 +1323,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist. Pyrrolidine + methoxy combination — ~3-4× weaker than PYRETZ.",
+      "downstream_signalling": "Full MOR agonist. Pyrrolidine + methoxy combination: ~3-4× weaker than PYRETZ.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1434,7 +1434,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist; subnanomolar EC50. Loses MOR-selectivity (~140× MOR/KOR vs ~330× for PYRETZ) — pyrrolidine + isopropoxy combo binds KOR/DOR significantly. Functional Emax 98%.",
+      "downstream_signalling": "Full MOR agonist; subnanomolar EC50. Loses MOR-selectivity (~140× MOR/KOR vs ~330× for PYRETZ): pyrrolidine + isopropoxy combo binds KOR/DOR significantly. Functional Emax 98%.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1545,7 +1545,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist with EC50 300 pM — among the four subnanomolar functional potencies in Kozell 2024 (alongside DEI, ETZ, ITZ).",
+      "downstream_signalling": "Full MOR agonist with EC50 300 pM: among the four subnanomolar functional potencies in Kozell 2024 (alongside DEI, ETZ, ITZ).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1811,7 +1811,7 @@
           ],
           "bias_factor_log": 0,
           "bias_reference_compound": "hydromorphone",
-          "interpretation": "Not significantly biased relative to reference. Brorphine and halogenated analogues recruit β-arrestin2 with high efficacy — at odds with the idea that 'designer opioids are uniformly β-arrestin-biased'.",
+          "interpretation": "Not significantly biased relative to reference. Brorphine and halogenated analogues recruit β-arrestin2 with high efficacy: at odds with the idea that 'designer opioids are uniformly β-arrestin-biased'.",
           "reference": null
         }
       ],
@@ -2012,7 +2012,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Diethylamino homologue of U-47700 (dimethyl → diethyl). MOR agonist per GTPγS in cloned hMOR. Krotulski [35S]GTPγS assay characterised this and seven U-series analogues — U-49900 was a weaker MOR agonist than U-47700.",
+      "downstream_signalling": "Diethylamino homologue of U-47700 (dimethyl → diethyl). MOR agonist per GTPγS in cloned hMOR. Krotulski [35S]GTPγS assay characterised this and seven U-series analogues: U-49900 was a weaker MOR agonist than U-47700.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2135,12 +2135,12 @@
           ],
           "bias_factor_log": 1.2,
           "bias_reference_compound": "DAMGO",
-          "interpretation": "MT-45 is strongly G-protein biased — 18-fold weaker β-arrestin recruitment than expected from its cAMP potency. This is the OPPOSITE of the 'biased toward arrestin' narrative; suggests respiratory depression in MT-45 cannot be explained by arrestin-mediated apnea.",
+          "interpretation": "MT-45 is strongly G-protein biased: 18-fold weaker β-arrestin recruitment than expected from its cAMP potency. This is the OPPOSITE of the 'biased toward arrestin' narrative; suggests respiratory depression in MT-45 cannot be explained by arrestin-mediated apnea.",
           "reference": "doi:10.1111/bph.15064"
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "G-protein–biased MOR partial agonist. Also reported NMDA-antagonist activity at high concentrations (associated with reported ototoxicity / bilateral hearing loss — see off_targets).",
+      "downstream_signalling": "G-protein–biased MOR partial agonist. Also reported NMDA-antagonist activity at high concentrations (associated with reported ototoxicity / bilateral hearing loss; see off_targets).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2177,7 +2177,7 @@
         "target": "auditory hair cells (mechanism unclear, possibly NMDA-related)",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Bilateral sensorineural hearing loss reported in MT-45 users in Sweden 2014 cluster — distinctive of this compound, not shared with other opioids.",
+        "clinical_consequence": "Bilateral sensorineural hearing loss reported in MT-45 users in Sweden 2014 cluster: distinctive of this compound, not shared with other opioids.",
         "reference": "pmid:25175898"
       }
     ],
@@ -2518,7 +2518,7 @@
         "OPRM1",
         "ABCB1"
       ],
-      "phenotype_effects": "CYP3A4*22 carriers have reduced clearance. OPRM1 A118G (rs1799971) — G-allele carriers need higher fentanyl doses for equivalent analgesia (Park 2007). ABCB1 (P-gp) polymorphisms affect brain efflux.",
+      "phenotype_effects": "CYP3A4*22 carriers have reduced clearance. OPRM1 A118G (rs1799971): G-allele carriers need higher fentanyl doses for equivalent analgesia (Park 2007). ABCB1 (P-gp) polymorphisms affect brain efflux.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -2538,7 +2538,7 @@
         "target": "diaphragm / chest wall musculature (chest wall rigidity)",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Rapid IV bolus or high-dose smoked / IV illicit use causes 'wooden chest syndrome' — laryngeal closure + thoracic skeletal muscle hypertonia via central MOR-dopaminergic pathway. Sudden ventilatory failure within seconds-minutes of dose; reversible with naloxone OR neuromuscular blockade.",
+        "clinical_consequence": "Rapid IV bolus or high-dose smoked / IV illicit use causes 'wooden chest syndrome': laryngeal closure + thoracic skeletal muscle hypertonia via central MOR-dopaminergic pathway. Sudden ventilatory failure within seconds-minutes of dose; reversible with naloxone OR neuromuscular blockade.",
         "reference": "pmid:34240442"
       }
     ],
@@ -2617,12 +2617,12 @@
           ],
           "bias_factor_log": -0.5,
           "bias_reference_compound": "DAMGO",
-          "interpretation": "Carfentanil is β-arrestin–BIASED relative to DAMGO (Ramos-González 2023) — opposite of fentanyl. Bias may contribute to apnea / respiratory depression at sub-analgesic doses. Carfentanil also stabilises MOR conformations resistant to naloxone reversal (Faouzi 2024 — see notes).",
+          "interpretation": "Carfentanil is β-arrestin–BIASED relative to DAMGO (Ramos-González 2023): opposite of fentanyl. Bias may contribute to apnea / respiratory depression at sub-analgesic doses. Carfentanil also stabilises MOR conformations resistant to naloxone reversal (Faouzi 2024; see notes).",
           "reference": "doi:10.1111/bph.16084"
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Ultra-efficient MOR agonist — full Emax at picomolar concentrations. Carfentanil-bound MOR is sensitive to naltrexone but partially resistant to naloxone and nalmefene (Faouzi et al., bioRxiv 2024 — PMC12198324); has clinical implications for overdose reversal.",
+      "downstream_signalling": "Ultra-efficient MOR agonist: full Emax at picomolar concentrations. Carfentanil-bound MOR is sensitive to naltrexone but partially resistant to naloxone and nalmefene (Faouzi et al., bioRxiv 2024; PMC12198324); has clinical implications for overdose reversal.",
       "neuroimaging": [
         {
           "modality": "PET",
@@ -2645,7 +2645,7 @@
           "protein_binding_pct": null,
           "dose_in_study_mg": null,
           "subject_n": 1,
-          "subject_demographics": "Single case report — intentional self-exposure",
+          "subject_demographics": "Single case report: intentional self-exposure",
           "reference": "pmid:29679387"
         }
       ],
@@ -2870,7 +2870,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist. Fast onset due to pKa (6.5) — 89% non-ionised at pH 7.4, vs fentanyl 9% non-ionised → much more rapid blood-brain transfer per molecule.",
+      "downstream_signalling": "Full MOR agonist. Fast onset due to pKa (6.5): 89% non-ionised at pH 7.4, vs fentanyl 9% non-ionised → much more rapid blood-brain transfer per molecule.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2968,7 +2968,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist. Ester hydrolysis by nonspecific esterases (not CES1) gives inactive metabolite — terminates effect.",
+      "downstream_signalling": "Full MOR agonist. Ester hydrolysis by nonspecific esterases (not CES1) gives inactive metabolite: terminates effect.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3133,7 +3133,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3158,7 +3158,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3177,7 +3177,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3225,7 +3225,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3250,7 +3250,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3269,7 +3269,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3394,7 +3394,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3435,7 +3435,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3454,7 +3454,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3503,7 +3503,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3528,7 +3528,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3547,7 +3547,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3656,7 +3656,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3681,7 +3681,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3700,7 +3700,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3765,7 +3765,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3798,7 +3798,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3817,7 +3817,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3864,7 +3864,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3889,7 +3889,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3908,7 +3908,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -3955,7 +3955,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -3980,7 +3980,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -3999,7 +3999,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -4046,7 +4046,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4071,7 +4071,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -4090,7 +4090,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -4137,7 +4137,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4162,7 +4162,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -4181,7 +4181,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -4230,7 +4230,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4255,7 +4255,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -4274,7 +4274,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -4339,7 +4339,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs — fentanyl class is broadly unbiased per Ramos-González 2023.",
+      "downstream_signalling": "Full MOR agonist via Gαi/o. β-arrestin bias not reliably established for most fentalogs: fentanyl class is broadly unbiased per Ramos-González 2023.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -4364,7 +4364,7 @@
         "CYP3A5",
         "OPRM1"
       ],
-      "phenotype_effects": "Inferred from fentanyl-class — no analogue-specific human data.",
+      "phenotype_effects": "Inferred from fentanyl-class: no analogue-specific human data.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -4383,7 +4383,7 @@
         "target": "chest wall",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Wooden chest syndrome — class-shared; rapid IV / smoked / IV illicit exposure.",
+        "clinical_consequence": "Wooden chest syndrome: class-shared; rapid IV / smoked / IV illicit exposure.",
         "reference": "pmid:34240442"
       }
     ],
@@ -4494,10 +4494,10 @@
     "is_class_context": true,
     "class_context_id": "benzimidazole-nitazenes",
     "class_name": "Benzimidazole nitazenes (2-benzylbenzimidazoles)",
-    "shared_mechanism": "Full μ-opioid receptor agonists with structures derived from 1950s Ciba-Geigy analgesic research (original etonitazene). MOR engagement via a binding pose distinct from fentanyl — the 5-nitro group, alkoxy phenyl, and N-dialkylaminoethyl tail all contribute to picomolar affinity. Most subnanomolar in Ki and EC50 at human MOR with Emax 90-110% of DAMGO. NOT detected by fentanyl test strips — chemically unrelated scaffold. Naloxone reverses but cumulative doses ≥4 mg are often needed clinically (vs ≥1 mg typical fentanyl).",
+    "shared_mechanism": "Full μ-opioid receptor agonists with structures derived from 1950s Ciba-Geigy analgesic research (original etonitazene). MOR engagement via a binding pose distinct from fentanyl: the 5-nitro group, alkoxy phenyl, and N-dialkylaminoethyl tail all contribute to picomolar affinity. Most subnanomolar in Ki and EC50 at human MOR with Emax 90-110% of DAMGO. NOT detected by fentanyl test strips: chemically unrelated scaffold. Naloxone reverses but cumulative doses ≥4 mg are often needed clinically (vs ≥1 mg typical fentanyl).",
     "shared_pk_summary": "Limited human PK. Hepatic metabolism via CYP3A4 (N-deethylation, primary) and CYP1A2 (O-dealkylation of alkoxy chain). Many phase-I metabolites retain MOR activity (notably N-desethyl-isotonitazene and N-desethyl-protonitazene, which are themselves sold as designer opioids). Half-life appears intermediate between morphine and fentanyl (rat data only).",
-    "shared_safety": "Extreme potency + steep dose-response + onset within minutes of insufflation/IV. Respiratory depression dominates clinical picture. Naloxone is effective but high cumulative doses needed: emergency departments report 4-6 mg cumulative IV naloxone for nitazene reversal (vs 0.4-2 mg typical for morphine/oxycodone). Active metabolites can produce 'renarcotization' as naloxone wears off (t½ 1.5-2.5h) while parent + metabolite persist longer. Public-access intranasal Narcan (4 mg) may be insufficient as single dose. Despite being part of the 'designer opioid' class, evidence does NOT support uniform β-arrestin bias — Vandeputte/Connors studies show MOR-coupling characteristic of full agonists rather than arrestin-biased ligands. The 'biased toward respiratory depression' narrative is better explained by extreme efficacy (Emax >100% DAMGO at full receptor occupancy) plus extreme potency than by pathway bias.",
-    "sar_summary": "MOR potency rank by 4-position substituent on benzyl: ethoxy ≈ isopropoxy > propoxy > methoxy > butoxy > Cl > F. 5-nitro contributes ~5× potency vs des-nitro analogues. Pyrrolidine (N-pyrrolidino) replacement of diethylamine tail preserves potency but appears to alter MOR/KOR selectivity. N-deethylation of the tail amine produces active metabolites with maintained or even improved MOR EC50. The 2-benzylbenzimidazole scaffold provides a binding mode unrelated to fentanyl's anilidopiperidine — this is why fentanyl-test-strips (immunoassay-based) cannot detect nitazenes.",
+    "shared_safety": "Extreme potency + steep dose-response + onset within minutes of insufflation/IV. Respiratory depression dominates clinical picture. Naloxone is effective but high cumulative doses needed: emergency departments report 4-6 mg cumulative IV naloxone for nitazene reversal (vs 0.4-2 mg typical for morphine/oxycodone). Active metabolites can produce 'renarcotization' as naloxone wears off (t½ 1.5-2.5h) while parent + metabolite persist longer. Public-access intranasal Narcan (4 mg) may be insufficient as single dose. Despite being part of the 'designer opioid' class, evidence does NOT support uniform β-arrestin bias: Vandeputte/Connors studies show MOR-coupling characteristic of full agonists rather than arrestin-biased ligands. The 'biased toward respiratory depression' narrative is better explained by extreme efficacy (Emax >100% DAMGO at full receptor occupancy) plus extreme potency than by pathway bias.",
+    "sar_summary": "MOR potency rank by 4-position substituent on benzyl: ethoxy ≈ isopropoxy > propoxy > methoxy > butoxy > Cl > F. 5-nitro contributes ~5× potency vs des-nitro analogues. Pyrrolidine (N-pyrrolidino) replacement of diethylamine tail preserves potency but appears to alter MOR/KOR selectivity. N-deethylation of the tail amine produces active metabolites with maintained or even improved MOR EC50. The 2-benzylbenzimidazole scaffold provides a binding mode unrelated to fentanyl's anilidopiperidine: this is why fentanyl-test-strips (immunoassay-based) cannot detect nitazenes.",
     "key_references": [
       "doi:10.1124/jpet.123.002052",
       "doi:10.1016/j.drugalcdep.2023.109939",
@@ -4510,9 +4510,9 @@
     "is_class_context": true,
     "class_context_id": "fentanyl-anilidopiperidines",
     "class_name": "Fentanyl-family anilidopiperidines",
-    "shared_mechanism": "4-anilidopiperidine scaffold designed at Janssen (1960s) — full MOR agonists with sub- to low-nanomolar Ki at human MOR. β-arrestin recruitment is broadly proportional to G-protein activation (i.e., not biased) per Ramos-González 2023, except for carfentanil which is genuinely β-arrestin-biased. Activate Gαi/o → cAMP inhibition + GIRK opening + Ca²⁺ channel closure.",
-    "shared_pk_summary": "Extensive CYP3A4 N-dealkylation to inactive nor-metabolite + 4-ANPP marker (from amide hydrolysis). High lipophilicity → rapid BBB transfer, large Vd (3-5 L/kg), context-sensitive half-life that grows with infusion duration (except remifentanil — esterase-cleared). Protein binding 80-92% (albumin + α1-acid glycoprotein). CYP3A4 inhibitors (ritonavir, itraconazole) markedly increase fentanyl exposure; the analogs share the same CYP3A4 N-dealkylation route, but interaction data for individual fentalogs are sparse and the magnitude is not established per-analog.",
-    "shared_safety": "Chest wall rigidity ('wooden chest syndrome') — class-specific complication driven by central MOR activation via dopaminergic pathway; risk highest with rapid-onset routes (IV bolus, smoked, IN). Reversible with naloxone OR neuromuscular blockade. Onset within seconds-to-minutes; can cause sudden ventilatory failure before classical respiratory depression manifests. Naloxone dose requirements rise with potency: fentanyl typically reverses with 0.4-2 mg cumulative; carfentanil-class exposures may need ≥4-8 mg and/or nalmefene/naltrexone given the unique receptor conformation stabilised by carfentanil (Faouzi 2024).",
+    "shared_mechanism": "4-anilidopiperidine scaffold designed at Janssen (1960s): full MOR agonists with sub- to low-nanomolar Ki at human MOR. β-arrestin recruitment is broadly proportional to G-protein activation (i.e., not biased) per Ramos-González 2023, except for carfentanil which is genuinely β-arrestin-biased. Activate Gαi/o → cAMP inhibition + GIRK opening + Ca²⁺ channel closure.",
+    "shared_pk_summary": "Extensive CYP3A4 N-dealkylation to inactive nor-metabolite + 4-ANPP marker (from amide hydrolysis). High lipophilicity → rapid BBB transfer, large Vd (3-5 L/kg), context-sensitive half-life that grows with infusion duration (except remifentanil; esterase-cleared). Protein binding 80-92% (albumin + α1-acid glycoprotein). CYP3A4 inhibitors (ritonavir, itraconazole) markedly increase fentanyl exposure; the analogs share the same CYP3A4 N-dealkylation route, but interaction data for individual fentalogs are sparse and the magnitude is not established per-analog.",
+    "shared_safety": "Chest wall rigidity ('wooden chest syndrome'): class-specific complication driven by central MOR activation via dopaminergic pathway; risk highest with rapid-onset routes (IV bolus, smoked, IN). Reversible with naloxone OR neuromuscular blockade. Onset within seconds-to-minutes; can cause sudden ventilatory failure before classical respiratory depression manifests. Naloxone dose requirements rise with potency: fentanyl typically reverses with 0.4-2 mg cumulative; carfentanil-class exposures may need ≥4-8 mg and/or nalmefene/naltrexone given the unique receptor conformation stabilised by carfentanil (Faouzi 2024).",
     "sar_summary": "4-position substituent on piperidine: methoxymethyl (sufentanil) or methyl ester (carfentanil, remifentanil) markedly increase MOR affinity. N-aryl ring substitution: para-F preserves activity; para-Cl, para-OMe also active; para-thienyl (sufentanil) increases potency. Amide acyl chain: propionyl (fentanyl) > butyryl (butyrfentanyl) > acetyl (acetylfentanyl) > pentanoyl in MOR Ki. Furanyl carbonyl (furanylfentanyl) preserves high potency. 3-methyl piperidine substitution + 4-carbomethoxy (lofentanil) gives extreme affinity + slow off-rate.",
     "key_references": [
       "doi:10.1002/dta.2822",
@@ -4529,7 +4529,7 @@
     "shared_mechanism": "trans-3,4-dichlorobenzamide + cyclohexyl-diamine scaffold designed at Upjohn 1970s (U-series) and Allen+Hanburys (AH-7921). Full MOR agonists with Ki 11-30 nM at human MOR. U-47700 shows ~25% MOR internalisation (DAMGO-like); AH-7921 shows ~5% (morphine-like) per Hsu 2019. Selectivity: μ >> δ > κ for U-47700; AH-7921 has mixed μ/κ.",
     "shared_pk_summary": "Hepatic metabolism via CYP3A4 (and minor CYP3A5/2B6/2C19) → N-desmethyl-U-47700 (active) and further N,N-didesmethyl in urine. Rapid Cmax (rat Tmax 15-38 min IV). Human CL extrapolated 0.944-1.371 L/h/kg via PBPK. Half-life in rats ~2-3 hours; human estimates ~3-5 hours.",
     "shared_safety": "Roughly 7-8× morphine potency in-vivo (U-47700). Fatalities reported with combination use, often with benzodiazepines. Naloxone-responsive with standard doses (lower-potency than fentanyl/nitazenes). Not detected by fentanyl test strips.",
-    "sar_summary": "trans-1,2-diamine geometry is required; 3,4-dichlorobenzamide is optimal — mono-Cl or mono-F reduce potency. N,N-dimethyl tail (U-47700) > N,N-diethyl tail (U-49900) at MOR. Modifications mostly explored as scheduling workarounds 2016-2019.",
+    "sar_summary": "trans-1,2-diamine geometry is required; 3,4-dichlorobenzamide is optimal: mono-Cl or mono-F reduce potency. N,N-dimethyl tail (U-47700) > N,N-diethyl tail (U-49900) at MOR. Modifications mostly explored as scheduling workarounds 2016-2019.",
     "key_references": [
       "doi:10.1016/j.drugalcdep.2023.109939",
       "doi:10.1007/s00204-020-02766-7",
@@ -4540,9 +4540,9 @@
     "is_class_context": true,
     "class_context_id": "mt-piperazines",
     "class_name": "Diphenylethyl-piperazine opioids (MT-45)",
-    "shared_mechanism": "1-cyclohexyl-4-(1,2-diphenylethyl)piperazine. MOR full agonist with moderate potency (Ki 18-57 nM; cAMP EC50 1.3 μM) but strongly G-PROTEIN BIASED — β-arrestin recruitment is 18× weaker than expected from cAMP potency. Approximately morphine-equivalent in vivo. Not chemically related to fentanyl, U-series, or nitazenes — entirely distinct scaffold.",
+    "shared_mechanism": "1-cyclohexyl-4-(1,2-diphenylethyl)piperazine. MOR full agonist with moderate potency (Ki 18-57 nM; cAMP EC50 1.3 μM) but strongly G-PROTEIN BIASED: β-arrestin recruitment is 18× weaker than expected from cAMP potency. Approximately morphine-equivalent in vivo. Not chemically related to fentanyl, U-series, or nitazenes: entirely distinct scaffold.",
     "shared_pk_summary": "Hepatic CYP3A4 oxidation; multiple hydroxylated and N-dealkylated metabolites identified in human urine (Helander 2018). No formal human PK studies.",
-    "shared_safety": "Distinctive bilateral sensorineural hearing loss in MT-45 users (2014 Swedish cluster, 9 cases) — unique among opioids. Mechanism unclear, possibly via NMDA-related off-target activity. Classical opioid respiratory depression also; naloxone-responsive.",
+    "shared_safety": "Distinctive bilateral sensorineural hearing loss in MT-45 users (2014 Swedish cluster, 9 cases): unique among opioids. Mechanism unclear, possibly via NMDA-related off-target activity. Classical opioid respiratory depression also; naloxone-responsive.",
     "sar_summary": "Class so small (MT-45 + 2F-MT-45 + a handful of analogues) that no broad SAR. The ortho-fluorine in 2F-MT-45 markedly increases potency (cAMP EC50 42 nM vs 1300 nM for MT-45) and restores β-arrestin recruitment to DAMGO-like potency.",
     "key_references": [
       "doi:10.1111/bph.15064",
@@ -4554,7 +4554,7 @@
     "class_context_id": "brorphine-benzimidazolones",
     "class_name": "Piperidine-benzimidazolone opioids (Brorphine class)",
     "shared_mechanism": "1-(piperidin-4-yl)-2,3-dihydro-1H-benzimidazol-2-one scaffold with arylethyl tail. Functional bridge between piperidine (fentanyl) and benzimidazole (nitazene) chemistries. Full MOR agonist with high β-arrestin2 recruitment (Emax 209% hydromorphone) but NOT biased (G-protein and arrestin scale proportionally). Halogen series (chlor-, brom-, iodo-rphine) all active; bromo (brorphine) is the marketed compound.",
-    "shared_pk_summary": "Hepatic CYP3A4 — multiple oxidative metabolites in hepatocyte studies. No formal human PK.",
+    "shared_pk_summary": "Hepatic CYP3A4: multiple oxidative metabolites in hepatocyte studies. No formal human PK.",
     "shared_safety": "Found in supply since 2019. Fatalities reported in US/EU. Naloxone-responsive but potency exceeds morphine. Not detected by fentanyl test strips. Resurgence post-2023 after initial decline.",
     "sar_summary": "Para-halogen on arylethyl phenyl ring: H << F < Cl ≈ Br ≈ I at MOR. The 'orphine' parent (no para-halogen) is much weaker.",
     "key_references": [

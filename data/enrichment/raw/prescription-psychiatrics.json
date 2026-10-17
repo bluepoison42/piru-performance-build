@@ -515,7 +515,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "SERT blockade plus 5-HT2C antagonism produces secondary disinhibition of frontal cortex DA/NE — accounts for activating profile distinct from other SSRIs.",
+      "downstream_signalling": "SERT blockade plus 5-HT2C antagonism produces secondary disinhibition of frontal cortex DA/NE: accounts for activating profile distinct from other SSRIs.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -580,7 +580,7 @@
         "CYP2D6",
         "CYP2C9"
       ],
-      "phenotype_effects": "CYP2D6 PMs: fluoxetine AUC ↑, norfluoxetine AUC ↓. Because norfluoxetine has comparable SERT potency to parent and longer t1/2, total active drug exposure is similar across phenotypes — fluoxetine is unusually robust to CYP2D6 polymorphism.",
+      "phenotype_effects": "CYP2D6 PMs: fluoxetine AUC ↑, norfluoxetine AUC ↓. Because norfluoxetine has comparable SERT potency to parent and longer t1/2, total active drug exposure is similar across phenotypes: fluoxetine is unusually robust to CYP2D6 polymorphism.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -933,7 +933,7 @@
       "relevant_genes": [
         "CYP2D6"
       ],
-      "phenotype_effects": "CYP2D6 PMs show ~3-7× higher plasma paroxetine. Paradoxically, autoinhibition of CYP2D6 makes EMs behave like PMs at steady state — major source of nonlinear PK.",
+      "phenotype_effects": "CYP2D6 PMs show ~3-7× higher plasma paroxetine. Paradoxically, autoinhibition of CYP2D6 makes EMs behave like PMs at steady state: major source of nonlinear PK.",
       "reference": "pmid:23357843"
     },
     "tolerance_and_dependence": {
@@ -1584,7 +1584,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "5-HT2A antagonism enhances frontal-cortex DA release while D2 blockade reduces mesolimbic DA — the classic 'atypical' separation of antipsychotic from EPS effect.",
+      "downstream_signalling": "5-HT2A antagonism enhances frontal-cortex DA release while D2 blockade reduces mesolimbic DA: the classic 'atypical' separation of antipsychotic from EPS effect.",
       "neuroimaging": [
         {
           "modality": "PET",
@@ -1769,7 +1769,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Reversible MAO-A inhibition raises 5-HT, NE, and DA in synapses. Reversibility means tyramine displaces moclobemide from MAO-A, preserving substantial first-pass intestinal tyramine metabolism — accounts for far lower hypertensive crisis risk than irreversible MAOIs.",
+      "downstream_signalling": "Reversible MAO-A inhibition raises 5-HT, NE, and DA in synapses. Reversibility means tyramine displaces moclobemide from MAO-A, preserving substantial first-pass intestinal tyramine metabolism: accounts for far lower hypertensive crisis risk than irreversible MAOIs.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1829,9 +1829,9 @@
       },
       {
         "with": "SSRIs / triptans / meperidine",
-        "mechanism": "Pharmacodynamic — 5-HT excess",
+        "mechanism": "Pharmacodynamic: 5-HT excess",
         "ki_um": null,
-        "clinical_effect": "Serotonin syndrome risk — combinations contraindicated despite reversibility.",
+        "clinical_effect": "Serotonin syndrome risk: combinations contraindicated despite reversibility.",
         "reference": "pmid:7781267"
       }
     ],
@@ -1958,21 +1958,21 @@
     "drug_interactions_pk": [
       {
         "with": "Tyramine (cheese, wine, fermented foods)",
-        "mechanism": "Pharmacodynamic — inability to deaminate dietary tyramine",
+        "mechanism": "Pharmacodynamic: inability to deaminate dietary tyramine",
         "ki_um": null,
-        "clinical_effect": "Hypertensive crisis. 'Cheese reaction' — defining safety issue.",
+        "clinical_effect": "Hypertensive crisis. 'Cheese reaction': defining safety issue.",
         "reference": "pmid:28655495"
       },
       {
         "with": "SSRIs / SNRIs / tramadol / meperidine / dextromethorphan",
-        "mechanism": "Pharmacodynamic — 5-HT excess",
+        "mechanism": "Pharmacodynamic: 5-HT excess",
         "ki_um": null,
         "clinical_effect": "Serotonin syndrome; contraindicated. 5-week washout from fluoxetine, 2 weeks from other SSRIs required.",
         "reference": "pmid:28655495"
       },
       {
         "with": "Sympathomimetics (pseudoephedrine, amphetamines, cocaine)",
-        "mechanism": "Pharmacodynamic — unopposed NE/DA release",
+        "mechanism": "Pharmacodynamic: unopposed NE/DA release",
         "ki_um": null,
         "clinical_effect": "Severe hypertension. Contraindicated.",
         "reference": "pmid:28655495"
@@ -2104,7 +2104,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Triple action: (1) irreversible MAO inhibition → 5-HT/NE/DA accumulation; (2) GABA-T inhibition → GABA accumulation (anxiolytic); (3) hydrazine moiety scavenges reactive aldehydes (acrolein, 4-HNE) — neuroprotective.",
+      "downstream_signalling": "Triple action: (1) irreversible MAO inhibition → 5-HT/NE/DA accumulation; (2) GABA-T inhibition → GABA accumulation (anxiolytic); (3) hydrazine moiety scavenges reactive aldehydes (acrolein, 4-HNE): neuroprotective.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2150,12 +2150,12 @@
         "with": "Tyramine",
         "mechanism": "Pharmacodynamic",
         "ki_um": null,
-        "clinical_effect": "Hypertensive crisis — classic 'cheese reaction'.",
+        "clinical_effect": "Hypertensive crisis: classic 'cheese reaction'.",
         "reference": null
       },
       {
         "with": "SSRIs, SNRIs, tramadol, meperidine, dextromethorphan",
-        "mechanism": "Pharmacodynamic — serotonin syndrome",
+        "mechanism": "Pharmacodynamic: serotonin syndrome",
         "ki_um": null,
         "clinical_effect": "Contraindicated; 2-5 week washout required.",
         "reference": null
@@ -2330,14 +2330,14 @@
     "drug_interactions_pk": [
       {
         "with": "NSAIDs",
-        "mechanism": "Renal — reduced afferent arteriolar prostaglandin signalling reduces lithium clearance",
+        "mechanism": "Renal: reduced afferent arteriolar prostaglandin signalling reduces lithium clearance",
         "ki_um": null,
         "clinical_effect": "Lithium plasma ↑ ~25-50%; toxicity risk.",
         "reference": "pmid:2258452"
       },
       {
         "with": "thiazide diuretics",
-        "mechanism": "Renal — increased proximal Na reabsorption increases Li retention",
+        "mechanism": "Renal: increased proximal Na reabsorption increases Li retention",
         "ki_um": null,
         "clinical_effect": "Lithium ↑ ~25%.",
         "reference": null
@@ -2499,14 +2499,14 @@
         "with": "valproate",
         "mechanism": "UGT1A4 inhibition",
         "ki_um": null,
-        "clinical_effect": "Lamotrigine t1/2 ↑ to ~70 h; AUC ↑ 2× — major SJS risk factor; half all doses when combined.",
+        "clinical_effect": "Lamotrigine t1/2 ↑ to ~70 h; AUC ↑ 2×: major SJS risk factor; half all doses when combined.",
         "reference": "doi:10.1111/bcp.12984"
       },
       {
         "with": "carbamazepine / phenytoin / phenobarbital / rifampicin",
         "mechanism": "UGT1A4 induction",
         "ki_um": null,
-        "clinical_effect": "Lamotrigine t1/2 ↓ to ~14 h; AUC ↓ 50% — double dose typically needed.",
+        "clinical_effect": "Lamotrigine t1/2 ↓ to ~14 h; AUC ↓ 50%: double dose typically needed.",
         "reference": "doi:10.1111/bcp.12984"
       },
       {
@@ -2523,7 +2523,7 @@
         "HLA-B*15:02",
         "HLA-A*31:01"
       ],
-      "phenotype_effects": "HLA-B*15:02 carriers (predominantly Han Chinese, SE Asian) have ~1000× higher SJS/TEN risk — pre-prescription testing recommended in these populations. HLA-A*31:01 also confers risk in European populations. UGT1A4*2/*3 alleles affect clearance.",
+      "phenotype_effects": "HLA-B*15:02 carriers (predominantly Han Chinese, SE Asian) have ~1000× higher SJS/TEN risk; pre-prescription testing recommended in these populations. HLA-A*31:01 also confers risk in European populations. UGT1A4*2/*3 alleles affect clearance.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -2842,7 +2842,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Triple monoamine reuptake inhibitor (5-HT/NE/DA) without producing the chronic adaptive changes (β-adrenergic downregulation) seen with tricyclics — distinguishing pharmacological feature.",
+      "downstream_signalling": "Triple monoamine reuptake inhibitor (5-HT/NE/DA) without producing the chronic adaptive changes (β-adrenergic downregulation) seen with tricyclics: distinguishing pharmacological feature.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2891,10 +2891,10 @@
     "is_class_context": true,
     "class_context_id": "prescription-psychiatrics",
     "class_name": "Prescription psychiatric drugs — SSRIs, SNRIs, atypical antidepressants, MAOIs, atypical antipsychotics, and mood stabilisers",
-    "shared_mechanism": "These compounds split into mechanistically distinct subclasses despite their shared therapeutic indication. SSRIs selectively block the serotonin transporter (SERT) with Ki values typically <5 nM at cloned hSERT, raising synaptic 5-HT acutely and producing delayed (2-3 week) somatodendritic 5-HT1A autoreceptor desensitisation that gates the antidepressant response. Atypical antidepressants act through diverse mechanisms: mirtazapine via α2-autoreceptor + 5-HT2/3 antagonism (no transporter blockade), bupropion via NDRI. MAOIs irreversibly form covalent adducts on monoamine oxidase A and/or B, requiring 2-week enzyme resynthesis for washout; moclobemide uniquely is reversible (RIMA). Atypical antipsychotics are defined functionally by 5-HT2A:D2 receptor binding ratios above unity (clozapine ~30:1, olanzapine ~3:1) — the 5-HT2A blockade enhances cortical DA release while D2 blockade reduces mesolimbic DA, separating antipsychotic efficacy from extrapyramidal side-effects. Lithium uncompetitively inhibits GSK-3β by displacing Mg2+, depletes inositol via IMPase inhibition. Lamotrigine blocks voltage-gated sodium channels in a use- and state-dependent manner.",
-    "shared_pk_summary": "CYP2D6 and CYP2C19 are the meta-axes for most antidepressant variability. Fluoxetine and paroxetine are mechanism-based CYP2D6 inhibitors AND substrates, producing severe nonlinear PK and persistent inhibition (weeks after stopping fluoxetine). Citalopram/escitalopram cleared by CYP2C19 — PMs require dose reduction. Sertraline goes mainly via CYP2B6/2C19. Fluvoxamine is the prototype CYP1A2 inhibitor (raises clozapine, theophylline, caffeine, melatonin levels). Antipsychotics divide by metabolism: olanzapine via UGT1A4 + CYP1A2 (smoking induces, fluvoxamine inhibits); clozapine via CYP1A2/2D6/3A4. Lamotrigine via UGT1A4 — valproate halves clearance, carbamazepine doubles it. Lithium and gabapentinoids are renally excreted unchanged with PK closely tied to GFR.",
-    "shared_safety": "Five class-defining safety issues. (1) Serotonin syndrome from combining any 5-HT-elevating agent with an MAOI requires 2-5 week washout. (2) QTc prolongation: citalopram >40 mg (FDA black box), ziprasidone, methadone; mediated by hERG block by parent compound and DCT metabolite. (3) Metabolic syndrome from antipsychotics (olanzapine, clozapine highest) — driven by 5-HT2C + H1 + M3 antagonism causing weight gain and diabetogenic effects. (4) Stevens-Johnson syndrome with lamotrigine, especially with valproate co-administration or rapid titration — HLA-B*15:02 increases risk 1000× in Asian populations. (5) Tyramine 'cheese reaction' with irreversible MAOIs requires dietary restriction. SSRI discontinuation syndrome is dose-, t1/2-, and anticholinergic-load-dependent — paroxetine (short t1/2 + M1 block) is worst, fluoxetine (long-acting metabolite) is mildest. Pregnancy: paroxetine alone is category D for cardiac malformations; lithium for Ebstein anomaly (low absolute risk); valproate strongly teratogenic; sertraline/citalopram generally considered safest SSRIs in pregnancy. Lithium narrow therapeutic index (0.6-1.2 mM target) with toxicity ≥1.5 mM — NSAIDs/ACEis/thiazides reduce renal clearance and precipitate intoxication.",
-    "sar_summary": "SSRI SAR is dominated by the orthosteric SERT pocket binding pose: fluoxetine's aryloxyalkylamine, sertraline's tetralin, paroxetine's piperidine, and citalopram's phthalan — each occupies the same site with different selectivities for off-targets driven by accessory pharmacophores (paroxetine's piperidine for NET, sertraline's dichloro substitution for DAT). Atypical antipsychotic SAR balances D2 affinity against 5-HT2A:D2 ratio (the higher the ratio, the more 'atypical'); clozapine's tricyclic dibenzodiazepine scaffold with N-methylpiperazine is the prototype, with thienobenzodiazepine (olanzapine) and dibenzothiazepine (quetiapine) being scaffold-conservative successors. Aripiprazole's dichlorophenylpiperazine + quinolinone is the unique partial-agonist scaffold. MAOI SAR turns on the warhead: hydrazine (phenelzine) reduces FAD non-selectively; cyclopropylamine (tranylcypromine) opens to form a covalent adduct; propargyl (selegiline, rasagiline) provides MAO-B selectivity. Lamotrigine's phenyltriazine is sui generis as a use-dependent Na blocker, distinct from the hydantoin (phenytoin) and dibenzazepine (carbamazepine) sodium-channel-blocking scaffolds.",
+    "shared_mechanism": "These compounds split into mechanistically distinct subclasses despite their shared therapeutic indication. SSRIs selectively block the serotonin transporter (SERT) with Ki values typically <5 nM at cloned hSERT, raising synaptic 5-HT acutely and producing delayed (2-3 week) somatodendritic 5-HT1A autoreceptor desensitisation that gates the antidepressant response. Atypical antidepressants act through diverse mechanisms: mirtazapine via α2-autoreceptor + 5-HT2/3 antagonism (no transporter blockade), bupropion via NDRI. MAOIs irreversibly form covalent adducts on monoamine oxidase A and/or B, requiring 2-week enzyme resynthesis for washout; moclobemide uniquely is reversible (RIMA). Atypical antipsychotics are defined functionally by 5-HT2A:D2 receptor binding ratios above unity (clozapine ~30:1, olanzapine ~3:1); the 5-HT2A blockade enhances cortical DA release while D2 blockade reduces mesolimbic DA, separating antipsychotic efficacy from extrapyramidal side-effects. Lithium uncompetitively inhibits GSK-3β by displacing Mg2+, depletes inositol via IMPase inhibition. Lamotrigine blocks voltage-gated sodium channels in a use- and state-dependent manner.",
+    "shared_pk_summary": "CYP2D6 and CYP2C19 are the meta-axes for most antidepressant variability. Fluoxetine and paroxetine are mechanism-based CYP2D6 inhibitors AND substrates, producing severe nonlinear PK and persistent inhibition (weeks after stopping fluoxetine). Citalopram/escitalopram cleared by CYP2C19: PMs require dose reduction. Sertraline goes mainly via CYP2B6/2C19. Fluvoxamine is the prototype CYP1A2 inhibitor (raises clozapine, theophylline, caffeine, melatonin levels). Antipsychotics divide by metabolism: olanzapine via UGT1A4 + CYP1A2 (smoking induces, fluvoxamine inhibits); clozapine via CYP1A2/2D6/3A4. Lamotrigine via UGT1A4: valproate halves clearance, carbamazepine doubles it. Lithium and gabapentinoids are renally excreted unchanged with PK closely tied to GFR.",
+    "shared_safety": "Five class-defining safety issues. (1) Serotonin syndrome from combining any 5-HT-elevating agent with an MAOI requires 2-5 week washout. (2) QTc prolongation: citalopram >40 mg (FDA black box), ziprasidone, methadone; mediated by hERG block by parent compound and DCT metabolite. (3) Metabolic syndrome from antipsychotics (olanzapine, clozapine highest): driven by 5-HT2C + H1 + M3 antagonism causing weight gain and diabetogenic effects. (4) Stevens-Johnson syndrome with lamotrigine, especially with valproate co-administration or rapid titration: HLA-B*15:02 increases risk 1000× in Asian populations. (5) Tyramine 'cheese reaction' with irreversible MAOIs requires dietary restriction. SSRI discontinuation syndrome is dose-, t1/2-, and anticholinergic-load-dependent: paroxetine (short t1/2 + M1 block) is worst, fluoxetine (long-acting metabolite) is mildest. Pregnancy: paroxetine alone is category D for cardiac malformations; lithium for Ebstein anomaly (low absolute risk); valproate strongly teratogenic; sertraline/citalopram generally considered safest SSRIs in pregnancy. Lithium narrow therapeutic index (0.6-1.2 mM target) with toxicity ≥1.5 mM: NSAIDs/ACEis/thiazides reduce renal clearance and precipitate intoxication.",
+    "sar_summary": "SSRI SAR is dominated by the orthosteric SERT pocket binding pose: fluoxetine's aryloxyalkylamine, sertraline's tetralin, paroxetine's piperidine, and citalopram's phthalan; each occupies the same site with different selectivities for off-targets driven by accessory pharmacophores (paroxetine's piperidine for NET, sertraline's dichloro substitution for DAT). Atypical antipsychotic SAR balances D2 affinity against 5-HT2A:D2 ratio (the higher the ratio, the more 'atypical'); clozapine's tricyclic dibenzodiazepine scaffold with N-methylpiperazine is the prototype, with thienobenzodiazepine (olanzapine) and dibenzothiazepine (quetiapine) being scaffold-conservative successors. Aripiprazole's dichlorophenylpiperazine + quinolinone is the unique partial-agonist scaffold. MAOI SAR turns on the warhead: hydrazine (phenelzine) reduces FAD non-selectively; cyclopropylamine (tranylcypromine) opens to form a covalent adduct; propargyl (selegiline, rasagiline) provides MAO-B selectivity. Lamotrigine's phenyltriazine is sui generis as a use-dependent Na blocker, distinct from the hydantoin (phenytoin) and dibenzazepine (carbamazepine) sodium-channel-blocking scaffolds.",
     "key_references": [
       "pmid:9400006",
       "pmid:8822531",

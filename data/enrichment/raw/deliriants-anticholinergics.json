@@ -204,7 +204,7 @@
           "dose_in_study_mg": 10,
           "subject_n": 6,
           "subject_demographics": "Healthy adult subjects",
-          "reference": "pmid:7106172 (Peets EA, Jackson M, Symchowicz S — Pharmacokinetics of chlorpheniramine after IV and oral administration, 1982; J Pharmacol Exp Ther)"
+          "reference": "pmid:7106172 (Peets EA, Jackson M, Symchowicz S. Pharmacokinetics of chlorpheniramine after IV and oral administration, 1982; J Pharmacol Exp Ther)"
         },
         {
           "route": "intravenous",
@@ -231,7 +231,7 @@
         "metabolite_name": "desmethylchlorpheniramine (monodesmethyl)",
         "metabolite_active": true,
         "metabolite_potency_vs_parent_pct": null,
-        "reference": "pmid:11994058 (Yasuda SU, Zhang L, Huang SM — The roles of CYP2D6 and stereoselectivity in the clinical pharmacokinetics of chlorpheniramine; Br J Clin Pharmacol 2002)"
+        "reference": "pmid:11994058 (Yasuda SU, Zhang L, Huang SM. The roles of CYP2D6 and stereoselectivity in the clinical pharmacokinetics of chlorpheniramine; Br J Clin Pharmacol 2002)"
       },
       {
         "enzyme": "CYP2D6",
@@ -282,7 +282,7 @@
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
         "clinical_consequence": "Class IA-like sodium channel block contributes to wide-QRS and Brugada-pattern ECG findings in massive overdose; treated with hypertonic sodium bicarbonate. Quantitative Nav1.5 IC50 not separately characterised in mammalian patch-clamp.",
-        "reference": "ncbi:books/NBK534844 (StatPearls — Sodium Channel Blocker Toxicity)"
+        "reference": "ncbi:books/NBK534844 (StatPearls: Sodium Channel Blocker Toxicity)"
       }
     ],
     "demographic_differences": {
@@ -550,7 +550,7 @@
           "reference_agonist": null,
           "species": "human",
           "cell_system": "HEK293 stably expressing hERG, 36°C, +20 mV step protocol",
-          "reference": "doi:10.1016/j.phrs.2009.05.008 (Jo SH et al. — Promethazine directly blocks hERG K+ channel; Pharmacol Res 2009)"
+          "reference": "doi:10.1016/j.phrs.2009.05.008 (Jo SH et al. Promethazine directly blocks hERG K+ channel; Pharmacol Res 2009)"
         }
       ],
       "biased_agonism": [],
@@ -569,7 +569,7 @@
         "metabolite_name": "3-hydroxypromethazine",
         "metabolite_active": true,
         "metabolite_potency_vs_parent_pct": null,
-        "reference": "pmid:8946477 (Nakamura K et al. — CYP2D6 is the principal cytochrome P450 responsible for metabolism of the histamine H1 antagonist promethazine in human liver microsomes; J Pharmacol Exp Ther 1996)"
+        "reference": "pmid:8946477 (Nakamura K et al. CYP2D6 is the principal cytochrome P450 responsible for metabolism of the histamine H1 antagonist promethazine in human liver microsomes; J Pharmacol Exp Ther 1996)"
       },
       {
         "enzyme": "flavin monooxygenase (FMO) / CYP3A4",
@@ -718,7 +718,7 @@
           "species": "human",
           "tissue_or_cell": "HEK293 stably expressing human 5-HT3A; whole-cell patch clamp",
           "radioligand_or_probe": "functional electrophysiology",
-          "reference": "pmid:27077139 (Lummis SCR group — The muscarinic antagonists scopolamine and atropine are competitive antagonists at 5-HT3 receptors; doi:10.1111/jnc.13628)"
+          "reference": "pmid:27077139 (Lummis SCR group: The muscarinic antagonists scopolamine and atropine are competitive antagonists at 5-HT3 receptors; doi:10.1111/jnc.13628)"
         }
       ],
       "functional": [],
@@ -728,8 +728,8 @@
       "neuroimaging": [
         {
           "modality": "EEG",
-          "finding": "Scopolamine produces characteristic increase in delta and theta power and decrease in alpha/beta — the 'cholinergic deficit EEG' signature also seen in Alzheimer's disease, supporting its use as a pharmacological model of AD cognitive impairment.",
-          "reference": "doi:10.1111/j.1365-2125.2011.03936.x (Liem-Moolenaar M et al. — PK-PD relationships of CNS effects of scopolamine in healthy subjects; Br J Clin Pharmacol 2011)"
+          "finding": "Scopolamine produces characteristic increase in delta and theta power and decrease in alpha/beta: the 'cholinergic deficit EEG' signature also seen in Alzheimer's disease, supporting its use as a pharmacological model of AD cognitive impairment.",
+          "reference": "doi:10.1111/j.1365-2125.2011.03936.x (Liem-Moolenaar M et al. PK-PD relationships of CNS effects of scopolamine in healthy subjects; Br J Clin Pharmacol 2011)"
         },
         {
           "modality": "fMRI",
@@ -753,7 +753,7 @@
           "dose_in_study_mg": 0.4,
           "subject_n": 6,
           "subject_demographics": "6 healthy male subjects",
-          "reference": "doi:10.1023/A:1015916423156 (Putcha L et al. — Pharmacokinetics and oral bioavailability of scopolamine in normal subjects; Pharm Res 1989)"
+          "reference": "doi:10.1023/A:1015916423156 (Putcha L et al. Pharmacokinetics and oral bioavailability of scopolamine in normal subjects; Pharm Res 1989)"
         },
         {
           "route": "intravenous",
@@ -768,7 +768,7 @@
           "dose_in_study_mg": 0.4,
           "subject_n": 6,
           "subject_demographics": "Healthy subjects",
-          "reference": "pmid:16175141 (Renner UD, Oertel R, Kirch W — Pharmacokinetics and pharmacodynamics in clinical use of scopolamine; Ther Drug Monit 2005)"
+          "reference": "pmid:16175141 (Renner UD, Oertel R, Kirch W. Pharmacokinetics and pharmacodynamics in clinical use of scopolamine; Ther Drug Monit 2005)"
         },
         {
           "route": "transdermal",
@@ -798,7 +798,7 @@
           "dose_in_study_mg": 0.4,
           "subject_n": 12,
           "subject_demographics": "12 healthy adults, randomised crossover",
-          "reference": "pmid:25187210 (Wu et al. — Dose escalation pharmacokinetics of intranasal scopolamine gel; J Clin Pharmacol 2015)"
+          "reference": "pmid:25187210 (Wu et al. Dose escalation pharmacokinetics of intranasal scopolamine gel; J Clin Pharmacol 2015)"
         }
       ],
       "concentration_effect": [
@@ -841,7 +841,7 @@
         "with": "grapefruit juice (CYP3A4 inhibition, intestinal)",
         "mechanism": "CYP3A4 inhibition",
         "ki_um": null,
-        "clinical_effect": "Increased oral scopolamine AUC by reducing first-pass metabolism — clinically observed.",
+        "clinical_effect": "Increased oral scopolamine AUC by reducing first-pass metabolism: clinically observed.",
         "reference": "pmid:16175141"
       },
       {
@@ -1006,10 +1006,10 @@
     "is_class_context": true,
     "class_context_id": "anticholinergic_deliriants_h1_blockers",
     "class_name": "First-generation H1 antihistamines with anticholinergic deliriant activity (ethanolamine, alkylamine, and phenothiazine subclasses)",
-    "shared_mechanism": "First-generation H1 antihistamines are lipophilic, brain-penetrant inverse agonists of the constitutively active H1 histamine receptor (Gαq → PLCβ → IP3/DAG). Their 'deliriant' / sedative profile is the combined result of (a) H1 inverse agonism in the tuberomammillary-cortical arousal system (sedation), and (b) variable but clinically meaningful muscarinic M1-M5 antagonism on cortical/hippocampal/PNS muscarinic receptors (anticholinergic delirium, dry mouth, tachycardia, urinary retention). Recreational use typically exploits the muscarinic action at supratherapeutic doses (e.g. diphenhydramine 500-1500 mg) to produce true hallucinations (Lilliputian, conversation with absent persons, indistinguishable from reality). Phenothiazine antihistamines (promethazine) add D2, 5-HT2, α1 antagonism. The class shares 'anticholinergic toxidrome': hyperthermia, mydriasis, dry mucous membranes, urinary retention, ileus, agitated delirium, seizures, and — at higher concentrations — cardiotoxicity via combined hERG (Kv11.1) and Nav1.5 (cardiac sodium channel) block.",
+    "shared_mechanism": "First-generation H1 antihistamines are lipophilic, brain-penetrant inverse agonists of the constitutively active H1 histamine receptor (Gαq → PLCβ → IP3/DAG). Their 'deliriant' / sedative profile is the combined result of (a) H1 inverse agonism in the tuberomammillary-cortical arousal system (sedation), and (b) variable but clinically meaningful muscarinic M1-M5 antagonism on cortical/hippocampal/PNS muscarinic receptors (anticholinergic delirium, dry mouth, tachycardia, urinary retention). Recreational use typically exploits the muscarinic action at supratherapeutic doses (e.g. diphenhydramine 500-1500 mg) to produce true hallucinations (Lilliputian, conversation with absent persons, indistinguishable from reality). Phenothiazine antihistamines (promethazine) add D2, 5-HT2, α1 antagonism. The class shares 'anticholinergic toxidrome': hyperthermia, mydriasis, dry mucous membranes, urinary retention, ileus, agitated delirium, seizures, and (at higher concentrations) cardiotoxicity via combined hERG (Kv11.1) and Nav1.5 (cardiac sodium channel) block.",
     "shared_pk_summary": "All members are weak bases (pKa 8-10), highly lipophilic, well absorbed orally but undergoing substantial first-pass hepatic metabolism (bioavailability 25-50%). Vd typically 3-15 L/kg (extensive tissue distribution). Protein binding 70-95% (predominantly albumin). Hepatic metabolism is dominated by CYP2D6 (chlorpheniramine, diphenhydramine, promethazine) with secondary CYP3A4/UGT pathways. Half-lives 8-30 h. CYP2D6 PMs (~7% of European-ancestry populations) show 2-3× higher AUC and prolonged sedation.",
-    "shared_safety": "Class hazards: (1) Anticholinergic delirium — particularly dangerous in elderly (Beers criteria avoid). (2) Cardiotoxicity in overdose: combined hERG block → QT prolongation/torsades + Nav1.5 block → wide QRS/Brugada-like ECG. Treated with hypertonic sodium bicarbonate (for sodium channel toxicity) and magnesium (for torsades). (3) Pediatric respiratory depression (promethazine FDA black box <2 y/o). (4) Serotonergic syndrome risk with chlorpheniramine + SSRI (SERT inhibition). (5) Hyperthermia & rhabdomyolysis at recreational doses. Antidote for anticholinergic delirium: physostigmine 0.5-2 mg IV (contraindicated if QRS prolonged or AV block). Sodium channel toxicity: not antidoted by physostigmine — physostigmine may worsen cardiac toxicity.",
-    "sar_summary": "Ethanolamines (diphenhydramine, doxylamine, dimenhydrinate) have ether/amine linker giving strong H1 affinity (Ki 5-20 nM) and intermediate muscarinic affinity (Ki 50-200 nM at M1). Alkylamines (chlorpheniramine, brompheniramine, pheniramine) are propylamine-linked, more H1-selective (Ki 1-5 nM) with weak muscarinic affinity (Ki 10-50 µM at M1) — but pick up potent SERT activity (Ki 15-30 nM) from the diphenylmethane → propylamine geometry. Phenothiazines (promethazine) inherit the antipsychotic-like polypharmacology of the phenothiazine ring (D2, 5-HT2, α1, plus very potent muscarinic ~1-12 nM at all subtypes). Replacing the tertiary amine with quaternary nitrogen (loratadine N-oxide → fexofenadine derivatives) removes BBB penetration → 'second-generation' non-sedating antihistamines.",
+    "shared_safety": "Class hazards: (1) Anticholinergic delirium: particularly dangerous in elderly (Beers criteria avoid). (2) Cardiotoxicity in overdose: combined hERG block → QT prolongation/torsades + Nav1.5 block → wide QRS/Brugada-like ECG. Treated with hypertonic sodium bicarbonate (for sodium channel toxicity) and magnesium (for torsades). (3) Pediatric respiratory depression (promethazine FDA black box <2 y/o). (4) Serotonergic syndrome risk with chlorpheniramine + SSRI (SERT inhibition). (5) Hyperthermia & rhabdomyolysis at recreational doses. Antidote for anticholinergic delirium: physostigmine 0.5-2 mg IV (contraindicated if QRS prolonged or AV block). Sodium channel toxicity: not antidoted by physostigmine; physostigmine may worsen cardiac toxicity.",
+    "sar_summary": "Ethanolamines (diphenhydramine, doxylamine, dimenhydrinate) have ether/amine linker giving strong H1 affinity (Ki 5-20 nM) and intermediate muscarinic affinity (Ki 50-200 nM at M1). Alkylamines (chlorpheniramine, brompheniramine, pheniramine) are propylamine-linked, more H1-selective (Ki 1-5 nM) with weak muscarinic affinity (Ki 10-50 µM at M1), but pick up potent SERT activity (Ki 15-30 nM) from the diphenylmethane → propylamine geometry. Phenothiazines (promethazine) inherit the antipsychotic-like polypharmacology of the phenothiazine ring (D2, 5-HT2, α1, plus very potent muscarinic ~1-12 nM at all subtypes). Replacing the tertiary amine with quaternary nitrogen (loratadine N-oxide → fexofenadine derivatives) removes BBB penetration → 'second-generation' non-sedating antihistamines.",
     "key_references": [
       "pmid:11994058",
       "pmid:8946477",
@@ -1026,9 +1026,9 @@
     "class_context_id": "anticholinergic_deliriants_tropane_alkaloids",
     "class_name": "Tropane alkaloid muscarinic antagonists (Solanaceae alkaloids — scopolamine, atropine, hyoscyamine)",
     "shared_mechanism": "Tropane-alkaloid muscarinic antagonists (atropine, scopolamine/hyoscine, hyoscyamine, anisodamine) are pan-muscarinic (M1-M5) competitive antagonists with sub-nanomolar to low-nanomolar Ki at all five subtypes. They are largely non-selective at equilibrium binding, but exhibit clinically meaningful functional differences driven by (a) lipophilicity (scopolamine > atropine > hyoscine butylbromide → CNS:peripheral ratio), (b) tissue distribution kinetics, and (c) the chirality of the tropic-acid ester (L-hyoscyamine is the pharmacologically active enantiomer; racemic atropine is half-strength). Block of muscarinic transmission in cortex/hippocampus produces 'true' deliriant hallucinations (Lilliputian, no insight, no critical distance from the experience), profound antegrade amnesia, and disorientation. Peripheral block produces classic 'mad as a hatter, red as a beet, hot as a hare, dry as a bone, blind as a bat' anticholinergic toxidrome.",
-    "shared_pk_summary": "Tropane alkaloids are weak bases (pKa ~9.7), lipophilic at physiological pH (atropine logP 1.8; scopolamine logP 1.2). Oral bioavailability 10-50% (variable due to first-pass and gut wall metabolism). Vd ~1-2 L/kg. CYP3A4 is the dominant metabolic pathway. Renal excretion of unchanged drug is small (1-5%). Half-lives are short: scopolamine 4-5 h (oral, longer transdermal), atropine 2-4 h. Notably shorter than the antihistamines — repeated dosing of scopolamine is uncommon clinically except via the 72-h transdermal patch.",
-    "shared_safety": "Class hazards: (1) Anticholinergic delirium with true hallucinations; recovery takes 24-72 h (longer than the parent compound's t1/2, suggesting active metabolites or post-receptor recovery kinetics). (2) Hyperthermia/heatstroke from sweat-gland blockade — particularly dangerous in summer / physical exertion. (3) Severe agitation requiring physical restraint or sedation — benzodiazepines preferred. (4) Physostigmine is antidote (peripheral + central AChE inhibitor; ~0.5-2 mg IV slow push). (5) Botanical preparations (Datura, Brugmansia, Atropa belladonna, Hyoscyamus) are exceptionally dangerous: scopolamine/atropine/hyoscyamine ratios vary 10-40× between specimens, plant parts (seeds richest), seasons, and geographies — no reliable dose estimation possible. Lethal doses estimated 10-100 mg atropine equivalent (highly variable). (6) Pediatric patients show paradoxical excitement and lower toxic thresholds.",
-    "sar_summary": "All tropane mAChR antagonists share the tropane bicyclic core (8-azabicyclo[3.2.1]octane) esterified with tropic acid (or substituted phenylpropanoic acid). The 6,7-epoxide differentiates scopolamine from atropine and confers greater CNS:peripheral ratio (more lipophilic, faster BBB equilibration). Quaternisation of the tropane nitrogen (e.g. atropine methylnitrate, hyoscine butylbromide) abolishes BBB penetration, producing peripheral-only antimuscarinics used for GI/biliary spasm without CNS delirium. Tropic acid stereochemistry: (S)-tropic acid (in L-hyoscyamine) is the active enantiomer; (R)-tropic acid has ~100× weaker muscarinic affinity. Racemisation of L-hyoscyamine during extraction/processing produces atropine (DL-hyoscyamine), halving potency by mass. Glycopyrrolate (synthetic quaternary) has the inverse CNS:peripheral profile of scopolamine — no CNS penetration, used for anesthesia premedication and sialorrhea.",
+    "shared_pk_summary": "Tropane alkaloids are weak bases (pKa ~9.7), lipophilic at physiological pH (atropine logP 1.8; scopolamine logP 1.2). Oral bioavailability 10-50% (variable due to first-pass and gut wall metabolism). Vd ~1-2 L/kg. CYP3A4 is the dominant metabolic pathway. Renal excretion of unchanged drug is small (1-5%). Half-lives are short: scopolamine 4-5 h (oral, longer transdermal), atropine 2-4 h. Notably shorter than the antihistamines: repeated dosing of scopolamine is uncommon clinically except via the 72-h transdermal patch.",
+    "shared_safety": "Class hazards: (1) Anticholinergic delirium with true hallucinations; recovery takes 24-72 h (longer than the parent compound's t1/2, suggesting active metabolites or post-receptor recovery kinetics). (2) Hyperthermia/heatstroke from sweat-gland blockade: particularly dangerous in summer / physical exertion. (3) Severe agitation requiring physical restraint or sedation: benzodiazepines preferred. (4) Physostigmine is antidote (peripheral + central AChE inhibitor; ~0.5-2 mg IV slow push). (5) Botanical preparations (Datura, Brugmansia, Atropa belladonna, Hyoscyamus) are exceptionally dangerous: scopolamine/atropine/hyoscyamine ratios vary 10-40× between specimens, plant parts (seeds richest), seasons, and geographies: no reliable dose estimation possible. Lethal doses estimated 10-100 mg atropine equivalent (highly variable). (6) Pediatric patients show paradoxical excitement and lower toxic thresholds.",
+    "sar_summary": "All tropane mAChR antagonists share the tropane bicyclic core (8-azabicyclo[3.2.1]octane) esterified with tropic acid (or substituted phenylpropanoic acid). The 6,7-epoxide differentiates scopolamine from atropine and confers greater CNS:peripheral ratio (more lipophilic, faster BBB equilibration). Quaternisation of the tropane nitrogen (e.g. atropine methylnitrate, hyoscine butylbromide) abolishes BBB penetration, producing peripheral-only antimuscarinics used for GI/biliary spasm without CNS delirium. Tropic acid stereochemistry: (S)-tropic acid (in L-hyoscyamine) is the active enantiomer; (R)-tropic acid has ~100× weaker muscarinic affinity. Racemisation of L-hyoscyamine during extraction/processing produces atropine (DL-hyoscyamine), halving potency by mass. Glycopyrrolate (synthetic quaternary) has the inverse CNS:peripheral profile of scopolamine; no CNS penetration, used for anesthesia premedication and sialorrhea.",
     "key_references": [
       "pmid:2704370",
       "pmid:16175141",

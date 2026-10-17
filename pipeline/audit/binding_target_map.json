@@ -1,7 +1,7 @@
 {
   "_readme": "Receptor-target spellings folded onto canonical names, produced by pipeline/audit/adjudicate.py --write-target-map. `cell` is the name two values must share before they may be compared; `base` is the receptor with every qualifier removed, which is what a class-level prior groups by. A `dropped` qualifier described the assay (species, tissue, radioligand); a `kept` one named a different entity or a different subunit/site and so keeps the rows apart.",
   "targets": {
-    "(prodrug — no direct affinity)": {
+    "(prodrug; no direct affinity)": {
       "base": "prodrug-no-direct-affinity",
       "cell": "prodrug-no-direct-affinity [entity:prodrug]",
       "dropped": [],
@@ -1096,7 +1096,7 @@
         "subtype:hr1a-r2"
       ]
     },
-    "GABA-B + α2δ-1 (rat brain) — by close analogy to phenibut": {
+    "GABA-B + α2δ-1 (rat brain), by close analogy to phenibut": {
       "base": "gaba-b-alpha2delta-1",
       "cell": "gaba-b-alpha2delta-1",
       "dropped": [

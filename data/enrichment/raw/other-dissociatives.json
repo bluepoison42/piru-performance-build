@@ -151,7 +151,7 @@
       },
       {
         "with": "MAOIs (phenelzine, tranylcypromine, moclobemide)",
-        "mechanism": "Pharmacodynamic — DXM SERT inhibition + MAO blockade",
+        "mechanism": "Pharmacodynamic: DXM SERT inhibition + MAO blockade",
         "ki_um": null,
         "clinical_effect": "Severe serotonin syndrome and hyperpyrexia; contraindicated combination.",
         "reference": "pmid:24587167"
@@ -282,7 +282,7 @@
       "relevant_genes": [
         "CYP2D6"
       ],
-      "phenotype_effects": "See Dextromethorphan record — same CYP2D6 dependency.",
+      "phenotype_effects": "See Dextromethorphan record: same CYP2D6 dependency.",
       "reference": "doi:10.1002/psp4.12776"
     },
     "tolerance_and_dependence": {
@@ -301,7 +301,7 @@
         "target": "bromide accumulation",
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
-        "clinical_consequence": "Bromism with chronic megadosing — bromide t1/2 ~12 days, replaces Cl-, causes neuropsychiatric symptoms and acneiform rash.",
+        "clinical_consequence": "Bromism with chronic megadosing: bromide t1/2 ~12 days, replaces Cl-, causes neuropsychiatric symptoms and acneiform rash.",
         "reference": "doi:10.1021/acschemneuro.3c00088"
       }
     ],
@@ -516,7 +516,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Preferential block of extrasynaptic over synaptic NMDA receptors (Xia et al. 2010, J Neurosci 30:11246) — this selectivity arises from extrasynaptic NMDARs being more frequently activated by low ambient glutamate, allowing memantine's voltage- and use-dependent block to accumulate. Extrasynaptic NMDA activation drives pro-apoptotic CREB shutoff signalling, while synaptic NMDA activation drives pro-survival CREB activation; memantine's bias preserves the latter — the molecular basis for therapeutic utility in Alzheimer's.",
+      "downstream_signalling": "Preferential block of extrasynaptic over synaptic NMDA receptors (Xia et al. 2010, J Neurosci 30:11246); this selectivity arises from extrasynaptic NMDARs being more frequently activated by low ambient glutamate, allowing memantine's voltage- and use-dependent block to accumulate. Extrasynaptic NMDA activation drives pro-apoptotic CREB shutoff signalling, while synaptic NMDA activation drives pro-survival CREB activation; memantine's bias preserves the latter: the molecular basis for therapeutic utility in Alzheimer's.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -569,7 +569,7 @@
       },
       {
         "with": "amantadine",
-        "mechanism": "Pharmacodynamic — additive NMDA channel block + OCT2 competition",
+        "mechanism": "Pharmacodynamic: additive NMDA channel block + OCT2 competition",
         "ki_um": null,
         "clinical_effect": "Increased risk of CNS toxicity; combination not recommended.",
         "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2003/021487lbl.pdf"
@@ -841,7 +841,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Voltage- and use-dependent NMDA channel block. The 2-methoxy substitution reduces affinity vs diphenidine but does not fundamentally change the binding pose. The 3-methoxy isomer (3-MeO-PCP-like geometry) is substantially more potent (Ki 19 nM); the 4-methoxy isomer collapses to Ki 461 nM — a steep SAR demonstrating the importance of meta-substitution on the aryl ring for PCP-site engagement.",
+      "downstream_signalling": "Voltage- and use-dependent NMDA channel block. The 2-methoxy substitution reduces affinity vs diphenidine but does not fundamentally change the binding pose. The 3-methoxy isomer (3-MeO-PCP-like geometry) is substantially more potent (Ki 19 nM); the 4-methoxy isomer collapses to Ki 461 nM: a steep SAR demonstrating the importance of meta-substitution on the aryl ring for PCP-site engagement.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1284,7 +1284,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Notable feature: DAT affinity is higher than NMDA affinity for fluorolintane — among the diarylethylamines, this profile is the closest approximation to a 'dissociative-stimulant' hybrid; users report substantial arousal vs the more dissociative-typical diphenidine.",
+      "downstream_signalling": "Notable feature: DAT affinity is higher than NMDA affinity for fluorolintane; among the diarylethylamines, this profile is the closest approximation to a 'dissociative-stimulant' hybrid; users report substantial arousal vs the more dissociative-typical diphenidine.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1360,7 +1360,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Trapping channel blocker — channel can close while drug is inside, requiring re-opening for drug egress. This trapping mechanism produces durable blockade and underlies both the long behavioural duration and the Olney's-lesion neurotoxicity (excessive disinhibition of cortical glutamate -> heat-shock response in retrosplenial neurons).",
+      "downstream_signalling": "Trapping channel blocker: channel can close while drug is inside, requiring re-opening for drug egress. This trapping mechanism produces durable blockade and underlies both the long behavioural duration and the Olney's-lesion neurotoxicity (excessive disinhibition of cortical glutamate -> heat-shock response in retrosplenial neurons).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1415,7 +1415,7 @@
         "target": "sigma receptors",
         "ki_or_ic50_nm": null,
         "concern_level": "low",
-        "clinical_consequence": "Originally claimed as sigma ligand; subsequent work shows the apparent sigma binding was actually low-affinity off-target — dizocilpine is highly selective for the NMDA PCP site.",
+        "clinical_consequence": "Originally claimed as sigma ligand; subsequent work shows the apparent sigma binding was actually low-affinity off-target: dizocilpine is highly selective for the NMDA PCP site.",
         "reference": "pmid:8355251"
       }
     ],
@@ -1548,7 +1548,7 @@
       "neuroimaging": [
         {
           "modality": "PET (15O-water rCBF, with 18F-FDG metabolic control)",
-          "finding": "N2O at sub-anesthetic concentrations produces increased BOLD in anterior cingulate cortex and posterior cingulate cortex with reduced default-mode network connectivity — pattern overlapping with ketamine.",
+          "finding": "N2O at sub-anesthetic concentrations produces increased BOLD in anterior cingulate cortex and posterior cingulate cortex with reduced default-mode network connectivity: pattern overlapping with ketamine.",
           "reference": "pmid:8694308"
         }
       ]
@@ -1864,7 +1864,7 @@
         "with": "QT-prolonging drugs (methadone, fluoroquinolones, amiodarone, ondansetron)",
         "mechanism": "Additive hERG blockade",
         "ki_um": null,
-        "clinical_effect": "Severe QTc prolongation, torsades risk — absolutely contraindicated combinations.",
+        "clinical_effect": "Severe QTc prolongation, torsades risk: absolutely contraindicated combinations.",
         "reference": "doi:10.1111/add.70319"
       }
     ],
@@ -1934,10 +1934,10 @@
     "is_class_context": true,
     "class_context_id": "non-acca-nmda-antagonists",
     "class_name": "Non-arylcyclohexylamine NMDA receptor antagonists (morphinans, aminoadamantanes, dibenzocycloheptenes, anaesthetic gases)",
-    "shared_mechanism": "Heterogeneous chemotypes that converge on the NMDA receptor PCP / channel-binding site, blocking the open channel in a use- and voltage-dependent manner. Affinity ranges from very low (DXM ~7 μM at the parent; dextrorphan metabolite ~0.9 μM) through low-affinity fast-off-rate (memantine, amantadine ~1-10 μM IC50, koff ~5 s-1) to extremely high-affinity slow-trapping (MK-801 Ki ~2 nM, koff ~0.01 s-1). Off-target serotonergic, sigma, nicotinic, and HCN1 actions vary by scaffold and explain qualitative differences in subjective profile — DXM is ketamine-adjacent with serotonergic affective overlay; memantine is functionally subtler due to fast off-rate and extrasynaptic selectivity; MK-801 is uncontrolled-dissociative with Olney's-lesion neurotoxicity. Nitrous oxide is mechanistically related (NMDA antagonist) but is the outlier in route (gas), kinetics (5-min onset/offset), and chronic toxicity (irreversible B12 inactivation).",
+    "shared_mechanism": "Heterogeneous chemotypes that converge on the NMDA receptor PCP / channel-binding site, blocking the open channel in a use- and voltage-dependent manner. Affinity ranges from very low (DXM ~7 μM at the parent; dextrorphan metabolite ~0.9 μM) through low-affinity fast-off-rate (memantine, amantadine ~1-10 μM IC50, koff ~5 s-1) to extremely high-affinity slow-trapping (MK-801 Ki ~2 nM, koff ~0.01 s-1). Off-target serotonergic, sigma, nicotinic, and HCN1 actions vary by scaffold and explain qualitative differences in subjective profile: DXM is ketamine-adjacent with serotonergic affective overlay; memantine is functionally subtler due to fast off-rate and extrasynaptic selectivity; MK-801 is uncontrolled-dissociative with Olney's-lesion neurotoxicity. Nitrous oxide is mechanistically related (NMDA antagonist) but is the outlier in route (gas), kinetics (5-min onset/offset), and chronic toxicity (irreversible B12 inactivation).",
     "shared_pk_summary": "DXM: oral, CYP2D6-dominated metabolism to active dextrorphan, F% varies 1-80% between PMs and EMs. Memantine: oral F 100%, ~100% renal-cleared (active tubular secretion + pH-dependent reabsorption), t1/2 60-80 h, no meaningful CYP role. Amantadine: similar profile to memantine but t1/2 ~17 h. MK-801: research tool, no published modern human PK. Nitrous: pulmonary, blood-gas 0.47, pharmacokinetics dominated by alveolar ventilation; non-metabolised (except for irreversible MTR-cobalamin oxidation, which is mechanistically a poison reaction not a clearance pathway).",
-    "shared_safety": "Acute: respiratory depression (NMDA antagonists are normally respiratory-sparing but in massive overdose or with synergistic CNS depressants this fails); psychotomimetic effects (Olney's lesions on chronic high-dose for slow-off compounds — MK-801, PCP, ketamine; not seen with fast-off memantine at therapeutic doses). DXM specific: hERG block + SERT activity → QT prolongation + serotonin syndrome risk with SSRIs/MAOIs (Nuedexta DXM/quinidine combination exploits the CYP2D6-driven exposure boost). Nitrous specific: irreversible B12 inactivation → subacute combined degeneration of the spinal cord with chronic heavy use (cases reliable at multi-canister-per-day exposure).",
-    "sar_summary": "Across this heterogeneous group, the unifying SAR axis is fit to the PCP/channel binding pocket. Within each scaffold: (1) morphinans — the dextrorotatory enantiomer is the NMDA-active series; CH2OMe vs OH at C3 (DXM vs DXO) changes affinity ~10x; (2) aminoadamantanes — methyl substitution on the adamantane cage (amantadine → memantine = 3,5-dimethyl) raises affinity ~10x and slightly slows off-rate but retains fast koff and voltage-dependent block; (3) dibenzocycloheptenes (MK-801) — methyl-bridged rigid scaffold maximises affinity and slows off-rate dramatically; (4) gases (N2O, xenon) — molecular volume and lipophilicity govern channel-pocket interaction. The fast-off vs slow-off distinction within the PCP site is more clinically important than absolute affinity — slow-off compounds are neurotoxic and psychotomimetic; fast-off are tolerable.",
+    "shared_safety": "Acute: respiratory depression (NMDA antagonists are normally respiratory-sparing but in massive overdose or with synergistic CNS depressants this fails); psychotomimetic effects (Olney's lesions on chronic high-dose for slow-off compounds; MK-801, PCP, ketamine; not seen with fast-off memantine at therapeutic doses). DXM specific: hERG block + SERT activity → QT prolongation + serotonin syndrome risk with SSRIs/MAOIs (Nuedexta DXM/quinidine combination exploits the CYP2D6-driven exposure boost). Nitrous specific: irreversible B12 inactivation → subacute combined degeneration of the spinal cord with chronic heavy use (cases reliable at multi-canister-per-day exposure).",
+    "sar_summary": "Across this heterogeneous group, the unifying SAR axis is fit to the PCP/channel binding pocket. Within each scaffold: (1) morphinans: the dextrorotatory enantiomer is the NMDA-active series; CH2OMe vs OH at C3 (DXM vs DXO) changes affinity ~10x; (2) aminoadamantanes: methyl substitution on the adamantane cage (amantadine → memantine = 3,5-dimethyl) raises affinity ~10x and slightly slows off-rate but retains fast koff and voltage-dependent block; (3) dibenzocycloheptenes (MK-801): methyl-bridged rigid scaffold maximises affinity and slows off-rate dramatically; (4) gases (N2O, xenon): molecular volume and lipophilicity govern channel-pocket interaction. The fast-off vs slow-off distinction within the PCP site is more clinically important than absolute affinity: slow-off compounds are neurotoxic and psychotomimetic; fast-off are tolerable.",
     "key_references": [
       "pmid:7714771",
       "pmid:8355251",
@@ -1952,9 +1952,9 @@
     "class_context_id": "diarylethylamine-nmda-antagonists",
     "class_name": "1,2-Diarylethylamine NMDA receptor antagonists (diphenidine series)",
     "shared_mechanism": "Open-chain (non-cyclic) NMDA channel blockers built on a 1,2-diphenyl-ethylamine scaffold with a cyclic amine on the alpha-carbon. Bind the PCP site of the NMDA receptor with high to moderate affinity (Ki 9-460 nM range, Wallach et al. 2016) in a use- and voltage-dependent manner. (S)-enantiomer is the active form (~40x more potent than R). Off-target profile: weak-to-moderate dopamine/norepinephrine reuptake inhibition (more prominent in pyrrolidine analogues like fluorolintane), moderate sigma-1/sigma-2 binding, generally negligible SERT and opioid receptor affinity (unlike DXM, which has appreciable SERT). The 1,2-diaryl orientation and lack of cyclohexyl ring distinguish them structurally from arylcyclohexylamines like PCP/ketamine, but they share the same NMDA binding pose and similar voltage-dependent block kinetics.",
-    "shared_pk_summary": "No controlled human PK studies have been published for any diphenidine-class compound. Forensic toxicology of intoxications and fatalities (Helander et al. 2015; Elliott et al. 2015; Geyer et al. 2015) shows: oral and insufflated routes both used; duration of subjective effects 4-8 h depending on compound; primary urinary metabolites are ring-hydroxylated and N-dealkylated products (CYP-mediated, presumed CYP3A4/2C19); no specific quantitative human Cmax, Tmax, t1/2 published. Postmortem blood concentrations of MXP in fatalities span ~200 μg/L to 24 mg/L — wide range indicates substantial inter-individual variability and a narrow therapeutic index.",
-    "shared_safety": "Major risks: (1) Narrow therapeutic index — multiple documented fatalities for MXP and diphenidine; recreational doses are close to toxic doses. (2) Long duration (4-8+ h) facilitates additional dosing during plateau, leading to delayed cumulative toxicity. (3) Co-ingestion with other CNS depressants (alcohol, benzodiazepines, GHB) is the most common fatal scenario. (4) Hypertensive crises, tachycardia, agitation, and dissociative psychosis reported in clinical case series. (5) No characterised antidote — supportive management only. (6) Cross-tolerance with ketamine reported anecdotally. Isomeric purity is a forensic concern: 3-MeO-diphenidine is ~2x more potent than 2-MeO at NMDA (Ki 19 vs 36 nM), and street 'MXP' has occasionally been the 3-MeO isomer or contained it as a contaminant.",
-    "sar_summary": "Key SAR findings from Wallach et al. 2016 (PLOS One): (1) NMDA affinity sensitive to ortho/meta vs para position of substituents on the 'aryl A' ring: meta-OMe (3-MXP) ≈ unsubstituted (DPH) > ortho-OMe (2-MXP) >> para-OMe (4-MXP); (2) Halogen at the 2-position dramatically increases affinity: 2-Cl-DPH Ki 9.3 nM (~2x parent), and the chloro analogue of ephenidine (2-Cl-ephenidine) is predicted to follow same trend; (3) Pyrrolidine (5-ring) replacing piperidine (6-ring) on nitrogen reduces NMDA affinity but markedly increases DAT inhibition — fluorolintane shows DAT > NMDA affinity, the opposite of the piperidine series; (4) Open-chain secondary amine (ephenidine, NEDPA) reduces affinity ~3x vs cyclic piperidine but retains channel-blocker mechanism. Conformational restriction by the cyclic amine on nitrogen is favourable for NMDA channel docking. CF3 substitution (2-TFMXP, no published Ki) remains pharmacologically uncharacterised but would predict either potent affinity (electron-withdrawing analogous to halogen) or steric loss depending on pocket geometry.",
+    "shared_pk_summary": "No controlled human PK studies have been published for any diphenidine-class compound. Forensic toxicology of intoxications and fatalities (Helander et al. 2015; Elliott et al. 2015; Geyer et al. 2015) shows: oral and insufflated routes both used; duration of subjective effects 4-8 h depending on compound; primary urinary metabolites are ring-hydroxylated and N-dealkylated products (CYP-mediated, presumed CYP3A4/2C19); no specific quantitative human Cmax, Tmax, t1/2 published. Postmortem blood concentrations of MXP in fatalities span ~200 μg/L to 24 mg/L: wide range indicates substantial inter-individual variability and a narrow therapeutic index.",
+    "shared_safety": "Major risks: (1) Narrow therapeutic index: multiple documented fatalities for MXP and diphenidine; recreational doses are close to toxic doses. (2) Long duration (4-8+ h) facilitates additional dosing during plateau, leading to delayed cumulative toxicity. (3) Co-ingestion with other CNS depressants (alcohol, benzodiazepines, GHB) is the most common fatal scenario. (4) Hypertensive crises, tachycardia, agitation, and dissociative psychosis reported in clinical case series. (5) No characterised antidote: supportive management only. (6) Cross-tolerance with ketamine reported anecdotally. Isomeric purity is a forensic concern: 3-MeO-diphenidine is ~2x more potent than 2-MeO at NMDA (Ki 19 vs 36 nM), and street 'MXP' has occasionally been the 3-MeO isomer or contained it as a contaminant.",
+    "sar_summary": "Key SAR findings from Wallach et al. 2016 (PLOS One): (1) NMDA affinity sensitive to ortho/meta vs para position of substituents on the 'aryl A' ring: meta-OMe (3-MXP) ≈ unsubstituted (DPH) > ortho-OMe (2-MXP) >> para-OMe (4-MXP); (2) Halogen at the 2-position dramatically increases affinity: 2-Cl-DPH Ki 9.3 nM (~2x parent), and the chloro analogue of ephenidine (2-Cl-ephenidine) is predicted to follow same trend; (3) Pyrrolidine (5-ring) replacing piperidine (6-ring) on nitrogen reduces NMDA affinity but markedly increases DAT inhibition: fluorolintane shows DAT > NMDA affinity, the opposite of the piperidine series; (4) Open-chain secondary amine (ephenidine, NEDPA) reduces affinity ~3x vs cyclic piperidine but retains channel-blocker mechanism. Conformational restriction by the cyclic amine on nitrogen is favourable for NMDA channel docking. CF3 substitution (2-TFMXP, no published Ki) remains pharmacologically uncharacterised but would predict either potent affinity (electron-withdrawing analogous to halogen) or steric loss depending on pocket geometry.",
     "key_references": [
       "doi:10.1371/journal.pone.0157021",
       "pmid:27623219",
@@ -1966,10 +1966,10 @@
     "is_class_context": true,
     "class_context_id": "iboga-alkaloid",
     "class_name": "Iboga alkaloid NMDA/opioid/sigma polyligands (ibogaine, noribogaine)",
-    "shared_mechanism": "Indolealkylamine monoterpenoid alkaloids from Tabernanthe iboga, with an unusually broad polypharmacology: weak-to-moderate affinity at NMDA receptors (Ki ~1-3 μM at PCP site), kappa-opioid (Ki ~0.7-3 μM, G-protein-biased agonism for noribogaine), mu-opioid (Ki ~2-5 μM, weak functional antagonism for noribogaine), serotonin transporter (Ki 40-550 nM, with noribogaine 10x more potent), sigma-1/sigma-2, 5-HT2A weak agonism, alpha3-beta4 nicotinic, and hERG (IC50 3.5 μM for ibogaine — clinically important arrhythmia risk). The anti-addictive efficacy is thought to arise from combined NMDA antagonism (Glick & Maisonneuve 1998), kappa-opioid G-biased agonism (Maillet et al. 2015), and SERT inhibition (especially via noribogaine). Pharmacology is not driven by any one target but by the orchestrated multi-target profile.",
-    "shared_pk_summary": "Ibogaine: oral, CYP2D6-dominated metabolism to noribogaine. Ibogaine plasma t1/2 ~7 h in EMs (shorter in UMs, much longer in PMs). Cmax and AUC strongly CYP2D6-genotype-dependent (Glue et al. 2015 — r=0.77 for Cmax). Noribogaine: t1/2 28-49 h (long-acting; persists days after parent gone — likely the species responsible for sub-acute mood and craving effects). Noribogaine itself has been formally characterised in healthy volunteers (Glue et al. 2014 ascending dose study).",
+    "shared_mechanism": "Indolealkylamine monoterpenoid alkaloids from Tabernanthe iboga, with an unusually broad polypharmacology: weak-to-moderate affinity at NMDA receptors (Ki ~1-3 μM at PCP site), kappa-opioid (Ki ~0.7-3 μM, G-protein-biased agonism for noribogaine), mu-opioid (Ki ~2-5 μM, weak functional antagonism for noribogaine), serotonin transporter (Ki 40-550 nM, with noribogaine 10x more potent), sigma-1/sigma-2, 5-HT2A weak agonism, alpha3-beta4 nicotinic, and hERG (IC50 3.5 μM for ibogaine; clinically important arrhythmia risk). The anti-addictive efficacy is thought to arise from combined NMDA antagonism (Glick & Maisonneuve 1998), kappa-opioid G-biased agonism (Maillet et al. 2015), and SERT inhibition (especially via noribogaine). Pharmacology is not driven by any one target but by the orchestrated multi-target profile.",
+    "shared_pk_summary": "Ibogaine: oral, CYP2D6-dominated metabolism to noribogaine. Ibogaine plasma t1/2 ~7 h in EMs (shorter in UMs, much longer in PMs). Cmax and AUC strongly CYP2D6-genotype-dependent (Glue et al. 2015; r=0.77 for Cmax). Noribogaine: t1/2 28-49 h (long-acting; persists days after parent gone; likely the species responsible for sub-acute mood and craving effects). Noribogaine itself has been formally characterised in healthy volunteers (Glue et al. 2014 ascending dose study).",
     "shared_safety": "PRIMARY ACUTE RISK: cardiac arrhythmia. Ibogaine blocks hERG (IC50 3.5 μM) and prolongs QTc; multiple case reports of fatal torsades-de-pointes at treatment doses (8-10 mg/kg). Pre-existing QT prolongation, hypokalaemia, hypomagnesaemia, structural heart disease, CYP2D6 PM genotype (slower metabolism, higher exposure), and concomitant QT-prolonging drugs all amplify risk. ECG monitoring, electrolyte repletion, and avoidance of co-medications are mandatory in clinical use. SUB-ACUTE: dystonia, ataxia, vomiting (24-72h), and prolonged dysregulation of mood. Cerebellar Purkinje cell toxicity seen in rats at very high doses (no clear human correlate). Noribogaine appears better tolerated cardiovascularly than parent ibogaine.",
-    "sar_summary": "Ibogaine → noribogaine (O-demethyl metabolite) is the dominant SAR shift: removing the 12-methoxy group of ibogaine to free phenol (noribogaine) (1) increases SERT affinity 10x (Ki 550 → 40 nM), (2) modestly increases opioid receptor affinities (Ki kappa 2.6 → 0.72 μM, mu 5 → 2.7 μM), (3) reduces NMDA affinity, (4) profoundly extends half-life (~7h → ~30+ h), (5) appears to reduce hERG and cardiac liability — making noribogaine the safer therapeutic candidate currently in clinical development for opioid use disorder (DemeRx, etc.). The 18-MC (18-methoxycoronaridine) congener was designed to retain anti-addictive efficacy while reducing tremor, hERG, and Purkinje toxicity by altering scaffold geometry.",
+    "sar_summary": "Ibogaine → noribogaine (O-demethyl metabolite) is the dominant SAR shift: removing the 12-methoxy group of ibogaine to free phenol (noribogaine) (1) increases SERT affinity 10x (Ki 550 → 40 nM), (2) modestly increases opioid receptor affinities (Ki kappa 2.6 → 0.72 μM, mu 5 → 2.7 μM), (3) reduces NMDA affinity, (4) profoundly extends half-life (~7h → ~30+ h), (5) appears to reduce hERG and cardiac liability, making noribogaine the safer therapeutic candidate currently in clinical development for opioid use disorder (DemeRx, etc.). The 18-MC (18-methoxycoronaridine) congener was designed to retain anti-addictive efficacy while reducing tremor, hERG, and Purkinje toxicity by altering scaffold geometry.",
     "key_references": [
       "pmid:9138735",
       "pmid:26302653",

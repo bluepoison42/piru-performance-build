@@ -125,11 +125,11 @@
         }
       ],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Tianeptine activates canonical MOR Gαi/o coupling — inhibition of adenylyl cyclase (reduced cAMP), activation of GIRK channels, inhibition of voltage-gated Ca²⁺ channels. Chronic dosing produces classical MOR tolerance with reduced analgesic and locomotor responses, mediated by receptor desensitization and downregulation in mice (Frontiers Psychiatry 2023, doi:10.3389/fpsyt.2023.1186397). Downstream BDNF/TrkB upregulation in the hippocampus appears MOR-dependent (Translational Psychiatry 2017, doi:10.1038/npp.2017.60).",
+      "downstream_signalling": "Tianeptine activates canonical MOR Gαi/o coupling: inhibition of adenylyl cyclase (reduced cAMP), activation of GIRK channels, inhibition of voltage-gated Ca²⁺ channels. Chronic dosing produces classical MOR tolerance with reduced analgesic and locomotor responses, mediated by receptor desensitization and downregulation in mice (Frontiers Psychiatry 2023, doi:10.3389/fpsyt.2023.1186397). Downstream BDNF/TrkB upregulation in the hippocampus appears MOR-dependent (Translational Psychiatry 2017, doi:10.1038/npp.2017.60).",
       "neuroimaging": [
         {
           "modality": "EEG (rat hippocampus)",
-          "finding": "Tianeptine induces opioid-receptor-dependent β oscillations in the rat hippocampus — naloxone-reversible.",
+          "finding": "Tianeptine induces opioid-receptor-dependent β oscillations in the rat hippocampus: naloxone-reversible.",
           "reference": "doi:10.64898/2025.11.30.691361"
         }
       ]
@@ -176,7 +176,7 @@
         "with": "MAO inhibitors",
         "mechanism": "MOR + serotonergic/sympathetic stack",
         "ki_um": null,
-        "clinical_effect": "Contraindicated — risk of hypertensive crisis and opioid potentiation",
+        "clinical_effect": "Contraindicated: risk of hypertensive crisis and opioid potentiation",
         "reference": "doi:10.1021/acschemneuro.4c00519"
       },
       {
@@ -358,7 +358,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Genomic mechanism — bromantane elevates CREB phosphorylation, disinhibiting TH transcription that is normally suppressed by dopamine autoregulation. Effect is slow-onset (hours) and long-lasting (weeks of chronic use) compared to classical psychostimulants. σ1 receptor involvement is inferred from amantadine/memantine analogy but not directly demonstrated for bromantane.",
+      "downstream_signalling": "Genomic mechanism: bromantane elevates CREB phosphorylation, disinhibiting TH transcription that is normally suppressed by dopamine autoregulation. Effect is slow-onset (hours) and long-lasting (weeks of chronic use) compared to classical psychostimulants. σ1 receptor involvement is inferred from amantadine/memantine analogy but not directly demonstrated for bromantane.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -493,7 +493,7 @@
         "with": "SSRIs / SNRIs / MAOIs / tramadol / meperidine",
         "mechanism": "MAO-A inhibition by MB",
         "ki_um": 0.027,
-        "clinical_effect": "Serotonin syndrome — FDA black-box-equivalent warning. Multiple deaths reported.",
+        "clinical_effect": "Serotonin syndrome: FDA black-box-equivalent warning. Multiple deaths reported.",
         "reference": "doi:10.1038/sj.bjp.0707430"
       }
     ],
@@ -501,7 +501,7 @@
       "relevant_genes": [
         "G6PD"
       ],
-      "phenotype_effects": "G6PD-deficient patients can develop hemolytic anemia or paradoxical methemoglobinemia from MB administration — relevant for parenteral/high-dose use.",
+      "phenotype_effects": "G6PD-deficient patients can develop hemolytic anemia or paradoxical methemoglobinemia from MB administration: relevant for parenteral/high-dose use.",
       "reference": null
     },
     "tolerance_and_dependence": {
@@ -849,7 +849,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "AChE inhibition is the dominant clinical mechanism — same target as donepezil/galantamine/rivastigmine. The much higher concentrations required for NMDA antagonism mean the 'dual-mechanism' marketing for neuroprotection is largely theoretical at oral doses.",
+      "downstream_signalling": "AChE inhibition is the dominant clinical mechanism: same target as donepezil/galantamine/rivastigmine. The much higher concentrations required for NMDA antagonism mean the 'dual-mechanism' marketing for neuroprotection is largely theoretical at oral doses.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1044,7 +1044,7 @@
       ],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Mechanism is poorly defined. Sikiric group attributes effects to angiogenesis (VEGF upregulation), NO system modulation, and growth-hormone receptor effects. Notably stable in gastric juice (>24 h) — claimed oral bioavailability is plausible structurally but not formally documented in humans.",
+      "downstream_signalling": "Mechanism is poorly defined. Sikiric group attributes effects to angiogenesis (VEGF upregulation), NO system modulation, and growth-hormone receptor effects. Notably stable in gastric juice (>24 h): claimed oral bioavailability is plausible structurally but not formally documented in humans.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1297,7 +1297,7 @@
       "binding": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Dual mechanism debated. Pereira's work claimed positive allosteric modulation of α4β2 and α7 nAChRs at the 'APL' site, but Kowal et al. 2018 (doi:10.1111/bph.14329) reported negative results in carefully controlled assays on human α4β2 and α7 nAChRs — calling the PAM mechanism into question. AChE inhibition remains the universally accepted dominant mechanism.",
+      "downstream_signalling": "Dual mechanism debated. Pereira's work claimed positive allosteric modulation of α4β2 and α7 nAChRs at the 'APL' site, but Kowal et al. 2018 (doi:10.1111/bph.14329) reported negative results in carefully controlled assays on human α4β2 and α7 nAChRs; calling the PAM mechanism into question. AChE inhibition remains the universally accepted dominant mechanism.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1514,7 +1514,7 @@
         "target": "5-HT3 receptor",
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
-        "clinical_consequence": "Nausea (~30% of patients) — most common AE.",
+        "clinical_consequence": "Nausea (~30% of patients): most common AE.",
         "reference": null
       }
     ],
@@ -2399,7 +2399,7 @@
       "binding": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Multi-target — PDE1 inhibition raises cAMP/cGMP (cerebral vasodilation); Na+ channel block (anticonvulsant / neuroprotective); IKK inhibition (anti-inflammatory). Plasma concentrations achievable from oral dosing fall well below the IC50s for all three targets, raising mechanistic questions about clinical efficacy.",
+      "downstream_signalling": "Multi-target: PDE1 inhibition raises cAMP/cGMP (cerebral vasodilation); Na+ channel block (anticonvulsant / neuroprotective); IKK inhibition (anti-inflammatory). Plasma concentrations achievable from oral dosing fall well below the IC50s for all three targets, raising mechanistic questions about clinical efficacy.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2472,7 +2472,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Lipophilic thiamine prodrug — two thiamine molecules linked by a disulfide bridge, esterified with isobutyrate. Crosses BBB more efficiently than thiamine hydrochloride. After reduction to thiamine in CNS, supports TPP-dependent metabolism (pyruvate dehydrogenase, α-ketoglutarate dehydrogenase, transketolase). Chronic dosing upregulates dopamine D1 receptor density in PFC in rats.",
+      "downstream_signalling": "Lipophilic thiamine prodrug: two thiamine molecules linked by a disulfide bridge, esterified with isobutyrate. Crosses BBB more efficiently than thiamine hydrochloride. After reduction to thiamine in CNS, supports TPP-dependent metabolism (pyruvate dehydrogenase, α-ketoglutarate dehydrogenase, transketolase). Chronic dosing upregulates dopamine D1 receptor density in PFC in rats.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2598,7 +2598,7 @@
       "functional": [],
       "biased_agonism": [],
       "receptor_oligomerisation": [],
-      "downstream_signalling": "Two vitamin B6 (pyridoxine) molecules joined by disulfide bridge — vitamin-derived semisynthetic. Crosses BBB; enhances glucose uptake/utilization in brain. Cleavage products include pyridoxal/pyridoxine (active B6 forms).",
+      "downstream_signalling": "Two vitamin B6 (pyridoxine) molecules joined by disulfide bridge: vitamin-derived semisynthetic. Crosses BBB; enhances glucose uptake/utilization in brain. Cleavage products include pyridoxal/pyridoxine (active B6 forms).",
       "neuroimaging": []
     },
     "human_pk": {
@@ -2623,7 +2623,7 @@
         "target": "drug-induced hepatitis (rare)",
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
-        "clinical_consequence": "Hepatotoxicity and cutaneous reactions (pemphigus, lichenoid) reported — particularly in elderly. Withdrawn or restricted in several markets for this reason.",
+        "clinical_consequence": "Hepatotoxicity and cutaneous reactions (pemphigus, lichenoid) reported: particularly in elderly. Withdrawn or restricted in several markets for this reason.",
         "reference": null
       }
     ],
@@ -2804,7 +2804,7 @@
         "target": "HGF/c-Met → mitogenic effects on tumors",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Theoretical oncogenic risk — HGF/c-Met signaling drives many cancers (hepatocellular, gastric, lung). Chronic supraphysiological activation is plausibly procarcinogenic. NO long-term human safety data.",
+        "clinical_consequence": "Theoretical oncogenic risk: HGF/c-Met signaling drives many cancers (hepatocellular, gastric, lung). Chronic supraphysiological activation is plausibly procarcinogenic. NO long-term human safety data.",
         "reference": null
       }
     ],
@@ -2953,7 +2953,7 @@
         "target": "GI saponin irritation",
         "ki_or_ic50_nm": null,
         "concern_level": "moderate",
-        "clinical_consequence": "Nausea, vomiting at high doses (saponin emetic effect — historically used as an expectorant for this reason).",
+        "clinical_consequence": "Nausea, vomiting at high doses (saponin emetic effect; historically used as an expectorant for this reason).",
         "reference": null
       }
     ],
@@ -3400,10 +3400,10 @@
     "is_class_context": true,
     "class_context_id": "nootropics-mixed",
     "class_name": "Other nootropics — kitchen-sink class with radically different mechanisms",
-    "shared_mechanism": "This is NOT a true mechanistic class. The 'nootropic' label groups together compounds with completely different primary pharmacology: (1) cholinergic enhancers — AChE inhibitors (huperzine A, galantamine), choline donors (alpha-GPC, citicoline, centrophenoxine, pyritinol), and nicotinic ligands (nicotine, varenicline, cytisine, encenicline, ABT-126, ABT-418, ispronicline, RG3487); (2) atypical neurotrophic / signaling peptides (semax, selank, cerebrolysin, BPC-157, dihexa, P21); (3) glutamate / AMPA modulators (noopept→cPG, NSI-189); (4) mitochondrial agents (methylene blue, idebenone, J-147); (5) atypical psychostimulants (bromantane via TH upregulation, sulbutiamine via D1 receptor upregulation, methylliberine via adenosine antagonism); (6) Nrf2/sirtuin/longevity (sulforaphane, pterostilbene); (7) misclassified opioids — TIANEPTINE is a μ-opioid receptor full agonist with high abuse liability whose historical 'SSRE atypical antidepressant' framing is medically obsolete and dangerously underplays the true pharmacology; (8) miscellaneous (agmatine, vinpocetine, PRL-8-53, Polygala tenuifolia, 9-Me-BC).",
-    "shared_pk_summary": "PK is heterogeneous: peptides (semax, selank, BPC-157) are essentially restricted to parenteral or intranasal routes due to GI proteolysis; small molecules have variable oral bioavailability ranging from very poor (~6-7% — idebenone, vinpocetine) to excellent (~80-99% — pterostilbene, tianeptine, citicoline). Half-lives range from minutes (semax parent peptide) to ~60 h (encenicline). CYP involvement is mostly limited to varenicline (minimal), galantamine (CYP2D6/3A4), and vinpocetine (CYP3A4/2C19) — tianeptine is notable for being almost entirely non-CYP cleared (mitochondrial β-oxidation).",
-    "shared_safety": "Multi-target safety considerations rather than class-shared: (a) SEROTONIN SYNDROME risk with MAO-A inhibitors (methylene blue is potent enough at therapeutic doses to be a major clinical hazard with SSRIs/SNRIs/tramadol; 9-Me-BC theoretically); (b) OPIOID-RELATED HARM with tianeptine — full MOR agonism with abuse liability, withdrawal, and respiratory depression at supratherapeutic doses (this is the SINGLE most important safety message for this group); (c) CHOLINERGIC AEs with AChE inhibitors and nAChR ligands (nausea, bradycardia, GI cramping); (d) HEPATOTOXICITY reported for pyritinol; (e) PREGNANCY contraindication for vinpocetine (miscarriage risk); (f) THEORETICAL ONCOGENICITY for dihexa (chronic HGF/c-Met augmentation); (g) NO HUMAN SAFETY DATA at all for J-147, P21, BPC-157 (oral), dihexa.",
-    "sar_summary": "No single SAR axis. Within sub-groups: (i) nAChR ligands — selectivity for α4β2 vs α7 vs α6β2 is structural (e.g., epibatidine/varenicline/cytisine share the pyridine-bicycle scaffold; encenicline/ABT-126 are α7-selective quinuclidine-based); (ii) peptide nootropics with C-terminal Pro-Gly-Pro tail (semax, selank) gain metabolic stability and acquire enkephalinase-inhibitor activity via the PGP metabolite; (iii) pterostilbene's two methoxy groups versus resveratrol's free hydroxyls dramatically improve oral BA and BBB penetration; (iv) tianeptine's MOR efficacy is sensitive to the heptanoate side chain length — shorter chain analogs lose efficacy.",
+    "shared_mechanism": "This is NOT a true mechanistic class. The 'nootropic' label groups together compounds with completely different primary pharmacology: (1) cholinergic enhancers: AChE inhibitors (huperzine A, galantamine), choline donors (alpha-GPC, citicoline, centrophenoxine, pyritinol), and nicotinic ligands (nicotine, varenicline, cytisine, encenicline, ABT-126, ABT-418, ispronicline, RG3487); (2) atypical neurotrophic / signaling peptides (semax, selank, cerebrolysin, BPC-157, dihexa, P21); (3) glutamate / AMPA modulators (noopept→cPG, NSI-189); (4) mitochondrial agents (methylene blue, idebenone, J-147); (5) atypical psychostimulants (bromantane via TH upregulation, sulbutiamine via D1 receptor upregulation, methylliberine via adenosine antagonism); (6) Nrf2/sirtuin/longevity (sulforaphane, pterostilbene); (7) misclassified opioids: TIANEPTINE is a μ-opioid receptor full agonist with high abuse liability whose historical 'SSRE atypical antidepressant' framing is medically obsolete and dangerously underplays the true pharmacology; (8) miscellaneous (agmatine, vinpocetine, PRL-8-53, Polygala tenuifolia, 9-Me-BC).",
+    "shared_pk_summary": "PK is heterogeneous: peptides (semax, selank, BPC-157) are essentially restricted to parenteral or intranasal routes due to GI proteolysis; small molecules have variable oral bioavailability ranging from very poor (~6-7%; idebenone, vinpocetine) to excellent (~80-99%; pterostilbene, tianeptine, citicoline). Half-lives range from minutes (semax parent peptide) to ~60 h (encenicline). CYP involvement is mostly limited to varenicline (minimal), galantamine (CYP2D6/3A4), and vinpocetine (CYP3A4/2C19): tianeptine is notable for being almost entirely non-CYP cleared (mitochondrial β-oxidation).",
+    "shared_safety": "Multi-target safety considerations rather than class-shared: (a) SEROTONIN SYNDROME risk with MAO-A inhibitors (methylene blue is potent enough at therapeutic doses to be a major clinical hazard with SSRIs/SNRIs/tramadol; 9-Me-BC theoretically); (b) OPIOID-RELATED HARM with tianeptine: full MOR agonism with abuse liability, withdrawal, and respiratory depression at supratherapeutic doses (this is the SINGLE most important safety message for this group); (c) CHOLINERGIC AEs with AChE inhibitors and nAChR ligands (nausea, bradycardia, GI cramping); (d) HEPATOTOXICITY reported for pyritinol; (e) PREGNANCY contraindication for vinpocetine (miscarriage risk); (f) THEORETICAL ONCOGENICITY for dihexa (chronic HGF/c-Met augmentation); (g) NO HUMAN SAFETY DATA at all for J-147, P21, BPC-157 (oral), dihexa.",
+    "sar_summary": "No single SAR axis. Within sub-groups: (i) nAChR ligands: selectivity for α4β2 vs α7 vs α6β2 is structural (e.g., epibatidine/varenicline/cytisine share the pyridine-bicycle scaffold; encenicline/ABT-126 are α7-selective quinuclidine-based); (ii) peptide nootropics with C-terminal Pro-Gly-Pro tail (semax, selank) gain metabolic stability and acquire enkephalinase-inhibitor activity via the PGP metabolite; (iii) pterostilbene's two methoxy groups versus resveratrol's free hydroxyls dramatically improve oral BA and BBB penetration; (iv) tianeptine's MOR efficacy is sensitive to the heptanoate side chain length: shorter chain analogs lose efficacy.",
     "key_references": [
       "doi:10.1038/tp.2014.30",
       "doi:10.1021/acschemneuro.4c00519",
@@ -3492,7 +3492,7 @@
       "relevant_genes": [
         "CYP1A2"
       ],
-      "phenotype_effects": "Caffeine is cleared almost entirely by CYP1A2, whose common intron-1 variant rs762551 (CYP1A2*1F) behaves as an inducibility genotype rather than a fixed fast/slow switch — it separates metabolic rates only where CYP1A2 is being induced. Sachse and colleagues phenotyped 185 non-smokers and 51 smokers with a 100 mg caffeine dose and report that \"The ratio of 1,7-dimethylxanthine (17X) plus 1,7-dimethyluric acid divided by caffeine in 0-5 h urine samples from 185 non-smokers did not differ significantly between the three CYP1A2 genotypes\", while in the smokers the 5 h plasma ratio was 1.37 in A/A carriers versus 0.82 in C/C. Their reading is that \"The A/A genotype, which may represent a CYP1A2 high inducibility genotype, may either be a direct cause of increased CYP1A2 activity, or be genetically linked to polymorphisms conferring high inducibility.\" So in a non-smoker, genotype alone predicts little about how long a coffee lasts; smoking and other CYP1A2 inducers dominate.",
+      "phenotype_effects": "Caffeine is cleared almost entirely by CYP1A2, whose common intron-1 variant rs762551 (CYP1A2*1F) behaves as an inducibility genotype rather than a fixed fast/slow switch: it separates metabolic rates only where CYP1A2 is being induced. Sachse and colleagues phenotyped 185 non-smokers and 51 smokers with a 100 mg caffeine dose and report that \"The ratio of 1,7-dimethylxanthine (17X) plus 1,7-dimethyluric acid divided by caffeine in 0-5 h urine samples from 185 non-smokers did not differ significantly between the three CYP1A2 genotypes\", while in the smokers the 5 h plasma ratio was 1.37 in A/A carriers versus 0.82 in C/C. Their reading is that \"The A/A genotype, which may represent a CYP1A2 high inducibility genotype, may either be a direct cause of increased CYP1A2 activity, or be genetically linked to polymorphisms conferring high inducibility.\" So in a non-smoker, genotype alone predicts little about how long a coffee lasts; smoking and other CYP1A2 inducers dominate.",
       "reference": "pmid:10233211"
     },
     "tolerance_and_dependence": {

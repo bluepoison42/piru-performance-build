@@ -1055,7 +1055,7 @@
           "reference": "doi:10.1001/jama.2009.351"
         }
       ],
-      "downstream_signalling": "Atypical DAT inhibitor — slower binding kinetics than cocaine; preserves outward-occluded DAT conformation. Activates orexin/hypocretin neurons in lateral hypothalamus and downstream histaminergic neurons in TMN — wakefulness is orexin/histamine dependent.",
+      "downstream_signalling": "Atypical DAT inhibitor: slower binding kinetics than cocaine; preserves outward-occluded DAT conformation. Activates orexin/hypocretin neurons in lateral hypothalamus and downstream histaminergic neurons in TMN: wakefulness is orexin/histamine dependent.",
       "neuroimaging": [
         {
           "modality": "PET",
@@ -1098,7 +1098,7 @@
       {
         "with": "ethinyl estradiol",
         "mechanism": "CYP3A4 induction",
-        "clinical_effect": "Reduced contraceptive efficacy — modafinil 400 mg/day decreases EE AUC by ~18%",
+        "clinical_effect": "Reduced contraceptive efficacy: modafinil 400 mg/day decreases EE AUC by ~18%",
         "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2010/021875s011lbl.pdf"
       },
       {
@@ -1151,7 +1151,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Atypical DAT inhibitor — increases NAc dopamine 150-200% over baseline but without cocaine-like reinforcement. Does NOT induce CYP enzymes (unlike modafinil)."
+      "downstream_signalling": "Atypical DAT inhibitor: increases NAc dopamine 150-200% over baseline but without cocaine-like reinforcement. Does NOT induce CYP enzymes (unlike modafinil)."
     },
     "human_pk": {
       "routes": []
@@ -1220,7 +1220,7 @@
       ],
       "binding": [],
       "functional": [],
-      "downstream_signalling": "Prodrug-like — hydroxamic acid analogue of fladrafinil. Animal data (Lafon patent CA1192222A) show sedation→excitation biphasic pattern at 64-256 mg/kg in mice."
+      "downstream_signalling": "Prodrug-like: hydroxamic acid analogue of fladrafinil. Animal data (Lafon patent CA1192222A) show sedation→excitation biphasic pattern at 64-256 mg/kg in mice."
     },
     "human_pk": {
       "routes": []
@@ -1641,7 +1641,7 @@
       ],
       "binding": [],
       "functional": [],
-      "downstream_signalling": "Lacks the C2 carbomethoxy of cocaine — much weaker DAT inhibitor (~30% potency of cocaine) but retains local anaesthetic activity at sodium channels."
+      "downstream_signalling": "Lacks the C2 carbomethoxy of cocaine: much weaker DAT inhibitor (~30% potency of cocaine) but retains local anaesthetic activity at sodium channels."
     },
     "human_pk": {
       "routes": []
@@ -1696,7 +1696,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Despite being a modafinil-derived 'atypical' template, JJC8-088 stabilises DAT in an outward-facing open conformation (cocaine-like) — produces cocaine-like reinforcement, self-administration, and reinstatement in primates. Its analog JJC8-091 (different N-substituent) favors occluded conformation and is non-reinforcing, illustrating the activity cliff in modafinil-based DAT inhibitors.",
+      "downstream_signalling": "Despite being a modafinil-derived 'atypical' template, JJC8-088 stabilises DAT in an outward-facing open conformation (cocaine-like): produces cocaine-like reinforcement, self-administration, and reinstatement in primates. Its analog JJC8-091 (different N-substituent) favors occluded conformation and is non-reinforcing, illustrating the activity cliff in modafinil-based DAT inhibitors.",
       "neuroimaging": []
     },
     "human_pk": {
@@ -1708,7 +1708,7 @@
         "target": "hERG/Kv11.1",
         "ki_or_ic50_nm": 130,
         "concern_level": "high",
-        "clinical_consequence": "IC50 0.13 µM at hERG — would prohibit clinical development without medchem reduction of this liability",
+        "clinical_consequence": "IC50 0.13 µM at hERG: would prohibit clinical development without medchem reduction of this liability",
         "reference": "pmid:34420294"
       }
     ],
@@ -1842,7 +1842,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Atypical DAT inhibitor — blocks cocaine-induced reward, locomotor stimulation, and sensitization without producing those effects itself. Sigma receptor antagonism may contribute to its anti-cocaine effects. Slow onset and high lipophilicity."
+      "downstream_signalling": "Atypical DAT inhibitor: blocks cocaine-induced reward, locomotor stimulation, and sensitization without producing those effects itself. Sigma receptor antagonism may contribute to its anti-cocaine effects. Slow onset and high lipophilicity."
     },
     "human_pk": {
       "routes": []
@@ -1937,7 +1937,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Atypical DAT inhibitor — non-substrate, non-releasing; interacts with outward-facing DAT but stabilises a more inward-occluded state than cocaine. Reverses tetrabenazine-induced motivational deficits in rats."
+      "downstream_signalling": "Atypical DAT inhibitor: non-substrate, non-releasing; interacts with outward-facing DAT but stabilises a more inward-occluded state than cocaine. Reverses tetrabenazine-induced motivational deficits in rats."
     },
     "human_pk": {
       "routes": []
@@ -2056,7 +2056,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Atypical allosteric DAT modulator — affects substrate uptake without affecting efflux (distinct from amphetamines and cocaine). Reduces amphetamine-induced DA release."
+      "downstream_signalling": "Atypical allosteric DAT modulator: affects substrate uptake without affecting efflux (distinct from amphetamines and cocaine). Reduces amphetamine-induced DA release."
     },
     "human_pk": {
       "routes": []
@@ -2194,7 +2194,7 @@
       "relevant_genes": [
         "CYP2B6"
       ],
-      "phenotype_effects": "CYP2B6*6 and *18 reduce hydroxybupropion formation by ~33% without altering parent or other metabolites — implications for smoking cessation efficacy.",
+      "phenotype_effects": "CYP2B6*6 and *18 reduce hydroxybupropion formation by ~33% without altering parent or other metabolites: implications for smoking cessation efficacy.",
       "reference": "pmc:3763712"
     },
     "tolerance_and_dependence": {
@@ -2210,7 +2210,7 @@
         "target": "Seizure threshold",
         "ki_or_ic50_nm": null,
         "concern_level": "high",
-        "clinical_consequence": "Dose-dependent seizure risk — 0.4% at ≤450 mg/day; markedly higher in eating-disorder patients, bulimia, or with concurrent stimulants",
+        "clinical_consequence": "Dose-dependent seizure risk: 0.4% at ≤450 mg/day; markedly higher in eating-disorder patients, bulimia, or with concurrent stimulants",
         "reference": null
       }
     ],
@@ -2282,7 +2282,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Selective NRI; in PFC, NET co-transports both NE and DA — atomoxetine therefore raises PFC DA despite no direct DAT activity. No striatal DA spike → no abuse liability, no reinforcement."
+      "downstream_signalling": "Selective NRI; in PFC, NET co-transports both NE and DA: atomoxetine therefore raises PFC DA despite no direct DAT activity. No striatal DA spike → no abuse liability, no reinforcement."
     },
     "human_pk": {
       "routes": [
@@ -2424,7 +2424,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Viloxazine SERTM = Serotonin and Norepinephrine Modulating Agent — at clinical Cmax occupies ~95% NET, >80% 5-HT2C/2B, 65% 5-HT7. Serotonergic component differentiates it from atomoxetine."
+      "downstream_signalling": "Viloxazine SERTM = Serotonin and Norepinephrine Modulating Agent: at clinical Cmax occupies ~95% NET, >80% 5-HT2C/2B, 65% 5-HT7. Serotonergic component differentiates it from atomoxetine."
     },
     "human_pk": {
       "routes": [
@@ -2468,7 +2468,7 @@
       "relevant_genes": [
         "CYP2D6"
       ],
-      "phenotype_effects": "PMs: Cmax +21%, AUC +26% — modest; no dose adjustment required",
+      "phenotype_effects": "PMs: Cmax +21%, AUC +26%; modest; no dose adjustment required",
       "reference": "doi:10.1007/s40261-024-01356-0"
     },
     "tags_to_add": [
@@ -2539,7 +2539,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Dual NDRI + OX2R partial agonism — combines transporter blockade with orexin pathway activation (similar wakefulness mechanism to modafinil)."
+      "downstream_signalling": "Dual NDRI + OX2R partial agonism: combines transporter blockade with orexin pathway activation (similar wakefulness mechanism to modafinil)."
     },
     "human_pk": {
       "routes": [
@@ -2632,7 +2632,7 @@
       ],
       "binding": [],
       "functional": [],
-      "downstream_signalling": "Inactive parent prodrug — hydrolysed by red blood cell aminopeptidases to d-amphetamine + L-lysine. All CNS effects via d-amphetamine. RBC hydrolysis is rate-limiting → flatter PK profile vs IR amphetamine; no escalating exposure with insufflation or IV use (cannot bypass enzymatic activation)."
+      "downstream_signalling": "Inactive parent prodrug: hydrolysed by red blood cell aminopeptidases to d-amphetamine + L-lysine. All CNS effects via d-amphetamine. RBC hydrolysis is rate-limiting → flatter PK profile vs IR amphetamine; no escalating exposure with insufflation or IV use (cannot bypass enzymatic activation)."
     },
     "human_pk": {
       "routes": [
@@ -2719,7 +2719,7 @@
       ],
       "binding": [],
       "functional": [],
-      "downstream_signalling": "Inactive prodrug — quaternary pyridinium carbamate of dexmethylphenidate. Cleaved gradually in lower GI tract (small intestine/colon) to release d-MPH → delayed absorption, prolonged plasma profile. Active component is identical to Focalin."
+      "downstream_signalling": "Inactive prodrug: quaternary pyridinium carbamate of dexmethylphenidate. Cleaved gradually in lower GI tract (small intestine/colon) to release d-MPH → delayed absorption, prolonged plasma profile. Active component is identical to Focalin."
     },
     "human_pk": {
       "routes": [
@@ -2803,7 +2803,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Classic NE/DA releasing agent — substrate-type (enters via DAT/NET, displaces vesicular monoamines via VMAT2 inhibition or weak base trapping)."
+      "downstream_signalling": "Classic NE/DA releasing agent: substrate-type (enters via DAT/NET, displaces vesicular monoamines via VMAT2 inhibition or weak base trapping)."
     },
     "human_pk": {
       "routes": [
@@ -2985,7 +2985,7 @@
         "NET"
       ],
       "functional": [],
-      "downstream_signalling": "3-Chloro analog — more potent DA releaser than 3-FPM, with measurable but modest serotonergic component."
+      "downstream_signalling": "3-Chloro analog: more potent DA releaser than 3-FPM, with measurable but modest serotonergic component."
     },
     "human_pk": {
       "routes": []
@@ -3126,7 +3126,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Despite carrying MDMA-like 3,4-methylenedioxy substitution, MDPM does NOT show robust 5-HT release — likely DAT/NET-preferring substrate-type releaser. Detected as MDMA synthesis impurity."
+      "downstream_signalling": "Despite carrying MDMA-like 3,4-methylenedioxy substitution, MDPM does NOT show robust 5-HT release: likely DAT/NET-preferring substrate-type releaser. Detected as MDMA synthesis impurity."
     },
     "human_pk": {
       "routes": []
@@ -3203,7 +3203,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Acts as prodrug — slow CYP N-demethylation to phenmetrazine. Resulting steady phenmetrazine plasma levels avoid the peak-trough abuse-amplifying pattern of phenmetrazine itself."
+      "downstream_signalling": "Acts as prodrug: slow CYP N-demethylation to phenmetrazine. Resulting steady phenmetrazine plasma levels avoid the peak-trough abuse-amplifying pattern of phenmetrazine itself."
     },
     "human_pk": {
       "routes": [
@@ -3284,7 +3284,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Triple reuptake inhibitor (SNDRI) — phenyltropane scaffold. Investigated for Parkinson's disease (akinesia reversal in MPTP marmosets without dyskinesia) and major depression. Discontinued 2001."
+      "downstream_signalling": "Triple reuptake inhibitor (SNDRI): phenyltropane scaffold. Investigated for Parkinson's disease (akinesia reversal in MPTP marmosets without dyskinesia) and major depression. Discontinued 2001."
     },
     "human_pk": {
       "routes": []
@@ -3348,7 +3348,7 @@
         }
       ],
       "functional": [],
-      "downstream_signalling": "Slow-onset, long-duration cocaine-like profile — blocks effects of cocaine, methamphetamine, and MDMA in animal models. Proposed as agonist substitution therapy for stimulant use disorder."
+      "downstream_signalling": "Slow-onset, long-duration cocaine-like profile: blocks effects of cocaine, methamphetamine, and MDMA in animal models. Proposed as agonist substitution therapy for stimulant use disorder."
     },
     "human_pk": {
       "routes": []
@@ -3624,8 +3624,8 @@
     "is_class_context": true,
     "class_context_id": "dat-inhibitors-mixed",
     "class_name": "Dopamine transporter (DAT) inhibitors — cocaine-like / phenidate-like / NDRI",
-    "shared_mechanism": "Block reuptake of DA (+/- NE +/- 5-HT) at the orthosteric site of SLC6A3 (DAT). The functional split that matters clinically is binding kinetics and DAT conformation, not chemical scaffold: 'cocaine-like' inhibitors (cocaine, methylphenidate, RTI-150, WIN-35,428, JJC8-088) stabilise DAT in an outward-open conformation, exhibit fast association/dissociation, and produce euphoria; 'atypical' DAT inhibitors (modafinil, JJC8-091, JHW-007, AHN-1055, vanoxerine, CE-123) stabilise an inward-occluded conformation, exhibit slow binding/dissociation, achieve partial DAT occupancy at therapeutic doses, and lack abuse liability. NDRIs (bupropion, methylphenidate, mazindol, atomoxetine via NE→DA spillover) hit both NET and DAT; PFC dopamine clearance is NET-dominated, so NDRI gives strong cognitive enhancement without striatal DA spike — better tolerability/cardiovascular profile depends on net DAT/NET ratio.",
-    "shared_pk_summary": "Cocaine: hepatic + plasma BChE + CES1 hydrolysis; t1/2 ~1 h (intranasal/IV) — fast in/out is the key abuse parameter. Methylphenidate and ester homologues: CES1 stereoselective hydrolysis (l-MPH cleared 5-10x faster than d-MPH; explains 22% vs 5% bioavailability respectively); CES1 G143E reduces clearance. Bupropion: CYP2B6→hydroxybupropion (active, NET-selective, 4-7x parent plasma); CYP2B6*6 reduces metabolite. Atomoxetine: CYP2D6 — PMs have 10x AUC, 5x Cmax, t1/2 21.6h vs 5.2h EM. Modafinil: hepatic amidase + CYP3A4/5; long t1/2 ~15h; weak CYP3A4 inducer (reduces oral contraceptive efficacy), weak CYP2C19 inhibitor. Lisdexamfetamine and serdexmethylphenidate: prodrugs (RBC aminopeptidases for LDX; gut hydrolysis for SDX) — rate-limited bioactivation deflates IV/IN abuse routes.",
+    "shared_mechanism": "Block reuptake of DA (+/- NE +/- 5-HT) at the orthosteric site of SLC6A3 (DAT). The functional split that matters clinically is binding kinetics and DAT conformation, not chemical scaffold: 'cocaine-like' inhibitors (cocaine, methylphenidate, RTI-150, WIN-35,428, JJC8-088) stabilise DAT in an outward-open conformation, exhibit fast association/dissociation, and produce euphoria; 'atypical' DAT inhibitors (modafinil, JJC8-091, JHW-007, AHN-1055, vanoxerine, CE-123) stabilise an inward-occluded conformation, exhibit slow binding/dissociation, achieve partial DAT occupancy at therapeutic doses, and lack abuse liability. NDRIs (bupropion, methylphenidate, mazindol, atomoxetine via NE→DA spillover) hit both NET and DAT; PFC dopamine clearance is NET-dominated, so NDRI gives strong cognitive enhancement without striatal DA spike: better tolerability/cardiovascular profile depends on net DAT/NET ratio.",
+    "shared_pk_summary": "Cocaine: hepatic + plasma BChE + CES1 hydrolysis; t1/2 ~1 h (intranasal/IV): fast in/out is the key abuse parameter. Methylphenidate and ester homologues: CES1 stereoselective hydrolysis (l-MPH cleared 5-10x faster than d-MPH; explains 22% vs 5% bioavailability respectively); CES1 G143E reduces clearance. Bupropion: CYP2B6→hydroxybupropion (active, NET-selective, 4-7x parent plasma); CYP2B6*6 reduces metabolite. Atomoxetine: CYP2D6; PMs have 10x AUC, 5x Cmax, t1/2 21.6h vs 5.2h EM. Modafinil: hepatic amidase + CYP3A4/5; long t1/2 ~15h; weak CYP3A4 inducer (reduces oral contraceptive efficacy), weak CYP2C19 inhibitor. Lisdexamfetamine and serdexmethylphenidate: prodrugs (RBC aminopeptidases for LDX; gut hydrolysis for SDX): rate-limited bioactivation deflates IV/IN abuse routes.",
     "shared_safety": "hERG block + Nav1.5 block → arrhythmia, sudden cardiac death (cocaine prototype; cocaethylene 4x worse). Atypical DAT inhibitors with sigma binding (JHW-007) and modafinil analogs (JJC8-088 IC50 0.13 µM at hERG) carry intrinsic hERG risk. Bupropion lowers seizure threshold (dose-dependent; 0.4% at ≤450 mg/day). All abused stimulants risk sympathomimetic crisis, hyperthermia, rhabdomyolysis at supratherapeutic doses. CES1 G143E and BChE deficiency are genetic risk factors for cocaine/MPH toxicity. CYP3A4 induction (modafinil/armodafinil) → oral contraceptive failure, reduced AUC of co-administered substrates (encorafenib, triazolam, ethinyl estradiol).",
     "sar_summary": "Cocaine scaffold: replacing C3 benzoyloxy with phenyl (phenyltropanes) → markedly higher DAT affinity (WIN-35,428 Kd 16 nM vs cocaine 300 nM) and slower dissociation; 4-iodo (RTI-55) adds SERT; 4-chloro phenyl ester (RTI-113) maximises DAT selectivity (1500x vs NET); N-substitution of benztropine scaffold from methyl→butyl shifts from cocaine-like (benztropine) to atypical/non-reinforcing (JHW-007, AHN-1055). Methylphenidate scaffold: ester chain length (Me→Et→iPr→Pr) shifts NET→DAT selectivity (d-MPH NET Ki 38 nM vs d-EPH NET Ki 3700 nM); 3,4-dichloro on phenyl (3,4-CTMP) gives 7-fold potency boost + esterase resistance → long duration. Modafinil scaffold: bis-4-fluoro (flmodafinil) boosts DAT affinity ~4x and abolishes CYP induction; small N-substituent changes in JJC8-088 vs -091 series produce activity cliff between cocaine-like and atypical profile (DAT conformation determined by single methyl difference). Phenylmorpholine releasers (phenmetrazine): 3-fluoro, 3-chloro maintain NE/DA releaser profile; 4-methyl or 3,4-methylenedioxy add 5-HT release → MDMA-like entactogen profile.",
     "key_references": [
@@ -3648,7 +3648,7 @@
     "class_context_id": "phenyltropane-RTI",
     "class_name": "Phenyltropanes (RTI series, WIN-35,428) — cocaine-derived DAT-selective inhibitors",
     "shared_mechanism": "Tropane scaffold of cocaine with the C3 benzoyloxy ester replaced by a phenyl ring (no oxygen at C3-aryl junction); C2 carbomethoxy retained. Removes the metabolically labile ester bond → much longer half-life and slower brain entry than cocaine. Binds DAT orthosteric site competitively with cocaine; most phenyltropanes are cocaine-like (outward-facing conformation, fast on/off) but with longer duration of action because the ester is replaced by a non-hydrolysable bond. SAR: 4-aryl substituent dictates DAT selectivity (4-F = WIN-35,428 highest selectivity for DAT; 4-I = RTI-55 adds SERT; 4-Me = RTI-150). C2 substituent dictates duration (C2 phenyl ester = RTI-113 long-acting).",
-    "shared_pk_summary": "Generally lipophilic with slow brain entry (vs cocaine) and long half-lives (hours to days); ester hydrolysis is the main clearance pathway when C2 carbomethoxy is retained, but C2 modifications (esters, amides) can produce very long elimination. Used primarily as PET/SPECT radioligands (WIN-35,428 [11C], β-CIT/RTI-55 [123I]) in human DAT imaging — slow brain kinetics is desirable for imaging but argues against therapeutic translation in pure form.",
+    "shared_pk_summary": "Generally lipophilic with slow brain entry (vs cocaine) and long half-lives (hours to days); ester hydrolysis is the main clearance pathway when C2 carbomethoxy is retained, but C2 modifications (esters, amides) can produce very long elimination. Used primarily as PET/SPECT radioligands (WIN-35,428 [11C], β-CIT/RTI-55 [123I]) in human DAT imaging: slow brain kinetics is desirable for imaging but argues against therapeutic translation in pure form.",
     "shared_safety": "Phenyltropanes inherit cocaine's cardiovascular off-targets (hERG, Nav1.5) to varying degrees; specific human data sparse since most are research tools. RTI-113 and others have been tested in primate self-administration with high reinforcing efficacy, but slower onset reduces (rather than eliminates) abuse liability. Atypical phenyltropanes (those stabilising occluded DAT conformation) like indatraline have lower abuse liability.",
     "sar_summary": "C3-aryl 4-position controls selectivity: H ~ cocaine; F → DAT-selective (WIN-35,428); I → adds SERT (RTI-55); Me → cocaine-like (RTI-150); 3,4-Cl2 → high potency. C2 substituent controls duration: methyl ester (cocaine) hydrolysed by esterases (t1/2 min); phenyl ester (RTI-113) and amides resist hydrolysis (t1/2 hours). N8 substituent (methyl→nor or larger groups) modulates affinity and kinetics: nor- generally less potent; larger N-substituents can flip from cocaine-like to atypical.",
     "key_references": [
@@ -3665,7 +3665,7 @@
     "class_name": "Atypical DAT inhibitors — modafinil-derived (JJC, CE, SoRI series)",
     "shared_mechanism": "Diphenylmethyl-sulfinyl-acetamide scaffold (modafinil) and ring-expanded/N-substituted variants. Mechanism distinct from cocaine: at the DAT, these compounds stabilise inward-facing or occluded conformations (rather than outward-open) and exhibit SLOW association and dissociation kinetics. Slow kinetics → blunted reinforcement (the dopaminergic spike does not have sharp onset) → low abuse liability. Some (JJC8-088 specifically) violate this rule by stabilising outward-open, demonstrating the conformation hypothesis: modafinil-derived chemistry can produce both atypical and cocaine-like profiles depending on subtle N- and aryl-substituent choices (activity cliff). Modafinil parent additionally activates orexin/hypocretin neurons in lateral hypothalamus → histamine TMN → wakefulness (DAT inhibition alone is insufficient to explain its eugeroic profile at clinical doses).",
     "shared_pk_summary": "Modafinil: oral t1/2 ~12-15h (racemate); armodafinil 10-15h; bioavailability high (~80%); CYP3A4/5 + amidase metabolism to inactive sulfone (t1/2 40h) and acid (t1/2 7h). Modafinil is weak CYP3A4 inducer and weak CYP2C19 inhibitor; flmodafinil is reportedly NOT a CYP inducer (key advantage). Adrafinil prodrug hepatically converted to modafinil (~50%) but carries additional hepatotoxicity from hydroxamic acid moiety. Atypical research compounds (JJC, CE-123) have very long half-lives by design to maintain slow brain kinetics.",
-    "shared_safety": "Major concern: hERG block (JJC8-088 IC50 0.13 µM; medchem effort to reduce). Modafinil: rare Stevens-Johnson syndrome / DRESS (FDA label warns), CYP3A4 induction → contraceptive failure. Vanoxerine: multi-channel cardiac block (hERG IC50 0.84 nM, Nav1.5, Cav1.2) but minimal APD prolongation — paradoxically antiarrhythmic. Atypical DAT profile generally low abuse liability — proposed mechanism for stimulant use disorder treatment.",
+    "shared_safety": "Major concern: hERG block (JJC8-088 IC50 0.13 µM; medchem effort to reduce). Modafinil: rare Stevens-Johnson syndrome / DRESS (FDA label warns), CYP3A4 induction → contraceptive failure. Vanoxerine: multi-channel cardiac block (hERG IC50 0.84 nM, Nav1.5, Cav1.2) but minimal APD prolongation; paradoxically antiarrhythmic. Atypical DAT profile generally low abuse liability: proposed mechanism for stimulant use disorder treatment.",
     "sar_summary": "Single N-substituent change (e.g. JJC8-088 vs -091) flips conformational preference and abuse-likability: this is the 'activity cliff'. Adding fluorines to diphenyl rings (flmodafinil vs modafinil) increases DAT affinity ~4x without changing atypical character and removes CYP induction. Hydroxamic acid moiety (adrafinil, fladrafinil) confers hepatotoxicity. CE-123 series replaces sulfinyl with thio/sulfonyl groups to tune selectivity.",
     "key_references": [
       "pmid:34420294",
@@ -3681,7 +3681,7 @@
     "class_name": "Atypical DAT inhibitors — N-substituted benztropines (AHN, JHW series)",
     "shared_mechanism": "Tropane-diphenylmethylether scaffold of benztropine. Despite high DAT affinity (Ki single-digit nM), N-substituent (especially N-butyl, JHW-007) yields atypical DAT inhibitor profile: slow onset, partial DAT occupancy at high doses, no cocaine-like reinforcement, blocks (rather than substitutes for) cocaine in self-administration and discrimination. Mechanism: stabilises DAT in inward-occluded conformation. Many in this series additionally bind sigma-1 and sigma-2 receptors at therapeutic concentrations, which may contribute to anti-cocaine effects. Slow binding kinetics + DAT-independent striatal binding sites (residual binding in DAT-knockout mice) are signatures of the class.",
     "shared_pk_summary": "Highly lipophilic → slow brain entry and prolonged half-lives. Limited human PK published. Benztropine itself: oral, t1/2 ~16h; N-substituted analogues lipophilicity-dependent.",
-    "shared_safety": "Inherited from benztropine: anticholinergic burden (M1, M2 muscarinic antagonism — dry mouth, urinary retention, cognitive impairment in elderly); H1 antihistamine (sedation). Sigma-1 antagonism may have unknown long-term consequences. Lower abuse liability is the chief advantage.",
+    "shared_safety": "Inherited from benztropine: anticholinergic burden (M1, M2 muscarinic antagonism; dry mouth, urinary retention, cognitive impairment in elderly); H1 antihistamine (sedation). Sigma-1 antagonism may have unknown long-term consequences. Lower abuse liability is the chief advantage.",
     "sar_summary": "N-methyl (benztropine, AHN-1055) → modest DAT affinity, partial cocaine-like profile. N-butyl/longer (JHW-007) → atypical, non-reinforcing, cocaine-antagonist profile. Bis-(4-fluoro) on diphenyl improves DAT selectivity. Removing tropane methyl yields nor-analogues with altered conformational preference at DAT.",
     "key_references": [
       "pmid:14755006",
@@ -3693,9 +3693,9 @@
     "is_class_context": true,
     "class_context_id": "phenylmorpholine-releasers",
     "class_name": "Phenylmorpholine substrate-type monoamine releasers (phenmetrazine and analogues)",
-    "shared_mechanism": "Substituted phenylmorpholine scaffold. Acts as substrate at DAT and NET — taken up via transporter, then displaces vesicular monoamines (via VMAT2 substrate competition / weak-base trapping) → reverse transport of DA and NE into synapse (efflux). Distinct from cocaine-class uptake blockers — releaser pharmacology produces stronger and more sustained DA/NE rise. Aryl-ring substitution dictates serotonergic add-on: parent phenmetrazine essentially NE/DA-selective (negligible SERT); 4-methyl (4-MPM) and 3,4-methylenedioxy (MDPM) shift toward 5-HT releaser activity (MDMA-like entactogen profile).",
-    "shared_pk_summary": "Phenmetrazine: oral t1/2 ~8h. Phendimetrazine (N-methyl analogue): inactive prodrug, slow CYP N-demethylation to phenmetrazine — flatter PK profile reduces abuse liability vs phenmetrazine itself. Fluorinated analogues (3-FPM) and Cl-substituted (3-CPM) have variable PK; halogenation typically extends duration via metabolic stabilisation.",
-    "shared_safety": "Releaser pharmacology produces stronger sympathomimetic load than uptake-blocker class — hypertension, tachycardia, vasoconstriction (3-FPM AKI + critical limb ischemia case reports). MDMA-like analogues (4-MPM) add serotonin syndrome risk and 5-HT2B-mediated valvulopathy concern with chronic use.",
+    "shared_mechanism": "Substituted phenylmorpholine scaffold. Acts as substrate at DAT and NET: taken up via transporter, then displaces vesicular monoamines (via VMAT2 substrate competition / weak-base trapping) → reverse transport of DA and NE into synapse (efflux). Distinct from cocaine-class uptake blockers: releaser pharmacology produces stronger and more sustained DA/NE rise. Aryl-ring substitution dictates serotonergic add-on: parent phenmetrazine essentially NE/DA-selective (negligible SERT); 4-methyl (4-MPM) and 3,4-methylenedioxy (MDPM) shift toward 5-HT releaser activity (MDMA-like entactogen profile).",
+    "shared_pk_summary": "Phenmetrazine: oral t1/2 ~8h. Phendimetrazine (N-methyl analogue): inactive prodrug, slow CYP N-demethylation to phenmetrazine; flatter PK profile reduces abuse liability vs phenmetrazine itself. Fluorinated analogues (3-FPM) and Cl-substituted (3-CPM) have variable PK; halogenation typically extends duration via metabolic stabilisation.",
+    "shared_safety": "Releaser pharmacology produces stronger sympathomimetic load than uptake-blocker class: hypertension, tachycardia, vasoconstriction (3-FPM AKI + critical limb ischemia case reports). MDMA-like analogues (4-MPM) add serotonin syndrome risk and 5-HT2B-mediated valvulopathy concern with chronic use.",
     "sar_summary": "Halogen at C3 (F, Cl) maintains NE/DA selectivity and modestly potentiates DAT release. Halogen at C4 (4-F) similar. C4 methyl or 3,4-methylenedioxy adds substantial SERT releaser activity → MDMA-like profile. N-methylation (phendimetrazine) abolishes activity, generating slow-release prodrug of demethylated form (phenmetrazine).",
     "key_references": [
       "doi:10.1016/j.neuropharm.2017.10.006",
@@ -3711,7 +3711,7 @@
     "class_name": "Eugeroic afinils (modafinil, adrafinil, fladrafinil, hydrafinil, etc.)",
     "shared_mechanism": "Predominant clinically active member is modafinil. Mechanism is multimodal: (1) weak DAT inhibition (modafinil DAT Ki ~4 µM; PET shows 50% striatal DAT occupancy at 200-400 mg in humans), (2) ORE EXIN/hypocretin neuron activation in lateral hypothalamus (modafinil increases orexin neuron c-Fos), (3) downstream histaminergic TMN activation (modafinil-induced wakefulness requires intact histamine neurons), (4) modest glutamate↑ and GABA↓ in cortical networks. Adrafinil is hepatic prodrug of modafinil; fladrafinil is bis-fluoro adrafinil; flmodafinil/bisfluoromodafinil is bis-fluoro modafinil (improved DAT affinity, no CYP induction); hydrafinil is structurally unrelated fluorenol with weak/poorly characterised mechanism.",
     "shared_pk_summary": "Modafinil: oral F ~80%, t1/2 12-15h, Tmax 2h, protein binding 60%. Metabolised CYP3A4/5 + hepatic amidase to inactive sulfone (t1/2 40h) and acid (t1/2 7h). Weak CYP3A4 inducer (clinically relevant for hormonal contraceptives, triazolam, encorafenib), weak CYP2C19 inhibitor (warfarin, omeprazole). Armodafinil (R-enantiomer): t1/2 ~15h (slightly longer than racemate because R-eutomer clears slower than S). Adrafinil: prodrug t1/2 ~1h before conversion to modafinil; adds hepatotoxicity (LFT elevation; French market withdrawal 2011).",
-    "shared_safety": "Rare Stevens-Johnson syndrome, DRESS, toxic epidermal necrolysis (FDA boxed-warning class). CYP3A4 induction → contraceptive failure. Adrafinil/fladrafinil class hepatotoxicity (hydroxamic acid moiety). Generally low abuse liability — but reinforcing in vulnerable populations; classified US Schedule IV.",
+    "shared_safety": "Rare Stevens-Johnson syndrome, DRESS, toxic epidermal necrolysis (FDA boxed-warning class). CYP3A4 induction → contraceptive failure. Adrafinil/fladrafinil class hepatotoxicity (hydroxamic acid moiety). Generally low abuse liability, but reinforcing in vulnerable populations; classified US Schedule IV.",
     "sar_summary": "Bis-4-fluoro on diphenyl (flmodafinil, fladrafinil) increases DAT affinity ~4x and removes CYP3A4 induction. Hydroxamic acid (adrafinil, fladrafinil) → hepatotoxicity. Sulfinyl→sulfonyl (modafinil sulfone): inactive. Acetamide→acetic acid (modafinil acid): inactive. R-enantiomer of modafinil is the eutomer (slower clearance, similar potency).",
     "key_references": [
       "doi:10.1001/jama.2009.351",
@@ -3724,10 +3724,10 @@
     "is_class_context": true,
     "class_context_id": "selective-NRI",
     "class_name": "Selective NE reuptake inhibitors (atomoxetine, viloxazine)",
-    "shared_mechanism": "Block NET (SLC6A2) with high selectivity over DAT and SERT. In prefrontal cortex, NET co-transports BOTH NE and DA (because PFC has low DAT density), so selective NET inhibition raises PFC DA without striatal DA spike → cognitive enhancement without abuse liability. No reinforcement, no euphoria. Viloxazine adds serotonergic activity (5-HT2C partial agonism, 5-HT2B/2C/7 antagonism) — differentiates from atomoxetine. Both used in ADHD as non-stimulant alternatives.",
+    "shared_mechanism": "Block NET (SLC6A2) with high selectivity over DAT and SERT. In prefrontal cortex, NET co-transports BOTH NE and DA (because PFC has low DAT density), so selective NET inhibition raises PFC DA without striatal DA spike → cognitive enhancement without abuse liability. No reinforcement, no euphoria. Viloxazine adds serotonergic activity (5-HT2C partial agonism, 5-HT2B/2C/7 antagonism): differentiates from atomoxetine. Both used in ADHD as non-stimulant alternatives.",
     "shared_pk_summary": "Atomoxetine: oral F 63% (EM) / 94% (CYP2D6 PM); t1/2 5.2h EM / 21.6h PM (10x AUC, 5x Cmax); protein binding 98% (albumin). CYP2D6 primary; CYP2C19 minor. Viloxazine ER: t1/2 7h, Tmax 5h, protein binding 76%; UGT1A9/UGT2B15 primary; CYP2D6 minor (PMs have only 21-26% increase, no dose adjust). Viloxazine is strong CYP1A2 inhibitor (caffeine, theophylline AUC doubled).",
     "shared_safety": "Atomoxetine: rare hepatic injury (boxed warning), modest QT prolongation in PMs, suicidality concern (FDA boxed warning, pediatric). Viloxazine: CYP1A2 interactions (caffeine, theophylline, melatonin, clozapine). Both: dry mouth, decreased appetite, insomnia common; no significant abuse liability.",
-    "sar_summary": "Phenoxypropylamine (atomoxetine) and morpholine (viloxazine) scaffolds. CYP2D6 stereoselective metabolism (atomoxetine R-isomer hydroxylated faster than S). NET selectivity over DAT/SERT 290-fold (atomoxetine) to 100-fold (viloxazine) — high enough to avoid abuse.",
+    "sar_summary": "Phenoxypropylamine (atomoxetine) and morpholine (viloxazine) scaffolds. CYP2D6 stereoselective metabolism (atomoxetine R-isomer hydroxylated faster than S). NET selectivity over DAT/SERT 290-fold (atomoxetine) to 100-fold (viloxazine): high enough to avoid abuse.",
     "key_references": [
       "pmc:4876529",
       "doi:10.1007/s40268-026-00543-y",
