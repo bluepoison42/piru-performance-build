@@ -11,7 +11,7 @@
       "k2": 3.57,
       "k3": 0.669,
       "confidence": "high",
-      "provenance": "estrannaise.js (MIT) fit. Cross-checked vs Oriowo 1980 (PMID 7389356, Tmax ~4 d) and Rahimy 1999 (PMID 10640167, terminal t½ ~8 d) — two independent primaries corroborate two model parameters. Amplitude (d) unvalidated.",
+      "provenance": "estrannaise.js (MIT) fit. Cross-checked vs Oriowo 1980 (PMID 7389356, Tmax ~4 d) and Rahimy 1999 (PMID 10640167, terminal t½ ~8 d): two independent primaries corroborate two model parameters. Amplitude (d) unvalidated.",
       "routes": ["IM", "SC"]
     },
     {
@@ -33,7 +33,7 @@
       "k2": 0.601,
       "k3": 0.402,
       "confidence": "medium",
-      "provenance": "estrannaise.js (MIT) fit. Terminal rate k1=0.119/d (t½ 5.82 d) agrees within 5% with Wiemeyer 1986 (PMID 3814225) fitted elimination t½ 5.57 d — the strongest cross-validation in the set. Rise phase (Tmax) is lower-confidence; amplitude (d) unvalidated.",
+      "provenance": "estrannaise.js (MIT) fit. Terminal rate k1=0.119/d (t½ 5.82 d) agrees within 5% with Wiemeyer 1986 (PMID 3814225) fitted elimination t½ 5.57 d, the strongest cross-validation in the set. Rise phase (Tmax) is lower-confidence; amplitude (d) unvalidated.",
       "routes": ["IM"]
     },
     {
@@ -41,7 +41,7 @@
       "ester_label": "Undecylate",
       "modelable": false,
       "confidence": "none",
-      "provenance": "Estradiol undecylate (EUn) is a very long-acting injectable ester listed in transfem dosing guides (diyhrt.info/transfem/forms) and historically marketed for depot use. No retrievable human concentration-time study parameterizes a release/elimination curve — estrannaise.js does not fit it either — so Piru logs, titles, and searches it but does not project a serum level for it. Its duration is longer than enanthate's; a rough clinical guide is dosing on the order of a month.",
+      "provenance": "Estradiol undecylate (EUn) is a very long-acting injectable ester listed in transfem dosing guides (diyhrt.info/transfem/forms) and historically marketed for depot use. No retrievable human concentration-time study parameterizes a release/elimination curve, and estrannaise.js does not fit it either, so Piru logs, titles, and searches it but does not project a serum level for it. Its duration is longer than enanthate's; a rough clinical guide is dosing on the order of a month.",
       "routes": ["IM", "SC"]
     }
   ]

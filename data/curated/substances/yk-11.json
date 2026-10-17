@@ -27,7 +27,7 @@
   ],
   "mechanismOfAction": {
     "summary": "Steroidal SARM with dual mechanism: partial AR agonism plus functional myostatin inhibition via follistatin upregulation.",
-    "description": "5α-DHT C17-methyl ester derivative; partial AR agonist (does not induce full N/C-terminal AR interaction unlike DHT) plus functional myostatin inhibitor via follistatin (FST) upregulation — the only characterized SARM with this dual mechanism. FST induction more potent than DHT in C2C12 myoblasts. CAS discrepancy: 1370003-76-1 confirmed by PubChem CID 119058028; 431579-34-9 is an unverified alternate.",
+    "description": "5α-DHT C17-methyl ester derivative; partial AR agonist (does not induce full N/C-terminal AR interaction unlike DHT) plus functional myostatin inhibitor via follistatin (FST) upregulation, the only characterized SARM with this dual mechanism. FST induction more potent than DHT in C2C12 myoblasts. CAS discrepancy: 1370003-76-1 confirmed by PubChem CID 119058028; 431579-34-9 is an unverified alternate.",
     "primaryTargets": [
       "Androgen receptor",
       "Myostatin/follistatin pathway"

@@ -29,7 +29,7 @@
   "halfLifeMinutes": 1320,
   "mechanismOfAction": {
     "summary": "Selective PPARδ agonist (EC50 ~1.2 nM); upregulates fatty acid oxidation genes and increases endurance. NOT a SARM.",
-    "description": "Peroxisome proliferator-activated receptor delta (PPARδ/PPARβ) agonist; does not bind the androgen receptor. Upregulates genes for fatty acid oxidation and mitochondrial biogenesis. Human PK is sparse — GSK discontinued development in 2007 due to multi-organ carcinogenicity in 2-year rodent studies at human-equivalent doses. WADA issued a specific safety warning.",
+    "description": "Peroxisome proliferator-activated receptor delta (PPARδ/PPARβ) agonist; does not bind the androgen receptor. Upregulates genes for fatty acid oxidation and mitochondrial biogenesis. Human PK is sparse. GSK discontinued development in 2007 due to multi-organ carcinogenicity in 2-year rodent studies at human-equivalent doses. WADA issued a specific safety warning.",
     "primaryTargets": [
       "PPARδ"
     ],

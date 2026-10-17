@@ -20,7 +20,7 @@
   ],
   "mechanismOfAction": {
     "summary": "N1-Boc thermolabile prodrug of DMT; inactive until pyrolysis (~150–200 °C) or acid conditions cleave the Boc group, releasing DMT (5-HT2A agonist, σ1 ligand).",
-    "description": "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl). The intact molecule is not itself active; the Boc group must be cleaved (pyrolysis/smoking or acid) to release DMT. Oral administration is inactive with or without an MAOI, because any absorbed intact compound must still be cleaved to DMT — claimed oral activity is unvalidated. Because the Boc-protected form is unscheduled, it is a common legal precursor form of DMT. No pharmacokinetic study or validated human dosing for the Boc compound.",
+    "description": "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl). The intact molecule is not itself active; the Boc group must be cleaved (pyrolysis/smoking or acid) to release DMT. Oral administration is inactive with or without an MAOI, because any absorbed intact compound must still be cleaved to DMT. Claimed oral activity is unvalidated. Because the Boc-protected form is unscheduled, it is a common legal precursor form of DMT. No pharmacokinetic study or validated human dosing for the Boc compound.",
     "primaryTargets": [
       "5-HT2A"
     ],

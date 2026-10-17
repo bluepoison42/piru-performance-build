@@ -19,7 +19,7 @@
         "highAmount": 500,
         "frequency": "2×/day",
         "courseDuration": "5-day courses with 2–3 day rest periods",
-        "notes": "up to 750–1000 mg/day in some protocols; accumulates with repeated doses — course-based dosing with breaks manages this; human t½ not published; Russian pharmaceutical standard (Metaprot)"
+        "notes": "up to 750–1000 mg/day in some protocols; accumulates with repeated doses, which course-based dosing with breaks manages; human t½ not published; Russian pharmaceutical standard (Metaprot)"
       }
     }
   ],
@@ -32,7 +32,7 @@
   ],
   "mechanismOfAction": {
     "summary": "Actoprotector/antihypoxant; activates genomic pathways increasing RNA synthesis and gluconeogenic enzyme induction.",
-    "description": "Benzimidazole actoprotector; activates PEPCK and G6Pase (gluconeogenic enzymes) via RNA synthesis induction; increases mitochondrial ATP production; antioxidant (reduces lipid peroxidation); antihypoxant (improves cellular oxygen utilization efficiency). BBB-penetrant. Accumulates with repeated doses — mechanism distinct from classical monoaminergic stimulants. Russian/CIS registered pharmaceutical (Metaprot); not FDA/EMA approved.",
+    "description": "Benzimidazole actoprotector; activates PEPCK and G6Pase (gluconeogenic enzymes) via RNA synthesis induction; increases mitochondrial ATP production; antioxidant (reduces lipid peroxidation); antihypoxant (improves cellular oxygen utilization efficiency). BBB-penetrant. Accumulates with repeated doses. Mechanism distinct from classical monoaminergic stimulants. Russian/CIS registered pharmaceutical (Metaprot); not FDA/EMA approved.",
     "primaryTargets": [
       "Gluconeogenic enzyme induction",
       "Mitochondrial ATP synthesis"

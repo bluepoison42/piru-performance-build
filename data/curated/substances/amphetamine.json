@@ -71,17 +71,17 @@
     {
       "severity": "caution",
       "name": "Other stimulants",
-      "description": "Cocaine, MDMA, heavy caffeine — heart rate and blood pressure add together. Stacking raises the strain faster than the effect."
+      "description": "Cocaine, MDMA, heavy caffeine: heart rate and blood pressure add together. Stacking raises the strain faster than the effect."
     },
     {
       "severity": "note",
       "name": "SSRIs",
-      "description": "Common and usually uneventful — amphetamine releases little serotonin. The main effect is a bit more jitter and a higher pulse. Worth noticing, not fearing.",
+      "description": "Common and usually uneventful, since amphetamine releases little serotonin. The main effect is a bit more jitter and a higher pulse. Worth noticing, not fearing.",
       "note": "adds NE"
     }
   ],
   "waterHeat": {
     "headline": "Sip to thirst",
-    "body": "Stimulants blunt thirst without changing how much fluid you need — not much more than usual unless you're dancing or in the heat. Sip to thirst; don't force water. A dry mouth is low saliva, not dehydration."
+    "body": "Stimulants blunt thirst without changing how much fluid you need: not much more than usual unless you're dancing or in the heat. Sip to thirst; don't force water. A dry mouth is low saliva, not dehydration."
   }
 }

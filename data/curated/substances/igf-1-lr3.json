@@ -30,7 +30,7 @@
   ],
   "halfLifeMinutes": 1500,
   "mechanismOfAction": {
-    "summary": "Modified recombinant IGF-1 (83-aa analog) — IGF-1R agonist.",
+    "summary": "Modified recombinant IGF-1 (83-aa analog): IGF-1R agonist.",
     "description": "Human IGF-1 with an Arg3→Glu substitution and a 13-residue N-terminal extension that sharply reduce IGF-binding-protein affinity, increasing potency and duration. Agonism of IGF-1R drives anabolic hyperplasia/hypertrophy; hypoglycemia is a key risk.",
     "primaryTargets": [
       "IGF-1R"

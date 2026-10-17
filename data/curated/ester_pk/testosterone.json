@@ -11,7 +11,7 @@
       "k2": 3.57,
       "k3": 0.669,
       "confidence": "medium",
-      "provenance": "Terminal half-life ~8 d from the FDA Depo-Testosterone label sets k1. The absorption shape (k2/k3) is borrowed from the estradiol cypionate oil-depot fit — the same ester chain and vehicle — giving Tmax ~3.8 d. Amplitude (d) is unvalidated. SC is treated as IM (McFarland/Spratt 2017, PMID 29264562: weekly SC cypionate stayed stable and in-range in trans men). Calibrate to your own labs.",
+      "provenance": "Terminal half-life ~8 d from the FDA Depo-Testosterone label sets k1. The absorption shape (k2/k3) is borrowed from the estradiol cypionate oil-depot fit (the same ester chain and vehicle), giving Tmax ~3.8 d. Amplitude (d) is unvalidated. SC is treated as IM (McFarland/Spratt 2017, PMID 29264562: weekly SC cypionate stayed stable and in-range in trans men). Calibrate to your own labs.",
       "routes": ["IM", "SC"]
     },
     {
@@ -22,7 +22,7 @@
       "k2": 3.57,
       "k3": 0.669,
       "confidence": "low",
-      "provenance": "Terminal half-life ~4.5 d is a textbook figure (Schulte-Beerbühl & Nieschlag 1980, PMID 7353699 — no extractable primary concentration-time curve), which sets k1. Rise shape borrowed from cypionate; amplitude (d) unvalidated; the band is kept wide. Near-interchangeable with cypionate in community masc HRT. Calibrate to your own labs.",
+      "provenance": "Terminal half-life ~4.5 d is a textbook figure (Schulte-Beerbühl & Nieschlag 1980, PMID 7353699; no extractable primary concentration-time curve), which sets k1. Rise shape borrowed from cypionate; amplitude (d) unvalidated; the band is kept wide. Near-interchangeable with cypionate in community masc HRT. Calibrate to your own labs.",
       "routes": ["IM", "SC"]
     },
     {
@@ -33,7 +33,7 @@
       "k2": 2.709,
       "k3": 0.508,
       "confidence": "medium",
-      "provenance": "Terminal half-life 33.9 d (castor-oil vehicle; Behre 1999, PMID 10229906 — the cleanest primary in the set) sets k1. k2/k3 are fit to the Aveed label's Tmax (median 7 d) keeping cypionate's absorption ratio. Amplitude (d) unvalidated. Steady state is reached only around the third injection (~14 wk). Calibrate to your own labs.",
+      "provenance": "Terminal half-life 33.9 d (castor-oil vehicle; Behre 1999, PMID 10229906, the cleanest primary in the set) sets k1. k2/k3 are fit to the Aveed label's Tmax (median 7 d) keeping cypionate's absorption ratio. Amplitude (d) unvalidated. Steady state is reached only around the third injection (~14 wk). Calibrate to your own labs.",
       "caution": "The undecanoate products Aveed and Nebido carry a boxed warning for pulmonary oil microembolism (POME) and anaphylaxis; clinical protocols observe for 30 minutes after each injection. This is why undecanoate is largely clinical rather than DIY.",
       "routes": ["IM"]
     },

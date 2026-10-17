@@ -22,7 +22,7 @@
     "Midodrine's own half-life is ~25 min; desglymidodrine's is ~3–4 h, and that is what the duration follows"
   ],
   "mechanismOfAction": {
-    "summary": "Prodrug of desglymidodrine, a selective peripheral α1-adrenergic agonist — vasoconstriction without central or β-adrenergic action.",
+    "summary": "Prodrug of desglymidodrine, a selective peripheral α1-adrenergic agonist: vasoconstriction without central or β-adrenergic action.",
     "description": "Oral midodrine is rapidly absorbed and deglycinated to desglymidodrine, which activates α1-adrenoceptors on arteriolar and venous smooth muscle, raising vascular tone and blood pressure. It does not stimulate cardiac β-adrenoceptors, so pulse rate is essentially unchanged, and it penetrates the CNS poorly. Absolute bioavailability measured as desglymidodrine is 93%, unaffected by food; clearance is ~80% active renal secretion. Neither compound is a monoamine-oxidase substrate.",
     "primaryTargets": [
       "α1-adrenergic receptor"

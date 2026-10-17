@@ -21,10 +21,10 @@
     }
   ],
   "halfLifeMinutes": 300,
-  "halfLifeSource": "FDA/DailyMed Cobenfy prescribing information §12.3 — xanomeline t½ ≈ 5 h",
+  "halfLifeSource": "FDA/DailyMed Cobenfy prescribing information §12.3: xanomeline t½ ≈ 5 h",
   "formula": "C14H23N3OS",
   "mechanismOfAction": {
-    "summary": "Muscarinic acetylcholine receptor agonist functionally selective for the M1 and M4 subtypes — the CNS-active component of Cobenfy, paired with trospium, a peripheral antimuscarinic that blunts cholinergic side effects without entering the brain. The first antipsychotic that works without blocking dopamine D2 receptors.",
+    "summary": "Muscarinic acetylcholine receptor agonist functionally selective for the M1 and M4 subtypes. It is the CNS-active component of Cobenfy, paired with trospium, a peripheral antimuscarinic that blunts cholinergic side effects without entering the brain. The first antipsychotic that works without blocking dopamine D2 receptors.",
     "description": "Xanomeline binds M1–M5 with comparable affinity (Kᵢ ≈ 10, 12, 17, 7, 22 nM at M1–M5) but drives agonist signaling preferentially at M1 and M4, which is the basis of its antipsychotic effect. It is marketed only as the fixed-dose combination Cobenfy (xanomeline + trospium chloride), approved for schizophrenia in adults; trospium is a quaternary antimuscarinic confined to the periphery, added to curb the nausea and other cholinergic effects xanomeline causes alone. Oral, twice daily: xanomeline Tₘₐₓ ≈ 2 h, t½ ≈ 5 h, cleared mainly by CYP2D6.",
     "primaryTargets": [
       "M1 muscarinic receptor",

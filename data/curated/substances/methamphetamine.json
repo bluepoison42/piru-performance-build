@@ -20,21 +20,21 @@
     {
       "severity": "caution",
       "name": "Alcohol",
-      "description": "The stimulant hides how drunk you are, so alcohol gets redosed too far — and meth's long duration outlasts most drinking. Heart strain adds up even when you can't feel it."
+      "description": "The stimulant hides how drunk you are, so alcohol gets redosed too far, and meth's long duration outlasts most drinking. Heart strain adds up even when you can't feel it."
     },
     {
       "severity": "caution",
       "name": "Other stimulants",
-      "description": "Cocaine, MDMA, more amphetamine — heart rate and blood pressure add together, and meth already sits near the top. Stacking raises the strain faster than the effect."
+      "description": "Cocaine, MDMA, more amphetamine: heart rate and blood pressure add together, and meth already sits near the top. Stacking raises the strain faster than the effect."
     },
     {
       "severity": "caution",
       "name": "Opioids",
-      "description": "The stimulant hides opioid drowsiness, the usual warning of too much — so a heavy opioid dose can feel manageable until the meth wears off first. If combining, dose the opioid as if the meth weren't there."
+      "description": "The stimulant hides opioid drowsiness, the usual warning of too much, so a heavy opioid dose can feel manageable until the meth wears off first. If combining, dose the opioid as if the meth weren't there."
     }
   ],
   "waterHeat": {
     "headline": "Sip to thirst",
-    "body": "Stimulants blunt thirst without changing how much fluid you need — not much more than usual unless you're moving hard or in the heat. Sip to thirst; don't force water. On a long session, remember to eat."
+    "body": "Stimulants blunt thirst without changing how much fluid you need: not much more than usual unless you're moving hard or in the heat. Sip to thirst; don't force water. On a long session, remember to eat."
   }
 }

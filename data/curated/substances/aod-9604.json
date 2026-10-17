@@ -25,7 +25,7 @@
   ],
   "halfLifeMinutes": 30,
   "mechanismOfAction": {
-    "summary": "Modified C-terminal HGH fragment — lipolytic, no growth effect.",
+    "summary": "Modified C-terminal HGH fragment: lipolytic, no growth effect.",
     "description": "Tyr-hGH(177-191): the C-terminal lipolytic fragment of growth hormone with an added N-terminal Tyr. Stimulates lipolysis and inhibits lipogenesis via an HGH-fragment/β3-adrenergic pathway without raising IGF-1 or producing growth effects.",
     "primaryTargets": [
       "β3-adrenergic pathway"

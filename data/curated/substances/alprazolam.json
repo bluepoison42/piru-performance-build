@@ -15,12 +15,12 @@
     {
       "severity": "danger",
       "name": "Opioids",
-      "description": "Both slow your breathing, by different routes — the pairing causes a large share of opioid deaths. Tolerance to one gives no protection against the other. Do not combine."
+      "description": "Both slow your breathing, by different routes, and the pairing causes a large share of opioid deaths. Tolerance to one gives no protection against the other. Do not combine."
     },
     {
       "severity": "danger",
       "name": "Alcohol",
-      "description": "Two nervous-system depressants stacking without warning — blackouts, deep sedation, stopped breathing at doses that would be fine apart. Alprazolam's fast onset makes the hit land harder. Do not combine."
+      "description": "Two nervous-system depressants stacking without warning: blackouts, deep sedation, stopped breathing at doses that would be fine apart. Alprazolam's fast onset makes the hit land harder. Do not combine."
     },
     {
       "severity": "caution",
@@ -30,7 +30,7 @@
     {
       "severity": "caution",
       "name": "Other depressants",
-      "description": "Sleep aids, sedating antihistamines, other benzos — all of it stacks, and alprazolam blurs the memory of redosing. Count the total depressant load, not each drug alone."
+      "description": "Sleep aids, sedating antihistamines, other benzos: all of it stacks, and alprazolam blurs the memory of redosing. Count the total depressant load, not each drug alone."
     }
   ]
 }
