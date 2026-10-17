@@ -52,9 +52,9 @@ struct EffectEngineTests {
     @Test
     func `Amphetamine — mild euphoria then a deep crash; cardiovascular danger, no respiratory`() {
         let o = sim("amp", 50)
-        #expect(isClose(peak(o.eu), 0.42))
+        #expect(isClose(peak(o.eu), 0.55))
         #expect(isClose(trough(o.eu), -0.73))
-        #expect(isClose(peak(o.dangerCV), 1.43))
+        #expect(isClose(peak(o.dangerCV), 1.71))
         #expect(peak(o.dangerResp) == 0)
         #expect(isClose(peak(o.liking), 0, 0.001)) // stimulant = wanting, not liking
     }
@@ -62,19 +62,19 @@ struct EffectEngineTests {
     @Test
     func `3-MMC (strong serotonergic cathinone) — big euphoria, no crash`() {
         let o = sim("mmc3", 150)
-        #expect(isClose(peak(o.eu), 1.65))
+        #expect(isClose(peak(o.eu), 1.90))
         #expect(trough(o.eu) > -0.1) // returns to baseline calmly (Ramaekers)
     }
 
     @Test
     func `Oral methylphenidate — robotic: drive without euphoria`() {
-        #expect(isClose(peak(sim("mph", 60).eu), 0.09))
+        #expect(isClose(peak(sim("mph", 60).eu), 0.20))
     }
 
     @Test
     func `MDMA — moderate euphoria, sedated (5-HT) drive`() {
         let o = sim("mdma", 110)
-        #expect(isClose(peak(o.eu), 1.19))
+        #expect(isClose(peak(o.eu), 1.77))
         #expect(trough(o.drive) < 0) // 5-HT sedation outlasts the catecholamine drive
     }
 
@@ -138,5 +138,35 @@ struct EffectEngineTests {
         // A pre-window dose alongside an in-window one still simulates cleanly.
         let mixed = EffectEngine.simulate(params, agents: [EffectAgent(params: dg, doses: [(t: -1, amt: 1), (t: 2, amt: 1)])], tMax: 12)
         #expect(peak(mixed.eu) > 0)
+    }
+
+    @MainActor
+    @Test
+    func `Oral driving concentration peaks near its Bateman Tmax`() throws {
+        let pharmacology = SubstanceStore.shared.pharmacologyParameters(forSubstanceName: "3-MMC")
+        let dg = try #require(SubstanceModelDatabase.params(name: "3-MMC", pharmacology: pharmacology))
+        let dt = 0.5 / 60.0
+        let n = Int((12 / dt).rounded())
+        let curve = EffectEngine.drivingKernel(params: dg, ka: dg.ka, kR: 0, nAbs: 3, dt: dt, n: n)
+        let peakIndex = try #require(curve.indices.max(by: { curve[$0] < curve[$1] }))
+        let batemanTmax = log(dg.ka / dg.ke) / (dg.ka - dg.ke)
+        #expect(abs(Double(peakIndex) * dt - batemanTmax) <= 5 / 60.0)
+    }
+
+    @Test
+    func `Route target follows route ka while curated heroin keeps its original kernel`() throws {
+        let mmc = try #require(Self.drug["mmc3"])
+        let dt = 0.5 / 60.0
+        let n = Int((12 / dt).rounded())
+        let routeKa = mmc.ka * 3.5
+        let route = EffectEngine.drivingKernel(params: mmc, ka: routeKa, kR: 2.5, nAbs: 3, dt: dt, n: n)
+        let routePeak = try #require(route.indices.max(by: { route[$0] < route[$1] }))
+        let inferredTarget = log(routeKa / mmc.ke) / (routeKa - mmc.ke)
+        #expect(abs(Double(routePeak) * dt - inferredTarget) <= 5 / 60.0)
+
+        let heroin = try #require(Self.drug["heroin"])
+        let unchanged = EffectEngine.drivingKernel(params: heroin, ka: heroin.ka, kR: 0, nAbs: 3, dt: dt, n: n)
+        let original = EffectEngine.absKernel(ka: heroin.ka, ke: heroin.ke, nAbs: 3, dt: dt, n: n)
+        #expect(unchanged == original)
     }
 }

@@ -177,6 +177,29 @@ nonisolated struct EffectTimeline {
 // MARK: - The engine
 
 nonisolated enum EffectEngine {
+    private struct KaKey: Hashable {
+        let kaBits: UInt64, keBits: UInt64, kRBits: UInt64
+        let nAbs: Int
+        init(ka: Double, ke: Double, kR: Double, nAbs: Int) {
+            kaBits = ka.bitPattern; keBits = ke.bitPattern; kRBits = kR.bitPattern; self.nAbs = nAbs
+        }
+    }
+
+    private final class KaCache: @unchecked Sendable {
+        private let lock = NSLock()
+        private var values: [KaKey: Double] = [:]
+        func value(for key: KaKey) -> Double? {
+            lock.lock(); defer { lock.unlock() }
+            return values[key]
+        }
+        func insert(_ value: Double, for key: KaKey) {
+            lock.lock(); defer { lock.unlock() }
+            values[key] = value
+        }
+    }
+
+    private static let kaCache = KaCache()
+
     @inline(__always)
     static func relu(_ x: Double, _ b: Double = 0.10) -> Double {
         x / (1 + exp(-x / b))
@@ -214,6 +237,83 @@ nonisolated enum EffectEngine {
         return out.map { $0 / (pk == 0 ? 1 : pk) }
     }
 
+    /// The resolver's non-curated ka is inverted from this one-compartment peak.
+    private static func batemanTmax(ka: Double, ke: Double) -> Double? {
+        guard ka > 0, ke > 0, ka.isFinite, ke.isFinite else { return nil }
+        if abs(ka - ke) < 1e-10 { return 1 / ke }
+        let peak = log(ka / ke) / (ka - ke)
+        return peak.isFinite && peak > 0 ? peak : nil
+    }
+
+    /// Only the heroin overlay currently supplies a curated ka; it models the felt
+    /// metabolite duration rather than the parent drug's plasma Tmax. Keep its kernel.
+    /// If another curated ka is added in SubstanceModelDatabase, add it here as well.
+    private static func hasCuratedKa(_ params: SubstanceModelParams) -> Bool {
+        params.mu == 1 && params.ka == 6 && params.ke == log(2.0) / 2.5
+    }
+
+    /// Match the transit/redistribution peak to the Bateman peak for this agent's
+    /// ka and ke. The solve is on the engine's fixed 30-second grid and cached by
+    /// every input that changes the shape; output normalization remains window-local.
+    private static func matchedKa(ka: Double, ke: Double, kR: Double, nAbs: Int) -> Double {
+        let key = KaKey(ka: ka, ke: ke, kR: kR, nAbs: nAbs)
+        if let cached = kaCache.value(for: key) { return cached }
+        guard let target = batemanTmax(ka: ka, ke: ke) else { return ka }
+        let dt = 0.5 / 60.0
+        let n = Int((12 / dt).rounded())
+        func peakTime(_ trialKa: Double) -> Double {
+            let curve = absKernel(
+                ka: trialKa,
+                ke: ke,
+                nAbs: nAbs,
+                dt: dt,
+                n: n,
+                k12: kR,
+                k21: kR * 0.22,
+            )
+            var index = 0
+            for i in 1 ..< curve.count where curve[i] > curve[index] { index = i }
+            guard index > 0, index < n else { return Double(index) * dt }
+            let left = curve[index - 1], center = curve[index], right = curve[index + 1]
+            let denominator = left - 2 * center + right
+            let offset = denominator == 0 ? 0 : 0.5 * (left - right) / denominator
+            return (Double(index) + max(-0.5, min(0.5, offset))) * dt
+        }
+        var low = 0.001, high = 60.0
+        var result = ka
+        if peakTime(low) >= target, peakTime(high) <= target {
+            for _ in 0 ..< 36 {
+                let mid = (low + high) * 0.5
+                if peakTime(mid) > target { low = mid } else { high = mid }
+            }
+            result = (low + high) * 0.5
+        }
+        kaCache.insert(result, for: key)
+        return result
+    }
+
+    /// Concentration shape used by simulate; exposed internally for peak and
+    /// curated-override regression tests.
+    static func drivingKernel(
+        params: SubstanceModelParams,
+        ka: Double,
+        kR: Double,
+        nAbs: Int,
+        dt: Double,
+        n: Int,
+    ) -> [Double] {
+        let kernelKa = hasCuratedKa(params) ? ka : matchedKa(ka: ka, ke: params.ke, kR: kR, nAbs: nAbs)
+        return absKernel(
+            ka: kernelKa,
+            ke: params.ke,
+            nAbs: nAbs,
+            dt: dt,
+            n: n,
+            k12: kR,
+            k21: kR * 0.22,
+        )
+    }
+
     /// Simulate a multi-substance session. Ports `simulateSession`. Substance-agnostic.
     static func simulate(_ P: EffectParams, agents: [EffectAgent], tMax: Double = 12) -> EffectTimeline {
         let dt = 0.5 / 60.0
@@ -232,7 +332,7 @@ nonisolated enum EffectEngine {
             let ka = a.ka ?? dg.ka
             let nAbs = a.nAbs.map { max(1, Int($0.rounded())) } ?? 3
             let kR = a.kR
-            let kern = absKernel(ka: ka, ke: dg.ke, nAbs: nAbs, dt: dt, n: n, k12: kR, k21: kR * 0.22)
+            let kern = drivingKernel(params: dg, ka: ka, kR: kR, nAbs: nAbs, dt: dt, n: n)
             var cRaw = [Double](repeating: 0, count: n + 1)
             let doses = a.doses.isEmpty ? [(t: 0.0, amt: 1.0)] : a.doses
             for d in doses {
