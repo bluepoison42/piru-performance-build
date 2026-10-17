@@ -275,4 +275,76 @@ struct VitalsAnalysisTests {
         #expect(withHR.hasHeartRate)
         #expect(!withHR.hasBloodPressure)
     }
+
+    // MARK: - HeartRateTrace
+
+    /// Six hours, the default visible span: the 5-minute level.
+    private let sixHours: TimeInterval = 6 * 3_600
+
+    @Test
+    func `trace reads nothing past the last reading or inside a gap`() {
+        let base = Date(timeIntervalSinceReferenceDate: 1_000_000)
+        let hr = samples([(0, 70), (5, 72), (10, 75), (15, 80), (20, 84), (80, 66), (85, 68)], from: base)
+        let trace = HeartRateTrace(samples: hr)
+        #expect(trace.bpm(at: base.addingTimeInterval(12 * 60), visibleSpan: sixHours) != nil)
+        // An hour without readings: the curve is broken there, so nothing is read.
+        #expect(trace.bpm(at: base.addingTimeInterval(50 * 60), visibleSpan: sixHours) == nil)
+        // Well after the last reading the dot has nothing to sit on.
+        #expect(trace.bpm(at: base.addingTimeInterval(140 * 60), visibleSpan: sixHours) == nil)
+        #expect(trace.bpm(at: base.addingTimeInterval(-30 * 60), visibleSpan: sixHours) == nil)
+    }
+
+    @Test
+    func `trace value lies between its neighbors and on the stroked cubic`() throws {
+        let base = Date(timeIntervalSinceReferenceDate: 2_000_000)
+        let hr = samples([(0, 70), (5, 74), (10, 90), (15, 88), (20, 76)], from: base)
+        let trace = HeartRateTrace(samples: hr)
+        let level = try #require(trace.level(forVisibleSpan: sixHours))
+        let run = try #require(level.runs.first)
+        // Every point is read back exactly at its own time.
+        for point in run {
+            let value = try #require(HeartRateTrace.bpm(at: point.time, in: level))
+            #expect(abs(value - point.mean) < 1e-9)
+        }
+        // Monotone between two points: no overshoot past either endpoint.
+        for (a, b) in zip(run, run.dropFirst()) {
+            for step in 1 ..< 10 {
+                let time = a.time + (b.time - a.time) * Double(step) / 10
+                let value = try #require(HeartRateTrace.bpm(at: time, in: level))
+                #expect(value >= min(a.mean, b.mean) - 1e-9 && value <= max(a.mean, b.mean) + 1e-9)
+            }
+        }
+    }
+
+    @Test
+    func `trace buckets are anchored in absolute time`() throws {
+        let base = Date(timeIntervalSinceReferenceDate: 3_000_000)
+        let hr = samples([(0, 70), (1, 90), (2.5, 60), (6, 80), (7, 82), (11, 75)], from: base)
+        let trace = HeartRateTrace(samples: hr)
+        let level = try #require(trace.level(forVisibleSpan: sixHours))
+        #expect(level.bucket == 5 * 60)
+        for point in level.runs.joined() {
+            // A bucket never straddles a 5-minute boundary of the reference date.
+            let index = (point.time / level.bucket).rounded(.down)
+            #expect(point.low <= point.mean && point.mean <= point.high)
+            #expect(point.time >= index * level.bucket && point.time < (index + 1) * level.bucket)
+        }
+    }
+
+    @Test
+    func `trace axis spans the whole series`() throws {
+        let base = Date(timeIntervalSinceReferenceDate: 4_000_000)
+        let hr = samples([(0, 58), (30, 71), (60, 133)], from: base)
+        let axis = try #require(HeartRateTrace(samples: hr).axis)
+        #expect(axis.lowerBound <= 58 && axis.upperBound >= 133)
+        #expect(HeartRateTrace(samples: []).axis == nil)
+    }
+
+    @Test
+    func `latest point counts only while it is recent`() {
+        let base = Date(timeIntervalSinceReferenceDate: 5_000_000)
+        let trace = HeartRateTrace(samples: samples([(0, 70), (5, 72), (10, 74)], from: base))
+        #expect(trace.latestPoint(asOf: base.addingTimeInterval(14 * 60), visibleSpan: sixHours) != nil)
+        #expect(trace.latestPoint(asOf: base.addingTimeInterval(90 * 60), visibleSpan: sixHours) == nil)
+    }
 }

@@ -124,8 +124,8 @@
         "slug": "1-3-dimethylamine"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -15613,9 +15613,9 @@
         "slug": "2c-e"
       },
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       }
     ],
     "count": 5,
@@ -29704,8 +29704,8 @@
         "slug": "3-meo-pcp"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -42523,8 +42523,8 @@
         "slug": "5-mapb"
       },
       {
-        "known": false,
-        "name": "propylhexedrine",
+        "known": true,
+        "name": "Propylhexedrine",
         "slug": "propylhexedrine"
       }
     ],
@@ -47889,8 +47889,8 @@
         "slug": "5-meo-dmt"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -51013,9 +51013,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "abilify",
-        "slug": "abilify"
+        "known": true,
+        "name": "Aripiprazole",
+        "slug": "aripiprazole"
       },
       {
         "known": true,
@@ -51083,9 +51083,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "abilify",
-        "slug": "abilify"
+        "known": true,
+        "name": "Aripiprazole",
+        "slug": "aripiprazole"
       },
       {
         "known": false,
@@ -53479,8 +53479,8 @@
         "slug": "acetaminophen"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -58915,8 +58915,8 @@
         "slug": "adderall-mixed-amphetamine-salts-mas"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -60643,8 +60643,8 @@
         "slug": "adrafinil"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -68430,8 +68430,8 @@
         "slug": "alcohol"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -73633,8 +73633,8 @@
         "slug": "alcohol"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -77008,8 +77008,8 @@
         "slug": "ald-52"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -77091,8 +77091,8 @@
         "slug": "kratom-indo-maeng-da"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -82233,8 +82233,8 @@
         "slug": "alprazolam"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -85824,8 +85824,8 @@
         "slug": "dextromethorphan-dxm"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -86164,8 +86164,8 @@
         "slug": "amitriptyline"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -94949,9 +94949,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       },
       {
         "known": true,
@@ -95055,9 +95055,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       },
       {
         "known": true,
@@ -95139,9 +95139,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       },
       {
         "known": true,
@@ -95198,9 +95198,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       },
       {
         "known": true,
@@ -95282,9 +95282,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       },
       {
         "known": false,
@@ -95378,9 +95378,9 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "benadryl",
-        "slug": "benadryl"
+        "known": true,
+        "name": "Diphenhydramine",
+        "slug": "diphenhydramine"
       },
       {
         "known": true,
@@ -98036,8 +98036,8 @@
         "slug": "brompheniramine-maleate"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -104420,8 +104420,8 @@
         "slug": "caffeine"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -104526,8 +104526,8 @@
         "slug": "caffeine"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -113088,8 +113088,8 @@
         "slug": "cannabis-tetrahydrocannabinol-cannabidiol-thc-cbd"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -113194,8 +113194,8 @@
         "slug": "cannabis-tetrahydrocannabinol-cannabidiol-thc-cbd"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -113277,8 +113277,8 @@
         "slug": "cannabis-tetrahydrocannabinol-cannabidiol-thc-cbd"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -127314,8 +127314,8 @@
         "slug": "cannabis-tetrahydrocannabinol-cannabidiol-thc-cbd"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -144947,8 +144947,8 @@
         "slug": "codeine"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -149404,8 +149404,8 @@
         "slug": "datura-inoxia"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -149506,8 +149506,8 @@
         "slug": "datura-seeds"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -150771,8 +150771,8 @@
         "slug": "dimenhydrinate"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -150871,8 +150871,8 @@
         "slug": "dextromethorphan-dxm"
       },
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       }
     ],
@@ -156131,8 +156131,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156233,8 +156233,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156305,8 +156305,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156387,8 +156387,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156471,8 +156471,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156567,8 +156567,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156651,8 +156651,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156751,8 +156751,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156840,8 +156840,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156916,8 +156916,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -156982,8 +156982,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -157084,8 +157084,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -157180,8 +157180,8 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "diphenhydramine",
+        "known": true,
+        "name": "Diphenhydramine",
         "slug": "diphenhydramine"
       },
       {
@@ -190801,8 +190801,8 @@
         "slug": "lsd"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -196024,8 +196024,8 @@
         "slug": "mdma"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -203787,8 +203787,8 @@
         "slug": "methylphenidate-mph"
       },
       {
-        "known": false,
-        "name": "propylhexedrine",
+        "known": true,
+        "name": "Propylhexedrine",
         "slug": "propylhexedrine"
       }
     ],
@@ -210374,8 +210374,8 @@
         "slug": "noopept-omberacetam"
       },
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       }
     ],
@@ -213004,13 +213004,13 @@
   {
     "components": [
       {
-        "known": false,
-        "name": "phenibut",
+        "known": true,
+        "name": "Phenibut",
         "slug": "phenibut"
       },
       {
-        "known": false,
-        "name": "propylhexedrine",
+        "known": true,
+        "name": "Propylhexedrine",
         "slug": "propylhexedrine"
       }
     ],

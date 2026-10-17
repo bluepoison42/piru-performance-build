@@ -1341,74 +1341,46 @@
         {
           "target": "NMDA (MK-801 site)",
           "ki_nm": 259,
-          "ki_ci_nm": [
-            183,
-            335
-          ],
           "action": "channelBlocker",
           "species": "rat",
           "tissue_or_cell": "rat forebrain membranes",
           "radioligand_or_probe": "[3H]MK-801",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-rat-nmda"
+          "comparable_set": "roth-2013-rat-nmda",
+          "assay_notes": "Roth 2013 Table 2, pKi 6.59 ± 0.06 SD (Ki 259 nM). The same paper's Table S1 lists the final Ki as 338 nM and Figure 3's single determination as 337 ± 76 nM (N = 3). Assay species, tissue and radioligand are the NIMH-PDSP MK-801-site protocol the Methods cite; the paper itself names only 'radioligand binding assays'."
         },
         {
           "target": "SERT",
           "ki_nm": 481,
-          "ic50_nm": 2400,
           "action": "reuptakeInhibitor",
           "species": "human",
           "tissue_or_cell": "HEK293 expressing hSERT",
           "radioligand_or_probe": "[125I]RTI-55",
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter"
-        },
-        {
-          "target": "NET",
-          "ki_nm": null,
-          "ic50_nm": 20000,
-          "action": "reuptakeInhibitor",
-          "species": "human",
-          "reference": "doi:10.1371/journal.pone.0059334",
           "comparable_set": "roth-2013-human-transporter",
-          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement. The IC50 kept here is above that screening concentration and appears in neither Table 2 nor the paper's text; it is unverified."
-        },
+          "assay_notes": "Roth 2013 Table 2, pKi 6.32 ± 0.05 SD (Ki 481 nM), the same value as Table S1. A displacement affinity, not a measured uptake inhibition. Assay species, tissue and radioligand are the NIMH-PDSP hSERT protocol the Methods cite."
+        }
+      ],
+      "negative_screens": [
         {
-          "target": "DAT",
-          "ki_nm": null,
-          "ic50_nm": 33000,
-          "action": "reuptakeInhibitor",
-          "species": "human",
+          "targets": [
+            "DAT",
+            "NET",
+            "σ1",
+            "σ2",
+            "MOR",
+            "KOR",
+            "DOR",
+            "D1-D5",
+            "5-HT1A-5-HT7",
+            "CB1",
+            "CB2",
+            "GABA-A",
+            "GABA-B"
+          ],
+          "screening_concentration_nm": 10000,
           "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter",
-          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement. The IC50 kept here is above that screening concentration and appears in neither Table 2 nor the paper's text; it is unverified."
-        },
-        {
-          "target": "σ1",
-          "ki_nm": null,
-          "action": "agonist",
-          "species": "guinea pig",
-          "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-guinea-pig-transporter",
-          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
-        },
-        {
-          "target": "σ2",
-          "ki_nm": null,
-          "action": "modulator",
-          "species": "rat",
-          "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-rat-transporter",
-          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
-        },
-        {
-          "target": "μ-opioid",
-          "ki_nm": null,
-          "action": "agonist",
-          "species": "human",
-          "reference": "doi:10.1371/journal.pone.0059334",
-          "comparable_set": "roth-2013-human-transporter",
-          "notes": "PDSP screened this target at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; this compound was not a hit, so the paper reports no constant for it (Roth 2013 Methods; Table 2 prints a dash). The 10,000 nM recorded here was the screening concentration, not a measurement."
+          "finding": "No binding constant exists for these targets. NIMH-PDSP screened 57 targets in quadruplicate at a single 10 µM concentration and determined a Ki only where inhibition exceeded 50%; of the whole panel only NMDA, SERT and H1 (Ki 2 960 nM, Table S1) passed. Table 2 prints a dash for NET, σ1 and σ2, Table S1 records every other target at the 10 000 nM screening concentration, and the Discussion states that no appreciable affinity was observed at under 10 µM for hDAT. Never convert a 10 000 nM screening concentration into an affinity, and never record an IC50 above it: a prior pass stored NET 20 000 nM and DAT 33 000 nM, which appear in no table, figure or sentence of the paper."
         }
       ],
       "functional": [

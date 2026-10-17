@@ -31,10 +31,33 @@ nonisolated struct BloodPressureReading: Hashable {
 /// Empty arrays mean "no data" — the UI renders **nothing** rather than an empty axis, so a
 /// day without an Apple Watch (or without a BP reading) shows no vitals chrome at all.
 nonisolated struct SessionVitals: Hashable {
-    var heartRate: [HeartRateSample]
+    let heartRate: [HeartRateSample]
     var bloodPressure: [BloodPressureReading]
     /// The user's resting heart rate near the session, for the "elevated vs resting" summary.
     var restingHeartRate: Double?
+    /// ``heartRate`` prepared for the timeline's cardio lane. Built here, once per
+    /// fetch, so panning and scrubbing the graph only read it.
+    let heartRateTrace: HeartRateTrace
+
+    init(heartRate: [HeartRateSample], bloodPressure: [BloodPressureReading], restingHeartRate: Double? = nil) {
+        self.heartRate = heartRate
+        self.bloodPressure = bloodPressure
+        self.restingHeartRate = restingHeartRate
+        heartRateTrace = HeartRateTrace(samples: heartRate)
+    }
+
+    /// The trace is derived from ``heartRate``, so equality and hashing skip it.
+    static func == (lhs: SessionVitals, rhs: SessionVitals) -> Bool {
+        lhs.heartRate == rhs.heartRate
+            && lhs.bloodPressure == rhs.bloodPressure
+            && lhs.restingHeartRate == rhs.restingHeartRate
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(heartRate)
+        hasher.combine(bloodPressure)
+        hasher.combine(restingHeartRate)
+    }
 
     var hasHeartRate: Bool {
         !heartRate.isEmpty
@@ -47,6 +70,194 @@ nonisolated struct SessionVitals: Hashable {
     }
 
     static let empty = SessionVitals(heartRate: [], bloodPressure: [], restingHeartRate: nil)
+}
+
+/// Heart rate prepared for the timeline's cardio lane, computed once from the samples.
+///
+/// Samples are averaged into buckets anchored to absolute time (the reference date), so a
+/// bucket holds the same samples wherever the graph is panned. Never anchor buckets to the
+/// visible window: that regroups the samples on every pan frame and the line writhes as it
+/// moves. Each zoom range has its own bucket width from ``bucketLadder``.
+///
+/// Within a bucket width the points split into runs at gaps the watch did not sample. A run
+/// carries the tangents of the monotone cubic the lane strokes, and ``bpm(at:visibleSpan:)``
+/// evaluates that same cubic, so the scrub dot and the callout sit on the drawn line and read
+/// nothing in a gap or past the last reading.
+nonisolated struct HeartRateTrace: Sendable {
+    /// One bucket's samples, reduced.
+    nonisolated struct Point: Sendable {
+        /// Mean sample time, seconds since the reference date.
+        let time: TimeInterval
+        let mean: Double
+        let low: Double
+        let high: Double
+        /// Tangent of the drawn curve here, bpm per second.
+        let slope: Double
+    }
+
+    /// The trace at one bucket width.
+    nonisolated struct Level: Sendable {
+        let bucket: TimeInterval
+        /// Unbroken stretches in time order. Nothing is drawn or read between two runs.
+        let runs: [[Point]]
+        /// The longest gap between two points that still joins them into one run.
+        let maximumGap: TimeInterval
+    }
+
+    /// Bucket widths, finest first. The lane uses the finest that keeps the visible span
+    /// within ``maximumPointsPerSpan`` buckets.
+    static let bucketLadder: [TimeInterval] = [2, 5, 10, 15, 30, 60].map { $0 * 60 }
+    static let maximumPointsPerSpan: Double = 90
+
+    let levels: [Level]
+    /// The bpm axis for the whole series: padded, snapped to 10s, at least 20 bpm tall.
+    /// The same for every pan and zoom position, so the line never rescales while it moves.
+    let axis: ClosedRange<Double>?
+
+    init(samples: [HeartRateSample]) {
+        let sorted = samples.sorted { $0.date < $1.date }
+        guard let minimum = sorted.map(\.bpm).min(), let maximum = sorted.map(\.bpm).max() else {
+            levels = []
+            axis = nil
+            return
+        }
+        let low = ((minimum - 6) / 10).rounded(.down) * 10
+        var high = ((maximum + 6) / 10).rounded(.up) * 10
+        if high - low < 20 { high = low + 20 }
+        axis = low ... high
+        levels = Self.bucketLadder.map { Self.level(bucket: $0, samples: sorted) }
+    }
+
+    /// The level drawn for a visible span of `seconds`.
+    func level(forVisibleSpan seconds: TimeInterval) -> Level? {
+        levels.first { seconds / $0.bucket <= Self.maximumPointsPerSpan } ?? levels.last
+    }
+
+    /// Heart rate on the drawn curve at `date`, or nil in a gap, before the first reading
+    /// or after the last.
+    func bpm(at date: Date, visibleSpan seconds: TimeInterval) -> Double? {
+        guard let level = level(forVisibleSpan: seconds) else { return nil }
+        return Self.bpm(at: date.timeIntervalSinceReferenceDate, in: level)
+    }
+
+    /// The newest point of the level, when it is recent enough at `date` to still count as
+    /// the current reading.
+    func latestPoint(asOf date: Date, visibleSpan seconds: TimeInterval) -> Point? {
+        guard let level = level(forVisibleSpan: seconds), let last = level.runs.last?.last else { return nil }
+        let age = date.timeIntervalSinceReferenceDate - last.time
+        return age >= 0 && age <= level.maximumGap ? last : nil
+    }
+
+    static func bpm(at time: TimeInterval, in level: Level) -> Double? {
+        for run in level.runs {
+            guard let first = run.first, let last = run.last else { continue }
+            if run.count == 1 {
+                if abs(time - first.time) <= level.bucket / 2 { return first.mean }
+                continue
+            }
+            guard time >= first.time, time <= last.time else { continue }
+            var lower = 0
+            var upper = run.count - 1
+            while upper - lower > 1 {
+                let middle = (lower + upper) / 2
+                if run[middle].time <= time { lower = middle } else { upper = middle }
+            }
+            return hermite(run[lower], run[upper], at: time)
+        }
+        return nil
+    }
+
+    /// The cubic Hermite segment between two points with their tangents — the curve a
+    /// Bézier with controls at a third of the span along each tangent draws.
+    static func hermite(_ a: Point, _ b: Point, at time: TimeInterval) -> Double {
+        let span = b.time - a.time
+        guard span > 0 else { return a.mean }
+        let s = (time - a.time) / span
+        let s2 = s * s, s3 = s2 * s
+        return (2 * s3 - 3 * s2 + 1) * a.mean
+            + (s3 - 2 * s2 + s) * span * a.slope
+            + (-2 * s3 + 3 * s2) * b.mean
+            + (s3 - s2) * span * b.slope
+    }
+
+    typealias Reduced = (time: TimeInterval, mean: Double, low: Double, high: Double)
+
+    private nonisolated struct Bucket {
+        let start: TimeInterval
+        /// Sample times are summed as offsets from `start`, which keeps the mean exact
+        /// where summing raw reference-date seconds would lose precision.
+        var timeOffsetSum = 0.0
+        var bpmSum = 0.0
+        var count = 0.0
+        var low = Double.infinity
+        var high = -Double.infinity
+
+        mutating func add(time: TimeInterval, bpm: Double) {
+            timeOffsetSum += time - start
+            bpmSum += bpm
+            count += 1
+            low = min(low, bpm)
+            high = max(high, bpm)
+        }
+
+        var reduced: Reduced {
+            (start + timeOffsetSum / count, bpmSum / count, low, high)
+        }
+    }
+
+    private static func level(bucket: TimeInterval, samples: [HeartRateSample]) -> Level {
+        var buckets: [Bucket] = []
+        for sample in samples {
+            let time = sample.date.timeIntervalSinceReferenceDate
+            let start = (time / bucket).rounded(.down) * bucket
+            if buckets.last?.start != start { buckets.append(Bucket(start: start)) }
+            buckets[buckets.count - 1].add(time: time, bpm: sample.bpm)
+        }
+        let reduced = buckets.map(\.reduced)
+
+        let maximumGap = max(VitalsAnalysis.maximumSampleGap, bucket * 1.5)
+        var runs: [[Point]] = []
+        var run: [Reduced] = []
+        for point in reduced {
+            if let previous = run.last, point.time - previous.time > maximumGap {
+                runs.append(withTangents(run))
+                run = []
+            }
+            run.append(point)
+        }
+        if !run.isEmpty { runs.append(withTangents(run)) }
+        return Level(bucket: bucket, runs: runs, maximumGap: maximumGap)
+    }
+
+    /// Fritsch–Carlson tangents: adjacent secants averaged, zero at a local extremum, capped
+    /// at three times the smaller neighboring secant, so no segment overshoots its endpoints.
+    private static func withTangents(_ run: [Reduced]) -> [Point] {
+        let count = run.count
+        var slopes = [Double](repeating: 0, count: count)
+        if count >= 2 {
+            var secants = [Double](repeating: 0, count: count - 1)
+            for i in 0 ..< count - 1 {
+                let span = run[i + 1].time - run[i].time
+                secants[i] = span > 0 ? (run[i + 1].mean - run[i].mean) / span : 0
+            }
+            slopes[0] = secants[0]
+            slopes[count - 1] = secants[count - 2]
+            if count > 2 {
+                for i in 1 ..< count - 1 {
+                    if secants[i - 1] * secants[i] <= 0 {
+                        slopes[i] = 0
+                    } else {
+                        let average = (secants[i - 1] + secants[i]) / 2
+                        let limit = 3 * min(abs(secants[i - 1]), abs(secants[i]))
+                        slopes[i] = min(max(average, -limit), limit)
+                    }
+                }
+            }
+        }
+        return run.indices.map { i in
+            Point(time: run[i].time, mean: run[i].mean, low: run[i].low, high: run[i].high, slope: slopes[i])
+        }
+    }
 }
 
 /// Which way a dose's heart rate moved. ``unchanged`` means the move stayed inside

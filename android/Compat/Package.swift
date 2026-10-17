@@ -80,6 +80,28 @@ let package = Package(
             ],
             plugins: ["StageSources"],
         ),
+        // The update check's release picking and version order: the app's own file, linked in from
+        // app/Sources/Piru/Android/Update, which needs nothing past Foundation.
+        .testTarget(
+            name: "AppReleaseTests",
+            swiftSettings: [
+                .defaultIsolation(MainActor.self),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("MemberImportVisibility"),
+            ],
+        ),
+        // Grammar agreement for counted phrases: the app's own file, linked in from
+        // app/Sources/Piru/Android/Platform, which needs nothing past Foundation.
+        .testTarget(
+            name: "InflectionTests",
+            swiftSettings: [
+                .defaultIsolation(MainActor.self),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("MemberImportVisibility"),
+            ],
+        ),
         .plugin(name: "StageSources", capability: .buildTool()),
     ],
 )

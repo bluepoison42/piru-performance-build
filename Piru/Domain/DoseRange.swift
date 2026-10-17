@@ -1,7 +1,7 @@
 import Foundation
 
 /// JSON-serializable representation of ClosedRange<Double>.
-struct CodableRange: Codable {
+nonisolated struct CodableRange: Codable {
     let lower: Double
     let upper: Double
 
@@ -152,9 +152,9 @@ nonisolated struct DoseLadder: Hashable {
     }
 }
 
-extension DoseRange: Hashable {}
+nonisolated extension DoseRange: Hashable {}
 
-extension DoseRange: Codable {
+nonisolated extension DoseRange: Codable {
     enum CodingKeys: String, CodingKey {
         case threshold
         case light

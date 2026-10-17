@@ -23,7 +23,7 @@ struct ContentView: View {
     /// self-owning `ViewModifier`s so their `@State` stays out of this body and
     /// out of the tab tree.
     var body: some View {
-        MainTabView()
+        rootNavigation
             .id(englishSubstanceNames)
             .sheetStackPresenter(navigator)
             .dismissesKeyboardOnTap()
@@ -62,6 +62,17 @@ struct ContentView: View {
             }
     }
 
+    /// The tab bar on iOS; on macOS the same tabs as a sidebar, with the
+    /// accessory's actions listed under them (``MacSidebarView``).
+    @ViewBuilder
+    private var rootNavigation: some View {
+        #if os(macOS)
+            MacSidebarView()
+        #else
+            MainTabView()
+        #endif
+    }
+
     // MARK: - Deep Linking
 
     private func handleDeepLink(_ url: URL) {
@@ -92,10 +103,10 @@ struct ContentView: View {
 }
 
 /// The session the `.sessionDetail` sheet would resolve — the most recent by
-/// start date (mirrors `CurrentSessionHost`). Used by the deep link handler
-/// and the session accessory to reveal an already-open session screen rather
+/// start date (mirrors `CurrentSessionHost`). Used by the deep link handler,
+/// the session accessory and the macOS sidebar's session row to reveal an already-open session screen rather
 /// than presenting a duplicate sheet.
-private func mostRecentSessionID(in context: ModelContext) -> UUID? {
+func mostRecentSessionID(in context: ModelContext) -> UUID? {
     var descriptor = FetchDescriptor<Session>(sortBy: [SortDescriptor(\.startDate, order: .reverse)])
     descriptor.fetchLimit = 1
     return try? context.fetch(descriptor).first?.id
@@ -279,7 +290,7 @@ private struct MainTabView: View {
 }
 
 /// One tab's root screen: a stock tab's hub, or the screen the user pinned.
-private struct TabRootView: View {
+struct TabRootView: View {
     let tab: TabID
     @Binding var searchText: String
     @Binding var librarySearchText: String
@@ -338,7 +349,7 @@ enum SearchTabScope: String, CaseIterable, Identifiable {
 /// never see the landing) and treat the cancel button as "leave the tab". Letting
 /// the system own focus gives the Music behavior: enter → landing, tap field →
 /// keyboard, cancel → back to the landing (staying on the tab).
-private struct SearchView: View {
+struct SearchView: View {
     @Binding var scope: SearchTabScope
     @Binding var searchText: String
 
@@ -725,7 +736,7 @@ private struct LogTipAnchor: ViewModifier {
 /// The live-session summary shown in the accessory's pill face: a compact
 /// timeline, the substance names, and elapsed/remaining times. Collapses to just
 /// the names when the tab bar minimizes (`.inline`).
-private struct SessionAccessoryInfo: View {
+struct SessionAccessoryInfo: View {
     @AppStorage("stackRedoses", store: UserDefaults(suiteName: AppIdentity.appGroup)) private var stackRedoses = true
 
     let states: [ActiveSubstanceState]

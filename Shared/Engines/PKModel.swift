@@ -364,6 +364,109 @@ extension PKModel {
     }
 }
 
+// MARK: - Sampled concentration track (what saturable kinetics produce instead of a closed form)
+
+extension PKModel {
+    /// A dose's concentration over time on a fixed grid starting at its onset — the form a
+    /// **capacity-limited** (Michaelis-Menten) elimination comes in, because `dC/dt = absorption −
+    /// Vmax·C/(Km+C)` has no closed solution the way the one-compartment Bateman shape does.
+    ///
+    /// The unit is whatever the builder scaled the samples to: ``saturableTrack(dose:bioavailability:vdPerKg:weightKg:ka:km:vmaxMgPerLPerMin:unitScale:)``
+    /// takes a `unitScale`, so the tolerance engine asks for nanomolar and the elimination readout
+    /// could ask for mg/L. Outside `[0, duration]` the value is 0: before a dose nothing is on board,
+    /// and a capacity-limited drug really does reach zero rather than trailing an exponential tail.
+    nonisolated struct ConcentrationTrack: Equatable, Sendable {
+        /// Grid spacing in minutes.
+        let stepMinutes: Double
+        /// Concentration at each grid point, first point = the dose's onset.
+        let values: [Double]
+
+        /// Concentration at `minutes` after onset, linearly interpolated between grid points.
+        func value(atMinutes minutes: Double) -> Double {
+            guard minutes >= 0, stepMinutes > 0, !values.isEmpty else { return 0 }
+            let position = minutes / stepMinutes
+            let lower = Int(position)
+            guard lower >= 0, lower < values.count - 1 else {
+                return lower == values.count - 1 ? values[lower] : 0
+            }
+            let fraction = position - Double(lower)
+            return values[lower] + (values[lower + 1] - values[lower]) * fraction
+        }
+
+        /// Highest concentration on the grid.
+        var peakValue: Double {
+            values.max() ?? 0
+        }
+
+        /// Minutes after onset at which ``peakValue`` occurs.
+        var peakMinutes: Double {
+            guard let index = values.firstIndex(of: peakValue) else { return 0 }
+            return Double(index) * stepMinutes
+        }
+
+        /// Minutes after onset from which the concentration stays at or below `threshold` — the end of
+        /// the dose's active window. The grid's end when it never does.
+        func endMinutes(atOrBelow threshold: Double) -> Double {
+            var last = values.count - 1
+            while last > 0, values[last] <= threshold {
+                last -= 1
+            }
+            return Double(min(last + 1, values.count - 1)) * stepMinutes
+        }
+    }
+
+    /// Integrate a saturable-elimination dose into a ``ConcentrationTrack``.
+    ///
+    /// A thin scaling wrapper over ``saturableCurve(dose:bioavailability:vdPerKg:weightKg:ka:saturation:durationMinutes:stepMinutes:)``
+    /// so every consumer draws one curve from one integrator: `unitScale` multiplies the mg/L samples
+    /// (pass `1e6 / molarMass` for nanomolar, `1` for mg/L).
+    ///
+    /// - Parameters:
+    ///   - vdPerKg: the volume **the Vmax and Km were fitted against** — for ethanol the total-body-water
+    ///     0.55 L/kg, never the forensic Widmark 0.7 L/kg. Pairing a Michaelis-Menten Vmax with the other
+    ///     convention's volume moves where the curve crosses Km.
+    ///   - vmaxMgPerLPerMin: maximum elimination rate already divided by that volume.
+    ///   - durationMinutes: how far to integrate; the caller sizes it from the dose (see
+    ///     ``saturableDurationMinutes(doseMg:bioavailability:vmaxMgPerMin:ka:)``).
+    nonisolated static func saturableTrack(
+        dose: Double,
+        bioavailability: Double,
+        vdPerKg: Double,
+        weightKg: Double,
+        ka: Double,
+        km: Double,
+        vmaxMgPerLPerMin: Double,
+        durationMinutes: Double,
+        unitScale: Double = 1,
+        stepMinutes: Double = 1,
+    ) -> ConcentrationTrack? {
+        guard dose > 0, km > 0, vmaxMgPerLPerMin > 0, unitScale > 0, durationMinutes > 0 else { return nil }
+        let curve = saturableCurve(
+            dose: dose, bioavailability: bioavailability, vdPerKg: vdPerKg, weightKg: weightKg, ka: ka,
+            saturation: .elimination(km: km, vmax: vmaxMgPerLPerMin),
+            durationMinutes: durationMinutes, stepMinutes: stepMinutes,
+        )
+        guard curve.parent.count > 1 else { return nil }
+        return ConcentrationTrack(
+            stepMinutes: curve.stepMinutes, values: curve.parent.map { $0 * unitScale },
+        )
+    }
+
+    /// How long a capacity-limited dose needs to be integrated for: the time the fixed-rate elimination
+    /// needs to remove the absorbed dose (`F·D / Vmax`), plus the span absorption occupies (`5/ka`,
+    /// five absorption time-constants ≈ 99 % absorbed) and a margin for the sub-Km tail, which is
+    /// first-order and short (ethanol's `Vmax/Km ÷ Vd` works out to minutes). Clamped to a week so a
+    /// mistyped dose cannot allocate an unbounded grid.
+    nonisolated static func saturableDurationMinutes(
+        doseMg: Double, bioavailability: Double, vmaxMgPerMin: Double, ka: Double,
+    ) -> Double {
+        guard doseMg > 0, vmaxMgPerMin > 0, ka > 0 else { return 0 }
+        let linear = bioavailability * doseMg / vmaxMgPerMin
+        let absorption = 5 / ka
+        return min(7 * 24 * 60, linear + absorption + 60)
+    }
+}
+
 // MARK: - Zero-order (capacity-limited) elimination — the alcohol shape
 
 extension PKModel {

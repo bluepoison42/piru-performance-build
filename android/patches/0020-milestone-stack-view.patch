@@ -1,16 +1,16 @@
-SkipFuseUI hosts no custom Layout: on Android the timeline graph's milestone stack is a VStack positioned at its center
+SkipFuseUI hosts no custom Layout: on Android the timeline graph's milestone stack is placed by a Compose layout (AndroidMilestoneStackLayout) that slides the time inside the plot by its measured width
 
 diff --git a/Shared/TimelineGraphView.swift b/Shared/TimelineGraphView.swift
-index 4b8c1d1a..1323dd85 100644
+index 4b8c1d1a..bf3ab233 100644
 --- a/Shared/TimelineGraphView.swift
 +++ b/Shared/TimelineGraphView.swift
-@@ -838,6 +838,31 @@ struct TimelineGraphView: View, Equatable {
+@@ -838,6 +838,27 @@ struct TimelineGraphView: View, Equatable {
  /// time slides sideways when centering it would run past either edge of the
  /// plot (``TimelineGraphRenderer/milestoneLabelCenterX(_:labelWidth:geom:)``,
  /// the same math the canvas uses to break the Now rule around it).
 +#if os(Android)
-+    /// SkipFuseUI hosts no custom `Layout`: the glyph and time stack in a VStack centered on
-+    /// (`x`, `y`), and the time stays centered under the glyph rather than sliding at the edges.
++    /// SkipFuseUI hosts no custom `Layout`: a Compose layout places the glyph and time the same
++    /// way, sliding the time by its measured width (Android/SwiftUI/MilestoneStack+Android.swift).
 +    private struct MilestoneStackLayout<Content: View>: View {
 +        let x: CGFloat
 +        let y: CGFloat
@@ -25,18 +25,14 @@ index 4b8c1d1a..1323dd85 100644
 +        }
 +
 +        var body: some View {
-+            VStack(spacing: TimelineGraphRenderer.MilestoneMetrics.spacing) {
-+                content
-+            }
-+            .fixedSize()
-+            .position(x: x, y: y)
++            AndroidMilestoneStackLayout(x: x, y: y, geom: geom) { content }
 +        }
 +    }
 +#else
  private struct MilestoneStackLayout: Layout {
      let x: CGFloat
      let y: CGFloat
-@@ -861,3 +886,4 @@ private struct MilestoneStackLayout: Layout {
+@@ -861,3 +882,4 @@ private struct MilestoneStackLayout: Layout {
          )
      }
  }

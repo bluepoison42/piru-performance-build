@@ -246,6 +246,10 @@ extension SubstanceStore {
             diazepamPerMg: diazepamPerMg,
             opioidMMEPerMg: opioidMMEPerMg,
             representsClasses: representsClasses,
+            // Capacity-limited elimination is a fact about the active compound, like binding and PK.
+            saturableElimination: pkID.flatMap {
+                SubstanceReadModel.saturableElimination(substanceID: $0, db: substancesDB)
+            },
         )
     }
 
@@ -340,6 +344,9 @@ extension SubstanceStore {
                     SubstanceReadModel.opioidMMEPerMg(substanceID: $0, db: queue, order: order)
                 },
                 representsClasses: id.map { representatives[$0] ?? [] } ?? [],
+                saturableElimination: id.flatMap {
+                    SubstanceReadModel.saturableElimination(substanceID: $0, db: queue)
+                },
             )
         }
         return out
@@ -471,6 +478,7 @@ extension SubstanceStore {
         diazepamPerMg: Double? = nil,
         opioidMMEPerMg: Double? = nil,
         representsClasses: Set<ReceptorClasses.ReceptorClass> = [],
+        saturableElimination: PharmacologyParameters.SaturableElimination? = nil,
     ) -> PharmacologyParameters {
         // Read Vd, F, and half-life from a SINGLE coherent pk row — never pair a Vd from one study
         // with an F or half-life from another. That cross-pairing silently double-counts F when a
@@ -612,6 +620,9 @@ extension SubstanceStore {
             diazepamPerMg: diazepamPerMg,
             opioidMMEPerMg: opioidMMEPerMg,
             representsClasses: representsClasses,
+            // The saturable set is the *alternative* to a half-life, never a second opinion about a
+            // substance that has one: a drug with both keeps the closed-form path it already ran on.
+            saturableElimination: halfLife == nil ? saturableElimination : nil,
         )
     }
 

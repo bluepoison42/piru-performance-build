@@ -23,6 +23,9 @@ struct DockMiddleContent: View {
     @Binding var browseResults: [Substance]
     let unrevealedItemIDs: Set<UUID>
     let awaitingBareCollapse: Bool
+    /// Whether the staged basket renders below the results. The macOS Log
+    /// window keeps the basket in its own pane beside the search.
+    var showsStagedBasket = true
     /// Present the custom-substance editor. ``QuickLogDock`` releases search
     /// focus before running this — restoring focus mid-transition on dismiss
     /// caused the SheetBridge exclusivity crash (builds 13/14).
@@ -63,7 +66,7 @@ struct DockMiddleContent: View {
                     suggestions
                 }
 
-                if !tray.isEmpty {
+                if showsStagedBasket, !tray.isEmpty {
                     // The staged basket never disappears — search results render
                     // above it, so staging more is not a context switch.
                     TrayStagedListCard(model: tray, hiddenItemIDs: unrevealedItemIDs)

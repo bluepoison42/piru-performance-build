@@ -3,8 +3,9 @@
 // clip in force at the time; the recording is then laid out as Compose shapes and text
 // inside a canvas-sized frame. Every Canvas in the shared code draws through this unchanged.
 //
-// Text is placed by an estimated size (Compose measures it only at layout), so an anchor
-// other than the center lands approximately.
+// Compose measures text only at layout, after the renderer has run. Drawn text keeps its anchor
+// until then, and Compose places it exactly by its measured size; `measure(in:)` answers the
+// renderer with an estimate from the characters.
 
 import SwiftUI
 
@@ -110,7 +111,7 @@ nonisolated struct GraphicsContext {
 
         /// An estimate: Compose measures text only at layout, after the renderer has run.
         func measure(in size: CGSize) -> CGSize {
-            CGSize(width: min(size.width, CGFloat(text.estimatedLength) * 7), height: min(size.height, 16))
+            CGSize(width: min(size.width, text.estimatedWidth), height: min(size.height, 16))
         }
 
         func firstBaseline(in _: CGSize) -> CGFloat { 12 }
@@ -196,9 +197,15 @@ nonisolated struct GraphicsContext {
     }
 
     func draw(_ text: ResolvedText, at point: CGPoint, anchor: UnitPoint = .center) {
+        let rotation = rotation
+        guard rotation.radians != 0 else {
+            append(.text(text.text, text.shading, point.applying(transform), anchor, .zero))
+            return
+        }
+        // Rotated text turns about its center, which sits at its estimated offset from the anchor.
         let size = text.measure(in: CGSize(width: 10_000, height: 10_000))
         let center = CGPoint(x: point.x + (0.5 - anchor.x) * size.width, y: point.y + (0.5 - anchor.y) * size.height)
-        append(.text(text.text, text.shading, center.applying(transform), rotation))
+        append(.text(text.text, text.shading, center.applying(transform), .center, rotation))
     }
 
     func draw(_ text: ResolvedText, in rect: CGRect) {
@@ -239,7 +246,8 @@ nonisolated struct CanvasItem {
     enum Kind {
         case fill(Path, GraphicsContext.Shading)
         case stroke(Path, GraphicsContext.Shading, StrokeStyle)
-        case text(Text, GraphicsContext.Shading, CGPoint, Angle)
+        /// The text, its shading, the point its anchor lands on, the anchor, its rotation.
+        case text(Text, GraphicsContext.Shading, CGPoint, UnitPoint, Angle)
         case image(Image, GraphicsContext.Shading, CGRect)
     }
 
@@ -264,11 +272,8 @@ private struct CanvasItemView: View {
             filled(path, shading)
         case let .stroke(path, shading, style):
             stroked(path, shading, style)
-        case let .text(text, shading, center, rotation):
-            textView(text, shading)
-                .fixedSize()
-                .rotationEffect(rotation)
-                .position(x: center.x, y: center.y)
+        case let .text(text, shading, point, anchor, rotation):
+            anchoredText(textView(text, shading).fixedSize().rotationEffect(rotation), at: point, anchor: anchor)
         case let .image(image, shading, rect):
             imageView(image, shading)
                 .frame(width: rect.width, height: rect.height)
@@ -301,6 +306,37 @@ private struct CanvasItemView: View {
         }
     }
 
+    /// The text with its anchor on `point`, placed by the size Compose measures. It sits in a
+    /// frame as large as the canvas, aligned to the anchor's side on each axis, and the frame is
+    /// centered so that its aligned edge (or its center) falls on the point. An anchor between an
+    /// edge and the center goes to the nearer of the two.
+    private func anchoredText(_ text: some View, at point: CGPoint, anchor: UnitPoint) -> some View {
+        let horizontal = Self.snapped(anchor.x)
+        let vertical = Self.snapped(anchor.y)
+        let frame = CGSize(width: max(size.width, 64), height: max(size.height, 32))
+        return text
+            .frame(width: frame.width, height: frame.height, alignment: Self.alignment(horizontal, vertical))
+            .position(x: point.x + (0.5 - horizontal) * frame.width, y: point.y + (0.5 - vertical) * frame.height)
+    }
+
+    private static func snapped(_ fraction: CGFloat) -> CGFloat {
+        fraction < 0.25 ? 0 : fraction > 0.75 ? 1 : 0.5
+    }
+
+    private static func alignment(_ horizontal: CGFloat, _ vertical: CGFloat) -> Alignment {
+        switch (horizontal, vertical) {
+        case (0, 0): .topLeading
+        case (0.5, 0): .top
+        case (1, 0): .topTrailing
+        case (0, 1): .bottomLeading
+        case (0.5, 1): .bottom
+        case (1, 1): .bottomTrailing
+        case (0, _): .leading
+        case (1, _): .trailing
+        default: .center
+        }
+    }
+
     @ViewBuilder
     private func textView(_ text: Text, _ shading: GraphicsContext.Shading) -> some View {
         if case let .color(color) = shading { text.foregroundStyle(color) } else { text }
@@ -321,8 +357,66 @@ private struct CanvasItemView: View {
 }
 
 private nonisolated extension Text {
-    /// A rough glyph count for placing drawn text: the rendered string is only known to Compose.
-    var estimatedLength: Int {
-        max(1, String(describing: self).count / 3)
+    /// The width the text takes at the sizes the renderers draw labels in (8 to 11 points): an
+    /// average advance per character, about twice that for a full-width (CJK) one.
+    var estimatedWidth: CGFloat {
+        estimatedString.reduce(0) { width, character in
+            let fullWidth = character.unicodeScalars.first.map { $0.properties.isIdeographic || $0.value >= 0xFF00 } ?? false
+            return width + (fullWidth ? 11 : 5.8)
+        }
+    }
+
+    /// The characters the text shows, as near as Swift knows them before Compose resolves the
+    /// string: its verbatim string, or its key's pattern with the interpolated values in place.
+    /// SkipFuseUI keeps both in the text's spec, which Mirror can read.
+    private var estimatedString: String {
+        guard let spec = Self.child("spec", of: self) else { return "" }
+        if let verbatim = Self.child("verbatim", of: spec) as? String {
+            return verbatim
+        }
+        guard let key = Self.child("key", of: spec), let interpolation = Self.child("interpolation", of: key),
+              let pattern = Self.child("pattern", of: interpolation) as? String
+        else { return "" }
+        return Self.formatted(pattern, Self.child("values", of: interpolation) as? [Any] ?? [])
+    }
+
+    /// The stored property named `label`, with an optional around it (or around `value`) looked
+    /// through.
+    private static func child(_ label: String, of value: Any) -> Any? {
+        guard let found = unwrapped(value).flatMap({ container in
+            Mirror(reflecting: container).children.first { $0.label == label }?.value
+        }) else { return nil }
+        return unwrapped(found)
+    }
+
+    private static func unwrapped(_ value: Any) -> Any? {
+        let mirror = Mirror(reflecting: value)
+        guard mirror.displayStyle == .optional else { return value }
+        return mirror.children.first?.value
+    }
+
+    /// `pattern` with each format specifier replaced by the next value, and `%%` by `%`.
+    private static func formatted(_ pattern: String, _ values: [Any]) -> String {
+        var result = ""
+        var remaining = values[...]
+        var characters = pattern.makeIterator()
+        while let character = characters.next() {
+            guard character == "%" else {
+                result.append(character)
+                continue
+            }
+            while let next = characters.next() {
+                if next == "%" {
+                    result.append("%")
+                    break
+                }
+                // Length modifiers (`ll`, `h`, …) lead up to the conversion letter.
+                if next.isLetter, !"lhqzjt".contains(next) {
+                    if let value = remaining.popFirst() { result += String(describing: value) }
+                    break
+                }
+            }
+        }
+        return result
     }
 }

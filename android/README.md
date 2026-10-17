@@ -1,32 +1,17 @@
 # Piru on Android
 
-How the Android app is made from the iOS app, and the rules that keep it that way.
+Piru's Android app compiles the iOS Swift sources through Skip Fuse, bridges SwiftUI views to Compose, and replaces SwiftData with a GRDB-backed compatibility layer. Android adaptations live under `android/`; the build reads the iOS tree and stages its output outside the repository.
 
-## Goals
+<details>
+<summary>Android implementation and build reference</summary>
 
-1. **iOS stays the product.** The iOS app is designed, written and tested as an iOS app.
-   Nothing in `Piru/` or `Shared/` exists for Android's sake, except refactors that also make
-   the iOS code better.
-2. **Android runs the same code.** The Android app compiles the iOS sources, passed through a
-   fixed set of translations, so iOS fixes and features reach Android by rebuilding. The
-   translations are the only Android-specific surface, kept as small as the platform allows.
-3. **One repository.** Everything Android lives under `android/`. The build reads the iOS tree
-   and never writes to it; the staged Android package is a build product outside the repo.
+## Scope
 
-A Piru release is an Android release: rebuild, and repair any translation that no longer
-applies. The model is ungoogled-chromium's patch series over Chromium, not a fork.
+The iOS app remains the product source. Shared-code refactors must also improve iOS; Android-specific changes belong in the translation layer. Rebuild Android for every Piru release and repair translations that no longer apply.
 
-### Non-goals
-
-- A Kotlin rewrite, or Android-first UI. Compose is reached only where SkipUI cannot express
-  a SwiftUI construct.
-- Platform integrations with no Android counterpart yet: widgets, the Live Activity, Health
-  Connect, the watch app.
-- Skins and any store: the Android app sells nothing.
+Compose handles layouts SkipUI cannot express. Widgets, Live Activities, Health Connect, the watch app, skins, and a store are outside the current Android scope.
 
 ## Principles
-
-Each one names the failure it prevents.
 
 1. **Translations adapt APIs; behavior stays in shared code.** An entry point that copies
    launch code drifts from it and silently skips store recovery, migrations or session
@@ -96,8 +81,7 @@ A few things the build does by hand that Skip's own tooling would:
 
 ## Where an Android difference goes
 
-Every difference takes the first form on this list that can express it. The order runs from
-"iOS code untouched" to "a hunk that can conflict with the next release".
+Use the first applicable form:
 
 | # | Form | Lives in | Use when | Per-release cost |
 |---|---|---|---|---|
@@ -126,9 +110,7 @@ Rules:
 
 ## The persistence contract
 
-PortableData must give the app what SwiftData gives it. Each item is a behavior some app code
-depends on; the test suite is these items, written against the app's real `@Model` types with
-two contexts.
+PortableData must preserve these SwiftData behaviors. Tests use Piru's real `@Model` types with two contexts.
 
 1. A stored property added with a default (or made optional) decodes old rows with that
    default; `@Attribute(originalName:)` reads the old key; unknown keys survive a save.
@@ -149,11 +131,7 @@ two contexts.
 
 ## Distribution, signing and data
 
-- **Distribution without Google.** The app ships as a signed APK on a GitHub release,
-  installable directly or through Obtainium, with the branch it was built from pushed
-  alongside, since the repository is GPL-3 and the APK's source must be available. About
-  carries the Android notices: MPL-2.0 Skip modules and their modified source, Apache NOTICE
-  files, Unicode/ICU, curl/OpenSSL, BSD-2, Material Symbols.
+- **Distribution.** GitHub releases carry APKs for direct installation or Obtainium, with the corresponding source branch published. About includes the Android dependency notices: MPL-2.0 Skip modules and their modified source, Apache NOTICE files, Unicode/ICU, curl/OpenSSL, BSD-2, and Material Symbols.
 - **Signing.** The release key follows Android's current guidance (RSA 4096, a validity far
   past 25 years, APK Signature Scheme v2+v3 so it can rotate) and lives in the macOS keychain.
   The build reads it at signing time, and a release build fails without it. Losing it strands
@@ -162,7 +140,8 @@ two contexts.
   leaves the device. Automatic backup, iOS's iCloud backup on Android, writes a
   passphrase-sealed `.piruenc` into a folder the user picks through the Storage Access
   Framework (`app/Sources/Piru/Android/Backup/`). A cloud folder is uploaded by its
-  provider's app, so the manifest still drops the network permission.
+  provider's app. The one connection Piru opens is the daily update check, which asks GitHub
+  for the newest release, sends nothing about the user, and turns off in Settings.
 - **Migration.** Import accepts every format iOS does, including PsychonautWiki Journal's
   (PsyLog), through the Storage Access Framework.
 
@@ -185,8 +164,7 @@ To change an upstream file for Android: edit it in place, run
 
 ### Driving the emulator
 
-`android/tools/droid` is the `axe` of this setup: adb and uiautomator, nothing to install.
-Labels are the SwiftUI accessibility labels, as Compose reports them.
+`android/tools/droid` drives adb and uiautomator using the SwiftUI accessibility labels reported by Compose.
 
 ```bash
 android/tools/droid restart                       # force-stop and relaunch Piru
@@ -201,16 +179,4 @@ An emulator on another Mac: `PIRU_ADB_SSH=user@host` (with `env.sh` sourced) tun
 that Mac's adb server, and every tool drives its emulator. The emulator needs 6 GB
 (`setup.sh` sets it): at 2 GB the app's startup is killed under memory pressure.
 
-## Where things live
-
-| Path | What |
-|---|---|
-| `tools/stage.py` | the whole translation: copy, patch, rewrite, generate, vendor |
-| `tools/build-app.sh`, `package-apk.sh` | the two Skip phases, then Gradle |
-| `tools/droid` | emulator driver |
-| `tools/mkpatch.py` | make a patch from a worktree edit |
-| `app/` | the Skip package template, stand-ins, Kotlin composers, Gradle project |
-| `Compat/` | PortableData (SwiftData over GRDB); `os`, CryptoKit, CoreLocation for PiruCore |
-| `patches/`, `substitutions.txt`, `exclude.txt`, `symbols.tsv` | the translations |
-| `vendor/` | dependency patches |
-| `PiruCore/` | the headless core build and its smoke test (`tools/run-smoke.sh`) |
+</details>

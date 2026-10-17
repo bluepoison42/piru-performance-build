@@ -1,7 +1,7 @@
-// What UserNotifications gives the iOS build beyond SkipFuseUI's bridge: typed pending
-// requests, the interruption level and relevance (Android sets these per notification
-// channel rather than per notification), and actionable categories, which register nothing:
-// an Android notification action needs a Kotlin broadcast receiver this build does not ship.
+// What UserNotifications gives the iOS build beyond SkipFuseUI's bridge: the interruption level
+// and relevance (Android sets these per notification channel rather than per notification), and
+// actionable categories, which register nothing: an Android notification action needs a Kotlin
+// broadcast receiver this build does not ship.
 
 import SwiftUI
 
@@ -62,12 +62,6 @@ final nonisolated class UNNotificationCategory: Hashable {
 }
 
 nonisolated extension UNUserNotificationCenter {
-    /// SkipFuseUI returns the pending requests untyped.
-    @concurrent
-    func androidPendingNotificationRequests() async -> [UNNotificationRequest] {
-        await pendingNotificationRequests().compactMap { $0 as? UNNotificationRequest }
-    }
-
     func setNotificationCategories(_: Set<UNNotificationCategory>) {}
 
     func add(_ request: UNNotificationRequest, withCompletionHandler completion: (@Sendable (Error?) -> Void)? = nil) {
@@ -86,7 +80,7 @@ nonisolated extension UNUserNotificationCenter {
     func getPendingNotificationRequests(completionHandler: @escaping @Sendable ([UNNotificationRequest]) -> Void) {
         nonisolated(unsafe) let center = self
         Task {
-            await completionHandler(center.androidPendingNotificationRequests())
+            await completionHandler(center.pendingNotificationRequests())
         }
     }
 }
@@ -108,17 +102,6 @@ enum AndroidCalendarTrigger {
 /// lands at the notification's deep link, as `DoseNotificationDelegate` does on iOS.
 final class AndroidNotificationDelegate: UNUserNotificationCenterDelegate, @unchecked Sendable {
     static let shared = AndroidNotificationDelegate()
-
-    /// A tap on a delivered notification. SkipUI opens every notification with the app's launch
-    /// intent, the request's userInfo copied onto it as extras, and calls no delegate for the tap;
-    /// the activity hands those extras here (`PiruAppDelegate.onNotificationTap`), and they reach
-    /// `didReceive` as the default action, the call iOS makes when a notification is tapped. The
-    /// request identifier is not on the intent, and nothing in `didReceive` reads it.
-    func receiveTap(userInfo: [String: String]) {
-        let request = UNNotificationRequest(identifier: "", content: UNNotificationContent(userInfo: userInfo), trigger: nil)
-        let response = UNNotificationResponse(notification: UNNotification(request: request, date: .now))
-        Task { await userNotificationCenter(.current(), didReceive: response) }
-    }
 
     func userNotificationCenter(_: UNUserNotificationCenter, willPresent _: UNNotification) async -> UNNotificationPresentationOptions {
         [.banner, .sound, .list]

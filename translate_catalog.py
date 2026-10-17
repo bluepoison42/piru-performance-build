@@ -14,6 +14,104 @@ from pathlib import Path
 
 # Translations: English -> (Simplified, Traditional)
 T = {
+    "Bar: participant range; dot: mean.": (
+        "横条：参与者范围；圆点：均值。",
+        "橫條：參與者範圍；圓點：平均值。",
+    ),
+    # substance.wiki reference timings
+    "substance.wiki timelines": ("substance.wiki 时间线", "substance.wiki 時間軸"),
+    "Route unknown": ("给药途径未知", "給藥途徑未知"),
+    "Reference %lld": ("参考 %lld", "參考 %lld"),
+    "Read source context": ("阅读来源背景", "閱讀來源背景"),
+    "Partial timing data": ("部分时间数据", "部分時間資料"),
+    "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session.": (
+        "已发表的时间示意。各阶段的计时起点尚未核实。未知时间不会被估算，也不会用于预测你的体验。",
+        "已發表的時間示意。各階段的計時起點尚未核實。未知時間不會被估算，也不會用於預測你的體驗。",
+    ),
+    "After-effects": ("后续效应", "後續效應"),
+    "Reported total": ("报告的总时长", "報告的總時長"),
+    "Units unknown": ("单位未知", "單位未知"),
+    "Study timeline": ("研究时间线", "研究時間軸"),
+    "Study statistics describe this condition, not a prediction of your session. The maximum response is a time point, not a peak plateau.": (
+        "研究统计数据描述这一实验条件，不能预测你的体验。最大反应是一个时间点，而非峰值平台期。",
+        "研究統計資料描述這一實驗條件，不能預測你的體驗。最大反應是一個時間點，而非峰值平台期。",
+    ),
+    "Study dose (µg base)": ("研究剂量（µg，游离碱）", "研究劑量（µg，游離鹼）"),
+    "Participants: %lld": ("参与者：%lld", "參與者：%lld"),
+    "Clock origin": ("计时起点", "計時起點"),
+    "Response threshold (% of individual maximum)": (
+        "反应阈值（个人最大值的百分比）",
+        "反應閾值（個人最大值的百分比）",
+    ),
+    "Active duration: onset to offset": ("作用时长：起效至消退", "作用時長：起效至消退"),
+    "Study article": ("研究论文", "研究論文"),
+    "Study data table": ("研究数据表", "研究資料表"),
+    "Mean ± SD": ("均值 ± 标准差", "平均值 ± 標準差"),
+    "Participant range": ("参与者范围", "參與者範圍"),
+    "This source entry has a recorded timing or route concern.": (
+        "此来源条目存在已记录的时间或给药途径问题。",
+        "此來源條目存在已記錄的時間或給藥途徑問題。",
+    ),
+    "Published timing": (
+        "已发表的时间",
+        "已發表的時間",
+    ),
+    "Anecdotal timing": (
+        "个人报告的时间",
+        "個人報告的時間",
+    ),
+    "Extrapolated, not validated": (
+        "外推估计，未经验证",
+        "外推估計，未經驗證",
+    ),
+    "Plasma model (illustrative)": (
+        "血浆模型（示意）",
+        "血漿模型（示意）",
+    ),
+    "Reference timing chart for one administration. Inferred or unknown phases are not used to predict your session.": (
+        "单次用药的参考时间图。推断或未知的阶段不会用于预测你的体验。",
+        "單次用藥的參考時間圖。推斷或未知的階段不會用於預測你的體驗。",
+    ),
+    "Modeled drug level in plasma, which is not the same as felt effects. It is not used to predict your session.": (
+        "模型估算的血浆药物浓度，与主观感受到的效果不同。它不会用于预测你的体验。",
+        "模型估算的血漿藥物濃度，與主觀感受到的效果不同。它不會用於預測你的體驗。",
+    ),
+    "Confidence": (
+        "可信度",
+        "可信度",
+    ),
+    "Low to moderate": (
+        "低至中等",
+        "低至中等",
+    ),
+    "Very low": (
+        "很低",
+        "很低",
+    ),
+    "Analyte": (
+        "检测物",
+        "檢測物",
+    ),
+    "Model time to peak level": (
+        "模型达峰时间",
+        "模型達峰時間",
+    ),
+    "Model half-life": (
+        "模型半衰期",
+        "模型半衰期",
+    ),
+    "seconds": (
+        "秒",
+        "秒",
+    ),
+    "Time since administration": (
+        "自用药起计时",
+        "自用藥起計時",
+    ),
+    "Endpoint: modeled “any drug effect” rating on a visual analog scale": (
+        "终点：模型估算的“任何药物效应”视觉模拟量表评分",
+        "終點：模型估算的「任何藥物效應」視覺類比量表評分",
+    ),
     # Hebi Arcade: the cabinet you get by tapping the backdrop's ship
     "Score": ("得分", "得分"),
     "Best": ("最高分", "最高分"),
@@ -5701,6 +5799,7 @@ T = {
     ),
     # 2026-06 review fixes — inflected plurals (replace hand-rolled "s"/"ies" suffixes)
     "^[%lld substance](inflect: true)": ("%lld 种物质", "%lld 種物質"),
+    "^[%lld result](inflect: true)": ("%lld 个结果", "%lld 個結果"),
     # 2026-08 — the deep-pharmacology sections (Genetics, Target Evidence,
     # concentration thresholds) and the drug-class write-ups moved to
     # Tools > Education.
@@ -7631,6 +7730,11 @@ T = {
     "Add an entry": ("添加记录", "新增記錄"),
     "Remove entry": ("移除记录", "移除記錄"),
     "Discard Entries": ("放弃记录", "捨棄記錄"),
+    "Nothing Staged": ("尚无暂存剂量", "尚無暫存劑量"),
+    "Choose a dose on the left, or search for a substance.": (
+        "在左侧选择一个剂量，或搜索物质。",
+        "在左側選擇一個劑量，或搜尋物質。",
+    ),
     "Move Entries": ("移动记录", "移動記錄"),
     "Move Entries…": ("移动记录…", "移動記錄…"),
     "Recent Entries (24h)": ("最近记录（24 小时）", "最近記錄（24 小時）"),
@@ -7931,9 +8035,9 @@ T = {
         "备份到文件夹…",
         "備份到資料夾…",
     ),
-    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here.": (
-        "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不联网。在新手机上恢复时，在这里选择同一个文件夹即可。",
-        "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不連網。在新手機上還原時，在這裡選擇同一個資料夾即可。",
+    "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.": (
+        "选择一个文件夹，可以在本机上，也可以在 Google 云端硬盘、Dropbox 或其他云应用中，每次你离开应用时，Piru 都会在那里保存一份加密的日记副本。只有你的密码短语能打开它，上传由云应用完成：Piru 本身从不把它发送到任何地方。在新手机上恢复时，在这里选择同一个文件夹即可。",
+        "選擇一個資料夾，可以在本機上，也可以在 Google 雲端硬碟、Dropbox 或其他雲端應用程式中，每次你離開應用程式時，Piru 都會在那裡儲存一份加密的日記副本。只有你的密碼短語能打開它，上傳由雲端應用程式完成：Piru 本身從不把它傳送到任何地方。在新手機上還原時，在這裡選擇同一個資料夾即可。",
     ),
     "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.": (
         "每次你离开应用时保存，并用你的密码短语加密。关闭后，最后一份备份会留在文件夹中。",
@@ -8023,6 +8127,36 @@ T = {
     "Some long notes were shortened or left out to fit.": (
         "部分较长的记录已被缩短或省略，以便放得下。",
         "部分較長的紀錄已被縮短或省略，以便放得下。",
+    ),
+    # Settings: the Discord row (Views/Settings/DiscordSection.swift); Android's update check
+    # (android/app/Sources/Piru/Android/Views/AppUpdate+Android.swift).
+    "Discord": (
+        "Discord",
+        "Discord",
+    ),
+    "Get help with the app or send your suggestions on our Discord server.": (
+        "在我们的 Discord 服务器上获取应用帮助，或提出你的建议。",
+        "在我們的 Discord 伺服器上取得應用程式協助，或提出你的建議。",
+    ),
+    "Piru %@ is available": (
+        "Piru %@ 已推出",
+        "Piru %@ 已推出",
+    ),
+    "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.": (
+        "新版本在 GitHub 上，也就是 Piru 的来源；直接安装在当前版本之上会保留你的日记。",
+        "新版本在 GitHub 上，也就是 Piru 的來源；直接安裝在目前版本之上會保留你的日記。",
+    ),
+    "Download": (
+        "下载",
+        "下載",
+    ),
+    "Check for Updates": (
+        "检查更新",
+        "檢查更新",
+    ),
+    "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.": (
+        "Piru 每天向 GitHub 查询一次最新版本。不会发送任何关于你或你日记的信息。",
+        "Piru 每天向 GitHub 查詢一次最新版本。不會傳送任何關於你或你日記的資訊。",
     ),
 }
 
@@ -8322,7 +8456,7 @@ if __name__ == "__main__":
         "Choose Another Folder…",
         "Turn Off Folder Backup",
         "Back Up to a Folder…",
-        "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never goes online. To restore on a new phone, choose the same folder here.",
+        "Pick a folder, on this phone or in Google Drive, Dropbox or another cloud app, and Piru saves an encrypted copy of your journal there each time you leave the app. Only your passphrase opens it, and the cloud app does the uploading: Piru itself never sends it anywhere. To restore on a new phone, choose the same folder here.",
         "Saved each time you leave the app, encrypted with your passphrase. Turning this off leaves the last backup in the folder.",
         "Backup Found",
         "This folder already holds a Piru backup. Enter its passphrase to merge it with your journal; later backups use the same passphrase.",
@@ -9178,8 +9312,63 @@ if __name__ == "__main__":
         "Open",
         "This opens dose.wiki's trip report form with this session filled in. Nothing is sent until you submit it there.",
         "Some long notes were shortened or left out to fit.",
+        "Discord",
+        "Get help with the app or send your suggestions on our Discord server.",
+        "Piru %@ is available",
+        "It is on GitHub, where Piru comes from, and installing it over this version keeps your journal.",
+        "Download",
+        "Check for Updates",
+        "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.",
     }
 
+    NEW_KEYS.update(
+        {
+            "substance.wiki timelines",
+            "Study data table",
+            "Units unknown",
+            "Reported total",
+            "Route unknown",
+            "Participants: %lld",
+            "Clock origin",
+            "Study dose (µg base)",
+            "After-effects",
+            "Study timeline",
+            "Reference %lld",
+            "Response threshold (% of individual maximum)",
+            "This source entry has a recorded timing or route concern.",
+            "Participant range",
+            "Study statistics describe this condition, not a prediction of your session. The maximum response is a time point, not a peak plateau.",
+            "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session.",
+            "Study article",
+            "Read source context",
+            "Active duration: onset to offset",
+            "Mean ± SD",
+            "Partial timing data",
+        }
+    )
+
+    NEW_KEYS.add("^[%lld result](inflect: true)")
+    NEW_KEYS.add("Bar: participant range; dot: mean.")
+    NEW_KEYS.update({"Nothing Staged", "Choose a dose on the left, or search for a substance."})
+    NEW_KEYS.update(
+        {
+            "Published timing",
+            "Anecdotal timing",
+            "Extrapolated, not validated",
+            "Plasma model (illustrative)",
+            "Reference timing chart for one administration. Inferred or unknown phases are not used to predict your session.",
+            "Modeled drug level in plasma, which is not the same as felt effects. It is not used to predict your session.",
+            "Confidence",
+            "Low to moderate",
+            "Very low",
+            "Analyte",
+            "Model time to peak level",
+            "Model half-life",
+            "seconds",
+            "Time since administration",
+            "Endpoint: modeled “any drug effect” rating on a visual analog scale",
+        }
+    )
     print("--- Piru main app catalog ---")
     n, added, missing = apply_translations(
         project_root / "Piru/Localizable.xcstrings",

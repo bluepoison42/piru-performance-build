@@ -115,7 +115,16 @@ private struct DockShortcutButton: View {
     }
 
     private func perform() {
-        switch shortcut {
+        shortcut.perform(navigator: navigator, modelContext: modelContext)
+    }
+}
+
+extension DockShortcut {
+    /// What a slot does when pressed — shared by the accessory's slot buttons
+    /// and the macOS sidebar's shortcut rows.
+    @MainActor
+    func perform(navigator: AppNavigator, modelContext: ModelContext) {
+        switch self {
         case .inventory:
             navigator.open(.tool(.inventory), home: .tools)
         case .interactions:
@@ -125,7 +134,7 @@ private struct DockShortcutButton: View {
         case .myMeds:
             navigator.open(.myMeds, home: .journal)
         case .addNote:
-            guard navigator.sheetStack.isEmpty, let id = mostRecentSessionID() else { return }
+            guard navigator.sheetStack.isEmpty, let id = mostRecentSessionID(in: modelContext) else { return }
             navigator.present(.sessionNoteEditor(sessionID: id))
         case let .favorite(substance):
             // Stages the substance at its reference dose; the user still commits.
@@ -133,14 +142,6 @@ private struct DockShortcutButton: View {
             guard navigator.sheetStack.isEmpty else { return }
             navigator.present(.quickLog(routine: nil, prefillSubstance: substance))
         }
-    }
-
-    /// The current session — most recent by start date, the same resolution
-    /// the accessory's session tap uses.
-    private func mostRecentSessionID() -> UUID? {
-        var descriptor = FetchDescriptor<Session>(sortBy: [SortDescriptor(\.startDate, order: .reverse)])
-        descriptor.fetchLimit = 1
-        return try? modelContext.fetch(descriptor).first?.id
     }
 }
 

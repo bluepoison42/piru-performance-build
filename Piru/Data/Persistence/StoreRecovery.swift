@@ -61,7 +61,18 @@ nonisolated enum StoreRecovery {
         let base = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID)
             ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? URL(fileURLWithPath: NSTemporaryDirectory())
-        return base.appendingPathComponent(storeName)
+        return base.appendingPathComponent(activeStoreName)
+    }
+
+    /// The store file this launch opens: ``storeName``, or for a DEBUG
+    /// screenshot tour a store of its own beside it. The tour reseeds a persona,
+    /// which wipes whatever store it opens — and on a Mac the debug build shares
+    /// its App Group container with the installed app's real journal.
+    nonisolated static var activeStoreName: String {
+        #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-piruScreenshots") { return "screenshots.store" }
+        #endif
+        return storeName
     }
 
     /// The pre-App-Group location (app sandbox Application Support).

@@ -66,7 +66,6 @@
 \blistRowInsets\(	androidListRowInsets(
 \bimageScale\(	androidImageScale(
 \bscrollEdgeEffectStyle\(	androidScrollEdgeEffectStyle(
-\.pendingNotificationRequests\(\)	.androidPendingNotificationRequests()
 \.stringArray\(forKey:	.androidStringArray(forKey:
 \bcontrolSize\(	androidControlSize(
 \btruncationMode\(	androidTruncationMode(
@@ -117,6 +116,12 @@
 # Markdown in an AttributedString: Android's Foundation cannot parse it and SkipFuseUI cannot
 # show one. The property becomes the text with its markers removed (emphasis is lost).
 ^([ \t]*)(private )?var (\w+): AttributedString \{\n([ \t]*)\(try\? AttributedString\(markdown: ([^)]+)\)\) \?\? AttributedString\(\5\)	\1\2var \3: String {\n\4androidPlainMarkdown(\5)
+# semantic: what a counted phrase reads as. SkipUI resolves a Text or Label key with Apple's
+# grammar-agreement markup and shows `^[2 dose](inflect: true)` as written; String(inflecting:)
+# resolves the same key and agrees the phrase with its count (patch 0021, Inflection+Android.swift,
+# tested in Compat/Tests/InflectionTests).
+\bText\("([^"\n]*\]\(inflect: true\)[^"\n]*)"\)	Text(verbatim: String(inflecting: "\1"))
+\bLabel\("([^"\n]*\]\(inflect: true\)[^"\n]*)", systemImage:	Label(String(inflecting: "\1"), systemImage:
 \.coordinateSpace\(	.androidCoordinateSpace(
 \.scrollPosition\(id:	.androidScrollPosition(id:
 # Text(Image) sets a symbol in the text line; the Image with the same font does on Android.

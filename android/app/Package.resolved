@@ -69,7 +69,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-fuse-ui.git",
       "state" : {
-        "revision" : "478b67151f26e978d21aa3117212a03d5bef03ba",
+        "revision" : "ed3c56c544e6e963bd8b8360dce0b5a0350fad8f",
         "version" : "1.19.0"
       }
     },
@@ -96,7 +96,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-ui.git",
       "state" : {
-        "revision" : "1a2bce50b5c36a97b65bcf68b907ecc760cf852e",
+        "revision" : "62625123da8c330eab50cece706f3fa77271b629",
         "version" : "1.62.0"
       }
     },

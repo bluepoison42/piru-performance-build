@@ -33,6 +33,8 @@ Security- or privacy-sensitive issues shouldn't go in public issues — see [SEC
 
 ## Build
 
+Run `pipeline/fetch-db.sh` before building to fetch the bundled substance database; the app requires it at launch.
+
 Open in Xcode and Run the **Piru** scheme on an iOS 26+ simulator or device:
 
 ```sh
@@ -46,7 +48,7 @@ legibly, and it won't race another build against the same DerivedData. A headles
 xcodebuild -scheme Piru -destination 'platform=iOS Simulator,name=iPhone 18 Pro Max' build
 ```
 
-Requires **Xcode 26+** and **Swift 6** (strict concurrency, `@MainActor` by default).
+Requires **Xcode 26+** and **Swift 6**.
 
 ### Tests
 

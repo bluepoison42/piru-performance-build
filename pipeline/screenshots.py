@@ -32,6 +32,15 @@ Usage::
     pipeline/screenshots.py --wallpapers --appearance both
                                                      # every skin's backdrop alone
 
+``--platform macos`` runs the same tour in the native Mac app. A sandboxed Mac
+app can write nowhere this script can read, so the tour POSTs each request to a
+loopback server here instead, and the window is captured with ``rocuronium
+screenshot --pid``. The tour runs on its own store (``screenshots.store``), so
+the persona reseed never touches the journal the installed Mac app reads.
+Output goes to ``Store/shots-macos/``::
+
+    pipeline/screenshots.py --platform macos --skins none --locales en
+
 ``--wallpapers`` shows the skin backdrop and nothing else (no chrome, no
 status bar) and captures one frame per skin, ``<skin>.png`` under
 ``Store/wallpapers/`` — the scenes as phone wallpapers. Language is
@@ -48,7 +57,10 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
+import uuid
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -58,6 +70,10 @@ DEVICE_TYPE = "com.apple.CoreSimulator.SimDeviceType.iPhone-18-Pro-Max"
 DEVICE_NAME = "Piru Screenshots"
 LOCALES = {"en": "en_US", "zh-Hans": "zh_CN", "zh-Hant": "zh_TW", "es": "es_ES"}
 TOUR_SOURCE = REPO / "Piru/Utilities/ScreenshotTour.swift"
+# Fixed so the Mac build never races the IDE's DerivedData; the internal disk
+# holds source only, so it goes on the build SSD when that is mounted.
+MAC_DERIVED_DATA = Path("/Volumes/Ugreen/Build/piru-mac")
+MAC_WINDOW = "1280x820"
 SKIN_SOURCE = REPO / "Shared/Skin/Skin.swift"
 
 
@@ -197,6 +213,15 @@ def clear_tour(tour: Path) -> None:
         (tour / name).unlink(missing_ok=True)
 
 
+def capture_target(leaf: Path, file: str) -> Path:
+    """Where a requested capture lands. The name comes from the app (or, on macOS,
+    from anything that can reach the loopback port), so it must stay inside `leaf`."""
+    target = (leaf / file).resolve()
+    if not target.is_relative_to(leaf.resolve()) or target.suffix != ".png":
+        sys.exit(f"✗ refusing capture outside {leaf}: {file!r}")
+    return target
+
+
 def process_alive(pid: int) -> bool:
     try:
         os.kill(pid, 0)
@@ -225,12 +250,12 @@ def capture_pass(udid: str, leaf: Path, launch_args: list[str], timeout: float, 
             except (json.JSONDecodeError, OSError):
                 time.sleep(0.02)
                 continue
-            target = leaf / request["file"]
+            target = capture_target(leaf, request["file"])
             target.parent.mkdir(parents=True, exist_ok=True)
             simctl("io", udid, "screenshot", str(target))
             ack.touch()
             print(f"  [{request['index']:>3}/{request['total']}] {label}/{request['file']}")
-            files.append({**request, "path": str(target.relative_to(leaf.parent))})
+            files.append({**request, "path": str(target.relative_to(leaf.resolve().parent))})
             while request_file.exists() or ack.exists():
                 time.sleep(0.02)
             last_activity = time.monotonic()
@@ -246,12 +271,112 @@ def capture_pass(udid: str, leaf: Path, launch_args: list[str], timeout: float, 
     return {"files": files, "report": report}
 
 
+# MARK: - macOS
+
+
+def mac_derived_data() -> list[str]:
+    return ["-derivedDataPath", str(MAC_DERIVED_DATA)] if MAC_DERIVED_DATA.parent.is_dir() else []
+
+
+def build_mac_app() -> None:
+    print("▸ building Piru (Debug, macOS)")
+    run(
+        "xcodebuild", "-scheme", SCHEME, "-configuration", "Debug",
+        "-destination", "platform=macOS,arch=arm64", *mac_derived_data(), "-quiet", "build",
+        capture=False,
+    )  # fmt: skip
+
+
+def find_mac_app() -> Path:
+    roots = [MAC_DERIVED_DATA] if mac_derived_data() else derived_data_roots()
+    apps = [root / "Build/Products/Debug/Piru.app" for root in roots]
+    apps = [app for app in apps if app.exists()]
+    if not apps:
+        sys.exit("✗ no Debug macOS build of this checkout — drop --no-build")
+    return max(apps, key=lambda app: app.stat().st_mtime)
+
+
+def capture_window(pid: int, target: Path) -> None:
+    """The app's window, through rocuronium (it only writes under /tmp and a few user folders)."""
+    scratch = Path(f"/tmp/piru-shot-{uuid.uuid4().hex}.png")
+    run("rocuronium", "screenshot", "--pid", str(pid), "--path", str(scratch))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(scratch, target)
+
+
+def capture_pass_macos(
+    app: Path, leaf: Path, launch_args: list[str], timeout: float, label: str
+) -> dict:
+    """One launch of the Mac app: answer every POSTed request until /done lands."""
+    files: list[dict] = []
+    state = {"pid": 0, "report": None, "last": time.monotonic()}
+    done = threading.Event()
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_POST(self) -> None:  # noqa: N802 — the stdlib's name
+            body = json.loads(self.rfile.read(int(self.headers["Content-Length"] or 0)) or b"{}")
+            if self.path == "/request":
+                try:
+                    target = capture_target(leaf, body["file"])
+                except SystemExit as refusal:
+                    print(refusal)
+                    self.send_response(400)
+                    self.end_headers()
+                    return
+                capture_window(state["pid"], target)
+                print(f"  [{body['index']:>3}/{body['total']}] {label}/{body['file']}")
+                files.append({**body, "path": str(target.relative_to(leaf.resolve().parent))})
+            elif self.path == "/done":
+                state["report"] = body
+                done.set()
+            state["last"] = time.monotonic()
+            self.send_response(200)
+            self.end_headers()
+
+        def log_message(self, *_: object) -> None:
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    host = f"http://127.0.0.1:{server.server_address[1]}"
+    binary = app / "Contents/MacOS/Piru"
+    process = subprocess.Popen(
+        [
+            str(binary),
+            *launch_args,
+            "-piruScreenshotHost",
+            host,
+            "-piruScreenshotWindow",
+            MAC_WINDOW,
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    state["pid"] = process.pid
+    try:
+        while not done.wait(0.2):
+            if process.poll() is not None:
+                sys.exit(f"✗ Piru exited before the tour finished ({label})")
+            if time.monotonic() - state["last"] > timeout:
+                sys.exit(f"✗ no capture request for {timeout:.0f}s ({label}) — the tour is wedged")
+    finally:
+        process.terminate()
+        server.shutdown()
+    return {"files": files, "report": state["report"]}
+
+
 # MARK: - Main
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "--platform",
+        choices=["ios", "macos"],
+        default="ios",
+        help="simulator or the native Mac app",
     )
     parser.add_argument(
         "--locales", default="en,zh-Hans", help="comma list of en, zh-Hans, zh-Hant, es"
@@ -295,6 +420,8 @@ def parse_args() -> argparse.Namespace:
         help="capture each skin's backdrop alone, as <skin>.png (default out: Store/wallpapers)",
     )
     args = parser.parse_args()
+    if args.platform == "macos" and args.out == str(REPO / "Store/shots"):
+        args.out = str(REPO / "Store/shots-macos")
     if args.wallpapers:
         if args.out == str(REPO / "Store/shots"):
             args.out = str(REPO / "Store/wallpapers")
@@ -332,18 +459,26 @@ def main() -> None:
             sys.exit(f"✗ unknown locale {locale!r} — one of {', '.join(LOCALES)}")
 
     started = time.monotonic()
-    udid = resolve_device(args.udid, args.device)
-    quiet_keyboard(udid)
-    if not args.no_build and not args.app:
-        build_app(udid)
-    app = Path(args.app) if args.app else find_app()
-    print(f"▸ installing {app}")
-    simctl("install", udid, str(app))
-    simctl(
-        "status_bar", udid, "override",
-        "--time", status_bar_time(args.clock), "--batteryState", "charged", "--batteryLevel", "100",
-        "--dataNetwork", "wifi", "--wifiBars", "3", "--cellularBars", "4", "--operatorName", "",
-    )  # fmt: skip
+    macos = args.platform == "macos"
+    udid = ""
+    if macos:
+        if not args.no_build and not args.app:
+            build_mac_app()
+        app = Path(args.app) if args.app else find_mac_app()
+        print(f"▸ running {app}")
+    else:
+        udid = resolve_device(args.udid, args.device)
+        quiet_keyboard(udid)
+        if not args.no_build and not args.app:
+            build_app(udid)
+        app = Path(args.app) if args.app else find_app()
+        print(f"▸ installing {app}")
+        simctl("install", udid, str(app))
+        simctl(
+            "status_bar", udid, "override",
+            "--time", status_bar_time(args.clock), "--batteryState", "charged", "--batteryLevel", "100",
+            "--dataNetwork", "wifi", "--wifiBars", "3", "--cellularBars", "4", "--operatorName", "",
+        )  # fmt: skip
 
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -351,7 +486,8 @@ def main() -> None:
     index: list[dict] = []
     failed: list[str] = []
     for appearance in appearances:
-        simctl("ui", udid, "appearance", appearance)
+        if not macos:
+            simctl("ui", udid, "appearance", appearance)
         for locale in locales:
             label = locale if appearance == "light" else f"{locale}-dark"
             leaf = out / label
@@ -377,13 +513,18 @@ def main() -> None:
                 launch_args.append("-piruWallpapers")
             if not args.no_fake_vitals:
                 launch_args.append("-piruFakeVitals")
-            result = capture_pass(udid, leaf, launch_args, args.timeout, label)
+            if macos:
+                # The app's own appearance; the system's is left alone.
+                launch_args += ["-AppleInterfaceStyle", "Dark" if appearance == "dark" else "Light"]
+                result = capture_pass_macos(app, leaf, launch_args, args.timeout, label)
+            else:
+                result = capture_pass(udid, leaf, launch_args, args.timeout, label)
             for entry in result["files"]:
                 index.append({"locale": locale, "appearance": appearance, **entry})
             failed += [f"{label}/{file}" for file in result["report"]["failed"]]
             failed += [f"{label}/{file}" for file in result["report"]["skipped"]]
 
-    if args.udid:
+    if args.udid and not macos:
         simctl("status_bar", udid, "clear")
     (out / "index.json").write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
     elapsed = time.monotonic() - started

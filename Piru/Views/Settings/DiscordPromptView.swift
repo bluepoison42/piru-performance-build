@@ -6,9 +6,6 @@ struct DiscordPromptView: View {
     @AppStorage("discordPromptDismissedForever") private var dismissedForever = false
     @Environment(\.dismiss) private var dismiss
 
-    private static let discordURL = URL(string: "https://discord.gg/hbpMZhPSdx")!
-    private static let blurple = Color(hex: "5865F2")
-
     var body: some View {
         VStack(spacing: Spacing.xxl) {
             HStack {
@@ -25,7 +22,7 @@ struct DiscordPromptView: View {
 
             Image(systemName: "bubble.left.and.bubble.right.fill")
                 .font(.system(size: 54))
-                .foregroundStyle(Self.blurple)
+                .foregroundStyle(DiscordInvite.blurple)
                 .padding(.top, Spacing.xs)
                 .accessibilityHidden(true)
 
@@ -42,12 +39,12 @@ struct DiscordPromptView: View {
 
             Spacer(minLength: 12)
 
-            Link(destination: Self.discordURL) {
+            Link(destination: DiscordInvite.url) {
                 Label("Join Discord", systemImage: "arrow.up.right")
                     .cardTitle()
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, Spacing.xxl)
-                    .background(Self.blurple, in: skinChipShape())
+                    .background(DiscordInvite.blurple, in: skinChipShape())
                     .foregroundStyle(.white)
             }
             .accessibilityAddTraits(.isLink)

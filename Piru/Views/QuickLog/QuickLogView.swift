@@ -163,6 +163,124 @@ struct QuickLogView: View {
 
     var body: some View {
         NavigationStack {
+            page
+                .task {
+                    // Wait for the launch prewarm so the card lookups below land on
+                    // the warm batch cache instead of cold per-substance SQL (returns
+                    // immediately if already loaded; the rebuild is then cheap enough
+                    // not to block the present animation).
+                    await SubstanceStore.shared.ensureAllLoaded()
+                    QuickLogManager.seedIfNeeded(history: allEntries, context: modelContext)
+                    seedFavoriteOrderIfNeeded()
+                    content.rebuildColorLookup(substanceColors: substanceColors)
+                    // Cards first: `rebuildEntryDerived` scopes its per-substance PK
+                    // badge work to the *displayed* set (favorites + the 10 recents),
+                    // so the card caches must exist before it runs.
+                    content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
+                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines)
+                    content.markLoaded()
+                    if let prestagedRoutine {
+                        stageRoutine(named: prestagedRoutine)
+                    }
+                    if let prefillSubstance {
+                        stagePrefill(named: prefillSubstance)
+                    }
+                    #if DEBUG
+                        if let query = ScreenshotTour.takeStagedDockSearch() {
+                            stageTopRecent(matching: query)
+                        }
+                    #endif
+                }
+                .task(id: quickLogDoses.count) {
+                    try? await Task.sleep(for: .milliseconds(200))
+                    guard !Task.isCancelled else { return }
+                    content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
+                }
+                // A logged dose (here or elsewhere) changes the history-derived
+                // caches — refresh them off the body, keyed on the dose-log
+                // revision (one observed Int; hashing `allEntries` here would
+                // subscribe this body to every field of every entry). The initial
+                // `.task` above owns the first rebuild, so skip until it has run.
+                .task(id: DoseLogService.shared.revision) {
+                    guard content.hasLoaded, !isCommitted else { return }
+                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines)
+                }
+                .onChange(of: substanceColors.count) {
+                    content.rebuildColorLookup(substanceColors: substanceColors)
+                    content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
+                }
+                // Keyed on names, not count — a reorder changes order only.
+                .onChange(of: favorites.map(\.substance)) { content.rebuildFavorites(favorites: favorites) }
+                // Routine pills depend on the routine rows + daily items; refresh
+                // the cache when either is edited (the Manage Routines sheet).
+                .onChange(of: routineSignature) { content.rebuildDailyGroups(dailyDoseItems: dailyDoseItems, routines: routines) }
+                .task(id: searchText) {
+                    guard !searchText.isEmpty else {
+                        content.setLibraryResults([])
+                        return
+                    }
+                    try? await Task.sleep(for: .milliseconds(150))
+                    guard !Task.isCancelled else { return }
+                    // Ranked off-main: the sync form runs the whole ranking pass —
+                    // fuzzy tail included — on the main actor, per keystroke.
+                    let matches = await SubstanceLibrary.searchMatchesAsync(searchText)
+                    guard !Task.isCancelled else { return }
+                    content.setLibraryResults(
+                        matches.filter { match in
+                            // Keep an ester match ("Estradiol Valerate") even when its
+                            // base substance is in history — it stages a distinct form
+                            // (the ester pre-set), so it must survive the history filter
+                            // just as it survives the recents dedup below. Otherwise the
+                            // ester is unsearchable for exactly the people who log the
+                            // base, which is everyone injecting it.
+                            if let alias = match.matchedAlias, SubstanceLibrary.saltForm(for: alias) != nil { return true }
+                            return !content.cachedHistoryNames.contains(match.substance.name.lowercased())
+                        },
+                    )
+                }
+        }
+        #if os(iOS)
+        // The staging dock: a native detented sheet over this cover, mounted
+        // for the cover's whole lifetime (never dismissible — it's the
+        // staging basket). Sheets launched from quick log (custom-substance
+        // form, favorites editor) stack *on the dock*, not on the cover: the
+        // dock permanently occupies the cover's presentation slot, so a
+        // sibling sheet here would never present.
+        .onGeometryChange(for: CGFloat.self, of: \.size.height) { newValue in
+            containerHeight = newValue
+        }
+        .sheet(isPresented: $dockPresented) {
+            DockSheetHost(
+                tray: tray,
+                content: content,
+                containerHeight: containerHeight,
+                geometry: dockGeometry,
+                searchText: $searchText,
+                searchActive: $searchActive,
+                showCustomForm: $showCustomForm,
+                showEditSheet: $showEditSheet,
+                showScanner: $showScanner,
+                onCommit: commitTray,
+            )
+        }
+        #endif
+    }
+
+    /// The screen under the shared data plumbing: on iOS the card list a
+    /// detented dock floats over; on macOS one two-pane window that holds the
+    /// cards, search and the staged tray side by side (``QuickLogMacLayout``).
+    @ViewBuilder
+    private var page: some View {
+        #if os(macOS)
+            QuickLogMacLayout(
+                tray: tray,
+                content: content,
+                searchText: $searchText,
+                showCustomForm: $showCustomForm,
+                showEditSheet: $showEditSheet,
+                onCommit: commitTray,
+            )
+        #else
             ScrollView {
                 // The scroll content (routines, favorites, recent cards) is a
                 // closure-free child: it takes only the two stable references it
@@ -255,104 +373,7 @@ struct QuickLogView: View {
                         }
                     #endif
                 }
-                .task {
-                    // Wait for the launch prewarm so the card lookups below land on
-                    // the warm batch cache instead of cold per-substance SQL (returns
-                    // immediately if already loaded; the rebuild is then cheap enough
-                    // not to block the present animation).
-                    await SubstanceStore.shared.ensureAllLoaded()
-                    QuickLogManager.seedIfNeeded(history: allEntries, context: modelContext)
-                    seedFavoriteOrderIfNeeded()
-                    content.rebuildColorLookup(substanceColors: substanceColors)
-                    // Cards first: `rebuildEntryDerived` scopes its per-substance PK
-                    // badge work to the *displayed* set (favorites + the 10 recents),
-                    // so the card caches must exist before it runs.
-                    content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
-                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines)
-                    content.markLoaded()
-                    if let prestagedRoutine {
-                        stageRoutine(named: prestagedRoutine)
-                    }
-                    if let prefillSubstance {
-                        stagePrefill(named: prefillSubstance)
-                    }
-                    #if DEBUG
-                        if let query = ScreenshotTour.takeStagedDockSearch() {
-                            stageTopRecent(matching: query)
-                        }
-                    #endif
-                }
-                .task(id: quickLogDoses.count) {
-                    try? await Task.sleep(for: .milliseconds(200))
-                    guard !Task.isCancelled else { return }
-                    content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
-                }
-                // A logged dose (here or elsewhere) changes the history-derived
-                // caches — refresh them off the body, keyed on the dose-log
-                // revision (one observed Int; hashing `allEntries` here would
-                // subscribe this body to every field of every entry). The initial
-                // `.task` above owns the first rebuild, so skip until it has run.
-                .task(id: DoseLogService.shared.revision) {
-                    guard content.hasLoaded, !isCommitted else { return }
-                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines)
-                }
-                .onChange(of: substanceColors.count) {
-                    content.rebuildColorLookup(substanceColors: substanceColors)
-                    content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
-                }
-                // Keyed on names, not count — a reorder changes order only.
-                .onChange(of: favorites.map(\.substance)) { content.rebuildFavorites(favorites: favorites) }
-                // Routine pills depend on the routine rows + daily items; refresh
-                // the cache when either is edited (the Manage Routines sheet).
-                .onChange(of: routineSignature) { content.rebuildDailyGroups(dailyDoseItems: dailyDoseItems, routines: routines) }
-                .task(id: searchText) {
-                    guard !searchText.isEmpty else {
-                        content.setLibraryResults([])
-                        return
-                    }
-                    try? await Task.sleep(for: .milliseconds(150))
-                    guard !Task.isCancelled else { return }
-                    // Ranked off-main: the sync form runs the whole ranking pass —
-                    // fuzzy tail included — on the main actor, per keystroke.
-                    let matches = await SubstanceLibrary.searchMatchesAsync(searchText)
-                    guard !Task.isCancelled else { return }
-                    content.setLibraryResults(
-                        matches.filter { match in
-                            // Keep an ester match ("Estradiol Valerate") even when its
-                            // base substance is in history — it stages a distinct form
-                            // (the ester pre-set), so it must survive the history filter
-                            // just as it survives the recents dedup below. Otherwise the
-                            // ester is unsearchable for exactly the people who log the
-                            // base, which is everyone injecting it.
-                            if let alias = match.matchedAlias, SubstanceLibrary.saltForm(for: alias) != nil { return true }
-                            return !content.cachedHistoryNames.contains(match.substance.name.lowercased())
-                        },
-                    )
-                }
-        }
-        // The staging dock: a native detented sheet over this cover, mounted
-        // for the cover's whole lifetime (never dismissible — it's the
-        // staging basket). Sheets launched from quick log (custom-substance
-        // form, favorites editor) stack *on the dock*, not on the cover: the
-        // dock permanently occupies the cover's presentation slot, so a
-        // sibling sheet here would never present.
-        .onGeometryChange(for: CGFloat.self, of: \.size.height) { newValue in
-            containerHeight = newValue
-        }
-        .sheet(isPresented: $dockPresented) {
-            DockSheetHost(
-                tray: tray,
-                content: content,
-                containerHeight: containerHeight,
-                geometry: dockGeometry,
-                searchText: $searchText,
-                searchActive: $searchActive,
-                showCustomForm: $showCustomForm,
-                showEditSheet: $showEditSheet,
-                showScanner: $showScanner,
-                onCommit: commitTray,
-            )
-        }
+        #endif
     }
 
     // MARK: - Daily routine

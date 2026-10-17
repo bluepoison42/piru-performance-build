@@ -24,7 +24,7 @@ import Foundation
 /// mixed rows.
 nonisolated enum SignatureComparability {
     /// Partition legs into every gate-passing group. One leg can appear in several groups when it
-    /// reports more than one measurement (Methoxetamine's MK-801-site row carries both a Kᵢ and an
+    /// reports more than one measurement (diphenidine's PCP-site row carries both a Kᵢ and an
     /// IC₅₀); those are genuinely separate comparisons and are kept separate.
     ///
     /// Legs with neither a `comparable_set` nor a `citation_id` are dropped: an uncited value was
