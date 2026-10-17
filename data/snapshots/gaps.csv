@@ -1842,13 +1842,6 @@ Zonisamide,,Zonegran,Anticonvulsant,medical_rx,GABA-modulator | anticonvulsant |
 α-Pyrrolidinopropiophenone,APPP,APPP | a-PPP | alpha-PPP,Stimulant,recreational,class:Pyrrolidinophenone cathinone stimulant,inhalation,inhalation | insufflation | intravenous | oral | sublingual,inhalation | insufflation | intravenous | oral | sublingual,yes,no,,,,,"duration_by_route, half_life_minutes, mechanism_of_action, references"
 βH-2C-B,,2C-B-OH | 2C-B-Β-OL | BH-2c-B | BH-2cb | BH2CB | BOH-2C-B | BOH-2cb | BOH2CB | BOHB | Β-hydroxy-2C-B | βOH-2C-B,Psychedelic,recreational,2C-x | 5-HT2A-agonist | phenethylamine | research-chemical | tentative,insufflation,insufflation | oral,insufflation | oral,yes,yes,,,,,"half_life_minutes, mechanism_of_action, references"
 复方甘草片,,,,medical_rx,,,,,no,no,,,,,"dose_ranges_by_route, duration_by_route, half_life_minutes, mechanism_of_action, references"
-多拉西敏,,,,medical_rx,,oral,oral,oral,yes,yes,,"Doxylamine acts primarily as an inverse agonist at H1 histamine receptors, an action responsible for its antihistaminic and sedative properties. To a lesser extent, doxylamine also acts as an antagonist at muscarinic acetylcholine receptors, an action that underlies its deliriant effects.
-
-Doxylamine is broken down in the liver by the cytochrome P450 enzymes CYP2D6, CYP1A2, and CYP2C9. Its primary metabolites are N-desmethyldoxylamine, N,N-didesmethyldoxylamine, and doxylamine N-oxide. Doxylamine reaches peak plasma concentration 1.5–2.5 hours after administration and has a half-life of 10–12 hours.
-
-At sufficiently high doses, doxylamine may cause a false positive result on methadone screening tests.
-
-The oral bioavailability of doxylamine is 24.7% and the intranasal bioavailability is 70.8%.",,,"half_life_minutes, references"
 大果柯拉豆,,科奥巴 | 约波 | 霍波,,medical_rx,,,,,no,no,,,,,"dose_ranges_by_route, duration_by_route, half_life_minutes, mechanism_of_action, references"
 愈美片,,,,medical_rx,,,,,no,no,,,,,"dose_ranges_by_route, duration_by_route, half_life_minutes, mechanism_of_action, references"
 橙黄鹅膏,,,,medical_rx,,,,,no,no,,,,,"dose_ranges_by_route, duration_by_route, half_life_minutes, mechanism_of_action, references"

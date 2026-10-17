@@ -113,6 +113,12 @@ struct Substance: Identifiable {
     /// ("4-meo-butyrfentanyl" for "4-Methoxybutyrfentanyl"), so the slug can't
     /// be derived from `name`. Detail-only; nil when there's no dose.wiki entry.
     let dosewikiSlug: String?
+    /// PsychonautWiki article title and TripSit key, for deep-linking each
+    /// source's page. Both come from the source's own record name, which often
+    /// differs from `name` (TripSit's "3-fmc" is "3-Fluoromethcathinone" here).
+    /// Detail-only; nil when that source has no entry.
+    let psychonautwikiPage: String?
+    let tripsitSlug: String?
     /// Long-form overview prose ("what it is / history / risk profile"),
     /// resolved locale-first (native Chinese when the app runs in Chinese,
     /// machine-translated English as a fallback). Detail-only; nil when no
@@ -186,6 +192,8 @@ struct Substance: Identifiable {
         drugCommunitySlug: String? = nil,
         freeodwikiSlug: String? = nil,
         dosewikiSlug: String? = nil,
+        psychonautwikiPage: String? = nil,
+        tripsitSlug: String? = nil,
         overview: SubstanceOverview? = nil,
         smiles: String? = nil,
         iupacName: String? = nil,
@@ -228,6 +236,8 @@ struct Substance: Identifiable {
         self.drugCommunitySlug = drugCommunitySlug
         self.freeodwikiSlug = freeodwikiSlug
         self.dosewikiSlug = dosewikiSlug
+        self.psychonautwikiPage = psychonautwikiPage
+        self.tripsitSlug = tripsitSlug
         self.overview = overview
         self.smiles = smiles
         self.iupacName = iupacName
@@ -378,7 +388,7 @@ struct Substance: Identifiable {
             return URL(string: "https://pubchem.ncbi.nlm.nih.gov/compound/\(cid)")
         }
         let query = inchikey ?? name
-        guard let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        guard let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) else { return nil }
         return URL(string: "https://pubchem.ncbi.nlm.nih.gov/#query=\(encoded)")
     }
 
@@ -804,6 +814,8 @@ extension Substance: Codable {
         // Detail/browse-only metadata, never part of the serialized Substance.
         freeodwikiSlug = nil
         dosewikiSlug = nil
+        psychonautwikiPage = nil
+        tripsitSlug = nil
         overview = nil
         smiles = nil
         iupacName = nil

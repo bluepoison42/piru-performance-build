@@ -139,16 +139,17 @@ MIN_MEANINGFUL_WORDS = 40
 # URL construction — mirrors AppSources.swift. Any divergence here is a bug.
 # --------------------------------------------------------------------------- #
 
-#: Foundation's `CharacterSet.urlPathAllowed` / `.urlQueryAllowed`, spelled out
-#: so the Python-built URL is byte-identical to the Swift one. Note both sets
-#: leave `&`, `+`, `=` and `;` unescaped — see `encoding_hazards`.
+#: Foundation's `CharacterSet.urlPathAllowed` and the app's
+#: `CharacterSet.urlQueryValueAllowed` (`.urlQueryAllowed` minus `&+=;`), spelled
+#: out so the Python-built URL is byte-identical to the Swift one.
 PATH_ALLOWED = "-._~!$&'()*+,;=:@/"
-QUERY_ALLOWED = "-._~!$&'()*+,;=:@/?"
+QUERY_ALLOWED = "-._~!$'()*,:@/?"
+#: A whole query string keeps its syntax characters; only values are escaped.
+QUERY_STRING_SAFE = QUERY_ALLOWED + "&+=;"
 
-#: Characters Foundation's `.urlQueryAllowed` passes through verbatim but that a
-#: server reads as query syntax. A substance name containing one produces a
-#: mangled search: "BPC-157 + TB-500" reaches PubMed as "BPC-157   TB-500",
-#: because `+` means space in a query string.
+#: Characters a server reads as query syntax. A substance name containing one
+#: produces a mangled search unless the query encoder escapes it: "BPC-157 +
+#: TB-500" reaches PubMed as "BPC-157   TB-500", because `+` means space.
 QUERY_HAZARD_CHARS = "&+=;"
 
 
@@ -158,7 +159,7 @@ def swift_path_encode(value: str) -> str:
 
 
 def swift_query_encode(value: str) -> str:
-    """`value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)`."""
+    """`value.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed)`."""
     return urllib.parse.quote(value, safe=QUERY_ALLOWED, encoding="utf-8")
 
 
@@ -175,20 +176,27 @@ def iri_to_uri(url: str) -> str:
             parts.scheme,
             parts.netloc,
             urllib.parse.quote(parts.path, safe=PATH_ALLOWED + "%"),
-            urllib.parse.quote(parts.query, safe=QUERY_ALLOWED + "%"),
+            urllib.parse.quote(parts.query, safe=QUERY_STRING_SAFE + "%"),
             parts.fragment,
         )
     )
 
 
-def psychonautwiki_url(sub: Substance) -> str:
-    # Swift: substance.replacingOccurrences(of: " ", with: "_"), then URL(string:)
-    # — no explicit percent-encoding, so URL()'s lenient parsing does it.
-    return "https://psychonautwiki.org/wiki/" + swift_path_encode(sub.name.replace(" ", "_"))
+def psychonautwiki_url(sub: Substance) -> str | None:
+    # The build captures PsychonautWiki's own article title, which often differs
+    # from Piru's name; without one the app offers no link (NO_LINK).
+    if not sub.psychonautwiki_page:
+        return None
+    return "https://psychonautwiki.org/wiki/" + swift_path_encode(
+        sub.psychonautwiki_page.replace(" ", "_")
+    )
 
 
-def tripsit_url(sub: Substance) -> str:
-    return "https://drugs.tripsit.me/" + swift_path_encode(sub.name.lower())
+def tripsit_url(sub: Substance) -> str | None:
+    # TripSit's own key (its record name, lowercased), captured by the build.
+    if not sub.tripsit_slug:
+        return None
+    return "https://tripsit.me/factsheets/" + swift_path_encode(sub.tripsit_slug)
 
 
 def freeodwiki_url(sub: Substance) -> str | None:
@@ -216,7 +224,7 @@ def drug_community_url(sub: Substance) -> str | None:
     # alias fallback), so a missing slug is NO_LINK, not a homepage.
     if not sub.drug_community_slug:
         return None
-    return "https://drug.community/drug/" + sub.drug_community_slug
+    return "https://substance.wiki/drug/" + sub.drug_community_slug
 
 
 def dailymed_url(sub: Substance) -> str:
@@ -231,9 +239,8 @@ def pubmed_url(sub: Substance) -> str:
 
 
 def emcdda_url(sub: Substance) -> str:
-    return (
-        "https://www.emcdda.europa.eu/publications/drug-profiles_en?search="
-        + swift_query_encode(sub.name)
+    return "https://www.euda.europa.eu/publications/drug-profiles_en?search=" + swift_query_encode(
+        sub.name
     )
 
 
@@ -298,7 +305,7 @@ SOURCES: dict[str, SourceSpec] = {
         SourceSpec(
             "drug.community",
             "drug.community",
-            "https://drug.community",
+            "https://substance.wiki",
             "page",
             drug_community_url,
             control="mdma",
@@ -314,7 +321,7 @@ SOURCES: dict[str, SourceSpec] = {
         SourceSpec(
             "emcdda",
             "EMCDDA",
-            "https://www.emcdda.europa.eu",
+            "https://www.euda.europa.eu",
             "search",
             emcdda_url,
             from_db=False,
@@ -358,12 +365,12 @@ NO_LINK_SOURCES = {
 #: the site root — the homepage-fallback trap. Kept here so a new
 #: `slugToName` entry without a matching case is a reported finding, not a
 #: silently-200 link a user has to notice.
-SWITCH_CASES = {"PsychonautWiki", "TripSit", "DailyMed", "PubMed", "EMCDDA"}
+SWITCH_CASES = {"DailyMed", "PubMed", "EMCDDA"}
 
 #: Sources whose deep link is built by a dedicated function elsewhere, so
 #: falling through `substanceURL`'s switch is harmless *as long as* every caller
 #: routes around it (SubstanceSourceLinks.deepLink does).
-DEDICATED_BUILDERS = {"FreeOD Wiki", "drug.community"}
+DEDICATED_BUILDERS = {"FreeOD Wiki", "substance.wiki", "dose.wiki", "PsychonautWiki", "TripSit"}
 
 
 def audit_swift_sources(repo: Path) -> list[str]:
@@ -422,17 +429,18 @@ def audit_swift_sources(repo: Path) -> list[str]:
 
 
 def encoding_hazards(substances: dict[int, Substance]) -> list[str]:
-    """Names whose characters survive `.urlQueryAllowed` but mean something to a
-    server. The link still resolves, so no fetch can catch this — only reading
-    the name can."""
+    """Names whose characters survive the app's query encoder but mean something
+    to a server. The link still resolves, so no fetch can catch this; only
+    reading the name against the encoder's allowed set can."""
     findings = []
+    survivors = [char for char in QUERY_HAZARD_CHARS if char in QUERY_ALLOWED]
     for sub in sorted(substances.values(), key=lambda s: s.name):
-        hit = [char for char in QUERY_HAZARD_CHARS if char in sub.name]
+        hit = [char for char in survivors if char in sub.name]
         if hit:
             findings.append(
-                f"{sub.name!r} contains {''.join(hit)!r}, which Foundation's "
-                f".urlQueryAllowed leaves unescaped — the search URL reaches the "
-                f"server mangled (e.g. '+' arrives as a space)."
+                f"{sub.name!r} contains {''.join(hit)!r}, which the query encoder "
+                f"leaves unescaped, so the search URL reaches the server mangled "
+                f"(e.g. '+' arrives as a space)."
             )
     return findings
 
@@ -451,6 +459,8 @@ class Substance:
     freeodwiki_slug: str | None
     drug_community_slug: str | None
     dosewiki_slug: str | None
+    psychonautwiki_page: str | None
+    tripsit_slug: str | None
 
     def mention_terms(self) -> list[str]:
         """Names a real page for this substance should contain. Short Latin
@@ -489,9 +499,9 @@ def load_pairs(db_path: Path) -> tuple[dict[int, Substance], list[tuple[str, int
         substances: dict[int, Substance] = {}
         for row in conn.execute(
             "SELECT id, canonical_name, display_name, freeodwiki_slug, drug_community_slug, "
-            "dosewiki_slug FROM substances"
+            "dosewiki_slug, psychonautwiki_page, tripsit_slug FROM substances"
         ):
-            substances[row[0]] = Substance(row[0], row[1], row[2], [], row[3], row[4], row[5])
+            substances[row[0]] = Substance(row[0], row[1], row[2], [], *row[3:8])
         for sid, alias in conn.execute("SELECT substance_id, alias FROM aliases"):
             if sid in substances:
                 substances[sid].aliases.append(alias)
@@ -740,8 +750,8 @@ def probe_source(spec: SourceSpec, throttle: HostThrottle) -> HostProbe:
     The sentinel is the error fingerprint. The control is the control: if the
     two look the same, the host renders client-side and its HTML cannot tell us
     whether a page exists — say so rather than condemning every link."""
-    fake = Substance(-1, SENTINEL, None, [], SENTINEL, SENTINEL)
-    real = Substance(-2, spec.control, None, [], spec.control, spec.control)
+    fake = Substance(-1, SENTINEL, None, [], *[SENTINEL] * 5)
+    real = Substance(-2, spec.control, None, [], *[spec.control] * 5)
     sentinel_url = spec.build(fake)
     control_url = spec.build(real)
     if not sentinel_url or not control_url:
@@ -856,20 +866,14 @@ class Oracles:
             with self._lock:
                 if self._tripsit_names is None:
                     self._tripsit_names = self._tripsit_bulk()
-        if normalize_for_match(sub.name) in self._tripsit_names:
-            return True, f"tripsit lists {sub.name} among {len(self._tripsit_names)} drugs"
-        # The canonical name misses. Before spending a request, see whether one
-        # of OUR aliases is what TripSit files the drug under — that turns
-        # "broken link" into "link it by this name instead".
-        working = [
-            alias for alias in sub.aliases if normalize_for_match(alias) in self._tripsit_names
-        ]
+        # The link is built from TripSit's own key, so that is what to look up.
+        key = sub.tripsit_slug or sub.name
+        if normalize_for_match(key) in self._tripsit_names:
+            return True, f"tripsit lists {key} among {len(self._tripsit_names)} drugs"
 
         # The factsheet page is a shell over this API; `data[0].err` is the
         # site's own not-found signal.
-        url = "https://tripbot.tripsit.me/api/tripsit/getDrug/" + urllib.parse.quote(
-            sub.name.lower()
-        )
+        url = "https://tripbot.tripsit.me/api/tripsit/getDrug/" + urllib.parse.quote(key.lower())
         resp = fetch(url, self.throttle, max_bytes=400_000)
         if resp.error or resp.status is None or resp.status >= 400:
             return None, f"tripsit API status={resp.status} error={resp.error}"
@@ -882,12 +886,11 @@ class Oracles:
             return None, "tripsit API returned no data field"
         entry = data[0]
         if isinstance(entry, dict) and entry.get("err"):
-            hint = f"; TripSit files it under {working[0]!r}" if working else ""
-            return False, entry.get("msg", "not found") + hint
+            return False, entry.get("msg", "not found")
         name = (
             (entry.get("pretty_name") or entry.get("name") or "") if isinstance(entry, dict) else ""
         )
-        return True, f"tripsit API has {name or sub.name}"
+        return True, f"tripsit API has {name or key}"
 
     def _tripsit_bulk(self) -> set[str]:
         """Every drug name TripSit knows, in one request. Empty on failure —
@@ -1039,6 +1042,8 @@ def working_alias(spec: SourceSpec, sub: Substance, throttle: HostThrottle) -> s
                 sub.freeodwiki_slug,
                 sub.drug_community_slug,
                 sub.dosewiki_slug,
+                sub.psychonautwiki_page,
+                sub.tripsit_slug,
             )
         )
         if not candidate:
@@ -1595,6 +1600,12 @@ def main() -> int:
                             "URL builder fell back to the site root",
                         )
                     )
+        # Failures are kept in the cache as an audit trail after their pair stops
+        # shipping (a merged substance, a dropped attribution); judge only links
+        # the current database still produces.
+        shipped_keys = {
+            cache_key(slug, substances[sid].name) for slug, sid in pairs if sid in substances
+        }
         cached_bad = [
             Finding(
                 key.split("|", 1)[0],
@@ -1607,7 +1618,7 @@ def main() -> int:
                 entry.get("category", "page"),
             )
             for key, entry in sorted(cache.items())
-            if entry.get("verdict") in GATE_FAILING
+            if entry.get("verdict") in GATE_FAILING and key in shipped_keys
         ]
         seen = {(f.slug, f.substance) for f in offline}
         combined = offline + [f for f in cached_bad if (f.slug, f.substance) not in seen]

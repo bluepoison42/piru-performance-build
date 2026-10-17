@@ -199,6 +199,8 @@ extension Substance {
             drugCommunitySlug: drugCommunitySlug,
             freeodwikiSlug: freeodwikiSlug,
             dosewikiSlug: dosewikiSlug,
+            psychonautwikiPage: psychonautwikiPage,
+            tripsitSlug: tripsitSlug,
             overview: overview,
             smiles: smiles,
             iupacName: iupacName,

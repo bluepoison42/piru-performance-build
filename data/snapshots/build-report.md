@@ -1,13 +1,13 @@
 # Piru SQLite build report
 
-Built 2026-10-17.7 → `Piru/Data/piru-substances.sqlite` (20,979,712 bytes, sha256 `14175be94e846882338e645bec6308b6e7e0b183b4061302cfa69b767e0e3db3`)
+Built 2026-10-17.11 → `Piru/Data/piru-substances.sqlite` (20,987,904 bytes, sha256 `7075a49bb07c85feeecf27bb239c7d4be6f66a0b43eda536544e38adaf573c80`)
 
 ## Row counts
 
 | Table | Rows |
 |---|---|
-| substances | 1,689 |
-| aliases | 5,729 |
+| substances | 1,688 |
+| aliases | 5,730 |
 | sources | 18 |
 | source_field_priority | 1 |
 | citations | 2,483 |
@@ -17,7 +17,7 @@ Built 2026-10-17.7 → `Piru/Data/piru-substances.sqlite` (20,979,712 bytes, sha
 | durations | 6,559 |
 | drug_community_timelines | 750 |
 | half_lives | 717 |
-| mechanisms_summary | 1,212 |
+| mechanisms_summary | 1,209 |
 | effects | 2,952 |
 | subjective_effects | 23,664 |
 | subjective_effect_concepts | 506 |

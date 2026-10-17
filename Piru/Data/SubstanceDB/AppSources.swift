@@ -1,5 +1,13 @@
 import Foundation
 
+extension CharacterSet {
+    /// `.urlQueryAllowed` minus `&`, `+`, `=` and `;`, which a server reads as
+    /// query syntax. Use it for any value placed inside a query string, so a
+    /// name like "BPC-157 + TB-500" arrives with its `+` intact rather than as
+    /// a space.
+    static let urlQueryValueAllowed = CharacterSet.urlQueryAllowed.subtracting(CharacterSet(charactersIn: "&+=;"))
+}
+
 struct SourceInfo {
     let name: String
     let url: String
@@ -170,6 +178,28 @@ enum AppSources {
         return URL(string: "https://dose.wiki/\(encoded)?from=piru")
     }
 
+    /// Deep link to a PsychonautWiki article, from the article title captured at
+    /// build time. Piru's name for a compound often differs from the wiki's, so
+    /// the title can't be derived from it. Returns `nil` without one, for the
+    /// reason spelled out on ``freeodwikiURL(slug:)``.
+    static func psychonautwikiURL(page: String?) -> URL? {
+        guard let page, !page.isEmpty,
+              let encoded = page.replacingOccurrences(of: " ", with: "_")
+              .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        else { return nil }
+        return URL(string: "https://psychonautwiki.org/wiki/\(encoded)")
+    }
+
+    /// Deep link to a TripSit factsheet, from TripSit's own key captured at build
+    /// time ("3-fmc" for Piru's "3-Fluoromethcathinone"). Returns `nil` without
+    /// one, for the reason spelled out on ``freeodwikiURL(slug:)``.
+    static func tripsitURL(slug: String?) -> URL? {
+        guard let slug, !slug.isEmpty,
+              let encoded = slug.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        else { return nil }
+        return URL(string: "https://tripsit.me/factsheets/\(encoded)")
+    }
+
     /// Deep link to a source's page for a substance, keyed by the DB `slug`
     /// rather than the display name. Used by the dose/duration source rows so
     /// "Dose data · TripSit" becomes a tappable link to that compound's page.
@@ -184,30 +214,23 @@ enum AppSources {
     /// page exists nor scrape counts — but a search always resolves for a person
     /// tapping it in their browser, with no dead-link or scraping concerns.
     static func erowidSearchURL(substance: String) -> URL? {
-        let query = substance.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? substance
+        let query = substance.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? substance
         return URL(string: "https://www.erowid.org/search.php?q=\(query)")
     }
 
     static func substanceURL(for source: String, substance: String) -> URL? {
         switch source {
-        case "PsychonautWiki":
-            let slug = substance.replacingOccurrences(of: " ", with: "_")
-            return URL(string: "https://psychonautwiki.org/wiki/\(slug)")
-        case "TripSit":
-            let slug = substance.lowercased()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? substance.lowercased()
-            return URL(string: "https://drugs.tripsit.me/\(slug)")
         case "DailyMed":
             let query = substance
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? substance
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? substance
             return URL(string: "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=\(query)")
         case "PubMed":
             let query = substance
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? substance
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? substance
             return URL(string: "https://pubmed.ncbi.nlm.nih.gov/?term=\(query)+pharmacology")
         case euda:
             let query = substance
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? substance
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? substance
             return URL(string: "https://www.euda.europa.eu/publications/drug-profiles_en?search=\(query)")
         default:
             // No per-substance page for this source. Never fall back to the

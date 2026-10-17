@@ -219,6 +219,13 @@ FREEODWIKI = REPO / "data/sources/freeodwiki.json"
 DOSEWIKI = REPO / "data/sources/dosewiki.json"
 DOSEWIKI_IDS = REPO / "data/curated/dosewiki-ids.json"
 TRIPSIT = REPO / "data/sources/tripsit.json"
+#: Sources whose page URL is built from their own name for a substance, and the
+#: `substances` column that keeps that name. TripSit keys are its names lowercased.
+_SOURCE_PAGE_COLUMNS = {"psychonautwiki": "psychonautwiki_page", "tripsit": "tripsit_slug"}
+#: TripSit keys whose factsheet TripSit has removed: its own API answers "Drug with
+#: that name not found" (checked 2026-10-18). `tripsit.json` predates the removal,
+#: so its data stays attributed but gets no link. Delete when the snapshot is refreshed.
+_TRIPSIT_REMOVED_PAGES = {"2c-g-5", "dimethocaine", "dxme", "ic-26"}
 MEDTAP_PK = REPO / "data/sources/medtap-pk.json"
 # Citation link-health cache produced by pipeline/audit/validate_links.py.
 # The build drops citations this proved dead (HTTP 404/410) so no broken link ships.
@@ -496,6 +503,8 @@ FREEOD_CATEGORY_MAP = {
 # genuine FreeOD-only entries under their Chinese title.
 FREEOD_NAME_OVERRIDE = {
     "1,4-丁二醇": "1,4-Butanediol",
+    # The page URL is 多拉西敏; its article is about 多西拉敏, doxylamine.
+    "多拉西敏": "Doxylamine",
     "麻黄碱": "Ephedrine",
     "伪麻黄碱": "Pseudoephedrine",
     "尼古丁": "Nicotine",
@@ -1157,6 +1166,7 @@ CREATE TABLE substances (
     drug_community_slug TEXT,
     -- FreeOD Wiki (freeodwiki.org/药物/<slug>) page slug, captured during
     -- ingest so the app can deep-link the source page (titles are Chinese).
+    -- Carried across merges via _merge_into's COALESCE.
     freeodwiki_slug TEXT,
     -- dose.wiki (dose.wiki/<slug>) page slug, captured during ingest. Its slugs
     -- are lowercase-hyphenated forms of names Piru often spells differently
@@ -1164,6 +1174,14 @@ CREATE TABLE substances (
     -- derive the link from its own name. Carried across merges via _merge_into's
     -- COALESCE. NULL when dose.wiki has no article.
     dosewiki_slug TEXT,
+    -- The source's own page name for PsychonautWiki (its article title,
+    -- psychonautwiki.org/wiki/<title>) and TripSit (its key,
+    -- drugs.tripsit.me/<key>), captured during ingest from the record's name
+    -- before Piru's renames. Piru's canonical name often differs (TripSit's
+    -- `3-fmc` is `3-Fluoromethcathinone` here), so the app cannot build these
+    -- links from its own name. Carried across merges via _merge_into's COALESCE.
+    psychonautwiki_page TEXT,
+    tripsit_slug TEXT,
     -- Pharmacokinetics REFERENCE-SUBSTANCE pointer (the derivation layer). When a
     -- substance has no citeable PK of its own, a curated flagship `pk_reference`
     -- names a structural-analogue surrogate whose PK the resolver may borrow
@@ -7968,6 +7986,7 @@ class Build:
         name = s.get("name") or ""
         if is_chemistry_noise(name):
             return None
+        source_page = name
         # Fix up scraped-source mislabels (e.g. TripSit's "apap" → Acetaminophen)
         # so they merge with the properly-named entry rather than duplicating it.
         name = _SOURCED_NAME_FIX.get(normalise(name), name)
@@ -7993,6 +8012,15 @@ class Build:
         )
         if sid is None:
             return None
+        if slug in _SOURCE_PAGE_COLUMNS:
+            column, page = _SOURCE_PAGE_COLUMNS[slug], source_page
+            if slug == "tripsit":
+                page = page.lower()
+                if page in _TRIPSIT_REMOVED_PAGES:
+                    page = None
+            self.cur.execute(
+                f"UPDATE substances SET {column}=COALESCE({column}, ?) WHERE id=?", (page, sid)
+            )
         # Curated presentation/sort overrides (also valid on override-only files).
         if slug == "piru-curated":
             if s.get("displayName"):
@@ -10279,7 +10307,10 @@ class Build:
             "molecular_weight=COALESCE(molecular_weight,(SELECT molecular_weight FROM substances WHERE id=:l)), "
             "regulatory_status=COALESCE(regulatory_status,(SELECT regulatory_status FROM substances WHERE id=:l)), "
             "drug_community_slug=COALESCE(drug_community_slug,(SELECT drug_community_slug FROM substances WHERE id=:l)), "
+            "freeodwiki_slug=COALESCE(freeodwiki_slug,(SELECT freeodwiki_slug FROM substances WHERE id=:l)), "
             "dosewiki_slug=COALESCE(dosewiki_slug,(SELECT dosewiki_slug FROM substances WHERE id=:l)), "
+            "psychonautwiki_page=COALESCE(psychonautwiki_page,(SELECT psychonautwiki_page FROM substances WHERE id=:l)), "
+            "tripsit_slug=COALESCE(tripsit_slug,(SELECT tripsit_slug FROM substances WHERE id=:l)), "
             "pk_reference_name=COALESCE(pk_reference_name,(SELECT pk_reference_name FROM substances WHERE id=:l)), "
             "pk_reference_fields=COALESCE(pk_reference_fields,(SELECT pk_reference_fields FROM substances WHERE id=:l)), "
             "pk_reference_confidence=COALESCE(pk_reference_confidence,(SELECT pk_reference_confidence FROM substances WHERE id=:l)) "

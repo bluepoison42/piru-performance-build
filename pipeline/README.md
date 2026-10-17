@@ -264,8 +264,13 @@ LLM-assisted research used to fill gaps external sources don't cover
   ```
   `--gate` makes no network calls. It fails on a provable homepage fallback
   and on any BROKEN or NO_MENTION verdict stored in
-  `data/sources/source-page-cache.json`, so its answer is only as fresh as the
-  last full run. MISSING_SLUG and UNVERIFIABLE are reported but never fail it.
+  `data/sources/source-page-cache.json` for a link the current database still
+  ships, so its answer is only as fresh as the last full run. MISSING_SLUG and
+  UNVERIFIABLE are reported but never fail it.
+
+  PsychonautWiki and TripSit links use each source's own page name, which the
+  build stores in `substances.psychonautwiki_page` and `substances.tripsit_slug`;
+  Piru's canonical name often differs from it.
 
 ## The adjudicator
 

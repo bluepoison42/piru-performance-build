@@ -320,7 +320,7 @@ struct SubstanceReadModel {
 
         do {
             return try db.read { db -> Substance? in
-                guard let coreRow = try Row.fetchOne(db, sql: "SELECT canonical_name, display_name, display_class, regulatory_status, duration_implausible, substance_uid, cas, inchikey, formula, pubchem_cid, molecular_weight, popularity, is_stub, drug_community_slug, freeodwiki_slug, dosewiki_slug, smiles, iupac_name, logp, tpsa, hba, hbd, ld50_oral_mg_per_kg, ld50_dermal_mg_per_kg, melting_point_c, boiling_point_c\(editorialColumns) FROM substances WHERE id = ?", arguments: [id]) else {
+                guard let coreRow = try Row.fetchOne(db, sql: "SELECT canonical_name, display_name, display_class, regulatory_status, duration_implausible, substance_uid, cas, inchikey, formula, pubchem_cid, molecular_weight, popularity, is_stub, drug_community_slug, freeodwiki_slug, dosewiki_slug, psychonautwiki_page, tripsit_slug, smiles, iupac_name, logp, tpsa, hba, hbd, ld50_oral_mg_per_kg, ld50_dermal_mg_per_kg, melting_point_c, boiling_point_c\(editorialColumns) FROM substances WHERE id = ?", arguments: [id]) else {
                     return nil
                 }
                 let name: String = coreRow["canonical_name"]
@@ -339,6 +339,8 @@ struct SubstanceReadModel {
                 let drugCommunitySlug: String? = coreRow["drug_community_slug"]
                 let freeodwikiSlug: String? = coreRow["freeodwiki_slug"]
                 let dosewikiSlug: String? = coreRow["dosewiki_slug"]
+                let psychonautwikiPage: String? = coreRow["psychonautwiki_page"]
+                let tripsitSlug: String? = coreRow["tripsit_slug"]
                 let smiles: String? = coreRow["smiles"]
                 let iupacName: String? = coreRow["iupac_name"]
                 // Curated editorial JSON blobs (piru-curated, popular-substances
@@ -421,6 +423,8 @@ struct SubstanceReadModel {
                     drugCommunitySlug: drugCommunitySlug,
                     freeodwikiSlug: freeodwikiSlug,
                     dosewikiSlug: dosewikiSlug,
+                    psychonautwikiPage: psychonautwikiPage,
+                    tripsitSlug: tripsitSlug,
                     overview: overview,
                     smiles: smiles,
                     iupacName: iupacName,

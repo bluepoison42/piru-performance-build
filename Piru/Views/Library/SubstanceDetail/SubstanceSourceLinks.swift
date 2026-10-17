@@ -8,8 +8,9 @@ import Foundation
 enum SubstanceSourceLinks {
     /// Deep link for a source-attribution row. substance.wiki's `/drug/<slug>`
     /// page resolves only the canonical slug captured at build time (no alias
-    /// fallback), so it can't be derived from the app's name; every other source
-    /// deep-links from the substance name via ``AppSources``.
+    /// fallback), so it can't be derived from the app's name. Sources that name
+    /// compounds their own way link the page name captured at build time; the
+    /// search sources build a query from the substance name via ``AppSources``.
     static func deepLink(_ slug: String, substance: Substance) -> URL? {
         if slug == "drug.community" {
             guard let dc = substance.drugCommunitySlug else { return nil }
@@ -24,6 +25,14 @@ enum SubstanceSourceLinks {
         // spells differently, so the captured slug is the only working link.
         if slug == "dosewiki" {
             return AppSources.dosewikiURL(slug: substance.dosewikiSlug)
+        }
+        // PsychonautWiki and TripSit name compounds their own way, so link the
+        // page name each source used rather than Piru's.
+        if slug == "psychonautwiki" {
+            return AppSources.psychonautwikiURL(page: substance.psychonautwikiPage)
+        }
+        if slug == "tripsit" {
+            return AppSources.tripsitURL(slug: substance.tripsitSlug)
         }
         // The Shulgin books (PiHKAL/TiHKAL) only have a book homepage, not a
         // per-substance page. The citation carries the real chapter link, so

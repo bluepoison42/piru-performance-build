@@ -334,7 +334,7 @@ private struct IdentifyExternalLinksCard: View {
 
     private var links: [ExternalLink] {
         var out: [ExternalLink] = []
-        if let token = result.searchToken?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+        if let token = result.searchToken?.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) {
             if let url = URL(string: "https://pubchem.ncbi.nlm.nih.gov/#query=\(token)") {
                 out.append(ExternalLink(title: String(localized: "Search PubChem"), icon: "atom", url: url))
             }

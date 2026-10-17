@@ -107,4 +107,30 @@ struct AppSourcesTests {
                 == "https://dose.wiki/4-meo-butyrfentanyl?from=piru",
         )
     }
+
+    @Test
+    func `PsychonautWiki and TripSit links use each source's own page name`() {
+        // Piru's name often differs from the source's ("3-Fluoromethcathinone"
+        // is TripSit's "3-fmc"), so building from it lands on a missing page.
+        #expect(
+            AppSources.psychonautwikiURL(page: "Bromo-DragonFLY")?.absoluteString
+                == "https://psychonautwiki.org/wiki/Bromo-DragonFLY",
+        )
+        #expect(
+            AppSources.psychonautwikiURL(page: "Choline bitartrate")?.absoluteString
+                == "https://psychonautwiki.org/wiki/Choline_bitartrate",
+        )
+        #expect(AppSources.tripsitURL(slug: "3-fmc")?.absoluteString == "https://tripsit.me/factsheets/3-fmc")
+        #expect(AppSources.psychonautwikiURL(page: nil) == nil)
+        #expect(AppSources.tripsitURL(slug: "") == nil)
+    }
+
+    @Test
+    func `Search queries escape characters a server reads as query syntax`() throws {
+        // A bare `+` in a query string arrives as a space.
+        let url = try #require(AppSources.substanceURL(for: "PubMed", substance: "BPC-157 + TB-500"))
+        #expect(url.absoluteString.contains("BPC-157%20%2B%20TB-500"))
+        let erowid = try #require(AppSources.erowidSearchURL(substance: "A&B=C;D"))
+        #expect(erowid.absoluteString.hasSuffix("q=A%26B%3DC%3BD"))
+    }
 }
