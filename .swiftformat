@@ -24,7 +24,9 @@
 # deliberately: `if x { return }`, `for p in tree { kill(p) }`,
 # `var isActive: Bool { NSApp.isActive }`, `func id() -> String { rawValue }`.
 # A single-line body is the house style wherever the body is one expression.
---disable wrapMultilineStatementBraces,wrapMultilineConditionalAssignment,blankLinesBetweenScopes,redundantInternal,redundantSelf,wrapIfStatementBodies,wrapIfExpressionBodies,wrapLoopBodies,wrapPropertyBodies,wrapFunctionBodies
+# docComments is off: from 0.63.1 it rewrites `///` on nested local functions to `//`, and
+# which comment marker a helper inside a function body carries is the author's call.
+--disable docComments,wrapMultilineStatementBraces,wrapMultilineConditionalAssignment,blankLinesBetweenScopes,redundantInternal,redundantSelf,wrapIfStatementBodies,wrapIfExpressionBodies,wrapLoopBodies,wrapPropertyBodies,wrapFunctionBodies
 
 # Header stripping
 --header strip
