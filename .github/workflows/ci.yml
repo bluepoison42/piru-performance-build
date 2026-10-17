@@ -175,14 +175,20 @@ jobs:
         run: |
           curl -sSL -o /tmp/swiftformat.zip "https://github.com/nicklockwood/SwiftFormat/releases/download/${SWIFTFORMAT_VERSION}/swiftformat.zip"
           unzip -q -o /tmp/swiftformat.zip -d /tmp/swiftformat
-          sudo install -m 755 /tmp/swiftformat/swiftformat /usr/local/bin/swiftformat
-          swiftformat --version
+          mkdir -p "$RUNNER_TEMP/bin"
+          install -m 755 /tmp/swiftformat/swiftformat "$RUNNER_TEMP/bin/swiftformat"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - name: Install SwiftLint ${{ env.SWIFTLINT_VERSION }}
         run: |
           curl -sSL -o /tmp/swiftlint.zip "https://github.com/realm/SwiftLint/releases/download/${SWIFTLINT_VERSION}/portable_swiftlint.zip"
           unzip -q -o /tmp/swiftlint.zip -d /tmp/swiftlint
-          sudo install -m 755 /tmp/swiftlint/swiftlint /usr/local/bin/swiftlint
-          swiftlint --version
+          install -m 755 /tmp/swiftlint/swiftlint "$RUNNER_TEMP/bin/swiftlint"
+      # The runner image ships its own Homebrew swiftformat ahead of /usr/local/bin, so the
+      # pinned binaries go first on PATH and this step fails if anything else answers.
+      - name: Verify pinned versions
+        run: |
+          test "$(swiftformat --version)" = "$SWIFTFORMAT_VERSION"
+          test "$(swiftlint --version)" = "$SWIFTLINT_VERSION"
       - name: SwiftFormat (check only)
         run: swiftformat --lint .
       - name: SwiftLint
