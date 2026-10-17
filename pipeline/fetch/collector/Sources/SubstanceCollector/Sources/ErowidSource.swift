@@ -14,9 +14,9 @@ struct ErowidSource {
     let cache: HTTPCache
 
     private static let pihkalAttribution =
-        "PIHKAL by Alexander & Ann Shulgin (Transform Press, 1991) — text used with permission per https://erowid.org/library/books_online/pihkal/pihkal.shtml"
+        "PIHKAL by Alexander & Ann Shulgin (Transform Press, 1991). Text used with permission per https://erowid.org/library/books_online/pihkal/pihkal.shtml"
     private static let tihkalAttribution =
-        "TIHKAL by Alexander & Ann Shulgin (Transform Press, 1997) — text used with permission per https://erowid.org/library/books_online/tihkal/tihkal.shtml"
+        "TIHKAL by Alexander & Ann Shulgin (Transform Press, 1997). Text used with permission per https://erowid.org/library/books_online/tihkal/tihkal.shtml"
 
     enum Book {
         case pihkal
