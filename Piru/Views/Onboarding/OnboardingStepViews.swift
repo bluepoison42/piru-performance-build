@@ -255,7 +255,7 @@ struct OnboardingRemindersStep: View {
                 OnboardingToggleRow(
                     symbol: "repeat",
                     title: "Never miss a dose",
-                    detail: "Reminders at each routine's time — and, if you want, a gentle re-ask a little later, like snooze.",
+                    detail: "Reminders at each routine's time and, if you want, a gentle re-ask a little later, like snooze.",
                     isOn: $doseReminders,
                 )
                 OnboardingToggleRow(

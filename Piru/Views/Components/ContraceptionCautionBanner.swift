@@ -17,7 +17,7 @@ struct ContraceptionCautionBanner: View {
             iconTint: .cautionAccent,
             title: "May reduce hormonal birth-control efficacy",
         ) {
-            Text("Induces \(inducer.enzyme.displayName), which clears the hormones in the combined pill, patch, ring, implant and hormonal IUD — lowering their levels. Anyone relying on hormonal contraception should consider a backup method. Often noted on the label, but easy to miss.")
+            Text("Induces \(inducer.enzyme.displayName), which clears the hormones in the combined pill, patch, ring, implant and hormonal IUD and lowers their levels. Anyone relying on hormonal contraception should consider a backup method. Often noted on the label, but easy to miss.")
                 .captionSecondary()
                 .fixedSize(horizontal: false, vertical: true)
         }

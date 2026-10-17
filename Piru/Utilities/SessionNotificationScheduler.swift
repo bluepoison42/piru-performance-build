@@ -203,7 +203,7 @@ enum SessionNotificationScheduler {
                         scheduleSimpleNotification(
                             id: NotificationType.sleep.identifier(anchor: anchor),
                             title: String(localized: "Time to rest"),
-                            body: String(localized: "You've been going for over \(Int(stimHours)) hours. Try to wind down — dim the lights, put the phone away, and let yourself sleep."),
+                            body: String(localized: "You've been going for over \(Int(stimHours)) hours. Try to wind down: dim the lights, put the phone away, and let yourself sleep."),
                             timeInterval: Timing.extendedStimSleepDelay,
                             category: sleepCategoryID,
                             threadId: threadId,
@@ -248,7 +248,7 @@ enum SessionNotificationScheduler {
         // marked time-sensitive, not guaranteed delivery).
         scheduleSimpleNotification(
             id: NotificationType.cumulative.identifier(anchor: entryID.uuidString),
-            title: String(localized: "Heads up — \(totalAmount.doseFormatted)\(unit) \(displayName ?? substanceName) today"),
+            title: String(localized: "Heads up: \(totalAmount.doseFormatted)\(unit) \(displayName ?? substanceName) today"),
             body: String(localized: "That's a high cumulative dose. \(tip)"),
             timeInterval: 5,
             category: cumulativeCategoryID,
@@ -369,7 +369,7 @@ enum SessionNotificationScheduler {
 
         scheduleSimpleNotification(
             id: NotificationType.phase.identifier(anchor: entryID.uuidString, ordinal: phase.rawValue),
-            title: "\(substance) — \(String(localized: phase.displayName))",
+            title: "\(substance) · \(String(localized: phase.displayName))",
             body: body,
             timeInterval: absoluteInterval,
             category: phaseCategoryID,
@@ -449,7 +449,7 @@ enum SessionNotificationScheduler {
         case .empathogen:
             String(localized: "That total is in the heavy range of the sources. Overheating, confusion or rigid muscles need emergency help.")
         case .opioid:
-            String(localized: "Don't use alone and don't mix with other downers. An overdose is a sudden blackout with no warning — you can't naloxone yourself, so someone with you needs it and should call emergency services.")
+            String(localized: "Don't use alone and don't mix with other downers. An overdose is a sudden blackout with no warning. You can't naloxone yourself, so someone with you needs it and should call emergency services.")
         case .benzodiazepine:
             String(localized: "High cumulative benzo doses impair memory and coordination. Stay somewhere safe.")
         case .dissociative:

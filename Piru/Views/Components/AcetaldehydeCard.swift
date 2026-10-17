@@ -85,10 +85,10 @@ struct AcetaldehydeCard: View {
                         }
                     }
 
-                    Text("Your ALDH2 variant clears acetaldehyde — the first, toxic by-product of alcohol — slowly, so it builds up and lingers. That build-up *is* the flush, racing heart, and nausea, and it's a Group 1 carcinogen (IARC): for flush-reactive drinkers each drink carries more long-term throat and esophageal cancer risk. Less alcohol means less acetaldehyde — there's no amount that clears as cleanly as it does for others.")
+                    Text("Your ALDH2 variant clears acetaldehyde (the first, toxic by-product of alcohol) slowly, so it builds up and lingers. That build-up *is* the flush, racing heart, and nausea, and it's a Group 1 carcinogen (IARC): for flush-reactive drinkers each drink carries more long-term throat and esophageal cancer risk. Less alcohol means less acetaldehyde. There's no amount that clears as cleanly as it does for others.")
                         .captionSecondary()
 
-                    Text("Avoid mixing alcohol with metronidazole or certain other antibiotics — they block this same step and can make even a small drink severe.")
+                    Text("Avoid mixing alcohol with metronidazole or certain other antibiotics. They block this same step and can make even a small drink severe.")
                         .captionSecondary()
                 }
                 .accessibilityElement(children: .combine)

@@ -136,7 +136,7 @@ enum CheckInLenses {
     /// emergency or say when a symptom ends. No line names something to take.
     static func note(for slug: String) -> LocalizedStringResource? {
         switch slug {
-        case "anxiety": "Commonly reported with this class. The timeline can't say how long yours will last — company and a quieter room are worth having."
+        case "anxiety": "Commonly reported with this class. The timeline can't say how long yours will last. Company and a quieter room are worth having."
         case "restlessness": "Commonly reported here. Some people find moving a little easier than sitting still."
         case "bruxism", "jaw-tension": "Jaw clenching is commonly reported. Something to chew spares your teeth."
         case "loss-of-appetite": "Commonly reported with this class. Something small now still counts."
@@ -145,18 +145,18 @@ enum CheckInLenses {
         case "irritability": "Commonly reported on the way down. Worth noting when it started."
         case "tremor": "Commonly reported with this class. A severe tremor, or one that comes with confusion or a high temperature, is a reason to get help now."
         case "nausea": "Commonly reported early on. Small sips rather than gulps."
-        case "vomiting": "Small sips once it settles. Vomiting while very drowsy is an emergency — stay on your side and get help."
+        case "vomiting": "Small sips once it settles. Vomiting while very drowsy is an emergency. Stay on your side and get help."
         case "paranoia": "Commonly reported with this class. A familiar person or place helps more than arguing with the thought."
         case "confusion": "Piru can't tell temporary confusion from a serious symptom. Confusion that deepens, or comes with a high temperature, is a reason to get help now."
         case "dizziness": "Sit or lie down so a fall can't happen. Fainting, or dizziness with chest pain, is a reason to get help now."
         case "memory-impairment": "Record what you can now. Piru can't tell what caused a gap or whether the memory returns."
         case "amnesia": "This class can stop memories forming while it is active. What you write down now is the record."
         case "incoordination", "impaired-balance": "Coordination can be impaired before you notice it. This increases the risk of accidents on stairs and in the kitchen."
-        case "blurred-vision": "Listed for this class. Piru can't tell what is causing a change in vision or when it ends — sudden loss of vision or eye pain needs urgent care."
+        case "blurred-vision": "Listed for this class. Piru can't tell what is causing a change in vision or when it ends. Sudden loss of vision or eye pain needs urgent care."
         case "complex-visual-hallucination": "Seeing things that aren't there is listed for this class. If you can't tell what is real, get someone with you. Piru can't predict when it ends."
         case "urinary-retention": "This class can block the signal to the bladder. Not being able to pass urine at all is a reason to get help now rather than wait for the timeline."
-        case "dysphoria": "Feeling bad is a listed effect of this class. It still deserves attention — Piru can't tell whether a symptom is harmless."
-        case "itching": "Opioids release histamine, and itching is commonly reported. Piru can't tell that from an allergy — swelling of the mouth or throat, or trouble breathing, is an emergency."
+        case "dysphoria": "Feeling bad is a listed effect of this class. It still deserves attention. Piru can't tell whether a symptom is harmless."
+        case "itching": "Opioids release histamine, and itching is commonly reported. Piru can't tell that from an allergy. Swelling of the mouth or throat, or trouble breathing, is an emergency."
         case "temperature-fluctuation": "Feeling hot and cold is commonly reported. A high temperature that rest and cooling don't bring down is an emergency."
         default: nil
         }

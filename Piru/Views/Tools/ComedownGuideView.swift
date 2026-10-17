@@ -94,12 +94,12 @@ struct ComedownGuideView: View {
     private var generalSection: some View {
         Section("Universal recovery basics") {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                tipRow(icon: "drop.fill", color: .blue, text: "Hydrate — water or electrolyte drinks, sip steadily")
-                tipRow(icon: "fork.knife", color: .orange, text: "Eat something nutritious — protein, carbs, and fruit")
+                tipRow(icon: "drop.fill", color: .blue, text: "Hydrate: water or electrolyte drinks, sip steadily")
+                tipRow(icon: "fork.knife", color: .orange, text: "Eat something nutritious: protein, carbs, and fruit")
                 tipRow(icon: "bed.double.fill", color: .indigo, text: "Rest when your body asks for it")
                 tipRow(icon: "sun.max.fill", color: .yellow, text: "Fresh air and gentle light")
-                tipRow(icon: "figure.walk", color: .green, text: "Light movement or stretching — nothing intense")
-                tipRow(icon: "iphone.slash", color: .gray, text: "Put the phone down — screens can amplify restlessness")
+                tipRow(icon: "figure.walk", color: .green, text: "Light movement or stretching, nothing intense")
+                tipRow(icon: "iphone.slash", color: .gray, text: "Put the phone down. Screens can amplify restlessness")
                 tipRow(icon: "person.2.fill", color: .pink, text: "Reach out to someone you trust if you feel overwhelmed")
             }
             .font(.caption)
@@ -163,8 +163,8 @@ struct ComedownGuideView: View {
                     "Piru doesn't measure any of this. It describes what sources report for the class.",
                 ],
                 rightNow: [
-                    "This class raises body temperature. Feeling very hot, confused or rigid is an emergency — cool down and call for help.",
-                    "Sip rather than gulp, and favor electrolytes. Over-drinking water is its own danger with this class — more is not safer.",
+                    "This class raises body temperature. Feeling very hot, confused or rigid is an emergency. Cool down and call for help.",
+                    "Sip rather than gulp, and favor electrolytes. Over-drinking water is its own danger with this class. More is not safer.",
                     "Eat light foods: fruit, toast, soup.",
                     "Gentle massage eases a sore jaw.",
                 ],
@@ -172,12 +172,12 @@ struct ComedownGuideView: View {
                     "Rest in a comfortable, calm space. Soft music or silence both work.",
                     "Be patient with yourself over the next few days.",
                     "A walk outside helps when you're ready.",
-                    "Talk to someone you trust — connection helps more than isolation.",
+                    "Talk to someone you trust. Connection helps more than isolation.",
                 ],
                 avoid: [
                     "Taking more to put off the low mood delays it.",
                     "Piru doesn't establish a safe interval for adding medicines or supplements. MAOIs are the documented danger with this class.",
-                    "Skip intense social situations — you may feel emotionally raw.",
+                    "Skip intense social situations. You may feel emotionally raw.",
                     "Don't judge your baseline mood by how you feel right now.",
                 ],
             )
@@ -190,7 +190,7 @@ struct ComedownGuideView: View {
                 ],
                 rightNow: [
                     "If the experience was intense: the acute effects of this class are time-limited, and company helps.",
-                    "Eat something grounding — warm food, fruit, or anything that sounds appealing.",
+                    "Eat something grounding: warm food, fruit, or anything that sounds appealing.",
                     "Drink water. Wrap up in something comfortable.",
                     "Write down anything meaningful before the details fade.",
                 ],
@@ -201,7 +201,7 @@ struct ComedownGuideView: View {
                     "Distress or perceptual changes that persist for days are worth taking to a professional.",
                 ],
                 avoid: [
-                    "Don't make big life decisions based on acute revelations — wait a week.",
+                    "Don't make big life decisions based on acute revelations. Wait a week.",
                     "Avoid screens and doom-scrolling while you're this impressionable.",
                     "Cannabis is widely reported to bring the effects back, sometimes unpleasantly.",
                     "Skip intense or crowded environments until you feel grounded.",
@@ -229,7 +229,7 @@ struct ComedownGuideView: View {
                 avoid: [
                     "Do not drive or operate machinery. Feeling normal does not establish that you can drive safely.",
                     "Alcohol, benzodiazepines and opioids on top of a dissociative raise the risk of stopped breathing.",
-                    "Avoid hot baths or showers alone — you may not feel temperature accurately.",
+                    "Avoid hot baths or showers alone. You may not feel temperature accurately.",
                     "Your own read of how affected you are is unreliable while dissociated.",
                 ],
             )
@@ -248,8 +248,8 @@ struct ComedownGuideView: View {
                 ],
                 nextHours: [
                     "Stay with someone, or let someone know to check on you. Heavy snoring or gurgling in sleep is a warning sign, not rest.",
-                    "Light movement helps — even a short walk.",
-                    "A warm bath can ease the achy, restless feeling — with someone in earshot.",
+                    "Light movement helps, even a short walk.",
+                    "A warm bath can ease the achy, restless feeling, with someone in earshot.",
                     "Help is available through the numbers in Get Help.",
                 ],
                 avoid: [
@@ -306,11 +306,11 @@ struct ComedownGuideView: View {
                 ],
                 avoid: [
                     "Taking more of a depressant to ease the morning symptoms delays recovery.",
-                    "If you have been drinking heavily and daily for weeks, stopping abruptly can be dangerous — seizures and delirium tremens peak 2–4 days after the last drink.",
+                    "If you have been drinking heavily and daily for weeks, stopping abruptly can be dangerous. Seizures and delirium tremens peak 2–4 days after the last drink.",
                     "With daily phenibut or F-phenibut, dependence develops within weeks and withdrawal can be protracted.",
                     "Acetaminophen (paracetamol) after heavy alcohol use adds stress to the liver.",
                     "Do not drive. Feeling normal does not establish that you can drive safely.",
-                    "Avoid greasy, heavy food — it sounds good but often makes nausea worse.",
+                    "Avoid greasy, heavy food. It sounds good but often makes nausea worse.",
                 ],
             )
         case .cannabinoid:
@@ -324,7 +324,7 @@ struct ComedownGuideView: View {
                     "Drink water. A dry mouth is an effect of cannabis itself and doesn't by itself mean dehydration.",
                     "Eat something balanced.",
                     "If you feel anxious, slow your breathing. Anxiety is a listed effect of this class.",
-                    "A change of scenery — even moving to a different room — can shift your headspace.",
+                    "A change of scenery, even a different room, can shift your headspace.",
                 ],
                 nextHours: [
                     "Physical activity helps with the fog.",

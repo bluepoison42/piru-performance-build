@@ -127,8 +127,8 @@ struct MonoamineProfile {
         guard let r = datSertRatio else { return "Balance not characterized (DAT or SERT data missing)" }
         switch r {
         case ..<0.8: return "Serotonin-leaning (entactogenic)"
-        case 0.8 ..< 3: return "Balanced — empathogen-like"
-        case 3 ..< 15: return "Dopamine-leaning — more stimulant in character"
+        case 0.8 ..< 3: return "Balanced, empathogen-like"
+        case 3 ..< 15: return "Dopamine-leaning, more stimulant in character"
         default: return "Strongly dopaminergic (SERT-sparing)"
         }
     }

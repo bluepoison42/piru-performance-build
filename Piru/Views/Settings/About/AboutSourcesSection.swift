@@ -29,7 +29,7 @@ struct AboutSourcesSection: View {
         } footer: {
             VStack(alignment: .leading, spacing: Spacing.md) {
                 Text("Each substance page names the source of each field. Text from PsychonautWiki and FreeOD Wiki is used under CC BY-SA 4.0, edited and merged with other sources, and remains available under that license.")
-                Text("Content outside those licenses — quotations from published books, manufacturers' label text, and figures from reference tables — belongs to its owners, and is shown for reference under their terms. Piru makes no claim to the correctness of any source.")
+                Text("Content outside those licenses (quotations from published books, manufacturers' label text, and figures from reference tables) belongs to its owners, and is shown for reference under their terms. Piru makes no claim to the correctness of any source.")
                 Link(destination: AboutSourceLinks.ccBySa) {
                     // Verbatim: a license identifier is a proper noun.
                     Text(verbatim: "CC BY-SA 4.0 ↗")

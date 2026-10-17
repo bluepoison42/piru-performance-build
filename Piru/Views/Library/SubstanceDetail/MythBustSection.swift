@@ -94,7 +94,7 @@ private struct PullQuoteView: View {
                 .font(.callout.italic())
                 .foregroundStyle(Theme.secondaryLabel)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("— \(quote.attribution)")
+            Text("\(quote.attribution)")
                 .captionSecondary()
         }
         .padding(.leading, Spacing.lg)

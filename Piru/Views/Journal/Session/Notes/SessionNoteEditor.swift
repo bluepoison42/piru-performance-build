@@ -255,7 +255,7 @@ struct SessionNoteEditor: View {
                     SevenStepRow(title: "Sociability", low: "Alone", high: "Social", value: $draft.social)
                 }
             } footer: {
-                Text("Optional — leave them where they are to record nothing.")
+                Text("Optional. Leave them where they are to record nothing.")
             }
         }
     }
@@ -364,11 +364,11 @@ private struct ShulginInfoView: View {
             Text("The Shulgin Rating Scale")
                 .cardTitle()
             Group {
-                row("±", "Threshold — a real effect, its nature not yet clear.")
+                row("±", "Threshold: a real effect, its nature not yet clear.")
                 row("+", "Definite, but the nature or duration not yet clear; ordinary activity possible.")
                 row("++", "Unmistakable effect and duration; ordinary activity possible but disinclined.")
                 row("+++", "Full effect; the experience is the thing, ordinary activity set aside.")
-                row("++++", "A rare, peak, transcendental state — a serene and all-encompassing experience; the person, and the rating, are describing something outside the ordinary scale.")
+                row("++++", "A rare, peak, transcendental state: a serene and all-encompassing experience. The person, and the rating, are describing something outside the ordinary scale.")
             }
             Text("Shulgin & Shulgin, PiHKAL: A Chemical Love Story (1991), \"The Shulgin Rating Scale\".")
                 .captionSecondary()

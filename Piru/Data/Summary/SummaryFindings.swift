@@ -158,11 +158,11 @@ extension SummaryStats {
         let n = Int(peakMME.rounded())
         let summary = if peakMME >= 90 {
             String(
-                localized: "Peak opioid load \(n) MME/day — above the CDC 90 MME reference.",
+                localized: "Peak opioid load \(n) MME/day, above the CDC 90 MME reference.",
             )
         } else {
             String(
-                localized: "Peak opioid load \(n) MME/day — at or above the CDC 50 MME reference.",
+                localized: "Peak opioid load \(n) MME/day, at or above the CDC 50 MME reference.",
             )
         }
         results.append(Finding(

@@ -119,7 +119,7 @@ private struct ClassColorsNoticeView: View {
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
 
-                Text("Every substance now gets a color from its class — stimulants share one family, psychedelics another — so a timeline reads at a glance. You can still give any substance a color of your own.")
+                Text("Every substance now gets a color from its class (stimulants share one family, psychedelics another) so a timeline reads at a glance. You can still give any substance a color of your own.")
                     .font(.subheadline)
                     .foregroundStyle(Theme.secondaryLabel)
                     .multilineTextAlignment(.center)

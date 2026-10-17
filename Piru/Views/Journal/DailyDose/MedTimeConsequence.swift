@@ -195,7 +195,7 @@ struct MedTimeConsequenceLine: View {
     private var sleepText: some View {
         let end = Self.clock(times.effectsEnd)
         if landsInNight {
-            Text("Modeled effects end ~\(end) — after most bedtimes.")
+            Text("Modeled effects end ~\(end), after most bedtimes.")
         } else {
             Text("Modeled effects end ~\(end)")
         }

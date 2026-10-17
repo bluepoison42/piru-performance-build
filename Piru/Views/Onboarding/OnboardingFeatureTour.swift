@@ -102,7 +102,7 @@ struct FeatureTourPage: Identifiable {
         FeatureTourPage(
             id: "library",
             title: "1,500+ substances",
-            caption: "Browse by family — dosing, duration, effects, and interactions, sourced and cited.",
+            caption: "Browse by family: dosing, duration, effects, and interactions, sourced and cited.",
             mock: AnyView(LibraryMock()),
         ),
         FeatureTourPage(
@@ -120,7 +120,7 @@ struct FeatureTourPage: Identifiable {
         FeatureTourPage(
             id: "insights",
             title: "See your patterns",
-            caption: "Your recorded amounts, timing, and self-reported effects — at a glance.",
+            caption: "Your recorded amounts, timing, and self-reported effects, at a glance.",
             mock: AnyView(InsightsMock()),
         ),
     ]

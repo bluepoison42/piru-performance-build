@@ -266,7 +266,7 @@ struct InventoryItemForm: View {
                     HStack(spacing: Spacing.xs) {
                         Image(systemName: "info.circle")
                             .accessibilityHidden(true)
-                        Text("Custom substance — its doses count by exact name match.")
+                        Text("Custom substance. Its doses count by exact name match.")
                     }
                     .captionSecondary()
                 }

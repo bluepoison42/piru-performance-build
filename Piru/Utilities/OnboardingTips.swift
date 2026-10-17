@@ -72,7 +72,7 @@ struct LogDoseTip: Tip {
         Text("Record your first entry")
     }
     var message: Text? {
-        Text("Tap here any time to record what you've taken — it only takes a few seconds.")
+        Text("Tap here any time to record what you've taken. It only takes a few seconds.")
     }
     var image: Image? {
         Image(systemName: "plus.circle.fill")

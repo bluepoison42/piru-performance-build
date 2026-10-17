@@ -10,7 +10,7 @@ struct SubstancePeptideSection: View {
     var body: some View {
         ForEach(substance.routes, id: \.route) { substanceRoute in
             if let pd = substanceRoute.protocolDosing {
-                Section("Protocol — \(String(localized: substanceRoute.route.localizedName))") {
+                Section("Protocol: \(String(localized: substanceRoute.route.localizedName))") {
                     ProtocolDosingCard(unit: substanceRoute.unit, protocolDosing: pd)
                 }
             }

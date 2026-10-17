@@ -223,7 +223,7 @@ struct MedDetailView: View {
             Text("Times")
         } footer: {
             if item.reminderTimesMinutes.isEmpty {
-                Text("No set time — this med still counts toward adherence once per due day.")
+                Text("No set time. This med still counts toward adherence once per due day.")
             }
         }
         .listRowBackground(CardBackground())
@@ -248,7 +248,7 @@ struct MedDetailView: View {
         } header: {
             Text("Reminders")
         } footer: {
-            Text("Ask Again sends another reminder if a dose isn't logged — “Default” uses the intervals in Notification Settings.")
+            Text("Ask Again sends another reminder if a dose isn't logged. “Default” uses the intervals in Notification Settings.")
         }
         .listRowBackground(CardBackground())
     }

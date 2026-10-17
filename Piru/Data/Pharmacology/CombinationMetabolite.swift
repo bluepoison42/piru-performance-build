@@ -53,9 +53,9 @@ nonisolated enum CombinationMetabolite {
         var formationNote: LocalizedStringResource {
             switch self {
             case .cocaethylene:
-                "Cocaine and alcohol together form cocaethylene — an active stimulant your body makes only while both are present. It lasts noticeably longer than cocaine, so the stimulant effect (and its strain) is drawn out."
+                "Cocaine and alcohol together form cocaethylene, an active stimulant your body makes only while both are present. It lasts noticeably longer than cocaine, so the stimulant effect (and its strain) is drawn out."
             case .ethylphenidate:
-                "Methylphenidate and alcohol together form ethylphenidate — an active stimulant your body makes only while both are present. It leans more on dopamine and lingers a little longer than methylphenidate, so the stimulant effect is drawn out."
+                "Methylphenidate and alcohol together form ethylphenidate, an active stimulant your body makes only while both are present. It leans more on dopamine and lingers a little longer than methylphenidate, so the stimulant effect is drawn out."
             }
         }
 
@@ -63,7 +63,7 @@ nonisolated enum CombinationMetabolite {
         var cautionNote: LocalizedStringResource {
             switch self {
             case .cocaethylene:
-                "Cocaethylene adds extra strain on the heart and liver beyond cocaine alone, so this combination is harder on your body. (The widely-repeated \"18–25× sudden death\" figure is not supported by the evidence — but the added cardiac and liver strain is real.)"
+                "Cocaethylene adds extra strain on the heart and liver beyond cocaine alone, so this combination is harder on your body. (The widely-repeated \"18–25× sudden death\" figure is not supported by the evidence, but the added cardiac and liver strain is real.)"
             case .ethylphenidate:
                 "The mix adds cardiovascular strain beyond either alone, and the ethylphenidate it forms outlasts the methylphenidate itself, so the load on your heart is stretched out rather than added up."
             }

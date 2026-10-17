@@ -307,7 +307,7 @@ struct SourceAttributionExplainer: View {
                 }
 
                 Section {
-                    Text("Piru shows the highest-priority source you've enabled that has this data — and you choose the order.")
+                    Text("Piru shows the highest-priority source you've enabled that has this data, and you choose the order.")
                         .font(.callout)
                     ForEach(candidates, id: \.self) { slug in
                         HStack {

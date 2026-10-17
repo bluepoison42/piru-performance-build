@@ -520,7 +520,7 @@ struct AdherenceDayDetailSheet: View {
                                 )
                                 .font(.body)
 
-                                Text("\(itemAdherence.item.amount.doseFormatted) \(itemAdherence.item.unit) \u{2014} \(String(localized: itemAdherence.item.frequency.shortLabel))")
+                                Text("\(itemAdherence.item.amount.doseFormatted) \(itemAdherence.item.unit) · \(String(localized: itemAdherence.item.frequency.shortLabel))")
                                     .captionSecondary()
                             }
                         }

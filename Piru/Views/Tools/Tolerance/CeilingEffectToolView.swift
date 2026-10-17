@@ -306,9 +306,9 @@ struct CeilingEffectToolView: View {
 
     private func mechanismLabel(_ mechanism: SaturablePharmacology.Mechanism) -> LocalizedStringResource {
         switch mechanism {
-        case .elimination: "Saturable elimination — exposure climbs faster than dose"
-        case .activation: "Saturable activation — effect hits a ceiling"
-        case .absorption: "Saturable absorption — exposure climbs slower than dose"
+        case .elimination: "Saturable elimination: exposure climbs faster than dose"
+        case .activation: "Saturable activation: effect hits a ceiling"
+        case .absorption: "Saturable absorption: exposure climbs slower than dose"
         }
     }
 

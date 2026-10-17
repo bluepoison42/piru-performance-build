@@ -258,12 +258,12 @@ struct MedFormView: View {
         } footer: {
             VStack(alignment: .leading, spacing: Spacing.sm) {
                 if draft.times.isEmpty {
-                    Text("No set time — this med still counts toward adherence once per due day.")
+                    Text("No set time. This med still counts toward adherence once per due day.")
                 } else if draft.remind {
                     Text("A reminder at each time. If you don't log it, Piru asks again \(askAgainListText) later.")
                 }
                 if !draft.times.isEmpty, consequence != nil {
-                    Text("Kick-in and wear-off come from this med's own duration data — the same model the timeline draws. An estimate.")
+                    Text("Kick-in and wear-off come from this med's own duration data, the same model the timeline draws. An estimate.")
                 }
             }
         }

@@ -251,7 +251,7 @@ nonisolated enum PDFReportGenerator {
         let titleAttr: [NSAttributedString.Key: Any] = [
             .font: Fonts.title, .foregroundColor: Colors.accent,
         ]
-        "Piru — Substance Report".draw(at: CGPoint(x: Layout.margin, y: cursor.y), withAttributes: titleAttr)
+        "Piru Substance Report".draw(at: CGPoint(x: Layout.margin, y: cursor.y), withAttributes: titleAttr)
         cursor.y += 30
 
         let linePath = UIBezierPath()
@@ -277,7 +277,7 @@ nonisolated enum PDFReportGenerator {
             cursor.y += 16
         }
 
-        "Period: \(dateFormatter.string(from: data.startDate)) — \(dateFormatter.string(from: data.endDate))".draw(
+        "Period: \(dateFormatter.string(from: data.startDate)) – \(dateFormatter.string(from: data.endDate))".draw(
             at: CGPoint(x: Layout.margin, y: cursor.y), withAttributes: subtitleAttr,
         )
         cursor.y += 16
@@ -641,7 +641,7 @@ nonisolated enum PDFReportGenerator {
         }
 
         if cautionCount > 0 {
-            let cautionNote = "+ \(cautionCount) caution-level combination\(cautionCount == 1 ? "" : "s") — standard pairings."
+            let cautionNote = "+ \(cautionCount) caution-level combination\(cautionCount == 1 ? "" : "s") (standard pairings)."
             cursor.ensureSpace(16)
             cautionNote.draw(at: CGPoint(x: Layout.margin, y: cursor.y), withAttributes: substanceAttr)
             cursor.y += 16

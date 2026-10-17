@@ -180,7 +180,7 @@ struct InteractionCheckerView: View {
                             .font(.subheadline)
                             .foregroundStyle(Theme.secondaryLabel)
                     }
-                    Text("Coverage is incomplete — absence of a listed interaction does not mean absence of risk.")
+                    Text("Coverage is incomplete. A missing interaction does not mean there is no risk.")
                         .font(.caption)
                         .foregroundStyle(Color.platformTertiaryLabel)
                         .multilineTextAlignment(.center)

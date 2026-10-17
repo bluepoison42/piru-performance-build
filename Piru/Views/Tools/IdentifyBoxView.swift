@@ -73,7 +73,7 @@ struct IdentifyBoxView: View {
             GlanceCardHeader(icon: Tool.identify.icon, title: Text("What is this box?")) {
                 EmptyView()
             }
-            Text("Point the camera at a medication box — the brand, the printed name, or the barcode — and Piru opens what it knows about the substance inside: the pharmacology, the doses on record, the interactions.")
+            Text("Point the camera at a medication box (the brand, the printed name, or the barcode) and Piru opens what it knows about the substance inside: the pharmacology, the doses on record, the interactions.")
                 .font(.subheadline)
                 .foregroundStyle(Theme.secondaryLabel)
             Text("Barcodes are matched offline against the US and French registries the app ships with. Anything else resolves by name.")
@@ -109,7 +109,7 @@ struct IdentifyBoxView: View {
     }
 
     private var disclaimer: some View {
-        Text("Text detected from the label. Check the name, strength and formulation before saving — a scan can't verify what is inside the box. Not medical advice.")
+        Text("Text detected from the label. Check the name, strength and formulation before saving. A scan can't verify what is inside the box. Not medical advice.")
             .captionSecondary()
             .frame(maxWidth: .infinity, alignment: .leading)
     }

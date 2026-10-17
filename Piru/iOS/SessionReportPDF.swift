@@ -71,7 +71,7 @@ struct SessionReportView: View {
                 .padding(.top, 16)
             }
 
-            sectionHeader(export.isLive ? "Right now — subjective state" : "Entries")
+            sectionHeader(export.isLive ? "Right now: subjective state" : "Entries")
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(Array(export.substances.enumerated()), id: \.element.id) { index, s in
                     subjectiveRow(s)
@@ -341,7 +341,7 @@ struct SessionReportView: View {
                 Text("modeled in body").font(.system(size: 12)).foregroundStyle(ink2)
             }
         case .unknown:
-            Text("No half-life data — elimination not modeled")
+            Text("No half-life data. Elimination not modeled")
                 .font(.system(size: 12)).foregroundStyle(ink2)
         }
     }
@@ -385,7 +385,7 @@ struct SessionReportView: View {
     // MARK: Footer
 
     private var footer: some View {
-        Text("Model estimates from population half-lives and your logged doses — individual clearance varies. Intensity is relative to each dose's own peak. Not medical advice.")
+        Text("Model estimates from population half-lives and your logged doses. Individual clearance varies. Intensity is relative to each dose's own peak. Not medical advice.")
             .font(.system(size: 10.5))
             .foregroundStyle(ink2)
             .padding(.top, 26)

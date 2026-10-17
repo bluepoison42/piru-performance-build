@@ -91,11 +91,11 @@ struct PharmacologyGlossarySheet: View {
     private var about: LocalizedStringResource? {
         switch topic {
         case .mechanism:
-            "How the drug acts in the body — which receptors and transporters it targets, and what it does at each (switches them on, blocks them, and so on). The dots show how strongly it acts at each target."
+            "How the drug acts in the body: which receptors and transporters it targets, and what it does at each (switches them on, blocks them, and so on). The dots show how strongly it acts at each target."
         case .monoamine:
-            "A summary of how the drug affects the brain's three main signaling chemicals — serotonin, dopamine, and noradrenaline — and whether it releases them or blocks their reuptake. The slider shows which one it leans toward."
+            "A summary of how the drug affects the brain's three main signaling chemicals (serotonin, dopamine, and noradrenaline) and whether it releases them or blocks their reuptake. The slider shows which one it leans toward."
         case .metabolism:
-            "How your body breaks the drug down — which liver enzymes do the work, what byproducts (metabolites) form, and whether those are still active. The percentage is each enzyme's rough share of clearance."
+            "How your body breaks the drug down: which liver enzymes do the work, what byproducts (metabolites) form, and whether those are still active. The percentage is each enzyme's rough share of clearance."
         case .receptor, .pharmacokinetics:
             nil
         }
@@ -104,9 +104,9 @@ struct PharmacologyGlossarySheet: View {
     private var caveat: LocalizedStringResource? {
         switch topic {
         case .pharmacokinetics:
-            "These are population averages from research — your own values vary with genetics, body size, and how the drug is taken."
+            "These are population averages from research. Your own values vary with genetics, body size, and how the drug is taken."
         case .receptor:
-            "Stronger doesn't mean more dangerous — it's just how tightly the drug grips that one target in the lab."
+            "Stronger doesn't mean more dangerous. It's just how tightly the drug grips that one target in the lab."
         case .metabolism:
             "Estimates from primary literature."
         case .mechanism, .monoamine:
@@ -140,7 +140,7 @@ struct PharmacologyGlossarySheet: View {
             id: "Tmax",
             term: "Time to peak",
             symbol: "Tmax",
-            explanation: "How long after taking it the level in your blood is highest — roughly when effects peak.",
+            explanation: "How long after taking it the level in your blood is highest, roughly when effects peak.",
         ),
         .init(
             id: "t12",
@@ -179,13 +179,13 @@ struct PharmacologyGlossarySheet: View {
             id: "dots",
             term: "Strength dots",
             symbol: nil,
-            explanation: "A quick read of how potent the drug is at that target — three dots is strong, one is weak. The same scale is used on the Mechanism card.",
+            explanation: "A quick read of how potent the drug is at that target: three dots is strong, one is weak. The same scale is used on the Mechanism card.",
         ),
         .init(
             id: "binding",
             term: "Binding",
             symbol: "Ki",
-            explanation: "Measures how tightly the drug grips the target (Ki). A smaller number means a tighter grip — under 100 nM is strong, over 1000 nM is weak.",
+            explanation: "Measures how tightly the drug grips the target (Ki). A smaller number means a tighter grip: under 100 nM is strong, over 1000 nM is weak.",
         ),
         .init(
             id: "functional",
@@ -203,7 +203,7 @@ struct PharmacologyGlossarySheet: View {
             id: "species",
             term: "Human vs animal",
             symbol: nil,
-            explanation: "Many values come from animal or lab-dish studies. Human data is the most reliable — the source tag tells you which it is.",
+            explanation: "Many values come from animal or lab-dish studies. Human data is the most reliable. The source tag tells you which it is.",
         ),
     ]
 }

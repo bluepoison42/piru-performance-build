@@ -367,7 +367,7 @@ private struct CatalogEsterNote: View {
             ForEach(Array(Set(markers.map(\.ester.esterID))).sorted(), id: \.self) { id in
                 if let ester = markers.first(where: { $0.ester.esterID == id })?.ester {
                     let count = markers.filter { $0.ester.esterID == id }.count
-                    Text("\(count) \(ester.label) injections logged. No serum curve is drawn for it — no validated release data.")
+                    Text("\(count) \(ester.label) injections logged. No serum curve is drawn for it: there is no validated release data.")
                         .font(.caption)
                         .foregroundStyle(Theme.secondaryLabel)
                 }
@@ -449,7 +449,7 @@ private struct HormoneLabCalibrationCard: View {
                 .font(.caption2)
                 .foregroundStyle(Theme.secondaryLabel)
         case .estradiol:
-            Text("Note the time since your last injection when you draw — a peak and a trough tell different stories, and the curve reads both against your dose times.")
+            Text("Note the time since your last injection when you draw. A peak and a trough tell different stories, and the curve reads both against your dose times.")
                 .font(.caption2)
                 .foregroundStyle(Theme.secondaryLabel)
         }
@@ -542,7 +542,7 @@ private struct HormoneLevelsProvenanceCard: View {
             }
             .tint(Theme.accent)
         case .testosterone:
-            Text("Testosterone ester curves are fit from label and primary-literature half-lives — there is no community PK simulator for them, so the band stays wide until your lab results calibrate the model.")
+            Text("Testosterone ester curves are fit from label and primary-literature half-lives. There is no community PK simulator for them, so the band stays wide until your lab results calibrate the model.")
                 .font(.caption2)
                 .foregroundStyle(Theme.secondaryLabel)
         }

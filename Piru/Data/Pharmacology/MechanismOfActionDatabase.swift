@@ -84,7 +84,7 @@ enum MechanismOfActionDatabase {
     /// ceiling effect is the clinically important fact about them, read as full agonists too.
     private static let opioidUnspecified = moa(
         "μ-Opioid Receptor Ligand",
-        "Acts at μ-opioid receptors (MOR), G-protein coupled receptors distributed throughout the central and peripheral nervous system. MOR activation inhibits adenylyl cyclase, opens inwardly rectifying potassium channels, and closes voltage-gated calcium channels, reducing neuronal excitability and neurotransmitter release — producing analgesia, euphoria, respiratory depression, and slowed gastrointestinal transit. How far this particular compound activates the receptor, and whether it also engages κ or δ, is not characterized here; the receptor panel below carries whatever has been measured for it.",
+        "Acts at μ-opioid receptors (MOR), G-protein coupled receptors distributed throughout the central and peripheral nervous system. MOR activation inhibits adenylyl cyclase, opens inwardly rectifying potassium channels, and closes voltage-gated calcium channels, reducing neuronal excitability and neurotransmitter release. The result is analgesia, euphoria, respiratory depression, and slowed gastrointestinal transit. How far this particular compound activates the receptor, and whether it also engages κ or δ, is not characterized here; the receptor panel below carries whatever has been measured for it.",
         [],
     )
 
@@ -96,7 +96,7 @@ enum MechanismOfActionDatabase {
 
     private static let antihistamineUnspecified = moa(
         "Histamine H1 Receptor Antagonist",
-        "Blocks histamine H1 receptors, reducing the itching, flare, wheal and vasodilation of the histamine response. Whether this compound crosses into the central nervous system — the difference between a sedating first-generation antihistamine with a muscarinic load and a peripherally selective second-generation one — is not characterized here.",
+        "Blocks histamine H1 receptors, reducing the itching, flare, wheal and vasodilation of the histamine response. Whether this compound crosses into the central nervous system (the difference between a sedating first-generation antihistamine with a muscarinic load and a peripherally selective second-generation one) is not characterized here.",
         [],
     )
 
@@ -160,7 +160,7 @@ enum MechanismOfActionDatabase {
         ),
         .orexinAntagonist: moa(
             "Dual Orexin Receptor Antagonist (DORA)",
-            "Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific \"stay awake\" drive that stabilizes arousal — permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability characteristic of benzodiazepines, Z-drugs, and other GABAergic sedatives.",
+            "Competitively blocks the orexin (hypocretin) receptors OX1R and OX2R, the targets of the wake-promoting neuropeptides orexin-A and orexin-B released from the lateral hypothalamus. Rather than broadly sedating the brain like a GABAergic hypnotic, it withdraws a specific \"stay awake\" drive that stabilizes arousal, permitting the natural transition into sleep with largely preserved sleep architecture and arousability. Because it does not enhance GABA or depress brainstem respiratory centers, it lacks the respiratory-depression synergy and dependence liability characteristic of benzodiazepines, Z-drugs, and other GABAergic sedatives.",
             [b("OX1R", .antagonist, .primary), b("OX2R", .antagonist, .primary)],
         ),
         .antidepressant: moa(

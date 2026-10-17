@@ -30,7 +30,7 @@ struct DiscordPromptView: View {
                 .font(.piru(.title2, weight: .bold))
                 .accessibilityAddTraits(.isHeader)
 
-            Text("Have feedback, questions, or want to discuss the app? Join our Discord — we'd love to hear from you.")
+            Text("Have feedback, questions, or want to discuss the app? Join our Discord. We'd love to hear from you.")
                 .font(.subheadline)
                 .foregroundStyle(Theme.secondaryLabel)
                 .multilineTextAlignment(.center)

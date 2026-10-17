@@ -180,7 +180,7 @@ private struct SubstanceSearchResultsList: View {
                         icon: "heart.fill",
                         color: .pink,
                         title: "SAMHSA Helpline",
-                        detail: "1-800-662-4357 — Free, confidential, 24/7",
+                        detail: "1-800-662-4357 · Free, confidential, 24/7",
                         url: "tel:18006624357",
                     )
                 }

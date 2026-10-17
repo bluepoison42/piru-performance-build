@@ -12,37 +12,37 @@
       "classA": "opioid",
       "classB": "benzodiazepine",
       "severity": "dangerous",
-      "note": "Combined respiratory depression — the leading cause of overdose death."
+      "note": "Combined respiratory depression. The leading cause of overdose death."
     },
     {
       "classA": "opioid",
       "classB": "ghb",
       "severity": "dangerous",
-      "note": "Severe respiratory depression — both substances suppress breathing."
+      "note": "Severe respiratory depression. Both substances suppress breathing."
     },
     {
       "classA": "opioid",
       "classB": "alcohol",
       "severity": "dangerous",
-      "note": "Respiratory depression and CNS shutdown — potentially fatal combination."
+      "note": "Respiratory depression and CNS shutdown. A potentially fatal combination."
     },
     {
       "classA": "maoi",
       "classB": "empathogen",
       "severity": "dangerous",
-      "note": "Risk of fatal serotonin syndrome — MAOIs block the enzyme that clears the serotonin an empathogen releases."
+      "note": "Risk of fatal serotonin syndrome. MAOIs block the enzyme that clears the serotonin an empathogen releases."
     },
     {
       "classA": "maoi",
       "classB": "ssri",
       "severity": "dangerous",
-      "note": "Serotonin syndrome — potentially fatal. The labels require a washout of weeks between them."
+      "note": "Serotonin syndrome, potentially fatal. The labels require a washout of weeks between them."
     },
     {
       "classA": "maoi",
       "classB": "snri",
       "severity": "dangerous",
-      "note": "Serotonin syndrome — potentially fatal. The labels require a washout of weeks between them."
+      "note": "Serotonin syndrome, potentially fatal. The labels require a washout of weeks between them."
     },
     {
       "classA": "maoi",
@@ -54,7 +54,7 @@
       "classA": "maoi",
       "classB": "stimulant",
       "severity": "dangerous",
-      "note": "Hypertensive crisis — potentially fatal spike in blood pressure."
+      "note": "Hypertensive crisis. A potentially fatal spike in blood pressure."
     },
     {
       "classA": "maoi",
@@ -66,50 +66,50 @@
       "classA": "lithium",
       "classB": "psychedelic",
       "severity": "dangerous",
-      "note": "Of 62 reports of this combination, 47% described a seizure and 39% involved medical attention — against none of 34 reports for lamotrigine. Self-reported, so the rate is not a measured one, but no other pairing shows a signal like it.",
+      "note": "Of 62 reports of this combination, 47% described a seizure and 39% involved medical attention, against none of 34 reports for lamotrigine. Self-reported, so the rate is not a measured one, but no other pairing shows a signal like it.",
       "citation": "doi:10.1055/a-1524-2794"
     },
     {
       "classA": "ghb",
       "classB": "alcohol",
       "severity": "dangerous",
-      "note": "Respiratory depression and loss of consciousness — very narrow safety margin."
+      "note": "Respiratory depression and loss of consciousness. Very narrow safety margin."
     },
     {
       "classA": "ghb",
       "classB": "benzodiazepine",
       "severity": "dangerous",
-      "note": "Severe respiratory depression — both are GABAergic depressants."
+      "note": "Severe respiratory depression. Both are GABAergic depressants."
     },
     {
       "classA": "benzodiazepine",
       "classB": "alcohol",
       "severity": "dangerous",
-      "note": "Life-threatening respiratory depression — this combination is a leading cause of overdose death."
+      "note": "Life-threatening respiratory depression. This combination is a leading cause of overdose death."
     },
     {
       "classA": "opioid",
       "classB": "gabapentinoid",
       "severity": "unsafe",
-      "note": "Enhanced respiratory depression — gabapentinoids increase opioid overdose risk."
+      "note": "Enhanced respiratory depression. Gabapentinoids increase opioid overdose risk."
     },
     {
       "classA": "opioid",
       "classB": "opioid",
       "severity": "unsafe",
-      "note": "Stacking opioids is unpredictable — respiratory depression risk compounds."
+      "note": "Stacking opioids is unpredictable. Respiratory depression risk compounds."
     },
     {
       "classA": "opioid",
       "classB": "antihistamine",
       "severity": "unsafe",
-      "note": "Additive CNS and respiratory depression — antihistamines potentiate opioid sedation."
+      "note": "Additive CNS and respiratory depression. Antihistamines potentiate opioid sedation."
     },
     {
       "classA": "opioid",
       "classB": "stimulant",
       "severity": "unsafe",
-      "note": "Stimulants mask overdose signs — when they wear off, respiratory depression can emerge."
+      "note": "Stimulants mask overdose signs. When they wear off, respiratory depression can emerge."
     },
     {
       "classA": "benzodiazepine",
@@ -121,20 +121,20 @@
       "classA": "benzodiazepine",
       "classB": "antihistamine",
       "severity": "unsafe",
-      "note": "Compounded CNS depression — excessive sedation and impaired breathing."
+      "note": "Compounded CNS depression. Excessive sedation and impaired breathing."
     },
     {
       "classA": "ssri",
       "classB": "empathogen",
       "severity": "caution",
-      "note": "SSRIs usually blunt MDMA — it may feel much weaker, and the documented harm is taking more to compensate (overheating, heart strain). Case reports don't show serotonin syndrome from this pair alone; MAOIs are the documented danger.",
+      "note": "SSRIs usually blunt MDMA. It may feel much weaker, and the documented harm is taking more to compensate (overheating, heart strain). Case reports don't show serotonin syndrome from this pair alone; MAOIs are the documented danger.",
       "why": "Antidepressant SERT blockers + empathogen: a myth-buster, not a danger. These compete for SERT and *blunt* the empathogen (it may feel much weaker or not work) — on their own they do not cause serotonin syndrome; the real lethal serotonergic edge is the MAOI rules above. Kept visible (and bypassing the relevance gate via `persistentClasses`) so people aren't blindsided when their dose does nothing, but colored `.caution`, not danger."
     },
     {
       "classA": "snri",
       "classB": "empathogen",
       "severity": "caution",
-      "note": "SNRIs usually blunt MDMA — it may feel weaker, and the documented harm is taking more to compensate (overheating, heart strain). Case reports don't show serotonin syndrome from this pair alone; MAOIs are the documented danger."
+      "note": "SNRIs usually blunt MDMA. It may feel weaker, and the documented harm is taking more to compensate (overheating, heart strain). Case reports don't show serotonin syndrome from this pair alone; MAOIs are the documented danger."
     },
     {
       "classA": "tca",
@@ -164,56 +164,56 @@
       "classA": "ssri",
       "classB": "snri",
       "severity": "unsafe",
-      "note": "Overlapping serotonin reuptake inhibition — increased serotonin syndrome risk."
+      "note": "Overlapping serotonin reuptake inhibition. Increased serotonin syndrome risk."
     },
     {
       "classA": "ssri",
       "classB": "tca",
       "severity": "unsafe",
-      "note": "SSRIs inhibit TCA metabolism — risk of TCA toxicity and serotonin syndrome."
+      "note": "SSRIs inhibit TCA metabolism. Risk of TCA toxicity and serotonin syndrome."
     },
     {
       "classA": "gabapentinoid",
       "classB": "alcohol",
       "severity": "unsafe",
-      "note": "Enhanced CNS depression — risk of respiratory depression and death."
+      "note": "Enhanced CNS depression. Risk of respiratory depression and death."
     },
     {
       "classA": "serotonergic",
       "classB": "empathogen",
       "severity": "dangerous",
-      "note": "Serotonin syndrome risk — these drugs add serotonin on top of an empathogen's surge. Some (tramadol, meperidine) can also trigger seizures.",
+      "note": "Serotonin syndrome risk. These drugs add serotonin on top of an empathogen's surge. Some (tramadol, meperidine) can also trigger seizures.",
       "why": "=== SEROTONIN-ADDING AGENTS (tramadol, meperidine, DXM) === Genuine additive serotonin-toxicity risk — these RAISE serotonin (unlike antidepressant SERT blockers, which blunt empathogens), so they stack rather than compete. Grounded in the Foundation-C serotonergic evidence run (2026-06-22): tramadol SS grade B/HIGH, seizure A/HIGH."
     },
     {
       "classA": "serotonergic",
       "classB": "maoi",
       "severity": "dangerous",
-      "note": "Serotonin syndrome — potentially fatal. MAOIs block the enzyme that clears serotonin."
+      "note": "Serotonin syndrome, potentially fatal. MAOIs block the enzyme that clears serotonin."
     },
     {
       "classA": "serotonergic",
       "classB": "serotonergic",
       "severity": "unsafe",
-      "note": "Serotonin syndrome risk — two serotonin-raising drugs stacked together."
+      "note": "Serotonin syndrome risk. Two serotonin-raising drugs stacked together."
     },
     {
       "classA": "serotonergic",
       "classB": "ssri",
       "severity": "unsafe",
-      "note": "Serotonin syndrome risk — a serotonin-raising drug stacked with an SSRI."
+      "note": "Serotonin syndrome risk. A serotonin-raising drug stacked with an SSRI."
     },
     {
       "classA": "serotonergic",
       "classB": "snri",
       "severity": "unsafe",
-      "note": "Serotonin syndrome risk — a serotonin-raising drug stacked with an SNRI."
+      "note": "Serotonin syndrome risk. A serotonin-raising drug stacked with an SNRI."
     },
     {
       "classA": "serotonergic",
       "classB": "tca",
       "severity": "unsafe",
-      "note": "Serotonin syndrome risk — a serotonin-raising drug stacked with a tricyclic antidepressant."
+      "note": "Serotonin syndrome risk. A serotonin-raising drug stacked with a tricyclic antidepressant."
     },
     {
       "classA": "serotonergic",
@@ -226,32 +226,32 @@
       "classA": "alpha2Agonist",
       "classB": "opioid",
       "severity": "dangerous",
-      "note": "Heavy sedation with a dangerously slow heart rate and breathing. Naloxone reverses the opioid but NOT the alpha-2 part — give rescue breaths and call for help even after naloxone.",
+      "note": "Heavy sedation with a dangerously slow heart rate and breathing. Naloxone reverses the opioid but NOT the alpha-2 part. Give rescue breaths and call for help even after naloxone.",
       "why": "=== ALPHA-2 AGONISTS & BETA-BLOCKERS === Grounded in the Foundation-C alpha-2/beta-blocker evidence run (2026-06-22). Key corrections: the alpha-2 + opioid danger is the xylazine/\"tranq\" reality (naloxone won't reverse the alpha-2 part); the genuine \"unopposed alpha\" is alpha-2 *withdrawal* while beta-blocked, NOT routine beta-blocker + stimulant (that contraindication is contested dogma → caution, not danger)."
     },
     {
       "classA": "alpha2Agonist",
       "classB": "alcohol",
       "severity": "caution",
-      "note": "Adds up sedation and lowers blood pressure further — stronger drowsiness and dizziness."
+      "note": "Adds up sedation and lowers blood pressure further. Stronger drowsiness and dizziness."
     },
     {
       "classA": "alpha2Agonist",
       "classB": "benzodiazepine",
       "severity": "caution",
-      "note": "Compounded sedation and low blood pressure — stronger drowsiness and dizziness."
+      "note": "Compounded sedation and low blood pressure. Stronger drowsiness and dizziness."
     },
     {
       "classA": "alpha2Agonist",
       "classB": "gabapentinoid",
       "severity": "caution",
-      "note": "Additive sedation and low blood pressure — increased drowsiness and dizziness."
+      "note": "Additive sedation and low blood pressure. More drowsiness and dizziness."
     },
     {
       "classA": "alpha2Agonist",
       "classB": "tca",
       "severity": "caution",
-      "note": "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise — a medical issue more than an overdose risk."
+      "note": "Tricyclics can cancel out clonidine-type blood-pressure lowering, so blood pressure may rise. A medical issue more than an overdose risk."
     },
     {
       "classA": "betaBlocker",
@@ -263,13 +263,13 @@
       "classA": "betaBlocker",
       "classB": "stimulant",
       "severity": "caution",
-      "note": "The old “never mix” warning rests on little — large reviews did not find the harm it predicts. Both still strain the heart."
+      "note": "The old “never mix” warning rests on little. Large reviews did not find the harm it predicts. Both still strain the heart."
     },
     {
       "classA": "betaBlocker",
       "classB": "alcohol",
       "severity": "caution",
-      "note": "Both can lower blood pressure and add to dizziness — you may feel faint, especially standing up."
+      "note": "Both can lower blood pressure and add to dizziness. You may feel faint, especially standing up."
     },
     {
       "classA": "orexinAntagonist",
@@ -282,37 +282,37 @@
       "classA": "orexinAntagonist",
       "classB": "alcohol",
       "severity": "caution",
-      "note": "Alcohol stacks psychomotor and memory impairment on top of the sleep med (and raises lemborexant's blood levels) — expect worse next-day grogginess and unsteadiness. The labels advise against drinking with these."
+      "note": "Alcohol stacks psychomotor and memory impairment on top of the sleep med (and raises lemborexant's blood levels). Expect worse next-day grogginess and unsteadiness. The labels advise against drinking with these."
     },
     {
       "classA": "orexinAntagonist",
       "classB": "benzodiazepine",
       "severity": "caution",
-      "note": "Two sleep-promoting drugs stacked — additive next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants."
+      "note": "Two sleep-promoting drugs stacked. Additive next-day sedation, fall risk and impaired coordination. The labels warn about combining with other CNS depressants."
     },
     {
       "classA": "orexinAntagonist",
       "classB": "gabapentinoid",
       "severity": "caution",
-      "note": "Additive sedation and next-day grogginess — more drowsiness, dizziness, and fall risk."
+      "note": "Additive sedation and next-day grogginess. More drowsiness, dizziness, and fall risk."
     },
     {
       "classA": "orexinAntagonist",
       "classB": "ghb",
       "severity": "caution",
-      "note": "Compounded sedation — stronger, deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice."
+      "note": "Compounded sedation. Stronger, deeper drowsiness. GHB suppresses breathing on its own, and added sedation makes that harder to notice."
     },
     {
       "classA": "orexinAntagonist",
       "classB": "antihistamine",
       "severity": "caution",
-      "note": "Both cause drowsiness — additive next-day sedation and grogginess."
+      "note": "Both cause drowsiness. Additive next-day sedation and grogginess."
     },
     {
       "classA": "dissociative",
       "classB": "opioid",
       "severity": "unsafe",
-      "note": "Respiratory depression risk — dissociatives can mask overdose signs."
+      "note": "Respiratory depression risk. Dissociatives can mask overdose signs."
     },
     {
       "classA": "opioid",
@@ -324,27 +324,27 @@
       "classA": "lithium",
       "classB": "ssri",
       "severity": "caution",
-      "note": "Both raise serotonin, so serotonin syndrome is possible — agitation, tremor, sweating, a racing heart — and most likely in the first weeks. This pairing is prescribed and monitored on purpose; SSRIs do not raise lithium levels.",
+      "note": "Both raise serotonin, so serotonin syndrome is possible (agitation, tremor, sweating, a racing heart), most likely in the first weeks. This pairing is prescribed and monitored on purpose; SSRIs do not raise lithium levels.",
       "citation": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=01c4facd-ed79-4078-ba33-2044de372d0f"
     },
     {
       "classA": "lithium",
       "classB": "snri",
       "severity": "caution",
-      "note": "Both raise serotonin, so serotonin syndrome is possible — agitation, tremor, sweating, a racing heart — and most likely in the first weeks. This pairing is prescribed and monitored on purpose; SNRIs do not raise lithium levels.",
+      "note": "Both raise serotonin, so serotonin syndrome is possible (agitation, tremor, sweating, a racing heart), most likely in the first weeks. This pairing is prescribed and monitored on purpose; SNRIs do not raise lithium levels.",
       "citation": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=01c4facd-ed79-4078-ba33-2044de372d0f"
     },
     {
       "classA": "maoi",
       "classB": "dissociative",
       "severity": "unsafe",
-      "note": "Serotonin syndrome risk — especially with DXM and other serotonergic dissociatives."
+      "note": "Serotonin syndrome risk. Especially with DXM and other serotonergic dissociatives."
     },
     {
       "classA": "barbiturate",
       "classB": "opioid",
       "severity": "dangerous",
-      "note": "Combined respiratory depression with no ceiling — barbiturates deepen an opioid's suppression of breathing until it stops.",
+      "note": "Combined respiratory depression with no ceiling. Barbiturates deepen an opioid's suppression of breathing until it stops.",
       "why": "=== BARBITURATES === Kept as one block across all three severities because the ordering is the point: a barbiturate sits ABOVE a benzodiazepine on every depressant pairing, not level with it. Direct chloride-channel opening has no modulator ceiling, so the respiratory depression keeps deepening with dose instead of plateauing."
     },
     {
@@ -357,13 +357,13 @@
       "classA": "barbiturate",
       "classB": "alcohol",
       "severity": "dangerous",
-      "note": "Life-threatening respiratory depression and loss of consciousness — the classic fatal combination."
+      "note": "Life-threatening respiratory depression and loss of consciousness. The classic fatal combination."
     },
     {
       "classA": "barbiturate",
       "classB": "ghb",
       "severity": "dangerous",
-      "note": "Severe respiratory depression — two direct-acting depressants with no shared ceiling."
+      "note": "Severe respiratory depression. Two direct-acting depressants with no shared ceiling."
     },
     {
       "classA": "barbiturate",
@@ -381,7 +381,7 @@
       "classA": "barbiturate",
       "classB": "antihistamine",
       "severity": "unsafe",
-      "note": "Heavy additive sedation — deep drowsiness and impaired breathing."
+      "note": "Heavy additive sedation. Deep drowsiness and impaired breathing."
     },
     {
       "classA": "barbiturate",
@@ -411,25 +411,25 @@
       "classA": "barbiturate",
       "classB": "antipsychotic",
       "severity": "caution",
-      "note": "Additive CNS depression — increased sedation and impairment."
+      "note": "Additive CNS depression. More sedation and impairment."
     },
     {
       "classA": "stimulant",
       "classB": "stimulant",
       "severity": "caution",
-      "note": "Cardiovascular strain — combined stimulants increase heart rate and blood pressure."
+      "note": "Cardiovascular strain. Combined stimulants raise heart rate and blood pressure."
     },
     {
       "classA": "stimulant",
       "classB": "psychedelic",
       "severity": "caution",
-      "note": "Increased anxiety and vasoconstriction — stimulants can intensify difficult trips."
+      "note": "Increased anxiety and vasoconstriction. Stimulants can intensify difficult trips."
     },
     {
       "classA": "cannabinoid",
       "classB": "psychedelic",
       "severity": "caution",
-      "note": "Unpredictable intensification — cannabis can trigger anxiety or thought loops."
+      "note": "Unpredictable intensification. Cannabis can trigger anxiety or thought loops."
     },
     {
       "classA": "ssri",
@@ -441,19 +441,19 @@
       "classA": "ssri",
       "classB": "ssri",
       "severity": "caution",
-      "note": "Serotonin accumulation risk — combining serotonergic agents increases toxicity chance."
+      "note": "Serotonin accumulation risk. Combining serotonergic agents increases toxicity chance."
     },
     {
       "classA": "stimulant",
       "classB": "dissociative",
       "severity": "caution",
-      "note": "Increased heart rate and blood pressure — cardiovascular strain."
+      "note": "Increased heart rate and blood pressure. Cardiovascular strain."
     },
     {
       "classA": "alcohol",
       "classB": "stimulant",
       "severity": "caution",
-      "note": "Stimulants mask alcohol impairment — risk of overconsumption."
+      "note": "Stimulants mask alcohol impairment. Risk of overconsumption."
     },
     {
       "classA": "alcohol",
@@ -465,7 +465,7 @@
       "classA": "alcohol",
       "classB": "antipsychotic",
       "severity": "caution",
-      "note": "Additive CNS depression — increased sedation and impairment."
+      "note": "Additive CNS depression. More sedation and impairment."
     },
     {
       "classA": "gabapentinoid",
@@ -477,13 +477,13 @@
       "classA": "dissociative",
       "classB": "dissociative",
       "severity": "caution",
-      "note": "Compounded dissociation — disorientation and loss of motor control."
+      "note": "Compounded dissociation. Disorientation and loss of motor control."
     },
     {
       "classA": "empathogen",
       "classB": "empathogen",
       "severity": "caution",
-      "note": "Serotonin depletion and neurotoxicity risk — allow adequate recovery between uses."
+      "note": "Serotonin depletion and neurotoxicity risk. Allow adequate recovery between uses."
     },
     {
       "classA": "lithium",
@@ -503,43 +503,43 @@
       "classA": "stimulant",
       "classB": "ssri",
       "severity": "caution",
-      "note": "Some combinations increase serotonin or seizure risk — monitor for symptoms."
+      "note": "Some combinations increase serotonin or seizure risk. Monitor for symptoms."
     },
     {
       "classA": "stimulant",
       "classB": "snri",
       "severity": "caution",
-      "note": "Cardiovascular strain and serotonin risk — watch your heart rate and blood pressure."
+      "note": "Cardiovascular strain and serotonin risk. Watch your heart rate and blood pressure."
     },
     {
       "classA": "antipsychotic",
       "classB": "antipsychotic",
       "severity": "caution",
-      "note": "Combined QTc prolongation risk — monitor cardiac rhythm."
+      "note": "Combined QTc prolongation risk. Monitor cardiac rhythm."
     },
     {
       "classA": "gabapentinoid",
       "classB": "antihistamine",
       "severity": "caution",
-      "note": "Additive CNS depression — increased sedation and impaired coordination."
+      "note": "Additive CNS depression. More sedation and impaired coordination."
     },
     {
       "classA": "cannabinoid",
       "classB": "benzodiazepine",
       "severity": "caution",
-      "note": "Additive sedation — may increase drowsiness and impaired coordination."
+      "note": "Additive sedation. Drowsiness and impaired coordination may increase."
     },
     {
       "classA": "cannabinoid",
       "classB": "opioid",
       "severity": "caution",
-      "note": "Additive CNS depression — may increase sedation and respiratory depression risk."
+      "note": "Additive CNS depression. Sedation and respiratory depression risk may rise."
     },
     {
       "classA": "cannabinoid",
       "classB": "alcohol",
       "severity": "caution",
-      "note": "Additive impairment — increased dizziness, drowsiness, and slowed reaction time."
+      "note": "Additive impairment. More dizziness, drowsiness, and slower reactions."
     }
   ]
 }

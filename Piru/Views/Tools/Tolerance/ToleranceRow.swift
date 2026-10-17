@@ -142,11 +142,11 @@ struct ToleranceRow: Identifiable {
         switch params.safetyAxis {
         case .resetOverdose:
             if hasTolerance {
-                add("After a break or in a new setting, tolerance drops — a dose that felt fine before can stop your breathing.")
+                add("After a break or in a new setting, tolerance drops. A dose that felt fine before can stop your breathing.")
             }
         case .dependenceKindling:
             if snapshot.chronicExposure > 0.10 {
-                add("Regular use over weeks builds physical dependence — stopping abruptly can be dangerous even if you don't feel tolerant.")
+                add("Regular use over weeks builds physical dependence. Stopping abruptly can be dangerous even if you don't feel tolerant.")
             }
         case .alpha2Rebound:
             add("Stopping an α₂-agonist abruptly after regular use can make blood pressure rebound.")
@@ -157,7 +157,7 @@ struct ToleranceRow: Identifiable {
         }
 
         if snapshot.safetyEndpointKind == .cognitiveImpairment, hasTolerance {
-            add("Feeling less sedated does not establish that memory or coordination are unimpaired — tolerance to sedation builds faster than tolerance to impairment.")
+            add("Feeling less sedated does not establish that memory or coordination are unimpaired. Tolerance to sedation builds faster than tolerance to impairment.")
         }
 
         return notes

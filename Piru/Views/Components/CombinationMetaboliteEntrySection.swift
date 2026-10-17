@@ -86,7 +86,7 @@ struct CombinationMetaboliteEntrySection: View {
         } header: {
             Label("Formed With", systemImage: "arrow.triangle.merge")
         } footer: {
-            Text("A third compound your body makes from this dose and something else in the session — not from either alone.")
+            Text("A third compound your body makes from this dose and something else in the session, not from either alone.")
         }
     }
 }

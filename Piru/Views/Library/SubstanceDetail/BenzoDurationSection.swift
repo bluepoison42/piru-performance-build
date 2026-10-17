@@ -33,7 +33,7 @@ struct BenzoDurationSection: View {
                     }
                     // Earns its negation: every reader arrives believing
                     // half-life is how long the drug is felt.
-                    Text("Elimination half-life — not how long you feel it.", comment: "Ladder caption")
+                    Text("Elimination half-life, not how long you feel it.", comment: "Ladder caption")
                         .font(.caption2)
                         .foregroundStyle(Theme.secondaryLabel)
                         .fixedSize(horizontal: false, vertical: true)

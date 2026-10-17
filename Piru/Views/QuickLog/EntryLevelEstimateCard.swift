@@ -127,7 +127,7 @@ struct EntryLevelEstimateCard: View {
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("The model puts ≈\(activeAmount.doseFormatted) \(unit) of your \(lastDoseAmount.doseFormatted) \(unit) dose (\(timeAgo)) as still active — ~\(Int(remainingPercent))%")
+                Text("The model puts ≈\(activeAmount.doseFormatted) \(unit) of your \(lastDoseAmount.doseFormatted) \(unit) dose (\(timeAgo)) as still active, ~\(Int(remainingPercent))%")
                     .font(.caption)
                     .foregroundStyle(.primary)
 

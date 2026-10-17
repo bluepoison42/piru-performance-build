@@ -36,7 +36,7 @@ struct UnmodeledFormNote: View {
         case let .named(product, base):
             "Piru doesn't model a timeline for \(product) \(base). The session shows when each dose was taken, not how long it lasts."
         case .generic:
-            "Piru doesn't model a timeline for these forms — the session shows when each dose was taken, not how long it lasts."
+            "Piru doesn't model a timeline for these forms. The session shows when each dose was taken, not how long it lasts."
         }
     }
 }

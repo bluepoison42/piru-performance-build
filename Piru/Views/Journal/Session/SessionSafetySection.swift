@@ -133,7 +133,7 @@ struct SessionSafetySection: View {
                 // Both figures above describe the session as it happened, workout included —
                 // so say when a workout is in them, or the peak reads as something a dose did.
                 if summary.workoutMinutes > 0 {
-                    Text("Includes \(summary.workoutMinutes) min of workout — the dose rows leave it out")
+                    Text("Includes \(summary.workoutMinutes) min of workout, which the dose rows leave out")
                         .font(.subheadline)
                         .foregroundStyle(Theme.secondaryLabel)
                 }

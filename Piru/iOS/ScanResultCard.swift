@@ -46,7 +46,7 @@ struct ScanResultCard: View {
     private func readingContent(_ reading: BoxReading, barcodeKnown: Bool) -> some View {
         VStack(alignment: .leading, spacing: Spacing.xl) {
             if reading.isEmpty {
-                Label("Point at the box — name, strength, barcode", systemImage: "barcode.viewfinder")
+                Label("Point at the box: name, strength, barcode", systemImage: "barcode.viewfinder")
                     .font(.subheadline)
                     .foregroundStyle(Theme.secondaryLabel)
             } else {

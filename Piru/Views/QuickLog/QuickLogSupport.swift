@@ -372,7 +372,7 @@ struct QuickLogCardList: View {
                     Text(substance.name)
                         .font(.body.weight(.medium))
                         .foregroundStyle(.primary)
-                    Text("\(substance.defaultRoute.displayName) \u{2014} \(substance.defaultUnit)")
+                    Text("\(substance.defaultRoute.displayName) · \(substance.defaultUnit)")
                         .captionSecondary()
                 }
                 Spacer()

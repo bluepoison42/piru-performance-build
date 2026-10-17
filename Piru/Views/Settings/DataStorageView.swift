@@ -244,7 +244,7 @@ private struct ICloudBackupSection: View {
             if !manager.autoICloudEnabled, existingBackupFound {
                 Text("An existing iCloud backup was found. Merge it with your current data to restore it, or remove it to start fresh.")
             } else if manager.iCloudAvailable {
-                Text("When on, Piru encrypts your journal and saves it to your private iCloud Drive each time you leave the app. The key is stored only in your iCloud Keychain, so it's end-to-end encrypted — **neither Apple nor Piru can read it** — and it restores on your other devices signed in to the same Apple Account.")
+                Text("When on, Piru encrypts your journal and saves it to your private iCloud Drive each time you leave the app. The key is stored only in your iCloud Keychain, so it's end-to-end encrypted: **neither Apple nor Piru can read it**. It restores on your other devices signed in to the same Apple Account.")
             } else {
                 Text("Sign in to iCloud and turn on iCloud Drive to enable automatic encrypted backups.")
             }
@@ -409,7 +409,7 @@ private struct ExportImportSection: View {
             ) { afterPopoverDismiss { onExportPlain(.psyLog) } }
             OptionRow(
                 title: "Encrypted Backup…",
-                subtitle: "Passphrase-protected — save or send it anywhere",
+                subtitle: "Passphrase-protected. Save or send it anywhere",
                 systemImage: "lock.doc",
             ) { afterPopoverDismiss(onExportEncrypted) }
         }
@@ -753,7 +753,7 @@ struct PassphraseSheet: View {
         if passphrase.isEmpty {
             Text("Use at least \(Self.minLength) characters. A phrase of several words is stronger and easier to remember than a short password.")
         } else if passphrase.count < Self.minLength {
-            Text("Too short — use at least \(Self.minLength) characters.").foregroundStyle(.cautionText)
+            Text("Too short. Use at least \(Self.minLength) characters.").foregroundStyle(.cautionText)
         } else if passphrase != confirmation {
             Text("Passphrases don't match yet.").foregroundStyle(Theme.secondaryLabel)
         } else {

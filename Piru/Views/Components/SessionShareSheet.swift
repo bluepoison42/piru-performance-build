@@ -182,7 +182,7 @@ struct SessionShareSheet: View {
     }
 
     private var tripReportCard: some View {
-        artifactCard(icon: "quote.opening", title: "Trip Report", subtitle: "Markdown — notes with T+ offsets", previewHeight: 120) {
+        artifactCard(icon: "quote.opening", title: "Trip Report", subtitle: "Markdown, notes with T+ offsets", previewHeight: 120) {
             markdownPreview(tripReport)
         } actions: {
             VStack(spacing: Spacing.md) {

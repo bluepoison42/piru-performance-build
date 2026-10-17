@@ -36,7 +36,7 @@ struct DrugClassSection: View {
                     DrugClassRow(drugClass: ownClass, isThisDrug: true, accent: substance.category.color)
                     if curated.isContested {
                         Text(
-                            "Which class this belongs in is argued over — the label is the conventional one, not a settled one.",
+                            "Which class this belongs in is argued over. The label is the conventional one, not a settled one.",
                             comment: "Shown under a drug's own class when the classification is contested",
                         )
                         .captionSecondary()

@@ -239,13 +239,15 @@ struct InteractionResult: Equatable {
         relevance < InteractionChecker.lowRelevanceThreshold
     }
 
-    /// The mechanism in the fewest words that still say what happens —
-    /// everything before the em dash, or the first sentence.
+    /// The mechanism in the fewest words that still say what happens: the
+    /// first sentence, or everything before a spaced em dash in prose from
+    /// another source.
     ///
-    /// Every rule's description is written the same way: the effect, an em
-    /// dash, then the elaboration ("Combined respiratory depression — the
-    /// leading cause of overdose death."). Compact surfaces show the first
-    /// half, which is the part that is not already implied by a red dot.
+    /// Every curated rule's description is written the same way: the effect as
+    /// one short sentence, then the elaboration ("Combined respiratory
+    /// depression. The leading cause of overdose death."). Compact surfaces
+    /// show the first sentence, which is the part that is not already implied
+    /// by a red dot.
     var mechanism: InteractionMechanism {
         if ruleKey.hasPrefix("enzyme:") { return .enzymeMetabolic }
         let key = ruleKey.lowercased()

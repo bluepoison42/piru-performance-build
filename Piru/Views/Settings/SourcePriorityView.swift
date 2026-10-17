@@ -20,7 +20,7 @@ struct SourcePriorityView: View {
                 }
                 .onMove(perform: move)
             } footer: {
-                Text("When several sources report the same fact — a dose, a duration — Piru shows the one nearest the top. Drag to set which you trust most.")
+                Text("When several sources report the same fact, such as a dose or a duration, Piru shows the one nearest the top. Drag to set which you trust most.")
             }
             .listRowBackground(CardBackground())
         }

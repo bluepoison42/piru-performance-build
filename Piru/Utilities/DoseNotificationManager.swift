@@ -369,7 +369,7 @@ enum DoseNotificationManager {
                     let skipTarget = "slot|\(slotKey)"
                     let deepLink = groupDeepLink(slug: MedTimeGroup.group(forMinutes: time).slug)?.absoluteString
                     let title = name
-                    let body = String(localized: "Time to log \(name) — \(doseText).")
+                    let body = String(localized: "Time to log \(name): \(doseText).")
                     // A question, deliberately — a follow-up re-asks, it
                     // never implies the dose was taken or scolds.
                     let followUpBody = String(localized: "Still need to log \(name)?")

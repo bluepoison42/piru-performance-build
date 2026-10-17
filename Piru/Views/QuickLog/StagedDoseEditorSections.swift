@@ -146,7 +146,7 @@ struct StagedDoseStepperBlock: View {
                 .snappy(duration: 0.15)
             }
             if item.isUnknownAmount {
-                Text("Logged with no number — stays out of curves, totals, and tolerance.")
+                Text("Logged with no number. Stays out of curves, totals, and tolerance.")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(Theme.secondaryLabel)
                     .multilineTextAlignment(.center)
@@ -315,7 +315,7 @@ struct StagedDoseByDrinkBlock: View {
         } else if capability.isMassPerVolume {
             // A volume with no concentration can't become a dose — the mg on the
             // syringe depend entirely on the vial's mg/mL. Say so where it's typed.
-            Text("Enter the vial's concentration — a volume alone isn't a dose.")
+            Text("Enter the vial's concentration. A volume alone isn't a dose.")
                 .font(.caption2)
                 .foregroundStyle(Theme.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)

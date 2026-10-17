@@ -170,7 +170,7 @@ struct ActiveMetaboliteCard: View {
             // claim needs half-life vs half-life, and for methamphetamine →
             // amphetamine both are ~10 h, so it would be false exactly where
             // this case fires.
-            String(localized: "Effects can outlast the duration above — \(metabolite) is still present when \(parent)'s listed duration ends.")
+            String(localized: "Effects can outlast the duration above. \(metabolite) is still present when \(parent)'s listed duration ends.")
         case let .persistsBeyondParent(metabolite, parent):
             String(localized: "\(metabolite) stays active in your body long after \(parent) itself is gone.")
         case let .comparable(ratio, parent):
@@ -190,9 +190,9 @@ struct ActiveMetaboliteCard: View {
                 // the ratio is only half the story, and the other half is on the
                 // row. Naming it is what stops "10× as strong" being read as a
                 // dose claim.
-                String(localized: "Molecule for molecule, \(metabolite) is about \(SubstanceDetailView.chemNumber(ratio))× as strong as \(parent) — but only about \(SubstanceDetailView.chemNumber(convertedPct))% of a dose becomes it.")
+                String(localized: "Molecule for molecule, \(metabolite) is about \(SubstanceDetailView.chemNumber(ratio))× as strong as \(parent), but only about \(SubstanceDetailView.chemNumber(convertedPct))% of a dose becomes it.")
             } else {
-                String(localized: "Molecule for molecule, \(metabolite) is about \(SubstanceDetailView.chemNumber(ratio))× as strong as \(parent) — but how much of a dose converts isn't recorded here.")
+                String(localized: "Molecule for molecule, \(metabolite) is about \(SubstanceDetailView.chemNumber(ratio))× as strong as \(parent), but how much of a dose converts isn't recorded here.")
             }
         case let .qualified(ratio, parent, _, target):
             if let target = metaboliteTargetName(target), ratio == 1 {
@@ -203,7 +203,7 @@ struct ActiveMetaboliteCard: View {
                 String(localized: "About \(SubstanceDetailView.chemNumber(ratio))× \(parent)'s activity, by one measurement.")
             }
         case let .divergent(parent):
-            String(localized: "Acts differently from \(parent) — not simply stronger or weaker.")
+            String(localized: "Acts differently from \(parent), not simply stronger or weaker.")
         case let .relationshipOnly(parent, metabolite):
             String(localized: "Your body turns \(parent) into \(metabolite), which is active too.")
         }
@@ -243,12 +243,12 @@ struct ActiveMetaboliteCard: View {
             : String(localized: "activity")
         guard let target = metaboliteTargetName(potency.target) else {
             return prefix
-                ? String(localized: "Also measured at \(ratio)× \(parentName)'s \(kind) — a lab measurement, not clinical potency.")
-                : String(localized: "Measured at \(ratio)× \(parentName)'s \(kind) — a lab measurement, not clinical potency.")
+                ? String(localized: "Also measured at \(ratio)× \(parentName)'s \(kind). A lab measurement, not clinical potency.")
+                : String(localized: "Measured at \(ratio)× \(parentName)'s \(kind). A lab measurement, not clinical potency.")
         }
         return prefix
-            ? String(localized: "Also measured at \(ratio)× \(parentName)'s \(kind) at the \(target) — a lab measurement, not clinical potency.")
-            : String(localized: "Measured at \(ratio)× \(parentName)'s \(kind) at the \(target) — a lab measurement, not clinical potency.")
+            ? String(localized: "Also measured at \(ratio)× \(parentName)'s \(kind) at the \(target). A lab measurement, not clinical potency.")
+            : String(localized: "Measured at \(ratio)× \(parentName)'s \(kind) at the \(target). A lab measurement, not clinical potency.")
     }
 
     private func caption(_ text: String) -> some View {
@@ -335,7 +335,7 @@ private struct MetabolizerVariationChart: View {
             }
             .chartLegend(position: .bottom, alignment: .leading, spacing: Spacing.xs)
             .frame(height: 80)
-            Text("Same dose, different conversion — the effect varies by genotype.")
+            Text("Same dose, different conversion. The effect varies by genotype.")
                 .font(.caption2)
                 .foregroundStyle(Theme.secondaryLabel)
         }

@@ -289,7 +289,7 @@ struct TripReport {
         var out: [String] = []
         let substanceLine = substances.joined(separator: " + ")
         let headline = title ?? (substanceLine.isEmpty ? "Trip report" : substanceLine)
-        out.append("# \(headline) — \(dateOnly.string(from: sessionStart))")
+        out.append("# \(headline) · \(dateOnly.string(from: sessionStart))")
         out.append("")
         if title != nil, !substanceLine.isEmpty {
             out.append("**\(substanceLine)**")
@@ -317,7 +317,7 @@ struct TripReport {
         if !course.isEmpty {
             out.append("## Modeled course")
             out.append("")
-            out.append("Population-median phase boundaries for each dose, as clock times — what was expected, to read the notes against.")
+            out.append("Population-median phase boundaries for each dose, as clock times. They show what was expected, to read the notes against.")
             out.append("")
             out.append("| Substance | " + Phase.reportLabels.joined(separator: " | ") + " |")
             out.append("|---" + String(repeating: "|---", count: Phase.reportLabels.count) + "|")
@@ -361,7 +361,7 @@ struct TripReport {
             if note.kind == .checkIn { text.append("**Check-in**") }
             if !note.text.isEmpty { text.append(Self.cell(note.text)) }
             if !note.descriptors.isEmpty { text.append("_" + note.descriptors.map(\.name).joined(separator: " · ") + "_") }
-            cells.append(text.joined(separator: " — "))
+            cells.append(text.joined(separator: "; "))
             out.append("| " + cells.joined(separator: " | ") + " |")
         }
         out.append("")

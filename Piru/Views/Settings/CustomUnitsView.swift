@@ -31,7 +31,7 @@ struct CustomUnitsView: View {
                         ContentUnavailableView {
                             Label("No Custom Units", systemImage: "ruler")
                         } description: {
-                            Text("Define a unit like \"1 capsule = 30 mg\" and it appears in the dose picker for that substance — log half a capsule, get 15 mg.")
+                            Text("Define a unit like \"1 capsule = 30 mg\" and it appears in the dose picker for that substance. Log half a capsule, get 15 mg.")
                         }
                     }
                 } else {

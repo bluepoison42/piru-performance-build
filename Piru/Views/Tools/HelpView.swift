@@ -119,7 +119,7 @@ struct HelpView: View {
                 color: .purple,
                 title: "Put on familiar music",
                 detail: activeCategories.contains(.psychedelic)
-                    ? "Music you know well is one of the most powerful grounding tools \u{2014} especially during a psychedelic experience."
+                    ? "Music you know well is one of the most powerful grounding tools, especially during a psychedelic experience."
                     : "Familiar songs can ground you and bring comfort. Pick something you know well.",
             )
 
@@ -127,7 +127,7 @@ struct HelpView: View {
                 icon: "person.2.fill",
                 color: .pink,
                 title: "Call a friend or family member",
-                detail: "Someone who knows you can help more than you\u{2019}d expect. You don\u{2019}t have to explain everything \u{2014} just hearing a familiar voice helps.",
+                detail: "Someone who knows you can help more than you\u{2019}d expect. You don\u{2019}t have to explain everything. Just hearing a familiar voice helps.",
             )
         }
     }
@@ -187,7 +187,7 @@ struct HelpView: View {
                     .font(.subheadline)
             }
         } header: {
-            Text("Recovery \u{2014} Right Now")
+            Text("Recovering Now")
         } footer: {
             Text("Showing the guide for the classes you logged in the last 48 hours. Tap above for the full guide.")
         }
@@ -537,7 +537,7 @@ struct HelpView: View {
             }
         } header: {
             if let name = regionName {
-                Text("Emergency Services \u{2014} \(name)")
+                Text("Emergency Services: \(name)")
             } else {
                 Text("Emergency Services")
             }
@@ -679,7 +679,7 @@ struct HelpView: View {
             lines.append("CURRENTLY ACTIVE:")
             for substance in activeSubstances {
                 let remaining = Int((1 - substance.eliminatedFraction) * 100)
-                lines.append("- \(substance.name) — \(substance.totalDosed.doseFormatted) \(substance.unit) total (est. ~\(remaining)% remaining)")
+                lines.append("- \(substance.name): \(substance.totalDosed.doseFormatted) \(substance.unit) total (est. ~\(remaining)% remaining)")
                 for dose in substance.doses {
                     lines.append("  \(dose.amount.doseFormatted) \(substance.unit) at \(formatter.string(from: dose.timestamp))")
                 }
@@ -702,7 +702,7 @@ struct HelpView: View {
                 let name = logged.caseInsensitiveCompare(canonical) == .orderedSame
                     ? canonical
                     : "\(canonical) (logged as \(logged))"
-                var line = "- \(name) \(entry.amountDisplay) \(entry.unit) \(String(localized: entry.route.localizedName).lowercased()) — \(formatter.string(from: entry.timestamp))"
+                var line = "- \(name) \(entry.amountDisplay) \(entry.unit) \(String(localized: entry.route.localizedName).lowercased()) at \(formatter.string(from: entry.timestamp))"
                 if let notes = entry.notes, !notes.isEmpty {
                     line += " (\(notes))"
                 }

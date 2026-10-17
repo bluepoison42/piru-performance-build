@@ -64,7 +64,7 @@ struct JournalSettingsView: View {
                         CaptionedRowLabel(
                             title: "Expand Session Graph",
                             systemImage: "arrow.up.backward.and.arrow.down.forward",
-                            caption: Text("Always show the full-height timeline. When off, graphs start compact — expand from the graph menu."),
+                            caption: Text("Always show the full-height timeline. When off, graphs start compact and expand from the graph menu."),
                         )
                     }
                     .tint(Theme.accent)

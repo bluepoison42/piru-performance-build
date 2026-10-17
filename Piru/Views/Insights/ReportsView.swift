@@ -169,7 +169,7 @@ struct ReportsView: View {
                 icon: "doc.plaintext",
                 tint: .orange,
                 title: "Markdown",
-                description: "Plain-text session data — for notes, AI, or records",
+                description: "Plain-text session data, for notes, AI, or records",
             ) {
                 await exportMarkdownAction()
             }
@@ -192,9 +192,9 @@ struct ReportsView: View {
     /// with nothing to export is never a surprise.
     private var tripReportDescription: LocalizedStringKey {
         switch model.sessionsWithNotes(in: selectedSessionObjects).count {
-        case 0: "Notes at their T+ offsets, descriptors by domain — none of the selected sessions has notes yet"
-        case 1: "Notes at their T+ offsets, descriptors by domain — 1 session with notes"
-        case let count: "Notes at their T+ offsets, descriptors by domain — \(count) sessions with notes"
+        case 0: "Notes at their T+ offsets, descriptors by domain. None of the selected sessions has notes yet"
+        case 1: "Notes at their T+ offsets, descriptors by domain. 1 session with notes"
+        case let count: "Notes at their T+ offsets, descriptors by domain. \(count) sessions with notes"
         }
     }
 

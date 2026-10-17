@@ -391,7 +391,7 @@ extension NotificationCategory {
         case .reminders:
             "Reminders fire at each med's times. Quiet meds share one reminder per time of day. Logging a dose clears its follow-ups."
         case .session:
-            "Timed from the typical onset and duration of each dose you log, for its substance and route. These are estimates from published data — Piru doesn't sense anything."
+            "Timed from the typical onset and duration of each dose you log, for its substance and route. These are estimates from published data. Piru doesn't sense anything."
         case .safety:
             "Totals include scheduled meds, as-needed doses, and everything else."
         }
@@ -400,7 +400,7 @@ extension NotificationCategory {
     var sectionFooter: LocalizedStringKey {
         switch self {
         case .reminders:
-            "Quiet meds' reminders arrive silently — no buzz, no lock-screen wake. If you use iOS Scheduled Summary, they batch there."
+            "Quiet meds' reminders arrive silently: no buzz, no lock-screen wake. If you use iOS Scheduled Summary, they batch there."
         case .session:
             "Session notifications use estimated timing from your entries."
         case .safety:
@@ -564,9 +564,9 @@ extension NotificationType {
         case .routine:
             "A reminder at each time you set for a med. Tapping it opens Quick Log with that time's meds staged."
         case .routineFollowUp:
-            "Asks again a little later if a med still isn't logged — like snooze for an alarm. Adjustable per med."
+            "Asks again a little later if a med still isn't logged, like snooze for an alarm. Adjustable per med."
         case .inventory:
-            "A heads-up when something you track runs low or out — before the empty bottle surprises you."
+            "A heads-up when something you track runs low or out, before the empty bottle surprises you."
         case .checkIn:
             "\"How is it going?\" at set points in a session, opening a timestamped note. Turned on per session; off unless you ask."
         }

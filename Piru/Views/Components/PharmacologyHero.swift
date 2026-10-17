@@ -93,7 +93,7 @@ struct PharmacologyHero {
         consumed.formUnion(bindings.filter { $0.target.lowercased().hasPrefix("gaba") }.map(\.id))
         return PharmacologyHero(
             kind: .benzo, character: "GABA-A positive modulator",
-            note: "Amplifies GABA — it doesn't open the channel on its own.",
+            note: "Amplifies GABA. It doesn't open the channel on its own.",
             rows: rows, bars: [], minor: minorFootnote(bindings, consumed: consumed),
         )
     }

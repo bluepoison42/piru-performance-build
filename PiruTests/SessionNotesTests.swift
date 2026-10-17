@@ -159,7 +159,7 @@ struct TripReportBuildTests {
         #expect(nauseaFirst.at == start.addingTimeInterval(40 * 60))
 
         let md = report.markdown(locale: Locale(identifier: "en_US"), calendar: Self.utc)
-        #expect(md.hasPrefix("# LSD — November 14, 2023\n"))
+        #expect(md.hasPrefix("# LSD · November 14, 2023\n"))
         #expect(md.contains("Started 10:13"))
         #expect(md.contains("1 entry · 2 notes · last note at T+2:05"))
         #expect(md.contains("| T+ | Time | Substance | Dose | Route |"))
@@ -167,9 +167,9 @@ struct TripReportBuildTests {
         #expect(md.contains(" | LSD | 100 µg | sublingual |"))
         #expect(md.contains("| T+ | Time | Shulgin | Mood / Energy | Note |"))
         #expect(md.contains("| T+0:40 | "))
-        #expect(md.contains(" | ± |  | queasy — _\(nausea.name)_ |"))
+        #expect(md.contains(" | ± |  | queasy; _\(nausea.name)_ |"))
         #expect(md.contains("| T+2:05 | "))
-        #expect(md.contains(" | +++ | +2 / – | **Check-in** — patterns — _\(geometry.name) · \(nausea.name)_ |"))
+        #expect(md.contains(" | +++ | +2 / – | **Check-in**; patterns; _\(geometry.name) · \(nausea.name)_ |"))
         #expect(md.contains("## Descriptors by domain"))
         #expect(md.contains("| Domain | Descriptor | First noted |"))
         #expect(md.contains("| \(nausea.domain.capitalized) | \(nausea.name) | T+0:40 |"))
@@ -197,7 +197,7 @@ struct TripReportBuildTests {
         let report = TripReport.build(session: session)
         #expect(report.substances == ["LSD", "Cannabis"])
         let md = report.markdown(locale: Locale(identifier: "en_US"), calendar: Self.utc)
-        #expect(md.hasPrefix("# Quiet Saturday — November 14, 2023\n\n**LSD + Cannabis**\n"))
+        #expect(md.hasPrefix("# Quiet Saturday · November 14, 2023\n\n**LSD + Cannabis**\n"))
         #expect(md.contains("3 entries · 1 note"))
     }
 }

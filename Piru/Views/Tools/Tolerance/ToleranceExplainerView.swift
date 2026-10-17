@@ -34,13 +34,13 @@ struct ToleranceExplainerView: View {
                 icon: "brain.head.profile",
                 tint: .accentColor,
                 title: "Your brain adapts to what you keep giving it",
-                body: "Use a drug repeatedly and your brain learns to expect it, then pushes back to cancel the effect — so the same dose does less. That push-back is tolerance. Stop, and it relaxes back. It's not the drug \u{201C}running out\u{201D}; it's your system re-balancing around it.",
+                body: "Use a drug repeatedly and your brain learns to expect it, then pushes back to cancel the effect, so the same dose does less. That push-back is tolerance. Stop, and it relaxes back. It's not the drug \u{201C}running out\u{201D}; it's your system re-balancing around it.",
             )
             concept(
                 icon: "arrow.uturn.backward",
                 tint: .teal,
                 title: "Why stopping can feel like the opposite",
-                body: "When you stop, that push-back is briefly left unopposed — which is why withdrawal or a comedown often feels like the mirror of the drug's effects (a stimulant's flatness, an opioid's aches).",
+                body: "When you stop, that push-back is briefly left unopposed, which is why withdrawal or a comedown often feels like the mirror of the drug's effects (a stimulant's flatness, an opioid's aches).",
             )
         } header: {
             Text("The idea")
@@ -61,13 +61,13 @@ struct ToleranceExplainerView: View {
                 icon: "chart.line.downtrend.xyaxis",
                 tint: .accentColor,
                 title: "Over days to weeks",
-                body: "Receptors and enzymes adjust, and your baseline shifts down — this is the tolerance most people mean, and what the bar on each card shows. It returns once you stop, at a pace set by the receptor.",
+                body: "Receptors and enzymes adjust, and your baseline shifts down. This is the tolerance most people mean, and what the bar on each card shows. It returns once you stop, at a pace set by the receptor.",
             )
             concept(
                 icon: "gauge.with.dots.needle.33percent",
                 tint: .orange,
                 title: "With heavy, prolonged use",
-                body: "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses — steady use doesn't reach it.",
+                body: "This can entrench a deeper change that takes months to relax. It shows up only well past everyday or therapeutic doses. Steady use doesn't reach it.",
             )
         } header: {
             Text("Three timescales")
@@ -102,8 +102,8 @@ struct ToleranceExplainerView: View {
             concept(
                 icon: "circle.hexagongrid",
                 tint: .purple,
-                title: "Why — the receptor comes in subtypes",
-                body: "GABA-A is built from several \u{03B1}-subtypes that adapt at different rates. \u{03B1}1 carries sedation and desensitizes (it uncouples, then the receptors are pulled from the synapse); \u{03B1}5 is required for that sedative tolerance to develop at all; \u{03B1}2 and \u{03B1}3, which carry the anxiety relief, don't adapt. So the dose that no longer makes you sleepy impairs your memory and coordination exactly as much as it did on day one — which is how tolerance quietly drives the dose up.",
+                title: "Why: the receptor comes in subtypes",
+                body: "GABA-A is built from several \u{03B1}-subtypes that adapt at different rates. \u{03B1}1 carries sedation and desensitizes (it uncouples, then the receptors are pulled from the synapse); \u{03B1}5 is required for that sedative tolerance to develop at all; \u{03B1}2 and \u{03B1}3, which carry the anxiety relief, don't adapt. So the dose that no longer makes you sleepy impairs your memory and coordination exactly as much as it did on day one, which is how tolerance quietly drives the dose up.",
             )
         } header: {
             Text("Effect-selective tolerance")
@@ -118,13 +118,13 @@ struct ToleranceExplainerView: View {
                 icon: "mappin.and.ellipse",
                 tint: .orange,
                 title: "Your body learns when to brace",
-                body: "When a drug is taken repeatedly in the same place, with the same ritual, the body learns to pre-compensate — it starts pushing back before the dose even arrives. That conditioned response is a real part of tolerance: you feel less, partly because your system saw the cues and braced for it.",
+                body: "When a drug is taken repeatedly in the same place, with the same ritual, the body learns to pre-compensate. It starts pushing back before the dose even arrives. That conditioned response is a real part of tolerance: you feel less, partly because your system saw the cues and braced for it.",
             )
             concept(
                 icon: "location.slash",
                 tint: .red,
                 title: "Change the setting, lose the bracing",
-                body: "In a new place, the conditioned push-back doesn't fire, and the same dose hits as if tolerance were lower. Heroin-tolerant rats given a familiar dose in a novel environment died at markedly higher rates than ones dosed in their usual cage — the pharmacology was the same, the conditioning was not (Siegel et al., Science 1982).",
+                body: "In a new place, the conditioned push-back doesn't fire, and the same dose hits as if tolerance were lower. Heroin-tolerant rats given a familiar dose in a novel environment died at markedly higher rates than ones dosed in their usual cage. The pharmacology was the same, the conditioning was not (Siegel et al., Science 1982).",
             )
             concept(
                 icon: "arrow.uturn.backward",
@@ -136,7 +136,7 @@ struct ToleranceExplainerView: View {
                 icon: "fork.knife",
                 tint: .purple,
                 title: "Some tolerance only develops if you experience the effect",
-                body: "Tolerance to amphetamine's appetite suppression does not build at all unless food is available while intoxicated — the tolerance is an instrumental response, not a receptor count (Carlton & Wolgin 1971). This means tolerance to one effect of a drug can exist while tolerance to another has never started.",
+                body: "Tolerance to amphetamine's appetite suppression does not build at all unless food is available while intoxicated. The tolerance is an instrumental response, not a receptor count (Carlton & Wolgin 1971). This means tolerance to one effect of a drug can exist while tolerance to another has never started.",
             )
         } header: {
             Text("The learned part of tolerance")
@@ -151,7 +151,7 @@ struct ToleranceExplainerView: View {
                 icon: "ruler",
                 tint: Theme.secondaryLabel,
                 title: "What this number does not include",
-                body: "Every layer above is pharmacodynamic — it is computed from your dose log and the clock. A large part of real tolerance is associative and context-specific: it attaches to the setting, the ritual and the cues around a dose, which is why tolerance measured in a familiar context can be substantially higher than tolerance in an unfamiliar one, and why the same cues without the dose can produce the opposite of the drug's effect. Piru cannot see any of that, because it does not record where you were or what you were doing. Treat the shift as a pharmacological estimate, not a total.",
+                body: "Every layer above is pharmacodynamic: it is computed from your dose log and the clock. A large part of real tolerance is associative and context-specific: it attaches to the setting, the ritual and the cues around a dose, which is why tolerance measured in a familiar context can be substantially higher than tolerance in an unfamiliar one, and why the same cues without the dose can produce the opposite of the drug's effect. Piru cannot see any of that, because it does not record where you were or what you were doing. Treat the shift as a pharmacological estimate, not a total.",
             )
         } header: {
             Text("Model boundary")
@@ -227,7 +227,7 @@ struct ToleranceExplainerView: View {
         case .psychedelic5HT2A:
             "Strong and fast: a repeat exposure soon after has much less effect. Resets within a few days."
         case .muOpioid:
-            "Real tolerance that drops after a break or a change of setting — which is exactly what makes returning to an old dose dangerous."
+            "Real tolerance that drops after a break or a change of setting, which is exactly what makes returning to an old dose dangerous."
         case .gaba:
             "Tolerance plus physical dependence; stopping abruptly after heavy regular use can be dangerous."
         case .nmdaAntagonist:
@@ -235,7 +235,7 @@ struct ToleranceExplainerView: View {
         case .cannabinoidCB1:
             "Fast and real, but recovers fairly quickly once you stop."
         case .adenosine:
-            "Clean, predictable tolerance — the caffeine case."
+            "Clean, predictable tolerance: the caffeine case."
         case .catecholamineStimulant:
             "A fast within-session fade, plus a modest, slower shift with heavy use. The effect on the heart fades far less than the felt effect."
         case .serotonergicReleaser:

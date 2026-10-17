@@ -216,7 +216,7 @@ struct ChemistrySection: View {
                     VStack(alignment: .leading, spacing: Spacing.xs) {
                         Text("Computed from the molecular structure (PubChem, NPS-DataHub) rather than measured in a lab.")
                         if phys.hasLD50 {
-                            Text("LD50 is rodent toxicity (order of magnitude) — not a human safe dose.")
+                            Text("LD50 is rodent toxicity (order of magnitude), not a human safe dose.")
                         }
                     }
                     .captionSecondary()
@@ -357,7 +357,7 @@ struct SourcesSection: View {
                             SourceLedgerRow(link: link, linked: false)
                         }
                     }
-                    Text("Each row lists what that source supplied here. Links open the source's own page — always verify against the original.")
+                    Text("Each row lists what that source supplied here. Links open the source's own page. Always verify against the original.")
                         .font(.caption2)
                         .foregroundStyle(Theme.secondaryLabel)
                         .fixedSize(horizontal: false, vertical: true)

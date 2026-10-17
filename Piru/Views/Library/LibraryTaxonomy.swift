@@ -195,10 +195,10 @@ extension LibraryFamily {
             molecule: "mescaline",
             source: nil,
             subclasses: [
-                .init(category: .psychedelic, blurb: "Serotonergic — LSD, psilocybin, mescaline."),
-                .init(category: .dissociative, blurb: "NMDA antagonists — ketamine, DXM, PCP."),
-                .init(category: .deliriant, blurb: "Anticholinergic — DPH, datura, Benadryl."),
-                .init(category: .dysdelic, blurb: "κ-opioid agonists — salvia, salvinorin A."),
+                .init(category: .psychedelic, blurb: "Serotonergic: LSD, psilocybin, mescaline."),
+                .init(category: .dissociative, blurb: "NMDA antagonists: ketamine, DXM, PCP."),
+                .init(category: .deliriant, blurb: "Anticholinergic: DPH, datura, Benadryl."),
+                .init(category: .dysdelic, blurb: "κ-opioid agonists: salvia, salvinorin A."),
             ],
         ),
         LibraryFamily(
@@ -229,8 +229,8 @@ extension LibraryFamily {
             molecule: "diazepam",
             source: nil,
             subclasses: [
-                .init(category: .benzodiazepine, blurb: "GABA-A modulators — diazepam, alprazolam."),
-                .init(category: .gabapentinoid, blurb: "GABAergics & gabapentinoids — GHB, pregabalin, phenibut."),
+                .init(category: .benzodiazepine, blurb: "GABA-A modulators: diazepam, alprazolam."),
+                .init(category: .gabapentinoid, blurb: "GABAergics & gabapentinoids: GHB, pregabalin, phenibut."),
                 .init(category: .depressant, blurb: "Barbiturates, sedative-hypnotics, and Z-drugs."),
             ],
         ),
@@ -253,10 +253,10 @@ extension LibraryFamily {
             source: nil,
             subclasses: [
                 .init(category: .antidepressant, blurb: "SSRIs, SNRIs, and MAOIs."),
-                .init(category: .antipsychotic, blurb: "Dopamine antagonists — quetiapine, risperidone."),
+                .init(category: .antipsychotic, blurb: "Dopamine antagonists: quetiapine, risperidone."),
                 .init(category: .nootropic, blurb: "Racetams, choline, and cognitive aids."),
                 .init(category: .ampakine, blurb: "AMPA-receptor positive modulators."),
-                .init(category: .eugeroic, blurb: "Wakefulness — modafinil, armodafinil."),
+                .init(category: .eugeroic, blurb: "Wakefulness: modafinil, armodafinil."),
             ],
         ),
         LibraryFamily(
@@ -268,7 +268,7 @@ extension LibraryFamily {
             molecule: "aspirin",
             source: nil,
             subclasses: [
-                .init(category: .analgesic, blurb: "Non-opioid pain relief — NSAIDs, paracetamol."),
+                .init(category: .analgesic, blurb: "Non-opioid pain relief: NSAIDs, paracetamol."),
                 .init(category: .antihistamine, blurb: "Allergy and sleep antihistamines."),
                 .init(category: .cardiovascular, blurb: "Blood pressure, heart, and cholesterol."),
                 .init(category: .antimicrobial, blurb: "Antibiotics, antivirals, and antifungals."),

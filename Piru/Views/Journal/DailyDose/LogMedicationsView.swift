@@ -49,7 +49,7 @@ struct LogMedicationsView: View {
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text(item.productName ?? CustomSubstanceStore.shared.displayName(for: item.substance))
                                         .font(.body)
-                                    Text("\(item.amount.doseFormatted) \(item.unit) \u{2014} \(String(localized: item.route.localizedName))")
+                                    Text("\(item.amount.doseFormatted) \(item.unit) · \(String(localized: item.route.localizedName))")
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.secondaryLabel)
                                 }

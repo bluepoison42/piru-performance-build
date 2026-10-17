@@ -253,7 +253,7 @@ struct PharmacologyCard: View {
             flag(
                 icon: "exclamationmark.triangle.fill",
                 tint: .dangerText,
-                text: "Often mis-sold as MDMA / \u{201C}molly,\u{201D} but it is pharmacologically a reuptake blocker — longer, more stimulant and anxiogenic, and more dangerous on an empathogen-style redose.",
+                text: "Often mis-sold as MDMA / \u{201C}molly,\u{201D} but it is pharmacologically a reuptake blocker: longer, more stimulant and anxiogenic, and more dangerous on an empathogen-style redose.",
             )
         }
     }

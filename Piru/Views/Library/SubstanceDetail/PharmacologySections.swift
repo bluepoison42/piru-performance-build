@@ -291,7 +291,7 @@ struct PharmacologySections: View {
             if !polymorphicConversionMetabolites.isEmpty {
                 Divider()
                 metabolismNote(
-                    "How much of a dose becomes its active form is partly genetic — the same dose can produce noticeably more effect in some people than in others.",
+                    "How much of a dose becomes its active form is partly genetic. The same dose can produce noticeably more effect in some people than in others.",
                     systemImage: "person.2",
                 )
             }
@@ -338,7 +338,7 @@ struct ActiveIngredientNote: View {
                 // is a catalog key with two substituted names rather than three
                 // concatenated `Text`s (`Text + Text` is deprecated in iOS 26).
                 Text(
-                    "\(preparation) acts through \(ingredient) — the pharmacology below is \(ingredient)'s.",
+                    "\(preparation) acts through \(ingredient). The pharmacology below is \(ingredient)'s.",
                     comment: "Preparation borrowing its active ingredient's pharmacology",
                 )
                 .font(.caption)

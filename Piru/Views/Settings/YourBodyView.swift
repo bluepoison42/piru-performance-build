@@ -70,11 +70,11 @@ struct YourBodyView: View {
     private var weightFootnote: LocalizedStringResource {
         switch profile.weightSource {
         case .healthKit:
-            "Synced from Apple Health. Your weight sizes every dose estimate — the same dose hits harder the less you weigh."
+            "Synced from Apple Health. Your weight sizes every dose estimate. The same dose hits harder the less you weigh."
         case .manual:
-            "Entered manually. Your weight sizes every dose estimate — the same dose hits harder the less you weigh."
+            "Entered manually. Your weight sizes every dose estimate. The same dose hits harder the less you weigh."
         case .estimated:
-            "Using the average 60 kg. Set yours above so estimates fit your body — the same dose hits harder the less you weigh."
+            "Using the average 60 kg. Set yours above so estimates fit your body. The same dose hits harder the less you weigh."
         }
     }
 
@@ -135,7 +135,7 @@ struct YourBodyView: View {
         } header: {
             Text("Heart data")
         } footer: {
-            Text("Shows your heart rate and blood pressure on each session's timeline. If something didn't connect — blood pressure especially, which iOS doesn't always prompt for — open **Settings ▸ Privacy & Security ▸ Health ▸ Piru** and turn it on there.")
+            Text("Shows your heart rate and blood pressure on each session's timeline. If something didn't connect (blood pressure especially, which iOS doesn't always prompt for), open **Settings ▸ Privacy & Security ▸ Health ▸ Piru** and turn it on there.")
         }
         .listRowBackground(CardBackground())
     }

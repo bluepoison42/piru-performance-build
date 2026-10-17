@@ -118,7 +118,7 @@ struct DoseEffectsCard: View {
 
     private var regimeBadge: some View {
         Label {
-            Text("Recreational doses — not a prescribed amount")
+            Text("Recreational doses, not a prescribed amount")
         } icon: {
             Image(systemName: "person.fill.questionmark").imageScale(.small)
                 .accessibilityHidden(true)

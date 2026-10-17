@@ -63,7 +63,7 @@ struct BrandedFormulationsSection: View {
         } header: {
             Text("Branded formulations")
         } footer: {
-            Text("Doses stay the substance's own — only the duration curve changes.", comment: "Branded formulations: clarifies the dose ladder is unaffected")
+            Text("Doses stay the substance's own. Only the duration curve changes.", comment: "Branded formulations: clarifies the dose ladder is unaffected")
         }
     }
 

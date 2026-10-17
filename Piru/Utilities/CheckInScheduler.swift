@@ -163,8 +163,8 @@ enum CheckInScheduler {
             ? String(localized: "Is it working?")
             : String(localized: "How is it going?")
         let body = isMedication
-            ? String(localized: "One tap records how this dose is going — less than usual, about right, or more.")
-            : String(localized: "Add a note to your session — what you notice, at this moment.")
+            ? String(localized: "One tap records how this dose is going: less than usual, about right, or more.")
+            : String(localized: "Add a note to your session: what you notice, at this moment.")
         for (index, date) in dates.enumerated() {
             if NotificationPreferencesStore.isInQuietHours(date) { continue }
             let content = UNMutableNotificationContent(

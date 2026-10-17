@@ -27,7 +27,7 @@ enum AppSources {
         SourceInfo(
             name: "OpenFDA",
             url: "https://open.fda.gov",
-            detail: "open.fda.gov — National Drug Code directory",
+            detail: "open.fda.gov · National Drug Code directory",
             description: "U.S. government open data.",
             license: "CC0 1.0",
         ),
@@ -61,21 +61,21 @@ enum AppSources {
         SourceInfo(
             name: "PiHKAL",
             url: "https://isomerdesign.com/pihkal/browse/pk",
-            detail: "Phenethylamines I Have Known and Loved — Shulgin & Shulgin (1991)",
+            detail: "Phenethylamines I Have Known and Loved, Shulgin & Shulgin (1991)",
             description: "Reference text by Alexander and Ann Shulgin.",
             license: "Book II · non-commercial reproduction",
         ),
         SourceInfo(
             name: "TiHKAL",
             url: "https://isomerdesign.com/pihkal/browse/tk",
-            detail: "Tryptamines I Have Known and Loved — Shulgin & Shulgin (1997)",
+            detail: "Tryptamines I Have Known and Loved, Shulgin & Shulgin (1997)",
             description: "Reference text by Alexander and Ann Shulgin.",
             license: "Book II · non-commercial reproduction",
         ),
         SourceInfo(
             name: "DailyMed",
             url: "https://dailymed.nlm.nih.gov",
-            detail: "dailymed.nlm.nih.gov — NLM/FDA Drug Label Database",
+            detail: "dailymed.nlm.nih.gov · NLM/FDA Drug Label Database",
             description: "U.S. product label database. Label text is written by each manufacturer.",
         ),
         SourceInfo(
@@ -87,7 +87,7 @@ enum AppSources {
         SourceInfo(
             name: "SubFxOnEx",
             url: "https://github.com/Di-lemma/SubFxOnEx",
-            detail: "github.com/Di-lemma/SubFxOnEx — subjective-effects ontology",
+            detail: "github.com/Di-lemma/SubFxOnEx · subjective-effects ontology",
             description: "Subjective-effects vocabulary.",
             license: "LGPL-2.1",
         ),
@@ -100,7 +100,7 @@ enum AppSources {
         SourceInfo(
             name: "PubChem",
             url: "https://pubchem.ncbi.nlm.nih.gov",
-            detail: "pubchem.ncbi.nlm.nih.gov — National Library of Medicine",
+            detail: "pubchem.ncbi.nlm.nih.gov · National Library of Medicine",
             description: "Open chemistry database.",
         ),
         SourceInfo(

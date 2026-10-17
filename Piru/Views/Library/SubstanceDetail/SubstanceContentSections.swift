@@ -220,7 +220,7 @@ struct SubstanceStatusMarker: View {
 
         var title: LocalizedStringResource {
             switch self {
-            case .peptideProtocol: "Peptide — protocol reference"
+            case .peptideProtocol: "Peptide protocol reference"
             case .researchCompound: "Research / performance compound"
             case .prescription: "Prescription medication"
             case .medicalReference: "Reference only"
@@ -233,13 +233,13 @@ struct SubstanceStatusMarker: View {
         var detail: LocalizedStringResource {
             switch self {
             case .peptideProtocol:
-                "Dosing shown reflects published or community protocols, not medical advice. Peptides are injected from reconstituted powder — handle and store as noted below."
+                "Dosing shown reflects published or community protocols, not medical advice. Peptides are injected from reconstituted powder. Handle and store as noted below."
             case .researchCompound:
                 "The protocol below reflects community or investigational use, not validated human dosing or medical advice. Many of these compounds are WADA-prohibited and lack human safety data."
             case .prescription, .medicalReference:
                 "No dosing is shown here. What follows is for recognition and reference only."
             case .limitedHumanData:
-                "This compound has no validated human dose data. Information below is for reference only — see the linked sources for primary literature. Do not extrapolate doses from related compounds."
+                "This compound has no validated human dose data. Information below is for reference only. See the linked sources for primary literature. Do not extrapolate doses from related compounds."
             }
         }
 

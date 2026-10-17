@@ -14,23 +14,23 @@ extension SubstanceCategory {
     var classSummary: LocalizedStringResource? {
         switch self {
         case .stimulant:
-            "Raise dopamine and noradrenaline signalling, which raises drive, attention and wakefulness — and heart rate and temperature with them. They differ mostly in how they do it: releasing the neurotransmitter, or blocking its reuptake."
+            "Raise dopamine and noradrenaline signaling, which raises drive, attention and wakefulness, and heart rate and temperature with them. They differ mostly in how they do it: releasing the neurotransmitter, or blocking its reuptake."
         case .psychedelic:
-            "Agonists at the 5-HT2A receptor. That single action reshapes perception, thought and the sense of self; the family splits by chemistry — phenethylamines, tryptamines, and the ergolines LSD belongs to."
+            "Agonists at the 5-HT2A receptor. That single action reshapes perception, thought and the sense of self. The family splits by chemistry: phenethylamines, tryptamines, and the ergolines LSD belongs to."
         case .dissociative:
             "Block the NMDA glutamate receptor, uncoupling perception from the body that reports it. The effect scales sharply with dose, from analgesia through anesthesia."
         case .dysdelic:
-            "Act at the κ-opioid receptor rather than 5-HT2A, which is why the experience is nothing like a classical psychedelic — dysphoric, disorienting, and usually brief."
+            "Act at the κ-opioid receptor rather than 5-HT2A, which is why the experience is nothing like a classical psychedelic: dysphoric, disorienting, and usually brief."
         case .deliriant:
-            "Block muscarinic acetylcholine receptors. Unlike psychedelics they produce true hallucinations — things that are not there and are not recognized as unreal — alongside amnesia and a narrow margin to toxicity."
+            "Block muscarinic acetylcholine receptors. Unlike psychedelics they produce true hallucinations, things that are not there and are not recognized as unreal, alongside amnesia and a narrow margin to toxicity."
         case .opioid:
             "Agonists at the µ-opioid receptor: analgesia, warmth and sedation, and depressed breathing by the same mechanism. Tolerance to the first outpaces tolerance to the last, which is what makes the margin narrow."
         case .benzodiazepine:
-            "Positive allosteric modulators at GABA-A — they amplify the brain's own inhibitory signal rather than acting on their own. That ceiling is why they are relatively safe alone and dangerous with anything else that sedates."
+            "Positive allosteric modulators at GABA-A. They amplify the brain's own inhibitory signal rather than acting on their own. That ceiling is why they are relatively safe alone and dangerous with anything else that sedates."
         case .gabapentinoid:
             "Bind the α2δ subunit of voltage-gated calcium channels, reducing excitatory transmitter release. Not GABAergic despite the name."
         case .empathogen:
-            "Release serotonin, along with dopamine and noradrenaline — warmth, closeness and emotional openness rather than the perceptual change of a psychedelic. Most are amphetamines with a methylenedioxy ring."
+            "Release serotonin, along with dopamine and noradrenaline: warmth, closeness and emotional openness rather than the perceptual change of a psychedelic. Most are amphetamines with a methylenedioxy ring."
         case .cannabinoid:
             "Act at the CB1 receptor. The phytocannabinoids are partial agonists with a natural ceiling; the synthetic ones are full agonists without it, which is the whole of the difference in risk."
         case .nootropic:
@@ -48,7 +48,7 @@ extension SubstanceCategory {
         case .antipsychotic:
             "Block dopamine D2 receptors, and usually several serotonin receptors alongside. Sedating, and a common blunting agent for other substances."
         case .antihistamine:
-            "Block histamine H1 receptors. The first-generation ones cross into the brain and are strongly anticholinergic, which is why they sedate — and, in quantity, deliriate."
+            "Block histamine H1 receptors. The first-generation ones cross into the brain and are strongly anticholinergic, which is why they sedate and, in quantity, deliriate."
         case .supplement:
             "Vitamins, minerals, amino acids and plant preparations. Pharmacologically a mixed bag, and the place where interactions are most often assumed to be absent."
         case .peptide:

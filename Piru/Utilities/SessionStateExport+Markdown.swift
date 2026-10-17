@@ -90,7 +90,7 @@ extension SessionStateExport {
         }
 
         var out: [String] = []
-        out.append("# Piru — " + (isLive ? "Session Snapshot" : "Session Report"))
+        out.append("# Piru " + (isLive ? "Session Snapshot" : "Session Report"))
         out.append("")
         if isLive {
             out.append("- **Generated:** \(full.string(from: generatedAt))")
@@ -104,7 +104,7 @@ extension SessionStateExport {
 
         if !interactions.isEmpty {
             for line in interactions {
-                out.append("> \(line.severity.exportSymbol) **\(line.severity.englishLabel):** \(line.a) + \(line.b) — \(line.detail)")
+                out.append("> \(line.severity.exportSymbol) **\(line.severity.englishLabel):** \(line.a) + \(line.b): \(line.detail)")
             }
             out.append("")
         }
@@ -112,13 +112,13 @@ extension SessionStateExport {
         out.append("## " + (isLive ? "Current state (subjective)" : "Entries"))
         out.append("")
         for s in substances {
-            out.append("### \(s.name) — \(s.amount.doseFormatted) \(s.unit) \(s.route.lowercased())")
+            out.append("### \(s.name), \(s.amount.doseFormatted) \(s.unit) \(s.route.lowercased())")
             if isLive {
                 out.append("- Taken: \(clock(s.doseTimestamp)) (\(TimeInterval(generatedAt.timeIntervalSince(s.doseTimestamp)).durationHM) ago)")
                 if let next = s.next {
-                    out.append("- Phase: **\(s.phase.englishName)** — \(next.phase.englishName.lowercased()) in ~\(next.at.timeIntervalSince(generatedAt).durationHM), baseline \(clock(s.baselineAt))")
+                    out.append("- Phase: **\(s.phase.englishName)**, \(next.phase.englishName.lowercased()) in ~\(next.at.timeIntervalSince(generatedAt).durationHM), baseline \(clock(s.baselineAt))")
                 } else {
-                    out.append("- Phase: **\(s.phase.englishName)** — baseline \(clock(s.baselineAt))")
+                    out.append("- Phase: **\(s.phase.englishName)**, baseline \(clock(s.baselineAt))")
                 }
                 out.append("- Subjective intensity: **\(Int((s.intensity * 100).rounded()))%** of this dose's peak")
                 out.append("- Curve progress: \(Int((s.progress * 100).rounded()))%")

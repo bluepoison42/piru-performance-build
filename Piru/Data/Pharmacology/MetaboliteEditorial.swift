@@ -61,124 +61,124 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Tramadol",
             metabolite: "O-desmethyltramadol",
-            note: "Tramadol is itself a weak opioid that also raises serotonin and noradrenaline. Most of the opioid effect people feel comes from this metabolite — and how much you make of it depends on a CYP2D6 gene, so the same dose can be a real opioid for one person and almost none for another.",
+            note: "Tramadol is itself a weak opioid that also raises serotonin and noradrenaline. Most of the opioid effect people feel comes from this metabolite, and how much you make of it depends on a CYP2D6 gene, so the same dose can be a real opioid for one person and almost none for another.",
         ),
         // mCPP is anxiogenic/dysphoric — the opposite of "trazodone, continued".
         .init(
             parent: "Trazodone",
             metabolite: "meta-chlorophenylpiperazine",
-            note: "mCPP acts on serotonin in a different way than trazodone — it tends to feel activating or anxious rather than sedating, which is part of why trazodone's later hours can feel unlike its calm onset.",
+            note: "mCPP acts on serotonin in a different way than trazodone. It tends to feel activating or anxious rather than sedating, which is part of why trazodone's later hours can feel unlike its calm onset.",
         ),
         // Noribogaine carries the long tail on a different mechanism.
         .init(
             parent: "Ibogaine",
             metabolite: "noribogaine",
-            note: "Noribogaine is long-lived and acts differently from ibogaine — it leans more on serotonin reuptake and κ-opioid signaling, and it is a large part of the extended after-effect rather than a continuation of the peak.",
+            note: "Noribogaine is long-lived and acts differently from ibogaine. It leans more on serotonin reuptake and κ-opioid signaling, and it is a large part of the extended after-effect rather than a continuation of the peak.",
         ),
         // Normeperidine is a convulsant, not a painkiller — the reason meperidine
         // is not used for ongoing pain.
         .init(
             parent: "Pethidine",
             metabolite: "normeperidine",
-            note: "Normeperidine isn't a painkiller — it's a stimulating metabolite that builds up with repeated or high doses and lowers the seizure threshold. It's why meperidine isn't used for long-term pain.",
+            note: "Normeperidine isn't a painkiller. It's a stimulating metabolite that builds up with repeated or high doses and lowers the seizure threshold. It's why meperidine isn't used for long-term pain.",
         ),
         // Dextrorphan is the stronger NMDA blocker — the dissociative axis.
         .init(
             parent: "Dextromethorphan",
             metabolite: "dextrorphan",
-            note: "Dextrorphan blocks NMDA receptors more strongly than DXM itself does — it's the more dissociative species, and the main reason the character shifts at higher doses rather than simply lasting longer.",
+            note: "Dextrorphan blocks NMDA receptors more strongly than DXM itself does. It's the more dissociative species, and the main reason the character shifts at higher doses rather than simply lasting longer.",
         ),
         // Meprobamate is a barbiturate-like downer in its own right.
         .init(
             parent: "Carisoprodol",
             metabolite: "meprobamate",
-            note: "Meprobamate is a long-lived, barbiturate-like sedative in its own right — it acts more like a classic downer than carisoprodol, and much of the sedation and the dependence potential come from it rather than the parent.",
+            note: "Meprobamate is a long-lived, barbiturate-like sedative in its own right. It acts more like a classic downer than carisoprodol, and much of the sedation and the dependence potential come from it rather than the parent.",
         ),
         // Nortriptyline is a marketed drug; noradrenergic shift.
         .init(
             parent: "Amitriptyline",
             metabolite: "nortriptyline",
-            note: "Nortriptyline is a marketed antidepressant in its own right, and it leans more on noradrenaline than amitriptyline does — so the metabolite's character is more activating than the parent's.",
+            note: "Nortriptyline is a marketed antidepressant in its own right, and it leans more on noradrenaline than amitriptyline does. The metabolite's character is more activating than the parent's.",
         ),
         // Desipramine, same shape.
         .init(
             parent: "Imipramine",
             metabolite: "desipramine",
-            note: "Desipramine is a marketed antidepressant in its own right, and more noradrenergic than imipramine — so as it forms, the effect shifts toward the more activating end.",
+            note: "Desipramine is a marketed antidepressant in its own right, and more noradrenergic than imipramine. As it forms, the effect shifts toward the more activating end.",
         ),
         .init(
             parent: "Clomipramine",
             metabolite: "N-desmethylclomipramine",
-            note: "The desmethyl metabolite shifts clomipramine's strongly serotonergic action toward noradrenaline, so the two don't act quite alike — the balance moves as the metabolite accumulates.",
+            note: "The desmethyl metabolite shifts clomipramine's strongly serotonergic action toward noradrenaline, so the two don't act quite alike. The balance moves as the metabolite accumulates.",
         ),
         // Norquetiapine adds NRI/antidepressant activity quetiapine lacks.
         .init(
             parent: "Quetiapine",
             metabolite: "norquetiapine",
-            note: "Norquetiapine adds effects quetiapine largely lacks — noradrenaline reuptake inhibition and antidepressant-like activity — so it contributes a different character than the parent's sedation.",
+            note: "Norquetiapine adds effects quetiapine largely lacks, noradrenaline reuptake inhibition and antidepressant-like activity, so it contributes a different character than the parent's sedation.",
         ),
         // HNK barely touches NMDA; separate, non-dissociative axis.
         .init(
             parent: "Ketamine",
             metabolite: "hydroxynorketamine",
-            note: "This metabolite (HNK) barely touches the NMDA receptor ketamine acts on — it's studied for a separate, non-dissociative antidepressant effect, so it isn't simply ketamine continuing.",
+            note: "This metabolite (HNK) barely touches the NMDA receptor ketamine acts on. It's studied for a separate, non-dissociative antidepressant effect, so it isn't simply ketamine continuing.",
         ),
         // MDA — more psychedelic, longer-lived. Descriptive, no encouragement.
         .init(
             parent: "MDMA",
             metabolite: "MDA",
-            note: "MDA is an active drug of its own — more amphetamine-like and more hallucinogenic than MDMA, and longer-lived — so the later hours can feel qualitatively different from the peak.",
+            note: "MDA is an active drug of its own: more amphetamine-like and more hallucinogenic than MDMA, and longer-lived. So the later hours can feel qualitatively different from the peak.",
         ),
         // Norbuprenorphine acts more like a full agonist and drives respiratory effect.
         .init(
             parent: "Buprenorphine",
             metabolite: "norbuprenorphine",
-            note: "Norbuprenorphine acts differently from buprenorphine — it behaves more like a full opioid agonist and contributes to respiratory effects, which buprenorphine's own ceiling doesn't fully predict.",
+            note: "Norbuprenorphine acts differently from buprenorphine. It behaves more like a full opioid agonist and contributes to respiratory effects, which buprenorphine's own ceiling doesn't fully predict.",
         ),
         // Cetirizine — the sedation fades into a plain antihistamine.
         .init(
             parent: "Hydroxyzine",
             metabolite: "cetirizine",
-            note: "Cetirizine — a common non-drowsy antihistamine — is hydroxyzine's main metabolite. It's far less sedating, so hydroxyzine's calming effect gives way to a plainer antihistamine as it converts.",
+            note: "Cetirizine, a common non-drowsy antihistamine, is hydroxyzine's main metabolite. It's far less sedating, so hydroxyzine's calming effect gives way to a plainer antihistamine as it converts.",
         ),
         // Norephedrine adds sympathomimetic tone (vasoconstriction, BP rise)
         // that amphetamine's central action doesn't predict.
         .init(
             parent: "Amphetamine",
             metabolite: "norephedrine",
-            note: "Norephedrine (phenylpropanolamine) is a peripheral sympathomimetic — it raises blood pressure and narrows blood vessels more than amphetamine's central action would predict. It adds cardiovascular load the parent's CNS profile doesn't warn about.",
+            note: "Norephedrine (phenylpropanolamine) is a peripheral sympathomimetic. It raises blood pressure and narrows blood vessels more than amphetamine's central action would predict, adding cardiovascular load the parent's CNS profile doesn't warn about.",
         ),
         // 7-Aminoclonazepam is pharmacologically inactive — the standard
         // urinary marker.
         .init(
             parent: "Clonazepam",
             metabolite: "7-aminoclonazepam",
-            note: "7-aminoclonazepam has no meaningful activity at GABA-A — it's an inactive metabolite used as a urinary marker for clonazepam exposure, not a contributor to the drug's effect.",
+            note: "7-aminoclonazepam has no meaningful activity at GABA-A. It's an inactive metabolite used as a urinary marker for clonazepam exposure, not a contributor to the drug's effect.",
         ),
         // Norfenfluramine is the serotonin releaser that drove fenfluramine's
         // weight-loss action (and its cardiac valve damage).
         .init(
             parent: "Fenfluramine",
             metabolite: "norfenfluramine",
-            note: "Norfenfluramine is a more potent serotonin releaser than fenfluramine itself — it drives much of the pharmacological effect, including the 5-HT₂B agonism linked to cardiac valve damage in the 1990s weight-loss era.",
+            note: "Norfenfluramine is a more potent serotonin releaser than fenfluramine itself. It drives much of the pharmacological effect, including the 5-HT₂B agonism linked to cardiac valve damage in the 1990s weight-loss era.",
         ),
         // N-succinyl-nor-mephedrone — a Phase II conjugate with unknown activity.
         .init(
             parent: "Mephedrone",
             metabolite: "N-succinyl-nor-mephedrone",
-            note: "This unusual Phase II conjugate retains the nor-mephedrone core — whether it has pharmacological activity is unknown, but its long plasma half-life means it lingers well past mephedrone's short duration.",
+            note: "This unusual Phase II conjugate retains the nor-mephedrone core. Whether it has pharmacological activity is unknown, but its long plasma half-life means it lingers well past mephedrone's short duration.",
         ),
         // Cotinine is the long-lived marker, not a nicotinic agonist.
         .init(
             parent: "Nicotine",
             metabolite: "cotinine",
-            note: "Cotinine has negligible nicotinic activity — it's the standard biomarker for tobacco exposure, not a continuation of nicotine's effect. Its long half-life (~16 hours) is why it's detectable in blood and urine days after the last cigarette.",
+            note: "Cotinine has negligible nicotinic activity. It's the standard biomarker for tobacco exposure, not a continuation of nicotine's effect. Its long half-life (~16 hours) is why it's detectable in blood and urine days after the last cigarette.",
         ),
         // EDDP is inactive — the standard urinary marker for methadone.
         .init(
             parent: "Methadone",
             metabolite: "EDDP",
-            note: "EDDP has no opioid activity — it's the primary urinary marker for methadone compliance monitoring, not a contributor to the drug's effect or duration.",
+            note: "EDDP has no opioid activity. It's the primary urinary marker for methadone compliance monitoring, not a contributor to the drug's effect or duration.",
         ),
         // M3G is the major morphine metabolite (~60%) and is neuroexcitatory,
         // not analgesic — the reason high-dose or renally impaired patients
@@ -186,7 +186,7 @@ nonisolated enum MetaboliteEditorial {
         .init(
             parent: "Morphine",
             metabolite: "morphine-3-glucuronide",
-            note: "M3G is morphine's major metabolite (~60% of the dose) and has no analgesic activity — at high concentrations it's neuroexcitatory, contributing to myoclonus and paradoxical pain increase rather than pain relief. It accumulates in renal impairment, which is why morphine dosing needs adjustment when kidneys are compromised.",
+            note: "M3G is morphine's major metabolite (~60% of the dose) and has no analgesic activity. At high concentrations it's neuroexcitatory, contributing to myoclonus and paradoxical pain increase rather than pain relief. It accumulates in renal impairment, which is why morphine dosing needs adjustment when kidneys are compromised.",
         ),
     ]
 }

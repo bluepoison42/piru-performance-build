@@ -63,7 +63,7 @@ struct OnboardingHealthStep: View {
     private var noteView: some View {
         Group {
             if healthValue != nil {
-                Label("Synced from Apple Health — check the number looks right.", systemImage: "checkmark.circle")
+                Label("Synced from Apple Health. Check the number looks right.", systemImage: "checkmark.circle")
             } else if noReadNote {
                 Label("Couldn't read a weight from Health. Set it above instead.", systemImage: "exclamationmark.circle")
             } else {

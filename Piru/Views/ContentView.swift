@@ -154,7 +154,7 @@ private struct StoreDiagnosticsModifier: ViewModifier {
                 Button("Send Logs to Developer") { prepareDiagnostics() }
                 Button("OK", role: .cancel) {}
             } message: {
-                Text("Piru couldn't open your journal this time, so it's running with temporary storage. **Nothing has been deleted** — your doses and sessions are safe on this device and a future update will restore them automatically.\n\nSending the logs helps us ship that fix faster. They describe the storage problem only — never your dose data.")
+                Text("Piru couldn't open your journal this time, so it's running with temporary storage. **Nothing has been deleted.** Your doses and sessions are safe on this device and a future update will restore them automatically.\n\nSending the logs helps us ship that fix faster. They describe the storage problem only, never your dose data.")
             }
             .sheet(item: $diagnosticsFile, onDismiss: cleanupDiagnostics) { file in
                 ShareSheet(items: [file.url])
