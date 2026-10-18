@@ -32,6 +32,9 @@ struct DayEntryCore: Equatable {
     /// The dose's class, carried so the row can state a sleep clause without a
     /// lookup of its own. `nil` for a substance the catalog cannot resolve.
     let category: SubstanceCategory?
+    /// The combination product the dose was logged as part of ("Co-codamol"
+    /// under a paracetamol row). `nil` for a dose logged on its own.
+    let combinationName: String?
 
     /// Resolve each dose row's substance facts once: title, dose level, and the
     /// rail's window.
@@ -73,6 +76,7 @@ struct DayEntryCore: Equatable {
                 isApproximate: entry.isApproximate,
                 isUnknownDose: entry.isUnknownDose,
                 category: resolved?.category,
+                combinationName: entry.combinationName,
             )
         }
     }
@@ -208,9 +212,16 @@ struct EntryRowView: View {
                 .font(.chartAnnotation)
                 .foregroundStyle(display.color)
                 .accessibilityHidden(true)
-            Text(display.core.displayName)
-                .font(.body.weight(.semibold))
-                .lineLimit(nameLineLimit)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(display.core.displayName)
+                    .font(.body.weight(.semibold))
+                    .lineLimit(nameLineLimit)
+                if let combination = display.core.combinationName {
+                    Text("Part of \(combination)")
+                        .captionSecondary()
+                        .lineLimit(1)
+                }
+            }
             roaPill
         }
     }
