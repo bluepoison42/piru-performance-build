@@ -302,6 +302,96 @@ struct DeepLinkTests {
         #expect(url.flatMap(DeepLink.decode)?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA", prefillRoute: .oral))
     }
 
+    // MARK: - Quick-log prefill (the automation form)
+
+    /// Every field the automation form carries, as a link and as the sheet it opens.
+    private let fullPrefill = DosePrefill(
+        amount: 27,
+        unit: "mg",
+        productName: "Concerta",
+        time: Date(timeIntervalSince1970: 1_760_779_800),
+        meal: .empty,
+        note: "after breakfast, late",
+        tags: ["work", "morning"],
+    )
+
+    @Test
+    func `piru://quicklog with the automation parameters stages the whole dose`() {
+        let outcome = decode(
+            "piru://quicklog?substance=Concerta&amount=27&unit=mg&route=oral&time=2025-10-18T09:30:00Z"
+                + "&meal=empty&notes=after%20breakfast,%20late&tags=work,%20morning&product=Concerta",
+        )
+        #expect(outcome?.tab == nil)
+        #expect(outcome?.sheet == .quickLog(
+            routine: nil,
+            prefillSubstance: "Concerta",
+            prefillDose: fullPrefill,
+            prefillRoute: .oral,
+        ))
+    }
+
+    @Test
+    func `time= accepts epoch seconds and a zone offset`() {
+        let expected = Date(timeIntervalSince1970: 1_760_779_800)
+        #expect(prefill(of: decode("piru://quicklog?substance=MDMA&time=1760779800"))?.time == expected)
+        #expect(prefill(of: decode("piru://quicklog?substance=MDMA&time=2025-10-18T11:30:00%2B02:00"))?.time == expected)
+        #expect(prefill(of: decode("piru://quicklog?substance=MDMA&time=2025-10-18T09:30:00.250Z"))?.time
+            == expected.addingTimeInterval(0.25))
+    }
+
+    @Test
+    func `A link with only a substance carries no prefill`() {
+        #expect(decode("piru://quicklog?substance=MDMA")?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA"))
+    }
+
+    @Test
+    func `A value the link gets wrong is dropped, not the link`() {
+        let outcome = decode("piru://quicklog?substance=MDMA&amount=lots&meal=brunch&time=yesterday&notes=%20&tags=,%20,")
+        #expect(outcome?.sheet == .quickLog(routine: nil, prefillSubstance: "MDMA"))
+    }
+
+    @Test
+    func `Tray-wide fields prefill without a substance`() {
+        let outcome = decode("piru://quicklog?meal=full&tags=party")
+        #expect(outcome?.sheet == .quickLog(routine: nil, prefillDose: DosePrefill(meal: .full, tags: ["party"])))
+    }
+
+    @Test
+    func `quickLog with a full prefill round-trips through encode`() throws {
+        let snap = NavigatorSnapshot(
+            selectedTab: .journal,
+            sheetStack: [.quickLog(routine: nil, prefillSubstance: "Concerta", prefillDose: fullPrefill, prefillRoute: .oral)],
+        )
+        let url = try #require(DeepLink.encode(snap))
+        #expect(url.absoluteString == "piru://quicklog?substance=Concerta&amount=27&unit=mg&route=oral"
+            + "&time=2025-10-18T09:30:00Z&meal=empty&notes=after%20breakfast,%20late&tags=work,morning&product=Concerta")
+        #expect(DeepLink.decode(url)?.sheet == .quickLog(
+            routine: nil,
+            prefillSubstance: "Concerta",
+            prefillDose: fullPrefill,
+            prefillRoute: .oral,
+        ))
+    }
+
+    @Test
+    func `The scanner's prefill (amount, unit, brand) round-trips through encode`() throws {
+        let scanned = DosePrefill(amount: 0.5, unit: "mg", productName: "Xanax")
+        let snap = NavigatorSnapshot(
+            selectedTab: .tools,
+            sheetStack: [.quickLog(routine: nil, prefillSubstance: "Alprazolam", prefillDose: scanned)],
+        )
+        let url = try #require(DeepLink.encode(snap))
+        #expect(url.absoluteString == "piru://quicklog?substance=Alprazolam&amount=0.5&unit=mg&product=Xanax&tab=tools")
+        let outcome = DeepLink.decode(url)
+        #expect(outcome?.tab == .tools)
+        #expect(outcome?.sheet == .quickLog(routine: nil, prefillSubstance: "Alprazolam", prefillDose: scanned))
+    }
+
+    private func prefill(of outcome: DeepLinkOutcome?) -> DosePrefill? {
+        guard case let .quickLog(_, _, prefill, _)? = outcome?.sheet else { return nil }
+        return prefill
+    }
+
     // MARK: - Web links (kagerou.glass, from dose.wiki)
 
     private func webLink(_ string: String) -> DosewikiLink? {

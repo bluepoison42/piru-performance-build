@@ -182,8 +182,8 @@ struct QuickLogView: View {
                     if let prestagedRoutine {
                         stageRoutine(named: prestagedRoutine)
                     }
-                    if let prefillSubstance {
-                        stagePrefill(named: prefillSubstance)
+                    if prefillSubstance != nil || prefillDose != nil {
+                        await stagePrefill(named: prefillSubstance)
                     }
                     #if DEBUG
                         if let query = ScreenshotTour.takeStagedDockSearch() {
@@ -422,36 +422,58 @@ struct QuickLogView: View {
         }
     }
 
-    /// Stage one library substance as a draft — the same path a search hit takes
-    /// ("Add & edit"): it seeds the reference dose for the substance's default
-    /// route and opens the editor, so the sheet lands on the dose the user came
-    /// to enter rather than on the card list. No-op for an unknown name.
-    private func stagePrefill(named name: String) {
-        guard let substance = SubstanceLibrary.resolveFull(name) else { return }
-        let route = prefillRoute ?? substance.defaultRoute
-        let unit = substance.routes.first { $0.route == route }?.unit ?? substance.defaultUnit
-        if let prefillDose {
-            withAnimation(.snappy) {
+    /// Stage what the opener already knows. The tray-wide fields come first —
+    /// time, stomach and tags belong to the tray, so they apply even when
+    /// `name` resolves to nothing. Then `name` stages as a complete dose when
+    /// an amount is known (a scanned box, a link, the Start Dose Log action),
+    /// else as a draft — the path a search hit takes ("Add & edit"): the
+    /// reference dose for the route is seeded and the editor opens, so the
+    /// sheet lands on the dose the user came to enter rather than on the card
+    /// list. A brand typed as the name stays on the row as its product, the way
+    /// the search row keeps it. No row for an unknown name.
+    private func stagePrefill(named name: String?) async {
+        if let time = prefillDose?.time {
+            tray.time = .custom(time)
+        }
+        if let meal = prefillDose?.meal {
+            tray.meal = meal
+        }
+        if let tags = prefillDose?.tags {
+            tray.tags.formUnion(tags)
+        }
+        guard let name, let named = await SubstanceLibrary.resolveNamed(name) else { return }
+        let substance = named.substance
+        let route = prefillRoute ?? named.esterRoute ?? substance.defaultRoute
+        let unit = prefillDose?.unit ?? substance.unit(for: route, saltForm: named.saltForm)
+        let productName = prefillDose?.productName ?? named.productName
+        let tint = content.cachedColorLookup[substance.name.lowercased()]
+        withAnimation(.snappy) {
+            if let amount = prefillDose?.amount {
                 tray.stage(
                     substance: substance.name,
                     route: route,
-                    amount: prefillDose.amount,
-                    unit: prefillDose.unit,
-                    tint: content.cachedColorLookup[substance.name.lowercased()],
+                    amount: amount,
+                    unit: unit,
+                    tint: tint,
                     librarySubstance: substance,
-                    productName: prefillDose.productName,
+                    productName: productName,
+                    saltForm: named.saltForm,
+                )
+            } else {
+                tray.stageDraft(
+                    substance: substance.name,
+                    route: route,
+                    unit: unit,
+                    tint: tint,
+                    librarySubstance: substance,
+                    productName: productName,
+                    saltForm: named.saltForm,
                 )
             }
-            return
-        }
-        withAnimation(.snappy) {
-            tray.stageDraft(
-                substance: substance.name,
-                route: route,
-                unit: unit,
-                tint: content.cachedColorLookup[substance.name.lowercased()],
-                librarySubstance: substance,
-            )
+            if let note = prefillDose?.note,
+               let index = tray.staged.lastIndex(where: { $0.substanceName == substance.name && $0.route == route }) {
+                tray.staged[index].note = note
+            }
         }
     }
 
