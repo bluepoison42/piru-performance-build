@@ -59,6 +59,9 @@ struct PiruApp: App {
 
         container = AppLaunch.openStore()
         storeOpening.end()
+        // The Log Dose action saves with no view hierarchy; App Intents launch
+        // the app before performing, so this is set before any `perform()`.
+        DoseIntentLogger.modelContainer = container
 
         // Reads what this person owns and starts listening for purchases that
         // land outside a purchase call (Ask to Buy, refunds, another device).
