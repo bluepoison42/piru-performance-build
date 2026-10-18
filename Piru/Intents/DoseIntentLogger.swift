@@ -136,7 +136,7 @@ enum DoseIntentLogger {
     /// each component on its own route and unit. A request's route and unit
     /// name a single dose and do not apply here.
     private static func stage(_ request: Request, as combination: CustomSubstanceEntry) -> [StagedDose] {
-        let quantity = max(1, Int((request.amount ?? 1).rounded()))
+        let quantity = CombinationComponent.units(for: request.amount)
         let tray = DoseTrayModel()
         tray.stage(combination: combination, quantity: quantity)
         let note = request.notes?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""

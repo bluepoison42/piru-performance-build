@@ -445,7 +445,7 @@ struct QuickLogView: View {
         if let combination = CustomSubstanceStore.shared.combination(named: name) {
             // A combination stages one row per component; the amount counts
             // units of the product (two co-codamol), never milligrams.
-            let quantity = max(1, Int((prefillDose?.amount ?? 1).rounded()))
+            let quantity = CombinationComponent.units(for: prefillDose?.amount)
             withAnimation(.snappy) {
                 tray.stage(combination: combination, quantity: quantity, colorLookup: content.cachedColorLookup)
                 if let note = prefillDose?.note {

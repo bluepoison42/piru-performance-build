@@ -47368,6 +47368,7 @@
       }
     },
     "Leave empty to log the dose with its amount unknown." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -47391,6 +47392,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "留空則以用量未知記錄這份劑量。"
+          }
+        }
+      }
+    },
+    "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío para registrar la dosis con cantidad desconocida. Para un producto combinado, el número de unidades tomadas."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío para registrar la dosis con cantidad desconocida. Para un producto combinado, el número de unidades tomadas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空则以用量未知记录这份剂量。对于复方制剂，填写服用的单位数。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空則以用量未知記錄這份劑量。對於複方製劑，填寫服用的單位數。"
           }
         }
       }
@@ -76378,6 +76407,7 @@
       }
     },
     "Showing the first 60 days." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

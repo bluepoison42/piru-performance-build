@@ -91,6 +91,17 @@ struct DoseIntentLoggerTests {
     }
 
     @Test
+    func `A unit count from outside is clamped, never trapped on`() {
+        #expect(CombinationComponent.units(for: nil) == 1)
+        #expect(CombinationComponent.units(for: 0) == 1)
+        #expect(CombinationComponent.units(for: -4) == 1)
+        #expect(CombinationComponent.units(for: 2.4) == 2)
+        #expect(CombinationComponent.units(for: 1e300) == CombinationComponent.maximumUnits)
+        #expect(CombinationComponent.units(for: .infinity) == 1)
+        #expect(CombinationComponent.units(for: .nan) == 1)
+    }
+
+    @Test
     func `Route and unit default from the catalog`() async throws {
         await SubstanceStore.shared.ensureAllLoaded()
         let caffeine = try #require(SubstanceLibrary.lookup("Caffeine"))

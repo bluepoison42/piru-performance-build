@@ -3386,7 +3386,7 @@ ES = {
     "Start Dose Log": "Iniciar registro de dosis",
     "Saves a dose to the journal without opening Piru.": "Guarda una dosis en el diario sin abrir Piru.",
     "Opens Piru with a dose staged in the quick log, ready to review and save.": "Abre Piru con una dosis preparada en el registro rápido, lista para revisar y guardar.",
-    "Leave empty to log the dose with its amount unknown.": "Déjalo vacío para registrar la dosis con cantidad desconocida.",
+    "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken.": "Déjalo vacío para registrar la dosis con cantidad desconocida. Para un producto combinado, el número de unidades tomadas.",
     "Leave empty to open the dose editor on the usual dose.": "Déjalo vacío para abrir el editor de dosis en la dosis habitual.",
     "The substance's usual unit for the route when empty.": "Si está vacío, la unidad habitual de la sustancia para esa vía.",
     "The substance's usual route when empty.": "Si está vacío, la vía habitual de la sustancia.",

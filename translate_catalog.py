@@ -7340,9 +7340,9 @@ T = {
         "打开 Piru，在快速记录中放好一份剂量，供你检查并保存。",
         "開啟 Piru，在快速記錄中放好一份劑量，供你檢查並儲存。",
     ),
-    "Leave empty to log the dose with its amount unknown.": (
-        "留空则以用量未知记录这份剂量。",
-        "留空則以用量未知記錄這份劑量。",
+    "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken.": (
+        "留空则以用量未知记录这份剂量。对于复方制剂，填写服用的单位数。",
+        "留空則以用量未知記錄這份劑量。對於複方製劑，填寫服用的單位數。",
     ),
     "Leave empty to open the dose editor on the usual dose.": (
         "留空则在常用剂量上打开剂量编辑器。",
@@ -8550,7 +8550,7 @@ if __name__ == "__main__":
             "Start Dose Log",
             "Saves a dose to the journal without opening Piru.",
             "Opens Piru with a dose staged in the quick log, ready to review and save.",
-            "Leave empty to log the dose with its amount unknown.",
+            "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken.",
             "Leave empty to open the dose editor on the usual dose.",
             "The substance's usual unit for the route when empty.",
             "The substance's usual route when empty.",

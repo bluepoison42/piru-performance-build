@@ -13,4 +13,16 @@ nonisolated struct CombinationComponent: Codable, Hashable, Sendable {
     var amountPerUnit: Double
     var unit: String
     var route: RouteOfAdministration
+
+    /// The most units one pick of a product can stage.
+    static let maximumUnits = 1000
+
+    /// How many units of a product an automation's amount means: at least one,
+    /// at most ``maximumUnits``, and one when the number is not finite. The
+    /// amount reaches here from a URL or a Shortcut, so it can be anything a
+    /// `Double` holds, and `Int(1e300)` traps.
+    static func units(for amount: Double?) -> Int {
+        guard let amount, amount.isFinite else { return 1 }
+        return Int(min(max(amount.rounded(), 1), Double(maximumUnits)))
+    }
 }
