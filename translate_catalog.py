@@ -3358,6 +3358,29 @@ T = {
     ),
     "≈%@ %@ active · %@ ago": ("体内约 %1$@ %2$@ · %3$@前", "體內約 %1$@ %2$@ · %3$@前"),
     "Create custom substance": ("创建自定义物质", "建立自訂物質"),
+    # Combination products (custom-substance editor, quick-log search, journal).
+    "Type": ("类型", "類型"),
+    "Compound": ("单一成分", "單一成分"),
+    "Combination": ("复方", "複方"),
+    "Product name (e.g. Co-codamol)": ("产品名称（如 Co-codamol）", "產品名稱（如 Co-codamol）"),
+    "Unit (e.g. tablet, capsule)": ("单位（如片、粒）", "單位（如片、粒）"),
+    "What one of these is called. Each component's amount is per unit.": (
+        "一份的叫法。每种成分的用量按每单位计。",
+        "一份的叫法。每種成分的用量按每單位計。",
+    ),
+    "Components": ("成分", "成分"),
+    "Component": ("成分", "成分"),
+    "Add Component": ("添加成分", "新增成分"),
+    "Picking this in the quick log stages one dose per component.": (
+        "在快捷记录中选择它时，每种成分各加入一条剂量。",
+        "在快捷記錄中選擇它時，每種成分各加入一筆劑量。",
+    ),
+    "Edit Combination": ("编辑复方", "編輯複方"),
+    "New Combination": ("新建复方", "新建複方"),
+    "Amount per %@": ("每%@的用量", "每%@的用量"),
+    "per %@": ("每%@", "每%@"),
+    "%@ · per %@": ("%@ · 每%@", "%@ · 每%@"),
+    "Part of %@": ("%@ 的一部分", "%@ 的一部分"),
     "Find a Place…": ("查找地点…", "尋找地點…"),
     "Location access is off": ("定位权限已关闭", "定位權限已關閉"),
     "Turn on location access in Settings to use your current location.": (
@@ -8495,6 +8518,27 @@ if __name__ == "__main__":
             "seconds",
             "Time since administration",
             "Endpoint: modeled “any drug effect” rating on a visual analog scale",
+        }
+    )
+    # Combination products (2026-10-18).
+    NEW_KEYS.update(
+        {
+            "Type",
+            "Compound",
+            "Combination",
+            "Product name (e.g. Co-codamol)",
+            "Unit (e.g. tablet, capsule)",
+            "What one of these is called. Each component's amount is per unit.",
+            "Components",
+            "Component",
+            "Add Component",
+            "Picking this in the quick log stages one dose per component.",
+            "Edit Combination",
+            "New Combination",
+            "Amount per %@",
+            "per %@",
+            "%@ · per %@",
+            "Part of %@",
         }
     )
     print("--- Piru main app catalog ---")
