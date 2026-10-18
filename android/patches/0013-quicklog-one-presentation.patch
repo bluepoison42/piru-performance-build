@@ -1,12 +1,12 @@
 Quick log on Android is one full-screen cover with the dock inline at the foot of its scroll view, sized as its detent would size it: a detented sheet over the cover is a second window that takes every tap. Off a sheet, presentationDetents swallows the dock, so the sheet modifiers stay iOS-only. DockClearance stays iOS-only: the inline dock already ends the cards above it
 
 diff --git a/Piru/Navigation/SheetStackPresenter.swift b/Piru/Navigation/SheetStackPresenter.swift
-index d4d11d03..5bb44dfa 100644
+index 6e7bb649..a2aabdb2 100644
 --- a/Piru/Navigation/SheetStackPresenter.swift
 +++ b/Piru/Navigation/SheetStackPresenter.swift
-@@ -48,7 +48,7 @@ private struct SheetLayer: ViewModifier {
-                     routeContent(route)
-                         .modifier(SheetLayer(navigator: navigator, depth: depth + 1))
+@@ -55,7 +55,7 @@ private struct SheetLayer: ViewModifier {
+                         .frame(minWidth: 520, idealWidth: 640, minHeight: 480, idealHeight: 720)
+                     #endif
                  }
 -            #if os(iOS)
 +            #if os(iOS) || os(Android)
@@ -14,10 +14,10 @@ index d4d11d03..5bb44dfa 100644
                      // swiftlint:disable:next redundant_discardable_let
                      let _ = assert(
 diff --git a/Piru/Views/QuickLog/QuickLogSupport.swift b/Piru/Views/QuickLog/QuickLogSupport.swift
-index 7243ba96..aa827c39 100644
+index 8e4c46bf..feab6d95 100644
 --- a/Piru/Views/QuickLog/QuickLogSupport.swift
 +++ b/Piru/Views/QuickLog/QuickLogSupport.swift
-@@ -90,6 +90,8 @@ struct DockSheetHost: View {
+@@ -97,6 +97,8 @@ struct DockSheetHost: View {
          // Routine…) present here, stacked on the dock — the dock occupies
          // the cover's only presentation slot, so they can't present there.
          .hostsNestedNavigatorSheets(navigator)
@@ -26,7 +26,7 @@ index 7243ba96..aa827c39 100644
          .presentationDetents(detents, selection: $detent)
          // At every height, never `upThrough: .medium`: a tall staged stack sets
          // its compact detent above medium, and past that threshold the sheet
-@@ -98,6 +100,7 @@ struct DockSheetHost: View {
+@@ -105,6 +107,7 @@ struct DockSheetHost: View {
          .presentationContentInteraction(geometry.compactOverflows ? .scrolls : .resizes)
          .presentationBackground { Color.clear }
          .interactiveDismissDisabled()
@@ -35,10 +35,10 @@ index 7243ba96..aa827c39 100644
  
      /// Stage a scanned label as a complete dose — the strength read off the box
 diff --git a/Piru/Views/QuickLog/QuickLogView.swift b/Piru/Views/QuickLog/QuickLogView.swift
-index 28948769..3343db58 100644
+index cddd526a..1b6d3883 100644
 --- a/Piru/Views/QuickLog/QuickLogView.swift
 +++ b/Piru/Views/QuickLog/QuickLogView.swift
-@@ -166,11 +166,48 @@ struct QuickLogView: View {
+@@ -302,11 +302,48 @@ struct QuickLogView: View {
              // Staging haptics live in a leaf, not this body: reading the tick
              // counters here would re-run the whole `QuickLogView.body` on
              // every stage/increment.
@@ -87,19 +87,8 @@ index 28948769..3343db58 100644
              #if canImport(UIKit)
                  .background(CoverAccessibilityUnmasker())
              #endif
-@@ -321,6 +358,7 @@ struct QuickLogView: View {
-         .onGeometryChange(for: CGFloat.self, of: \.size.height) { newValue in
-             containerHeight = newValue
-         }
-+        #if !os(Android)
-         .sheet(isPresented: $dockPresented) {
-             DockSheetHost(
-                 tray: tray,
-@@ -335,8 +373,19 @@ struct QuickLogView: View {
-                 onCommit: commitTray,
-             )
-         }
-+        #endif
+@@ -376,6 +413,16 @@ struct QuickLogView: View {
+         #endif
      }
  
 +    #if os(Android)
