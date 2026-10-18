@@ -54,6 +54,7 @@ struct DockMiddleContent: View {
                                 onAdd: stagePayload,
                                 onAddDraft: stageDraftPayload,
                                 onCreateCustom: onCreateCustom,
+                                onAddCombination: stageCombination,
                             )
                         }
                     }
@@ -157,9 +158,21 @@ struct DockMiddleContent: View {
         onDidStage()
     }
 
+    /// A combination product: one chip per component joins the tray, each
+    /// labeled with the product; picking it ends the search like any hit.
+    private func stageCombination(_ entry: CustomSubstanceEntry) {
+        withAnimation(.snappy) {
+            tray.stage(combination: entry, colorLookup: content.cachedColorLookup)
+        }
+        onDidStage()
+    }
+
     // MARK: Search results
 
-    /// The ranked hits shown beneath the field (recent → library → custom).
+    /// The ranked hits shown beneath the field (recent → combination → library
+    /// → custom). A combination the user authored outranks a library hit for
+    /// the same word: it is the product they named, and the library may carry
+    /// that name as a brand alias of one component.
     private var results: [QuickLogSearchResult] {
         let query = searchText.lowercased()
         guard !query.isEmpty else { return [] }
@@ -183,6 +196,7 @@ struct DockMiddleContent: View {
         let recentNames = Set(recentCards.map { $0.substanceName.lowercased() })
 
         var results: [QuickLogSearchResult] = recentCards.map { .recent($0) }
+        results += filteredCombinations.prefix(1).map { .combination($0) }
         results += content.cachedLibraryResults
             .filter { match in
                 // An ester match ("Estradiol Valerate") is a distinct form from a
@@ -198,21 +212,31 @@ struct DockMiddleContent: View {
         return Array(results.prefix(4))
     }
 
-    private var filteredCustomSubstances: [Substance] {
+    /// The custom entries whose canonical name OR personal display name holds
+    /// the query, so a relabelled substance is findable by the name the user
+    /// gave it. Entries already covered by a recent card or a library hit are
+    /// left out.
+    private var matchingCustomEntries: [CustomSubstanceEntry] {
         guard !searchText.isEmpty else { return [] }
         let query = searchText.lowercased()
         let libraryNames = Set(content.cachedLibraryResults.map { $0.substance.name.lowercased() })
-        return customSubstanceStore.all
-            .filter { custom in
-                let nameLower = custom.name.lowercased()
-                let displayLower = custom.displayName?.lowercased() ?? ""
-                // Match the canonical name OR the personal display name, so a
-                // relabelled substance is findable by the name the user gave it.
-                let matches = nameLower.contains(query) || (!displayLower.isEmpty && displayLower.contains(query))
-                return matches
-                    && !content.cachedHistoryNames.contains(nameLower)
-                    && !libraryNames.contains(nameLower)
-            }
+        return customSubstanceStore.all.filter { custom in
+            let nameLower = custom.name.lowercased()
+            let displayLower = custom.displayName?.lowercased() ?? ""
+            let matches = nameLower.contains(query) || (!displayLower.isEmpty && displayLower.contains(query))
+            return matches
+                && !content.cachedHistoryNames.contains(nameLower)
+                && !libraryNames.contains(nameLower)
+        }
+    }
+
+    private var filteredCombinations: [CustomSubstanceEntry] {
+        matchingCustomEntries.filter(\.isCombination)
+    }
+
+    private var filteredCustomSubstances: [Substance] {
+        matchingCustomEntries
+            .filter { !$0.isCombination }
             // Resolve through the library so an override of a shipped substance
             // carries its full dose/duration data (labeled with the personal
             // name); a net-new custom falls back to its own asSubstance.

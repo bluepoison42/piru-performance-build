@@ -2,19 +2,24 @@ import SwiftUI
 
 // MARK: - In-dock search results
 
-/// One in-dock search hit: a recent card, a library substance, or a custom one.
+/// One in-dock search hit: a recent card, a library substance, a custom one,
+/// or a combination product.
 enum QuickLogSearchResult: Identifiable {
     case recent(SubstanceCard)
     /// A library hit, carrying the alias the query matched — so a search for
     /// "Concerta" can say so instead of silently resolving to "Methylphenidate".
     case library(SubstanceMatch)
     case custom(Substance)
+    /// A combination product (co-codamol): its own case because picking it
+    /// stages one dose per component, not a single substance.
+    case combination(CustomSubstanceEntry)
 
     var id: String {
         switch self {
         case let .recent(card): "recent|\(card.id)"
         case let .library(match): "library|\(match.substance.name.lowercased())"
         case let .custom(substance): "custom|\(substance.name.lowercased())"
+        case let .combination(entry): "combination|\(entry.id.uuidString)"
         }
     }
 }
@@ -67,6 +72,9 @@ struct QuickLogSearchResults: View {
     /// suggestions surfaces (recents, category browse) reuse these rows
     /// without the create CTA.
     let onCreateCustom: (() -> Void)?
+    /// Stage every component of a combination product. Only the search
+    /// surface lists combinations, so the suggestion surfaces leave it `nil`.
+    var onAddCombination: ((CustomSubstanceEntry) -> Void)?
 
     @State private var customSubstanceStore = CustomSubstanceStore.shared
 
@@ -123,6 +131,14 @@ struct QuickLogSearchResults: View {
                 source: String(localized: "Custom"),
                 tint: substance.category.color,
                 detail: substanceDetail(substance),
+            )
+        case let .combination(entry):
+            resultRow(
+                result: result,
+                name: entry.resolvedDisplayName,
+                source: String(localized: "Combination"),
+                tint: entry.category.color,
+                detail: entry.componentsSummary,
             )
         }
     }
@@ -214,6 +230,10 @@ struct QuickLogSearchResults: View {
     /// A recent with a recorded drink is already complete — it re-stages
     /// exactly, matching the recent-card chip path.
     private func add(_ result: QuickLogSearchResult) {
+        if case let .combination(entry) = result {
+            onAddCombination?(entry)
+            return
+        }
         let payload = payload(for: result)
         let hasRecordedDrink = payload.volumeML != nil && payload.abv != nil && payload.amount > 0
         if (payload.librarySubstance?.byVolumeDosing != nil && !hasRecordedDrink) || payload.amount <= 0 {
@@ -252,6 +272,19 @@ struct QuickLogSearchResults: View {
             return payload(for: match.substance, productName: match.matchedAlias)
         case let .custom(substance):
             return payload(for: substance, productName: nil)
+        case let .combination(entry):
+            // `add` routes a combination to `onAddCombination` before asking for
+            // a payload; a combination has no single substance to stage, so
+            // this answers with its first component.
+            let first = entry.components?.first
+            return QuickLogStagePayload(
+                substance: first?.substance ?? entry.name,
+                route: first?.route ?? entry.defaultRoute,
+                unit: first?.unit ?? entry.unit,
+                amount: first?.amountPerUnit ?? 0,
+                tint: nil,
+                librarySubstance: first.flatMap { SubstanceLibrary.lookup($0.substance) },
+            )
         }
     }
 

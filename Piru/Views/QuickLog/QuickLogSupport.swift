@@ -47,6 +47,9 @@ struct DockSheetHost: View {
     @State private var detents: Set<PresentationDetent> = QuickLogDockMetrics.emptyDetents
 
     @State private var pendingCustomPrefill: EntryPrefillPayload?
+    /// A combination saved from the create sheet, staged whole once the sheet
+    /// is down — one chip per component, where a compound stages a draft.
+    @State private var pendingCombination: CustomSubstanceEntry?
 
     var body: some View {
         QuickLogDock(
@@ -63,11 +66,15 @@ struct DockSheetHost: View {
         )
         .sheet(isPresented: $showCustomForm, onDismiss: onCustomFormDismiss) {
             CustomSubstanceFormView(initialName: searchText.trimmingCharacters(in: .whitespaces)) { saved in
-                pendingCustomPrefill = EntryPrefillPayload(
-                    substance: saved.name,
-                    route: saved.defaultRoute,
-                    unit: saved.unit,
-                )
+                if saved.isCombination {
+                    pendingCombination = saved
+                } else {
+                    pendingCustomPrefill = EntryPrefillPayload(
+                        substance: saved.name,
+                        route: saved.defaultRoute,
+                        unit: saved.unit,
+                    )
+                }
             }
         }
         .sheet(isPresented: $showEditSheet) {
@@ -121,6 +128,15 @@ struct DockSheetHost: View {
     }
 
     private func onCustomFormDismiss() {
+        if let combination = pendingCombination {
+            pendingCombination = nil
+            withAnimation(.snappy) {
+                tray.stage(combination: combination, colorLookup: content.cachedColorLookup)
+                searchActive = false
+                searchText = ""
+            }
+            return
+        }
         guard let prefill = pendingCustomPrefill else { return }
         pendingCustomPrefill = nil
         withAnimation(.snappy) {
