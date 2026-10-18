@@ -47367,35 +47367,6 @@
         }
       }
     },
-    "Leave empty to log the dose with its amount unknown." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Déjalo vacío para registrar la dosis con cantidad desconocida."
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Déjalo vacío para registrar la dosis con cantidad desconocida."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "留空则以用量未知记录这份剂量。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "留空則以用量未知記錄這份劑量。"
-          }
-        }
-      }
-    },
     "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken." : {
       "localizations" : {
         "es" : {
