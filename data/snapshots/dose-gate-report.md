@@ -2,14 +2,13 @@
 
 Rows the build deleted because they fail a rule about themselves — a class ceiling from `data/curated/dose-class-gates.json`, or a phase too short for its route. Each is a row to report upstream; each rule is in `pipeline/build/dose_gates.py`.
 
-6 row(s) deleted.
+7 row(s) deleted.
 
 ## absorption floor · phase under 1 min on an absorbed route
 
 | substance | source | route | detail |
 |---|---|---|---|
 | Alprazolam | freeodwiki | insufflation | onset 0.0833333–0.166667 min |
-| Nicotine | freeodwiki | oral | comeup 0.0833333–0.166667 min |
 
 ## class ceiling · benzimidazole-nitazenes ≤ 2 mg
 
@@ -23,4 +22,6 @@ Rows the build deleted because they fail a rule about themselves — a class cei
 |---|---|---|---|
 | Acetylfentanyl | dosewiki | insufflation | strong_upper 20 mg — 6 tier(s) above the ceiling; fentanyl is dosed in tens of micrograms and no anilidopiperidine in human use is more than ~100× weaker (PMID 40721041 ranks six analogs within a decade of fentanyl in vivo); a tier above 2 mg is a milligram written for a microgram |
 | Acetylfentanyl | dosewiki | sublingual | strong_upper 20 mg — 6 tier(s) above the ceiling; fentanyl is dosed in tens of micrograms and no anilidopiperidine in human use is more than ~100× weaker (PMID 40721041 ranks six analogs within a decade of fentanyl in vivo); a tier above 2 mg is a milligram written for a microgram |
+| Acetylfentanyl | freeodwiki | insufflation | strong_upper 20 mg — 7 tier(s) above the ceiling; fentanyl is dosed in tens of micrograms and no anilidopiperidine in human use is more than ~100× weaker (PMID 40721041 ranks six analogs within a decade of fentanyl in vivo); a tier above 2 mg is a milligram written for a microgram |
+| Acetylfentanyl | freeodwiki | sublingual | strong_upper 20 mg — 7 tier(s) above the ceiling; fentanyl is dosed in tens of micrograms and no anilidopiperidine in human use is more than ~100× weaker (PMID 40721041 ranks six analogs within a decade of fentanyl in vivo); a tier above 2 mg is a milligram written for a microgram |
 | Valerylfentanyl | tripsit | oral | light_lower 50 mg — 2 tier(s) above the ceiling; fentanyl is dosed in tens of micrograms and no anilidopiperidine in human use is more than ~100× weaker (PMID 40721041 ranks six analogs within a decade of fentanyl in vivo); a tier above 2 mg is a milligram written for a microgram |

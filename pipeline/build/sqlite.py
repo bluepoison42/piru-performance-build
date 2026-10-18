@@ -497,6 +497,12 @@ FREEOD_CATEGORY_MAP = {
 # Effect links the FreeOD extractor reads from a page's prose that are not the
 # page's own effects. The extractor takes every link into 药效/ on the page, so
 # a page that mentions an effect it counteracts or an etymology claims it.
+# Titles a page carried before upstream renamed it. Journals logged under the old
+# name resolve by alias.
+FREEOD_FORMER_TITLES: dict[str, list[str]] = {
+    "IHCH-7113": ["IHCH-711"],
+}
+
 FREEOD_EFFECT_EXCLUSIONS: dict[str, dict[str, str]] = {
     "8-氯茶碱": {"困倦": "the drowsiness of diphenhydramine it counteracts"},
     "颠茄": {"扩大": "etymology: the eye drops once used to dilate pupils"},
@@ -517,7 +523,7 @@ FREEOD_NAME_OVERRIDE = {
     # Neither page lists a name Piru already carries, so without these they
     # would each mint a substance titled in Chinese.
     "二氟莫达非尼": "Flmodafinil",
-    "阿莫达非尼": "Modafinil",
+    "阿莫达非尼": "Armodafinil",
     # The α-PHP page also lists the short name "alpha-PHP", which an earlier
     # source carries as its own row until the InChIKey merge folds it in.
     "α-PHP": "alpha-Pyrrolidinohexiophenone",
@@ -529,6 +535,10 @@ FREEOD_NAME_OVERRIDE = {
     "NMP": "Pentedrone",
     "NEH": "N-Ethylhexedrone",
     "8-氯茶碱": "1,3-Dimethyl-8-Chloroxanthine",
+    # Chinese-titled pages whose only other name is Chinese: N-cyclopropylpemoline
+    # and 3,4,5-trimethoxyphenethylamine.
+    "环唑酮": "Cyclazodone",
+    "麦斯卡林": "Mescaline",
     "麻黄碱": "Ephedrine",
     "伪麻黄碱": "Pseudoephedrine",
     "尼古丁": "Nicotine",
@@ -583,7 +593,6 @@ FREEOD_NAME_OVERRIDE = {
     "金刚烷胺": "Amantadine",
     "加兰他敏": "Galantamine",
     "加波沙多": "Gaboxadol",
-    "阿莫达菲尼": "Armodafinil",
     "苄达明": "Benzydamine",
     "卡瓦": "Kava",
     "环己丙甲胺": "Propylhexedrine",
@@ -3172,7 +3181,7 @@ IDENTIFIER_CORRECTIONS: dict[str, dict] = {
 }
 
 
-def apply_identifier_reconciliation(con, mapping: dict) -> dict:
+def apply_identifier_reconciliation(con, mapping: dict, *, set_cid: bool = False) -> dict:
     """Apply PubChem-authoritative InChIKey/SMILES corrections from the
     ``data/sources/identifier-corrections.json`` snapshot (refresh via
     ``reconcile_identifiers_pubchem.py``). Keyed by canonical_name; each entry
@@ -3184,12 +3193,21 @@ def apply_identifier_reconciliation(con, mapping: dict) -> dict:
     corrections PubChem corroborated against exactly one existing DB signal, so
     each names the field that was wrong. Runs after dedup (canonical_name matches
     the snapshot's basis) and **before** ``apply_pubchem_cids`` so CID resolution
-    keys off the corrected InChIKey. Returns per-field change counts."""
+    keys off the corrected InChIKey. ``set_cid`` also writes an entry's ``cid``;
+    only the hand-verified manual layer passes it, because the CID fill that
+    follows skips a row whose formula is not stored yet. Returns per-field
+    change counts."""
     if not mapping:
-        return {"inchikey": 0, "smiles": 0, "cas": 0, "formula": 0}
+        return {"inchikey": 0, "smiles": 0, "cas": 0, "formula": 0, "cid": 0}
     cur = con.cursor()
-    res = {"inchikey": 0, "smiles": 0, "cas": 0, "formula": 0}
+    res = {"inchikey": 0, "smiles": 0, "cas": 0, "formula": 0, "cid": 0}
     for name, fix in mapping.items():
+        if set_cid and fix.get("cid"):
+            cur.execute(
+                "UPDATE substances SET pubchem_cid = ? WHERE canonical_name = ? AND pubchem_cid IS NOT ?",
+                (fix["cid"], name, fix["cid"]),
+            )
+            res["cid"] += cur.rowcount
         if fix.get("inchikey"):
             cur.execute(
                 "UPDATE substances SET inchikey = ? WHERE canonical_name = ? AND inchikey IS NOT ?",
@@ -6014,6 +6032,9 @@ _INERT_TAGS: set[str] = {
 # Keys are normalised canonical names (lowercase). Values are sets of
 # normalised alias strings to drop on insert.
 _ALIAS_BLOCKLIST: dict[str, set[str]] = {
+    # FreeOD's kava page lists "ava", which is also apovincaminic acid (AVA),
+    # vinpocetine's metabolite.
+    "kava": {"ava"},
     # FreeOD's α-PiHP page lists α-PHP's systematic name among its own; α-PiHP is
     # the isohexyl isomer, so the name stays on alpha-Pyrrolidinohexiophenone.
     "alpha-pihp": {"alpha-pyrrolidinohexiophenone"},
@@ -9303,6 +9324,12 @@ class Build:
             ).fetchone()
             return row[0] if row else None
 
+        isomer_variants = {
+            normalise(v["name"])
+            for fam in collision_registry.fold_families()
+            for v in fam.get("variants", [])
+        }
+
         def resolve_existing(cands: list[str]) -> str | None:
             for cand in cands:
                 n = normalise(cand)
@@ -9314,8 +9341,12 @@ class Build:
                 # curated "2-Fluoroamphetamine"). Prefer the fuller-named,
                 # usually-curated alias target so FreeOD data lands there and
                 # the later dedup keeps the canonical name, not the acronym.
+                # Never when the alias target is a stereoisomer variant: a stereo
+                # alias ("(S)-amphetamine") normalizes to its parent's name, and
+                # following it files a racemic page under one enantiomer.
                 if sid_canon and sid_alias and sid_alias != sid_canon:
-                    if name := canonical_of(sid_alias):
+                    name = canonical_of(sid_alias)
+                    if name and normalise(name) not in isomer_variants:
                         return name
                 if sid_canon:
                     return cand
@@ -9351,7 +9382,13 @@ class Build:
             else:
                 canonical = resolve_existing(latin_cands) or canonical
             # All FreeOD names + the zh title become searchable aliases.
-            aliases = list(dict.fromkeys([n for n in ([title] + names) if n and n != canonical]))
+            aliases = list(
+                dict.fromkeys(
+                    n
+                    for n in ([title] + names + FREEOD_FORMER_TITLES.get(title, []))
+                    if n and n != canonical
+                )
+            )
             before = self.stats["substances"]
             sid = self.upsert_substance(
                 canonical,
@@ -15099,10 +15136,11 @@ def main() -> int:
             for k, v in json.loads(IDENTIFIER_RECONCILE_MANUAL.read_text()).items()
             if not k.startswith("_")
         }
-        rec_m = apply_identifier_reconciliation(build.cur.connection, manual)
+        rec_m = apply_identifier_reconciliation(build.cur.connection, manual, set_cid=True)
         print(
             f"Identifier reconciliation (manual): inchikey={rec_m['inchikey']} "
-            f"smiles={rec_m['smiles']} cas={rec_m['cas']} formula={rec_m['formula']}",
+            f"smiles={rec_m['smiles']} cas={rec_m['cas']} formula={rec_m['formula']} "
+            f"cid={rec_m['cid']}",
             file=sys.stderr,
         )
 

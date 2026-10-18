@@ -230,5 +230,39 @@ class TestSplitNamesKeepsSystematicNamesWhole(unittest.TestCase):
         )
 
 
+class TestPageLayouts(unittest.TestCase):
+    def test_heading_route_sections_keep_their_own_ladders(self):
+        # 羟考酮.md: one table per route under "#### **route**" headings.
+        rec = _parse_md(
+            "---\ntitle: X\n---\n\n#### **口服**\n\n| 剂量 | |\n|---|---|\n"
+            "| 阈值 | 5 mg |\n| 中等 | 10 ~ 25 mg |\n\n#### **静脉注射**\n\n"
+            "| 剂量 | |\n|---|---|\n| 阈值 | 2 mg |\n| 中等 | 7.5 ~ 10 mg |\n\nprose.\n"
+        )
+        self.assertEqual(rec["doses"]["oral"]["common"], {"min": 10.0, "max": 25.0})
+        self.assertEqual(rec["doses"]["intravenous"]["common"], {"min": 7.5, "max": 10.0})
+
+    def test_every_route_column_reads_into_its_own_route(self):
+        # 尼古丁.md: smoking, oral and buccal side by side.
+        rec = _parse_md(
+            "---\ntitle: X\n---\n\n- | 给药途径 | 🔽 抽吸 | 🔽 口服 | 🔽 颊部给药 |\n"
+            "  | --- | --- | --- | --- |\n  | 阈值 | 0.1 mg | 1 mg | 0.5 mg |\n\nprose.\n"
+        )
+        self.assertEqual(rec["doses"]["inhalation"]["threshold"], 0.1)
+        self.assertEqual(rec["doses"]["oral"]["threshold"], 1.0)
+        self.assertEqual(rec["doses"]["buccal"]["threshold"], 0.5)
+
+    def test_cas_cell_keeps_the_first_number(self):
+        rec = _parse_md(
+            "---\ntitle: X\n---\n\n| CAS 号 | 113-45-1<br>298-59-9（盐酸盐） |\n"
+            "| 阈值 | 5 mg |\n\nprose.\n"
+        )
+        self.assertEqual(rec["cas"], "113-45-1")
+
+    def test_cas_prefers_the_racemate_over_a_leading_enantiomer(self):
+        pick = _mod.pick_cas
+        self.assertEqual(pick("537-46-2（右旋）<br>7632-10-2（消旋）"), "7632-10-2")
+        self.assertEqual(pick("300-62-9<br>2706-50-5（消旋盐酸盐）"), "300-62-9")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

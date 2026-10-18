@@ -1713,9 +1713,8 @@
     "substance_uid": "DRLFMBDRBRZALE"
   },
   "mem": {
-    "name": "EMM",
-    "substance_uid": "SKRNTJDDBVAEGB",
-    "note": "draft; identical structure"
+    "substance_uid": null,
+    "note": "draft; its SMILES and IUPAC are EMM (2-ethoxy-4,5-dimethoxy) while its title and substitutive name are MEM (2,5-dimethoxy-4-ethoxy), so the structure contradicts the page"
   },
   "memantine": {
     "name": "Memantine",

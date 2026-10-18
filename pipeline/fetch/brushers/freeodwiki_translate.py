@@ -122,8 +122,20 @@ def fetch_titles(titles):
     # Map each requested title to an extract through the alias chain.
     res = {}
     for t in titles:
-        res[t] = title_extract.get(resolve(t))
+        ex = title_extract.get(resolve(t))
+        res[t] = ex if ex and names_itself(t, resolve(t), ex) else None
     return res
+
+
+def names_itself(query: str, resolved: str, extract: str) -> bool:
+    """False when a redirect landed on another compound's article: PsychonautWiki
+    sends Dimenhydrinate to Diphenhydramine and Tobacco to Nicotine, and that
+    lead describes a different substance. A redirect is kept only when the
+    lead's first sentence names what was asked for."""
+    if query.casefold() == resolved.casefold():
+        return True
+    first = extract.split(". ", 1)[0].casefold()
+    return query.casefold() in first
 
 
 remaining = list(slug_cands.keys())

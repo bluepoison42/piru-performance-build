@@ -89,11 +89,12 @@ struct IsomerFormTests {
         let ketamine = try #require(store.lookup("Ketamine"))
         let isomers = Set(ketamine.availableIsomers)
         #expect(isomers.contains("S"))
-        #expect(isomers.contains("R"))
-        // Each enantiomer keeps its recognized name (route-independent), so the
-        // picker titles it "Esketamine"/"Arketamine" rather than a bare letter.
+        // No source carries arketamine doses. An R form here means a racemic
+        // ladder was filed under one enantiomer, as FreeOD's ketamine page was.
+        #expect(!isomers.contains("R"))
+        // The enantiomer keeps its recognized name (route-independent), so the
+        // picker titles it "Esketamine" rather than a bare letter.
         #expect(ketamine.isomerDisplayName(for: "S") == "Esketamine")
-        #expect(ketamine.isomerDisplayName(for: "R") == "Arketamine")
     }
 
     @Test

@@ -49,6 +49,8 @@ DURATION_PHASES = {
 # Route keywords, longest-first so "舌下含服" wins over "舌下" and "静脉注射"
 # over "静脉". Mapped onto Piru's RouteOfAdministration raw values.
 ROUTE_KEYWORDS = [
+    ("颊部给药", "buccal"),
+    ("颊", "buccal"),
     ("舌下含服", "sublingual"),
     ("舌下", "sublingual"),
     ("含服", "sublingual"),
@@ -69,6 +71,8 @@ ROUTE_KEYWORDS = [
     ("汽化", "inhalation"),
     ("蒸发", "inhalation"),
 ]
+
+_CAS_RE = re.compile(r"\d{2,7}-\d{2}-\d")
 
 # Chem-info card labels.
 CHEM_FORMULA = "分子式"
@@ -275,6 +279,20 @@ def table_text(line: str) -> str:
     return s[2:].strip() if s.startswith("- |") else s
 
 
+def pick_cas(value: str) -> str | None:
+    """The substance's own CAS number from a cell that may list several, each
+    with a note: "113-45-1<br>298-59-9（盐酸盐）". The first number is the
+    substance, unless another is marked racemic (消旋) without being a salt (盐),
+    as on pages whose first number is one enantiomer."""
+    entries = [
+        (m.group(0), value[m.end() : m.end() + 12].split("<br")[0]) for m in _CAS_RE.finditer(value)
+    ]
+    for number, note in entries:
+        if "消旋" in note and "盐" not in note:
+            return number
+    return entries[0][0] if entries else None
+
+
 def is_table_row(line: str) -> bool:
     s = table_text(line)
     return s.startswith("|") and s.count("|") >= 2
@@ -293,11 +311,11 @@ def route_columns(cells: list[str]) -> list[str | None] | None:
     if not named:
         return None
     routes = [match_route(c) for c in named]
-    if not all(routes):
+    if not any(routes):
         return None
     out: list[str | None] = []
     for r in routes:
-        out.append(None if r in out else r)
+        out.append(None if r is None or r in out else r)
     return out
 
 
@@ -346,6 +364,15 @@ def parse_page(path: Path) -> dict | None:
                 columns = None
                 continue
         stripped = line.strip()
+        # A heading that is only a route name ("#### **口服**", "#### [抽吸](…)")
+        # starts that route's section.
+        if stripped.startswith("#"):
+            heading = clean_cell(stripped.lstrip("#"))
+            r = match_route(heading) if 0 < len(heading) <= 8 else None
+            if r:
+                current_route = r
+                columns = None
+                continue
         if stripped.startswith("**") and (
             "生物利用度" in stripped
             or "Bioavailability" in stripped
@@ -414,7 +441,7 @@ def parse_page(path: Path) -> dict | None:
             rec["formula"] = strip_md(value) or None
             continue
         if label.startswith(CHEM_CAS) and not rec["cas"]:
-            rec["cas"] = strip_md(value) or None
+            rec["cas"] = pick_cas(value)
             continue
         if label in CHEM_IUPAC and not rec["iupac"]:
             rec["iupac"] = strip_md(value) or None

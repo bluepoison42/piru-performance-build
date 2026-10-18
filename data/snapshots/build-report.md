@@ -1,23 +1,23 @@
 # Piru SQLite build report
 
-Built 2026-10-18.13 → `Piru/Data/piru-substances.sqlite` (21,225,472 bytes, sha256 `7806186619beb9f4a615515a942d9a8437287607c1ac8475bf72e2f6875f16e0`)
+Built 2026-10-18.17 → `Piru/Data/piru-substances.sqlite` (21,225,472 bytes, sha256 `98db4bb132567694978a9a03d8780b63e8b050dd48a9283ced971141766f1192`)
 
 ## Row counts
 
 | Table | Rows |
 |---|---|
-| substances | 1,676 |
-| aliases | 6,014 |
+| substances | 1,674 |
+| aliases | 6,016 |
 | sources | 18 |
 | source_field_priority | 1 |
 | citations | 2,483 |
-| categories | 1,578 |
+| categories | 1,577 |
 | tags | 7,054 |
-| dose_ranges | 2,782 |
-| durations | 6,769 |
+| dose_ranges | 2,801 |
+| durations | 6,853 |
 | drug_community_timelines | 755 |
 | half_lives | 716 |
-| mechanisms_summary | 1,233 |
+| mechanisms_summary | 1,232 |
 | effects | 2,952 |
 | subjective_effects | 23,645 |
 | subjective_effect_concepts | 506 |
@@ -76,7 +76,6 @@ Identifier columns a source was allowed to overwrite because the stored row cont
 | 1P-LSD | inchikey | key_from_own_smiles | `JSMQOVGXBIDBIE-UHFFFAOYSA-N` | `JSMQOVGXBIDBIE-OXQOHEQNSA-N` |
 | 4-EMC | inchikey | key_from_own_smiles | `FUYPDKFWOHBUFT-VIFPVBQESA-N` | `FUYPDKFWOHBUFT-UHFFFAOYSA-N` |
 | Buprenorphine | smiles | smiles_regains_stereo | `COC12CCC3(CC1C(C)(O)C(C)(C)C)C1Cc4ccc(O)c5OC2C3(CCN1CC1CC1)c45` | `CO[C@]12CC[C@@]3(C[C@@H]1[C@](C)(O)C(C)(C)C)[C@H]1CC4=C5C(O[C@@H]2[C@@]35CCN1CC1CC1)=C(O)C=C4` |
-| Zolpidem | cas | cas_check_digit | `82626-48-099294-93-6（酒石酸盐）` | `82626-48-0` |
 | ETH-LAD | inchikey | key_from_own_smiles | `MYNOUXJLOHVSMQ-UHFFFAOYSA-N` | `MYNOUXJLOHVSMQ-DNVCBOLYSA-N` |
 | 1P-ETH-LAD | smiles | smiles_regains_stereo | `CCN(CC)C(=O)C1CN(CC)C2Cc3cn(C(=O)CC)c4cccc(C2=C1)c34` | `CCN1C[C@@H](C=C2[C@H]1Cc1cn(c3c1c2ccc3)C(=O)CC)C(=O)N(CC)CC` |
 | 3,4-CTMP | inchikey | key_from_own_smiles | `JUKMAYKVHWKRKY-CHWSQXEVSA-N` | `JUKMAYKVHWKRKY-UHFFFAOYSA-N` |
@@ -97,7 +96,7 @@ Identifier columns a source was allowed to overwrite because the stored row cont
 
 ## Dose gates
 
-6 row(s) deleted by `pipeline/build/dose_gates.py`; the rows are in `data/snapshots/dose-gate-report.md`.
+7 row(s) deleted by `pipeline/build/dose_gates.py`; the rows are in `data/snapshots/dose-gate-report.md`.
 
 ## Per-source coverage
 
@@ -120,4 +119,4 @@ Identifier columns a source was allowed to overwrite because the stored row cont
 | medtap | 0 | 0 | 0 | 0 |
 | benzos-cited | 0 | 0 | 0 | 0 |
 | nps-datahub | 0 | 0 | 0 | 0 |
-| freeodwiki | 359 | 0 | 47 | 0 |
+| freeodwiki | 378 | 0 | 46 | 0 |

@@ -123,7 +123,10 @@ pipeline/build.sh full     # also re-run upstream scrape/extract first (network 
 `full` takes about an hour, most of it PubChem's rate limit, and needs
 `defusedxml` for the PubMed step (`pip install defusedxml`). Every lookup it
 refreshes merges into its committed snapshot, because each one queries the
-built database for what is still missing and would otherwise write only that.
+built database for what is still missing and would otherwise write only that. The
+same merge means a refresh never revokes an entry: once a correction is applied
+the database reads as consistent, so a wrong one has to be deleted from its
+snapshot by hand.
 
 `build.sh` is the source of truth for the steps and their order; it just
 invokes the per-step scripts (`fetch/psychonautwiki.py`, the Swift collector,

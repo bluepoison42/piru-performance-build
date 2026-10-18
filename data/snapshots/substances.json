@@ -2041,7 +2041,6 @@
     "default_route": "insufflation",
     "all_routes": [
       "insufflation",
-      "oral",
       "sublingual"
     ],
     "routes_with_dose": [
@@ -5048,11 +5047,13 @@
     "default_route": "insufflation",
     "all_routes": [
       "insufflation",
-      "oral"
+      "oral",
+      "rectal"
     ],
     "routes_with_dose": [
       "insufflation",
-      "oral"
+      "oral",
+      "rectal"
     ],
     "has_dose_data": true,
     "has_duration_data": true,
@@ -17962,8 +17963,7 @@
       "oral"
     ],
     "routes_with_dose": [
-      "inhalation",
-      "oral"
+      "inhalation"
     ],
     "has_dose_data": true,
     "has_duration_data": true,
@@ -23397,7 +23397,9 @@
     "aliases": [
       "N-cyclopropyl-pemoline",
       "N-cyclopropylpemoline",
-      "NCP-pemoline"
+      "N-环丙基匹莫林",
+      "NCP-pemoline",
+      "环唑酮"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -23416,12 +23418,11 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
+    "mechanism_summary": "环唑酮是匹莫林的大约3x - 5x更强的N-环丙基衍生物。匹莫林被认为是多巴胺能的，但其确切作用方式尚未完全确定。匹莫林对去甲肾上腺素受体有最小亲和力，因此与典型的多巴胺能中枢神经系统兴奋剂如哌甲酯和右旋-苯丙胺相比，具有最小的拟交感副作用哦。\n\n根据发明人提交的专利，环唑酮表现出中枢神经系统刺激特性以及比匹莫林和其他N-低烷基取代匹莫林衍生物更强的食欲抑制特性。当时环唑酮也提供了比匹莫林和其他N-低烷基取代匹莫林衍生物更有利的治疗指数和安全边际呢。\n\n在动物模型中，环唑酮表现出中枢神经系统兴奋剂和抗抑郁药效和效力至少等于右旋-苯丙胺。最大活性持续时间为180分钟，总兴奋持续时间超过6小时。而且，根据发明人的专利，环唑酮在动物模型中也具有至少等于右旋-苯丙胺的食欲抑制效力和效力，但环唑酮的毒性与其活性相比被发现较低欸。\n\n环唑酮很可能是一种苯丙胺样的Trace Amine Associated Receptor 1 (TAAR1)的激动剂，这是常见和微量脑单胺如多巴胺、血清素和去甲肾上腺素的关键调节器。这一组受体的激动导致突触间隙中多巴胺、血清素和去甲肾上腺素浓度的增加。这导致用户内的认知和躯体刺激嘛。",
     "effects": [],
     "references": [],
     "data_gaps": [
       "half_life_minutes",
-      "mechanism_of_action",
       "references"
     ]
   },
@@ -35926,7 +35927,9 @@
   {
     "name": "IHCH-7113",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "IHCH-711"
+    ],
     "category": "",
     "display_class": "medical_rx",
     "tags": [],
@@ -37501,7 +37504,6 @@
     "display_name": "",
     "aliases": [
       "Piper methysticum",
-      "ava",
       "kava-kava",
       "malogu",
       "malok",
@@ -41949,6 +41951,7 @@
       "3,4,5-trimethoxybenzeneethanamine",
       "3,4,5-trimethoxyphenethylamine",
       "3,4,5-trimethoxyphenylethylamine",
+      "3,4,5-三甲氧基苯乙胺",
       "Buttons",
       "Cactus",
       "TMPEA",
@@ -41957,7 +41960,8 @@
       "仙人掌毒碱",
       "仙人掌毒鹼",
       "麥司卡林",
-      "麦司卡林"
+      "麦司卡林",
+      "麦斯卡林"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -41979,7 +41983,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 237.0,
-    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
+    "mechanism_summary": "Mescaline acts similarly to other psychedelics. It binds to and activates the serotonin 5-HT2A receptor with high affinity. How activation of the 5-HT2A receptor produces a psychedelic state is not fully understood, but it likely involves excitation of neurons in the prefrontal cortex. Mescaline is also known to bind to and activate the serotonin 5-HT2C receptor.",
     "effects": [
       "Acuity enhancement",
       "After images",
@@ -45826,11 +45830,13 @@
       "no-human-data",
       "research-chemical"
     ],
-    "default_route": "oral",
+    "default_route": "insufflation",
     "all_routes": [
+      "insufflation",
       "oral"
     ],
     "routes_with_dose": [
+      "insufflation",
       "oral"
     ],
     "has_dose_data": true,
@@ -62964,34 +62970,6 @@
     ]
   },
   {
-    "name": "环唑酮",
-    "display_name": "",
-    "aliases": [
-      "N-环丙基匹莫林"
-    ],
-    "category": "Stimulant",
-    "display_class": "recreational",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "环唑酮是匹莫林的大约3x - 5x更强的N-环丙基衍生物。匹莫林被认为是多巴胺能的，但其确切作用方式尚未完全确定。匹莫林对去甲肾上腺素受体有最小亲和力，因此与典型的多巴胺能中枢神经系统兴奋剂如哌甲酯和右旋-苯丙胺相比，具有最小的拟交感副作用哦。\n\n根据发明人提交的专利，环唑酮表现出中枢神经系统刺激特性以及比匹莫林和其他N-低烷基取代匹莫林衍生物更强的食欲抑制特性。当时环唑酮也提供了比匹莫林和其他N-低烷基取代匹莫林衍生物更有利的治疗指数和安全边际呢。\n\n在动物模型中，环唑酮表现出中枢神经系统兴奋剂和抗抑郁药效和效力至少等于右旋-苯丙胺。最大活性持续时间为180分钟，总兴奋持续时间超过6小时。而且，根据发明人的专利，环唑酮在动物模型中也具有至少等于右旋-苯丙胺的食欲抑制效力和效力，但环唑酮的毒性与其活性相比被发现较低欸。\n\n环唑酮很可能是一种苯丙胺样的Trace Amine Associated Receptor 1 (TAAR1)的激动剂，这是常见和微量脑单胺如多巴胺、血清素和去甲肾上腺素的关键调节器。这一组受体的激动导致突触间隙中多巴胺、血清素和去甲肾上腺素浓度的增加。这导致用户内的认知和躯体刺激嘛。",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
     "name": "羟吗啡酮腙",
     "display_name": "",
     "aliases": [
@@ -63123,34 +63101,6 @@
       "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
-      "references"
-    ]
-  },
-  {
-    "name": "麦斯卡林",
-    "display_name": "",
-    "aliases": [
-      "3,4,5-三甲氧基苯乙胺"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "Mescaline acts similarly to other psychedelics. It binds to and activates the serotonin 5-HT2A receptor with high affinity. How activation of the 5-HT2A receptor produces a psychedelic state is not fully understood, but it likely involves excitation of neurons in the prefrontal cortex. Mescaline is also known to bind to and activate the serotonin 5-HT2C receptor.",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
       "references"
     ]
   },

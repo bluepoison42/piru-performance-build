@@ -34,7 +34,8 @@ struct PSIDResolutionTests {
         let ketamine = try #require(store.lookup("Ketamine"))
         let isomers = Set(ketamine.availableIsomers)
         #expect(isomers.contains("S"), "Esketamine folds in as isomer S")
-        #expect(isomers.contains("R"), "Arketamine folds in as isomer R")
+        // Arketamine folds in by name but offers no form: no source carries its doses.
+        #expect(!isomers.contains("R"), "a racemic ladder must not be filed as R")
     }
 
     @Test
