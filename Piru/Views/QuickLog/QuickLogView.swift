@@ -554,6 +554,7 @@ struct QuickLogView: View {
                     volumeML: item.isUnknownAmount ? nil : item.volumeML,
                     abv: item.isUnknownAmount ? nil : item.abv,
                     drinkName: item.isUnknownAmount ? nil : item.drinkName,
+                    combinationName: item.combinationName,
                 )
                 batch.append((entry, item.librarySubstance))
 

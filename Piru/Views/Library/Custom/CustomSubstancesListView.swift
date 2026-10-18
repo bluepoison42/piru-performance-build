@@ -29,14 +29,22 @@ struct CustomSubstancesListView: View {
                                 Text(substance.name)
                                     .font(.body.weight(.medium))
                                     .foregroundStyle(.primary)
-                                HStack(spacing: Spacing.sm) {
-                                    Text(substance.category.displayName)
-                                    Middot()
-                                    Text(substance.defaultRoute.localizedName)
-                                    Middot()
-                                    Text(substance.unit)
+                                if let components = substance.componentsSummary {
+                                    // A combination is its components: "500 mg
+                                    // Paracetamol · 30 mg Codeine" per tablet.
+                                    Text("\(components) · per \(substance.unit)")
+                                        .captionSecondary()
+                                        .lineLimit(2)
+                                } else {
+                                    HStack(spacing: Spacing.sm) {
+                                        Text(substance.category.displayName)
+                                        Middot()
+                                        Text(substance.defaultRoute.localizedName)
+                                        Middot()
+                                        Text(substance.unit)
+                                    }
+                                    .captionSecondary()
                                 }
-                                .captionSecondary()
                             }
                             Spacer()
                             Image(systemName: "chevron.right")

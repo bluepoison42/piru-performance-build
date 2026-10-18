@@ -175,6 +175,11 @@ struct EntryReadHero: View {
                         .font(.subheadline)
                         .foregroundStyle(Theme.secondaryLabel)
                         .monospacedDigit()
+                    if let combination = entry.combinationName {
+                        Text("Part of \(combination)")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.secondaryLabel)
+                    }
                     if let drinkLine = byVolumeDisplayLine {
                         Label(drinkLine, systemImage: byVolumeSymbol)
                             .font(.subheadline.weight(.medium))

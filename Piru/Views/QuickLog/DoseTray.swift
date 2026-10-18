@@ -155,6 +155,10 @@ struct StagedDose: Identifiable, Equatable {
     /// Emoji of the selected drink preset, carried onto the quick-log chip so a
     /// re-logged drink keeps its glyph. Display-only; not persisted on `DoseEntry`.
     var emoji: String?
+    /// The combination product this row was staged from ("Co-codamol" on its
+    /// paracetamol row), carried onto the committed entry. `nil` for a dose
+    /// staged on its own.
+    var combinationName: String?
     /// The user opened this row to type into it (the sliders pill, a row tap),
     /// so the editor focuses the amount field on appear — even over a seeded
     /// reference dose. The editor clears it once consumed. Stays false for
@@ -644,6 +648,9 @@ final class DoseTrayModel {
     /// row: re-staging the same amount increments its count ("took two
     /// pills"), a different amount joins as a new component ("a 150 and a
     /// 182") — always one entry of the summed total at commit, never two.
+    /// `count` stages that many of the chip at once (two tablets of a
+    /// combination); `combinationName` labels the row with the product it
+    /// came from.
     func stage(
         substance: String,
         route: RouteOfAdministration,
@@ -659,13 +666,18 @@ final class DoseTrayModel {
         abv: Double? = nil,
         drinkName: String? = nil,
         emoji: String? = nil,
+        count: Int = 1,
+        combinationName: String? = nil,
     ) {
         let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm)
         if let index = stagedIndex(identity: identity, route: route, unit: unit) {
             if let componentIndex = staged[index].components.firstIndex(where: { Self.sameAmount($0.amount, amount) }) {
-                staged[index].components[componentIndex].count += 1
+                staged[index].components[componentIndex].count += count
             } else {
-                staged[index].components.append(.init(amount: amount))
+                staged[index].components.append(.init(amount: amount, count: count))
+            }
+            if staged[index].combinationName == nil {
+                staged[index].combinationName = combinationName
             }
             incrementTick += 1
         } else {
@@ -682,13 +694,39 @@ final class DoseTrayModel {
                 isFromDailySet: isFromDailySet,
                 isBackgroundMed: isBackgroundMed,
             )
+            dose.components = [.init(amount: amount, count: count)]
             dose.volumeML = volumeML
             dose.abv = abv
             dose.drinkName = drinkName
             dose.emoji = emoji
+            dose.combinationName = combinationName
             staged.append(dose)
             stageTick += 1
             syncEmptiness()
+        }
+    }
+
+    /// Stage a combination product: one chip per component, `quantity` units
+    /// of each ("two co-codamol" is 2 × 500 mg paracetamol and 2 × 30 mg
+    /// codeine), every row labeled with the product's name. Rows merge like any
+    /// other chip, so picking the product again adds another unit to each. A
+    /// component whose substance the library no longer knows stages under its
+    /// raw name, as a custom substance does.
+    func stage(combination: CustomSubstanceEntry, quantity: Int = 1, colorLookup: [String: P3Color] = [:]) {
+        guard quantity > 0 else { return }
+        for component in combination.components ?? [] {
+            let library = SubstanceLibrary.lookup(component.substance)
+            let name = library?.name ?? component.substance
+            stage(
+                substance: name,
+                route: component.route,
+                amount: component.amountPerUnit,
+                unit: component.unit,
+                tint: colorLookup[name.lowercased()],
+                librarySubstance: library,
+                count: quantity,
+                combinationName: combination.name,
+            )
         }
     }
 

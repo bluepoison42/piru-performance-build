@@ -173,4 +173,81 @@ struct DoseTrayModelTests {
         #expect(tray.staged.count == 1)
         #expect(tray.staged[0].components.first?.count == 2)
     }
+
+    // MARK: Combinations
+
+    private var coCodamol: CustomSubstanceEntry {
+        CustomSubstanceEntry(
+            name: "Co-codamol", unit: "tablet",
+            components: [
+                CombinationComponent(substance: "Paracetamol", amountPerUnit: 500, unit: "mg", route: .oral),
+                CombinationComponent(substance: "Codeine", amountPerUnit: 30, unit: "mg", route: .oral),
+            ],
+        )
+    }
+
+    /// One tablet is one row per component, each labeled with the product.
+    @Test
+    func `Staging a combination stages one row per component`() {
+        let tray = DoseTrayModel()
+        tray.stage(combination: coCodamol)
+
+        #expect(tray.staged.count == 2)
+        #expect(tray.staged.map(\.totalAmount) == [500, 30])
+        #expect(tray.staged.map(\.unit) == ["mg", "mg"])
+        #expect(tray.staged.allSatisfy { $0.route == .oral })
+        #expect(tray.staged.allSatisfy { $0.combinationName == "Co-codamol" })
+        #expect(tray.isCommittable)
+    }
+
+    /// Picking the product again is a second tablet: every row doubles, no
+    /// row is added.
+    @Test
+    func `Staging a combination twice doubles every row`() {
+        let tray = DoseTrayModel()
+        tray.stage(combination: coCodamol)
+        tray.stage(combination: coCodamol)
+
+        #expect(tray.staged.count == 2)
+        #expect(tray.staged.map(\.totalAmount) == [1000, 60])
+        #expect(tray.staged.allSatisfy { $0.components.count == 1 && $0.components[0].count == 2 })
+    }
+
+    /// `quantity` is the same as that many picks.
+    @Test
+    func `A quantity stages that many units at once`() {
+        let tray = DoseTrayModel()
+        tray.stage(combination: coCodamol, quantity: 3)
+
+        #expect(tray.staged.map(\.totalAmount) == [1500, 90])
+        #expect(tray.staged[0].breakdownLabel == "3 × 500")
+    }
+
+    /// A component the library doesn't know stages under its raw name, as a
+    /// custom substance does, rather than being dropped from the tablet.
+    @Test
+    func `An unknown component stages by its raw name`() {
+        let tray = DoseTrayModel()
+        let entry = CustomSubstanceEntry(
+            name: "Mystery blend", unit: "capsule",
+            components: [CombinationComponent(substance: "ZZNoSuchCompound", amountPerUnit: 10, unit: "mg", route: .sublingual)],
+        )
+        tray.stage(combination: entry)
+
+        #expect(tray.staged.count == 1)
+        #expect(tray.staged[0].substanceName == "ZZNoSuchCompound")
+        #expect(tray.staged[0].librarySubstance == nil)
+        #expect(tray.staged[0].route == .sublingual)
+        #expect(tray.staged[0].combinationName == "Mystery blend")
+    }
+
+    /// A zero quantity stages nothing, and a combination with no components
+    /// stages nothing — neither leaves an empty row behind.
+    @Test
+    func `Nothing to stage leaves the tray empty`() {
+        let tray = DoseTrayModel()
+        tray.stage(combination: coCodamol, quantity: 0)
+        tray.stage(combination: CustomSubstanceEntry(name: "Empty"))
+        #expect(tray.isEmpty)
+    }
 }

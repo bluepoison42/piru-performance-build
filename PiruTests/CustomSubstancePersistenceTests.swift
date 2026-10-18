@@ -181,5 +181,64 @@ struct CustomSubstanceStoreTests {
         let data = try JSONEncoder().encode(entry)
         let roundTripped = try JSONDecoder().decode(CustomSubstanceEntry.self, from: data)
         #expect(roundTripped.duration == nil)
+        #expect(roundTripped.components == nil)
+        #expect(!roundTripped.isCombination)
+    }
+
+    // MARK: Combinations
+
+    private let coCodamol = [
+        CombinationComponent(substance: "Paracetamol", amountPerUnit: 500, unit: "mg", route: .oral),
+        CombinationComponent(substance: "Codeine", amountPerUnit: 30, unit: "mg", route: .oral),
+    ]
+
+    @Test
+    func `A combination's components round-trip through the store`() throws {
+        let (store, container) = try makeStore()
+        store.add(CustomSubstanceEntry(name: "Co-codamol", category: .opioid, unit: "tablet", components: coCodamol))
+
+        let reloaded = CustomSubstanceStore.forTesting(context: ModelContext(container))
+        let entry = try #require(reloaded.all.first)
+        #expect(entry.isCombination)
+        #expect(entry.unit == "tablet")
+        #expect(entry.components == coCodamol)
+        #expect(entry.doses == nil)
+    }
+
+    /// `update` rewrites the components blob like every other field, and
+    /// clearing them turns the row back into a single compound: an empty list
+    /// never persists as "a combination of nothing".
+    @Test
+    func `Update rewrites components and an empty list stores as nil`() throws {
+        let (store, container) = try makeStore()
+        let entry = CustomSubstanceEntry(name: "Co-codamol", unit: "tablet", components: coCodamol)
+        store.add(entry)
+
+        var edited = entry
+        edited.components = [coCodamol[0]]
+        store.update(edited)
+        #expect(CustomSubstanceStore.forTesting(context: ModelContext(container)).all.first?.components == [coCodamol[0]])
+
+        edited.components = []
+        store.update(edited)
+        let cleared = try #require(CustomSubstanceStore.forTesting(context: ModelContext(container)).all.first)
+        #expect(cleared.components == nil)
+        #expect(!cleared.isCombination)
+    }
+
+    /// Names the library doesn't carry, so the summary shows them verbatim —
+    /// a library name would come back as its region-resolved display title
+    /// (Paracetamol reads "Acetaminophen" in the US).
+    @Test
+    func `componentsSummary lists each component's amount, unit and name`() {
+        let entry = CustomSubstanceEntry(
+            name: "Blend", unit: "capsule",
+            components: [
+                CombinationComponent(substance: "ZZAlpha", amountPerUnit: 500, unit: "mg", route: .oral),
+                CombinationComponent(substance: "ZZBeta", amountPerUnit: 0.5, unit: "mg", route: .oral),
+            ],
+        )
+        #expect(entry.componentsSummary == "500 mg ZZAlpha · 0.5 mg ZZBeta")
+        #expect(CustomSubstanceEntry(name: "Plain").componentsSummary == nil)
     }
 }

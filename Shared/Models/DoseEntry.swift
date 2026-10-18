@@ -197,6 +197,13 @@ final class DoseEntry {
     /// substance where present.
     var drinkName: String?
 
+    /// The combination product this dose was logged as one component of — a
+    /// paracetamol dose staged by picking "Co-codamol" carries "Co-codamol".
+    /// Label only: the dose stays a plain dose of its own substance for every
+    /// engine. `nil` for a dose logged on its own, so the field-add stays a
+    /// lightweight migration.
+    var combinationName: String?
+
     /// The dose's location as a coordinate, or `nil` unless both ``latitude`` and
     /// ``longitude`` are set. A named place may have no coordinate (e.g. a
     /// free-typed label), so a non-nil ``locationName`` does not imply this.
@@ -257,6 +264,7 @@ final class DoseEntry {
         volumeML: Double? = nil,
         abv: Double? = nil,
         drinkName: String? = nil,
+        combinationName: String? = nil,
     ) {
         self.substance = substance
         self.amount = isUnknownDose ? 0 : max(0, amount)
@@ -282,5 +290,6 @@ final class DoseEntry {
         self.volumeML = volumeML
         self.abv = abv
         self.drinkName = drinkName
+        self.combinationName = combinationName
     }
 }

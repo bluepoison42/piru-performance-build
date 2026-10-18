@@ -28,6 +28,9 @@ nonisolated struct PiruCustomSubstanceData: Codable {
     var displayName: String?
     var doses: DoseRange?
     var halfLifeMinutes: Double?
+    /// A combination product's components. Optional on both sides: omitted for
+    /// a single compound, absent from files written before combinations.
+    var components: [CombinationComponent]?
 
     @MainActor
     init(_ entry: CustomSubstanceEntry) {
@@ -42,6 +45,7 @@ nonisolated struct PiruCustomSubstanceData: Codable {
         self.displayName = entry.displayName
         self.doses = entry.doses
         self.halfLifeMinutes = entry.halfLifeMinutes
+        self.components = entry.components
     }
 
     @MainActor
@@ -57,6 +61,7 @@ nonisolated struct PiruCustomSubstanceData: Codable {
             doses: doses,
             duration: duration,
             halfLifeMinutes: halfLifeMinutes,
+            components: components,
             createdAt: Date(ms: createdAt),
         )
     }
@@ -222,6 +227,9 @@ nonisolated struct PiruDoseData: Codable {
     var volumeML: Double?
     var abv: Double?
     var drinkName: String?
+    /// The combination product the dose was logged as part of. Optional on
+    /// both sides: omitted for a dose logged on its own, absent from older files.
+    var combinationName: String?
 }
 
 nonisolated struct PiruDailyDoseData: Codable {
@@ -341,6 +349,7 @@ extension DataExportImport {
                 isApproximate: e.isApproximate, isUnknownDose: e.isUnknownDose,
                 hadGrapefruit: e.hadGrapefruit, meal: e.mealRaw,
                 volumeML: e.volumeML, abv: e.abv, drinkName: e.drinkName,
+                combinationName: e.combinationName,
             )
         }
 
@@ -493,6 +502,7 @@ extension DataExportImport {
                 meal: d.meal.flatMap(MealState.init(rawValue:)),
                 isApproximate: d.isApproximate ?? false, isUnknownDose: d.isUnknownDose ?? false,
                 volumeML: d.volumeML, abv: d.abv, drinkName: d.drinkName,
+                combinationName: d.combinationName,
             )
             if let id = d.id, seenIDs.insert(id).inserted {
                 entry.id = id

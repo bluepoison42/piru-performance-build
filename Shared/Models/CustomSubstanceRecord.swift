@@ -56,6 +56,11 @@ final class CustomSubstanceRecord {
 
     var halfLifeMinutes: Double?
 
+    /// JSON-encoded `[CombinationComponent]` for a combination product (co-codamol
+    /// = paracetamol + codeine per tablet); `nil` for a single compound. Encoded
+    /// and decoded in the Piru target, opaque here.
+    var componentsData: Data?
+
     var createdAt: Date = Date.distantPast
 
     init(
@@ -69,6 +74,7 @@ final class CustomSubstanceRecord {
         dosesData: Data? = nil,
         durationData: Data? = nil,
         halfLifeMinutes: Double? = nil,
+        componentsData: Data? = nil,
         createdAt: Date = .now,
     ) {
         self.id = id
@@ -81,6 +87,7 @@ final class CustomSubstanceRecord {
         self.dosesData = dosesData
         self.durationData = durationData
         self.halfLifeMinutes = halfLifeMinutes
+        self.componentsData = componentsData
         self.createdAt = createdAt
     }
 }

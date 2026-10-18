@@ -23,6 +23,23 @@ Not medical advice→No es consejo médico.
 """
 
 ES = {
+    # Combination products (custom-substance editor, quick-log search, journal).
+    "Type": "Tipo",
+    "Compound": "Compuesto",
+    "Combination": "Combinación",
+    "Product name (e.g. Co-codamol)": "Nombre del producto (p. ej. Co-codamol)",
+    "Unit (e.g. tablet, capsule)": "Unidad (p. ej. pastilla, cápsula)",
+    "What one of these is called. Each component's amount is per unit.": "Cómo se llama una unidad. La cantidad de cada componente es por unidad.",
+    "Components": "Componentes",
+    "Component": "Componente",
+    "Add Component": "Agregar componente",
+    "Picking this in the quick log stages one dose per component.": "Al elegirlo en el registro rápido se prepara una dosis por componente.",
+    "Edit Combination": "Editar combinación",
+    "New Combination": "Nueva combinación",
+    "Amount per %@": "Cantidad por %@",
+    "per %@": "por %@",
+    "%@ · per %@": "%@ · por %@",
+    "Part of %@": "Parte de %@",
     "Bar: participant range; dot: mean.": "Barra: rango entre participantes; punto: media.",
     "substance.wiki timelines": "Cronologías de substance.wiki",
     "Route unknown": "Vía desconocida",
