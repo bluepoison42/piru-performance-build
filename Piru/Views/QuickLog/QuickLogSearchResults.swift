@@ -234,7 +234,7 @@ struct QuickLogSearchResults: View {
             onAddCombination?(entry)
             return
         }
-        let payload = payload(for: result)
+        guard let payload = payload(for: result) else { return }
         let hasRecordedDrink = payload.volumeML != nil && payload.abv != nil && payload.amount > 0
         if (payload.librarySubstance?.byVolumeDosing != nil && !hasRecordedDrink) || payload.amount <= 0 {
             onAddDraft(payload)
@@ -245,7 +245,7 @@ struct QuickLogSearchResults: View {
 
     /// The stage payload for one hit. Recents prefill from their most recent
     /// chip; library hits from the reference dose for the default route.
-    private func payload(for result: QuickLogSearchResult) -> QuickLogStagePayload {
+    private func payload(for result: QuickLogSearchResult) -> QuickLogStagePayload? {
         switch result {
         case let .recent(card):
             let group = card.routes.first
@@ -272,19 +272,10 @@ struct QuickLogSearchResults: View {
             return payload(for: match.substance, productName: match.matchedAlias)
         case let .custom(substance):
             return payload(for: substance, productName: nil)
-        case let .combination(entry):
-            // `add` routes a combination to `onAddCombination` before asking for
-            // a payload; a combination has no single substance to stage, so
-            // this answers with its first component.
-            let first = entry.components?.first
-            return QuickLogStagePayload(
-                substance: first?.substance ?? entry.name,
-                route: first?.route ?? entry.defaultRoute,
-                unit: first?.unit ?? entry.unit,
-                amount: first?.amountPerUnit ?? 0,
-                tint: nil,
-                librarySubstance: first.flatMap { SubstanceLibrary.lookup($0.substance) },
-            )
+        case .combination:
+            // A combination has no single substance to stage; `add` hands it to
+            // `onAddCombination`, which stages one row per component.
+            return nil
         }
     }
 
