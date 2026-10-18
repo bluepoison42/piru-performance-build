@@ -46,7 +46,7 @@ struct ToleranceToolView: View {
                     ToleranceCombinedRecoverySection(
                         series: recoverySeries(),
                         axisDays: sharedAxisDays,
-                        isClipped: recoveryWindowIsClipped,
+                        windowDays: sharedRecoveryWindowMinutes / 1_440,
                     )
                     switch detailMode {
                     case .perReceptor:
@@ -205,8 +205,8 @@ struct ToleranceToolView: View {
             .sorted { $0.snapshot.severity > $1.snapshot.severity }
     }
 
-    /// The shared X window (minutes) — the widest per-row recovery window, capped at 60 days so a
-    /// months-scale deep tail doesn't flatten the fast mechanisms into a single line at the bottom.
+    /// The shared X window (minutes) — the widest per-row recovery window, capped at 60 days: past that
+    /// a deep tail is a flat line, and the chart pans sideways in three-week pages anyway.
     private var sharedRecoveryWindowMinutes: Double {
         let widest = recoveryRows.map(\.recoveryWindowMinutes).max() ?? 0
         return min(max(widest, Self.minimumSharedWindowMinutes), Self.maximumSharedWindowMinutes)
@@ -215,29 +215,28 @@ struct ToleranceToolView: View {
     private static let maximumSharedWindowMinutes: Double = 60 * 1_440
     private static let minimumSharedWindowMinutes: Double = 120
 
-    /// True when at least one mechanism's natural recovery window exceeds the shared cap — the chart is
-    /// then showing only the first 60 days, which the caption notes.
-    private var recoveryWindowIsClipped: Bool {
-        (recoveryRows.map(\.recoveryWindowMinutes).max() ?? 0) > Self.maximumSharedWindowMinutes
-    }
-
     private func recoverySeries() -> [ToleranceRecoverySeries] {
         let window = sharedRecoveryWindowMinutes
+        // One sample per day of a long window, so a three-week page still bends.
+        let sampleCount = max(28, Int(window / 1_440) + 1)
         return recoveryRows.map { row in
             ToleranceRecoverySeries(
                 id: row.snapshot.receptorClass,
                 legendKey: String(reflecting: row.snapshot.receptorClass),
                 name: toleranceClassName(row.snapshot.receptorClass, tier: tier),
                 color: row.familyColor,
-                points: row.recoveryCurve(overMinutes: window, sampleCount: 28),
+                points: row.recoveryCurve(overMinutes: window, sampleCount: sampleCount),
             )
         }
     }
 
-    /// Linear day ticks across the shared window — `now` at the origin, four evenly-spaced gridlines to
-    /// the window edge.
+    /// Day ticks across the shared window — `now` at the origin, then four evenly-spaced gridlines to
+    /// the window edge, or one a week once the window is long enough to pan.
     private var sharedAxisDays: [Double] {
         let windowDays = sharedRecoveryWindowMinutes / 1_440
+        if windowDays > ToleranceCombinedRecoveryChart.visibleDays * 1.05 {
+            return Array(stride(from: 0, through: windowDays, by: 7))
+        }
         return [0, windowDays * 0.25, windowDays * 0.5, windowDays * 0.75, windowDays]
     }
 }

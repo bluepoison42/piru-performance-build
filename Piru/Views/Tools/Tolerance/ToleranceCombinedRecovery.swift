@@ -15,9 +15,8 @@ struct ToleranceRecoverySeries: Identifiable {
 struct ToleranceCombinedRecoverySection: View {
     let series: [ToleranceRecoverySeries]
     let axisDays: [Double]
-    /// At least one mechanism's natural recovery window exceeds the shared 60-day cap — the chart then
-    /// carries a caption saying it shows only the first 60 days.
-    let isClipped: Bool
+    /// The shared window the curves span, in days.
+    let windowDays: Double
 
     var body: some View {
         Section {
@@ -30,13 +29,8 @@ struct ToleranceCombinedRecoverySection: View {
                         .font(.subheadline)
                         .foregroundStyle(Theme.secondaryLabel)
                 } else {
-                    ToleranceCombinedRecoveryChart(series: series, axisDays: axisDays)
+                    ToleranceCombinedRecoveryChart(series: series, axisDays: axisDays, windowDays: windowDays)
                     ToleranceRecoveryLegend(series: series)
-                    if isClipped {
-                        Text("Showing the first 60 days.")
-                            .font(.caption2)
-                            .foregroundStyle(Theme.secondaryLabel)
-                    }
                 }
             }
             .padding(.vertical, Spacing.sm)
@@ -65,11 +59,66 @@ struct ToleranceRecoveryLegend: View {
 /// by a "now" ``PointMark`` at its current level, on a linear days X axis (gridlines) and a 0–100% Y axis
 /// (gridlines at 0/100). Family colors are applied per series with a manual legend rendered by the
 /// parent, so each line keeps its exact family hue.
+///
+/// A window longer than ``visibleDays`` opens on its first three weeks and pans sideways, the way the
+/// Insights charts do (``ChartXScrollWindow``): a months-long tail no longer squeezes the fast
+/// mechanisms into a single line at the left edge.
 struct ToleranceCombinedRecoveryChart: View {
     let series: [ToleranceRecoverySeries]
     let axisDays: [Double]
+    let windowDays: Double
+
+    /// How much of a long window is on screen at once.
+    static let visibleDays = 21.0
+
+    private var scrolls: Bool {
+        windowDays > Self.visibleDays * 1.05
+    }
 
     var body: some View {
+        chart
+            .chartYScale(domain: 0 ... 100)
+            .chartYAxis {
+                AxisMarks(values: [0, 100]) { value in
+                    AxisGridLine()
+                    AxisValueLabel {
+                        if let percent = value.as(Int.self) {
+                            Text(percent >= 100 ? "high" : "low")
+                        }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks(values: axisDays) { value in
+                    AxisGridLine()
+                    AxisTick()
+                    AxisValueLabel {
+                        if let days = value.as(Double.self) {
+                            Text(axisDayLabel(days: days))
+                        }
+                    }
+                }
+            }
+            .frame(height: 160)
+            .chartSummaryAccessibility(
+                label: Text("Recovery by mechanism"),
+                value: Text("\(series.count) mechanisms plotted from their modeled level now."),
+            )
+    }
+
+    @ViewBuilder
+    private var chart: some View {
+        if scrolls {
+            marks
+                .chartXScale(domain: 0 ... windowDays)
+                .chartScrollableAxes(.horizontal)
+                .chartXVisibleDomain(length: Self.visibleDays)
+        } else {
+            marks
+        }
+    }
+
+    private var marks: some View {
         Chart(series) { item in
             ForEach(item.points) { point in
                 LineMark(
@@ -89,32 +138,5 @@ struct ToleranceCombinedRecoveryChart: View {
                 .symbolSize(40)
             }
         }
-        .chartYScale(domain: 0 ... 100)
-        .chartYAxis {
-            AxisMarks(values: [0, 100]) { value in
-                AxisGridLine()
-                AxisValueLabel {
-                    if let percent = value.as(Int.self) {
-                        Text(percent >= 100 ? "high" : "low")
-                    }
-                }
-            }
-        }
-        .chartXAxis {
-            AxisMarks(values: axisDays) { value in
-                AxisGridLine()
-                AxisTick()
-                AxisValueLabel {
-                    if let days = value.as(Double.self) {
-                        Text(axisDayLabel(days: days))
-                    }
-                }
-            }
-        }
-        .frame(height: 160)
-        .chartSummaryAccessibility(
-            label: Text("Recovery by mechanism"),
-            value: Text("\(series.count) mechanisms plotted from their modeled level now."),
-        )
     }
 }

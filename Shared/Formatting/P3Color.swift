@@ -5,13 +5,26 @@ import Foundation
 /// form a substance color is stored in and travels in: the SwiftData row, the
 /// Live Activity payload, the watch manifest, widget entries and layout caches.
 nonisolated struct P3Color: Hashable, Sendable {
-    var red: Double
-    var green: Double
-    var blue: Double
+    let red: Double
+    let green: Double
+    let blue: Double
+
+    /// Components are clamped to `0…1` and a non-finite one reads as 0, so a
+    /// stored row or an imported backup carrying a value outside the panel's
+    /// range never reaches `Color(.displayP3, …)` as written.
+    init(red: Double, green: Double, blue: Double) {
+        self.red = Self.clamped(red)
+        self.green = Self.clamped(green)
+        self.blue = Self.clamped(blue)
+    }
 
     /// Shown for a substance no color has been resolved for — a widget
     /// rendering a name the app has yet to mint a row for.
     static let neutral = P3Color(red: 0.62, green: 0.62, blue: 0.65)
+
+    private static func clamped(_ component: Double) -> Double {
+        component.isFinite ? min(max(component, 0), 1) : 0
+    }
 }
 
 /// Encodes as `[r, g, b]` at four decimals: a quarter of the keyed form's
@@ -22,9 +35,10 @@ nonisolated extension P3Color: Codable {
 
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        red = try container.decode(Double.self)
-        green = try container.decode(Double.self)
-        blue = try container.decode(Double.self)
+        let red = try container.decode(Double.self)
+        let green = try container.decode(Double.self)
+        let blue = try container.decode(Double.self)
+        self.init(red: red, green: green, blue: blue)
     }
 
     func encode(to encoder: Encoder) throws {

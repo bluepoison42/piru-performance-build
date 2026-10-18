@@ -246,14 +246,15 @@ struct InventoryStepperRow: View {
         .sensoryFeedback(.increase, trigger: stepTick)
         .padding(.vertical, Spacing.xs)
         .onAppear { if focusOnAppear { focused = true } }
-        // One slider for the whole row: swipes step by `step`, the spoken value
-        // is the amount with its unit, and assistive tech gets a numeric
-        // position. The range grows with the value, so it never caps the amount.
+        // One slider for the whole row: swipes step by `accessibleStep`, the
+        // spoken value is the amount with its unit, and assistive tech gets a
+        // numeric position. The range grows with the value, so it never caps
+        // the amount.
         .accessibilityRepresentation {
             Slider(
                 value: Binding(get: { value }, set: { bump(to: max(0, $0)) }),
-                in: 0 ... max(value + step * Self.accessibleStepsAhead, step),
-                step: step,
+                in: 0 ... max(value + accessibleStep * Self.accessibleStepsAhead, accessibleStep),
+                step: accessibleStep,
             ) {
                 Text(label)
             }
@@ -263,6 +264,15 @@ struct InventoryStepperRow: View {
 
     /// How far past the current amount the accessible slider's range reaches.
     private static let accessibleStepsAhead = 100.0
+
+    /// The accessible slider's step: the dose-anchored `step`, or a tenth of the
+    /// amount when that is larger. Never the raw `step` alone: a stepped Slider
+    /// resolves one tick per step across its whole range, so a 50 g stock nudged
+    /// by 5 mg is ten thousand ticks per body evaluation, which the scene
+    /// watchdog kills. This keeps the tick count near a hundred at any amount.
+    private var accessibleStep: Double {
+        max(step, InventoryStep.nice(for: value))
+    }
 
     /// The number and its unit share a baseline so "50,000 mg" reads as one
     /// figure; the pair is centered between the step buttons. The whole field is
