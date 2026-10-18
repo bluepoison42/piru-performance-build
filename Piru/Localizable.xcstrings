@@ -66395,30 +66395,30 @@
         }
       }
     },
-    "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session." : {
+    "Published timing illustration, read with every phase counted from the dose. It draws your session's curve only when no other source describes this route; unknown timings are not estimated." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión."
+            "value" : "Ilustración temporal publicada, con cada fase contada desde la toma. Solo dibuja la curva de tu sesión cuando ninguna otra fuente describe esta vía; los tiempos desconocidos no se estiman."
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión."
+            "value" : "Ilustración temporal publicada, con cada fase contada desde la toma. Solo dibuja la curva de tu sesión cuando ninguna otra fuente describe esta vía; los tiempos desconocidos no se estiman."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已发表的时间示意。各阶段的计时起点尚未核实。未知时间不会被估算，也不会用于预测你的体验。"
+            "value" : "已发表的时间示意，各阶段均自服用起计时。仅当没有其他来源描述该途径时，才用它绘制你的体验曲线；未知时间不会被估算。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已發表的時間示意。各階段的計時起點尚未核實。未知時間不會被估算，也不會用於預測你的體驗。"
+            "value" : "已發表的時間示意，各階段均自服用起計時。僅當沒有其他來源描述該途徑時，才用它繪製你的體驗曲線；未知時間不會被估算。"
           }
         }
       }

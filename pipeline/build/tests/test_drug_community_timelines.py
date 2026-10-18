@@ -82,7 +82,8 @@ class TimelineImportTests(unittest.TestCase):
             record = next(r for r in records if r["drug_name"] == row["source_name"])
             self.assertEqual(json.loads(row["duration_text_json"]), record.get("duration") or {})
             self.assertEqual(json.loads(row["citations_json"]), record.get("citations") or [])
-        self.assertEqual(self.db.execute("SELECT count(*) FROM durations").fetchone()[0], 0)
+        # Complete legacy curves also project phase lengths into `durations`.
+        self.assertGreater(self.db.execute("SELECT count(*) FROM durations").fetchone()[0], 0)
         self.assertEqual(self.db.execute("PRAGMA foreign_key_check").fetchall(), [])
 
     def test_partial_count_is_visible_to_audit(self):
@@ -115,7 +116,7 @@ class TimelineImportTests(unittest.TestCase):
         self.assertEqual(len({r["record_key"] for r in rows}), 3)
         self.assertEqual({r["route"] for r in rows}, {"ophthalmic"})
 
-    def test_four_semantic_cases_are_never_projected_as_phase_lengths(self):
+    def test_complete_curves_project_phase_lengths_and_the_rest_stay_reference(self):
         base = {
             "units": "hours",
             "onset": {"start": 0.2, "end": 0.5},
@@ -129,12 +130,47 @@ class TimelineImportTests(unittest.TestCase):
         unknown["onset"]["start"] = None
         unknown_unit = {**base, "units": "unrecognized"}
         entries = [
-            {"method": "fictional route", "duration_curve": c}
-            for c in (base, later_tail, unknown, unknown_unit)
+            {"method": route, "duration_curve": c}
+            for route, c in (
+                ("oral", base),
+                ("sublingual", later_tail),
+                ("rectal", unknown),
+                ("ophthalmic", unknown_unit),
+            )
         ]
         rows = self.ingest([{"drug_name": "Fictional compound", "duration_curves": entries}])
         self.assertEqual([json.loads(r["entry_json"]) for r in rows], entries)
-        self.assertEqual(self.db.execute("SELECT count(*) FROM durations").fetchone()[0], 0)
+        phases = {}
+        for route, phase, lo, hi in self.db.execute(
+            "SELECT route, phase, min_minutes, max_minutes FROM durations"
+        ):
+            phases.setdefault(route, {})[phase] = (lo, hi)
+        # Each phase is counted from the dose: come-up runs from onset's end to
+        # peak's start, offset from peak's end (or its own window when the source
+        # put it inside the peak), afterglow to after-effects' end.
+        self.assertEqual(
+            phases["oral"],
+            {
+                "onset": (12, 30),
+                "comeup": (30, 30),
+                "peak": (120, 120),
+                "offset": (60, 60),
+                "afterglow": (360, 360),
+            },
+        )
+        self.assertEqual(phases["sublingual"]["afterglow"], (360, 360))
+        # A phase with an unknown side is not estimated; the others still project.
+        self.assertNotIn("onset", phases["rectal"])
+        self.assertNotIn("comeup", phases["rectal"])
+        self.assertEqual(phases["rectal"]["peak"], (120, 120))
+        # An unrecognized unit projects nothing.
+        self.assertNotIn("ophthalmic", phases)
+        self.assertEqual(
+            self.db.execute(
+                "SELECT count(*) FROM durations WHERE source_id != ?", (rows[0]["source_id"],)
+            ).fetchone()[0],
+            0,
+        )
 
     def test_withdrawal_removes_old_timeline_and_derived_rows(self):
         record = {

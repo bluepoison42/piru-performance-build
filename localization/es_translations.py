@@ -46,7 +46,7 @@ ES = {
     "Reference %lld": "Referencia %lld",
     "Read source context": "Leer el contexto de la fuente",
     "Partial timing data": "Datos temporales parciales",
-    "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session.": "Ilustración temporal publicada. No se han verificado los puntos de inicio del tiempo de cada fase. Los tiempos desconocidos no se estiman ni se usan para predecir tu sesión.",
+    "Published timing illustration, read with every phase counted from the dose. It draws your session's curve only when no other source describes this route; unknown timings are not estimated.": "Ilustración temporal publicada, con cada fase contada desde la toma. Solo dibuja la curva de tu sesión cuando ninguna otra fuente describe esta vía; los tiempos desconocidos no se estiman.",
     "After-effects": "Efectos posteriores",
     "Reported total": "Duración total indicada",
     "Units unknown": "Unidades desconocidas",

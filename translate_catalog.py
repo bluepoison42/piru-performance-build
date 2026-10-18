@@ -24,9 +24,9 @@ T = {
     "Reference %lld": ("参考 %lld", "參考 %lld"),
     "Read source context": ("阅读来源背景", "閱讀來源背景"),
     "Partial timing data": ("部分时间数据", "部分時間資料"),
-    "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session.": (
-        "已发表的时间示意。各阶段的计时起点尚未核实。未知时间不会被估算，也不会用于预测你的体验。",
-        "已發表的時間示意。各階段的計時起點尚未核實。未知時間不會被估算，也不會用於預測你的體驗。",
+    "Published timing illustration, read with every phase counted from the dose. It draws your session's curve only when no other source describes this route; unknown timings are not estimated.": (
+        "已发表的时间示意，各阶段均自服用起计时。仅当没有其他来源描述该途径时，才用它绘制你的体验曲线；未知时间不会被估算。",
+        "已發表的時間示意，各階段均自服用起計時。僅當沒有其他來源描述該途徑時，才用它繪製你的體驗曲線；未知時間不會被估算。",
     ),
     "After-effects": ("后续效应", "後續效應"),
     "Reported total": ("报告的总时长", "報告的總時長"),
@@ -8533,7 +8533,7 @@ if __name__ == "__main__":
             "This source entry has a recorded timing or route concern.",
             "Participant range",
             "Study statistics describe this condition, not a prediction of your session. The maximum response is a time point, not a peak plateau.",
-            "Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session.",
+            "Published timing illustration, read with every phase counted from the dose. It draws your session's curve only when no other source describes this route; unknown timings are not estimated.",
             "Study article",
             "Read source context",
             "Active duration: onset to offset",

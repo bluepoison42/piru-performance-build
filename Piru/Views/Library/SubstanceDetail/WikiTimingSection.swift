@@ -146,7 +146,7 @@ struct WikiTimingSection: View {
     private func legacy(_ curve: WikiTimingCurve, partial: Bool) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             if partial { Text("Partial timing data").font(.subheadline.bold()) }
-            Text("Published timing illustration. Phase clock origins are unverified. Unknown timings are not estimated or used to predict your session.")
+            Text("Published timing illustration, read with every phase counted from the dose. It draws your session's curve only when no other source describes this route; unknown timings are not estimated.")
                 .captionSecondary()
             WikiTimingWindowRow("Onset", window: curve.onset, units: curve.units, maximum: curve.plotMaximum)
             WikiTimingWindowRow("Peak", window: curve.peak, units: curve.units, maximum: curve.plotMaximum)

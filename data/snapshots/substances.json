@@ -52,14 +52,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -178,14 +177,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -631,14 +629,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -932,14 +929,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -1345,14 +1341,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -1603,14 +1598,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -1762,14 +1756,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -1834,14 +1827,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -2127,14 +2119,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -2292,14 +2283,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -2478,14 +2468,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -2520,14 +2509,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -2869,14 +2857,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -3089,14 +3076,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4428,14 +4414,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4561,14 +4546,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4594,14 +4578,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4670,14 +4653,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4742,14 +4724,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4778,14 +4759,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4867,14 +4847,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4904,14 +4883,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -4968,14 +4946,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -5004,14 +4981,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -5095,14 +5071,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -5159,14 +5134,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -5207,14 +5181,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6007,14 +5980,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6041,14 +6013,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6207,14 +6178,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6575,14 +6545,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6617,14 +6586,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6688,14 +6656,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -6828,6 +6795,7 @@
     ],
     "default_route": "insufflation",
     "all_routes": [
+      "inhalation",
       "insufflation",
       "oral"
     ],
@@ -7263,14 +7231,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -7302,14 +7269,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "4-Chloroamphetamine acts as a releasing agent for the monoamine neurotransmitter serotonin. At higher doses it depletes serotonin in the brain.\n\nAdditionally, a reduction in tryptophan hydroxylase activity has been observed.",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -7378,14 +7344,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -7412,14 +7377,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -7461,7 +7425,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
@@ -7470,7 +7434,6 @@
       "https://en.wikipedia.org/wiki/Clephedrone"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes"
     ]
   },
@@ -7534,14 +7497,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -7644,14 +7606,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -7754,14 +7715,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -7871,14 +7831,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8229,20 +8188,20 @@
     ],
     "default_route": "oral",
     "all_routes": [
+      "insufflation",
       "oral"
     ],
     "routes_with_dose": [
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8504,14 +8463,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8569,14 +8527,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8603,14 +8560,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8767,14 +8723,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8855,14 +8810,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8939,14 +8893,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -8978,14 +8931,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -9019,14 +8971,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -9055,14 +9006,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -9245,14 +9195,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -9287,14 +9236,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -9386,14 +9334,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -9657,14 +9604,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -10083,14 +10029,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -10182,14 +10127,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -11617,7 +11561,7 @@
       "intravenous"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 25.0,
     "mechanism_summary": "",
@@ -11626,7 +11570,6 @@
       "6-Monoacetylmorphine (6-MAM), Not Morphine, Is Responsible for the Rapid Neural Effects Induced by Intravenous Heroin"
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -11659,7 +11602,7 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 240.0,
     "mechanism_summary": "μ-Opioid Receptor Agonist (Kratom Alkaloid)",
@@ -11668,9 +11611,7 @@
       "Human Mitragynine and 7-Hydroxymitragynine Pharmacokinetics after Single and Multiple Daily Doses of Oral Encapsulated Dried Kratom Leaf Powder",
       "7-Hydroxymitragynine Is an Active Metabolite of Mitragynine and a Key Mediator of Its Analgesic Effects"
     ],
-    "data_gaps": [
-      "duration_by_route"
-    ]
+    "data_gaps": []
   },
   {
     "name": "9-Me-BC",
@@ -11703,14 +11644,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -12207,14 +12147,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -12415,14 +12354,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -12669,14 +12607,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -12714,7 +12651,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -12723,7 +12660,6 @@
       "https://en.wikipedia.org/wiki/ADB-PINACA"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -12754,14 +12690,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -12791,14 +12726,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -13198,14 +13132,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -13609,7 +13542,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -13618,7 +13551,6 @@
       "https://erowid.org/library/books_online/pihkal/pihkal006.shtml"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -13682,7 +13614,7 @@
       "intravenous"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 94.0,
     "mechanism_summary": "",
@@ -13691,7 +13623,6 @@
       "The pharmacokinetics of alfentanil (R39209): a new opioid analgesic."
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -13968,14 +13899,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -14337,14 +14267,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -14420,14 +14349,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -14457,14 +14385,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -14583,14 +14510,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -14644,14 +14570,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -14693,7 +14618,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 240.0,
     "mechanism_summary": "",
@@ -14702,7 +14627,6 @@
       "Pharmacogenetics of amfepramone in healthy Mexican subjects reveals potential markers for tailoring pharmacotherapy of obesity: results of a randomised trial"
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -15037,6 +14961,7 @@
     "default_route": "intramuscular",
     "all_routes": [
       "intramuscular",
+      "intravenous",
       "oral"
     ],
     "routes_with_dose": [
@@ -15575,7 +15500,7 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 40.0,
     "mechanism_summary": "",
@@ -15584,7 +15509,6 @@
       "Pharmacokinetic-pharmacodynamic relationships of apomorphine in patients with Parkinson's disease"
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -16107,6 +16031,7 @@
     "default_route": "intravenous",
     "all_routes": [
       "intravenous",
+      "oral",
       "other"
     ],
     "routes_with_dose": [
@@ -16114,14 +16039,13 @@
       "other"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "Reversible antagonist at muscarinic acetylcholine receptors, without distinguishing the M1, M2 and M3 subgroups.",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -16210,14 +16134,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -17140,14 +17063,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -17373,14 +17295,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -17497,7 +17418,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 1050.0,
     "mechanism_summary": "",
@@ -17506,7 +17427,6 @@
       "Pharmacokinetics of the oral narcotic analgesic bezitramide and preliminary observations on its effect on experimentally induced pain."
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -18299,14 +18219,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -18713,13 +18632,14 @@
     ],
     "default_route": "insufflation",
     "all_routes": [
-      "insufflation"
+      "insufflation",
+      "intramuscular"
     ],
     "routes_with_dose": [
       "insufflation"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -18728,7 +18648,6 @@
       "https://en.wikipedia.org/wiki/Bromoketamine"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -19367,7 +19286,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 270.0,
     "mechanism_summary": "",
@@ -19376,7 +19295,6 @@
       "A Size Standard for Pharmacokinetics"
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -19772,14 +19690,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -19840,14 +19757,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -20361,14 +20277,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -20642,14 +20557,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -22136,14 +22050,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -23694,14 +23607,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -26060,14 +25972,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -26771,14 +26682,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -27712,14 +27622,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -28053,14 +27962,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -28116,14 +28024,13 @@
       "intramuscular"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -28237,14 +28144,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -29352,7 +29258,7 @@
       "transdermal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 2160.0,
     "mechanism_summary": "Estrogen Receptor Agonist (ERα / ERβ)",
@@ -29364,9 +29270,7 @@
       "Comparative pharmacokinetics and pharmacodynamics after subcutaneous and intramuscular administration of medroxyprogesterone acetate (25 mg) and estradiol cypionate (5 mg)",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0179-0073"
     ],
-    "data_gaps": [
-      "duration_by_route"
-    ]
+    "data_gaps": []
   },
   {
     "name": "Estrogens, Conjugated",
@@ -30110,11 +30014,15 @@
       "nitazene",
       "subnanomolar-Ki"
     ],
-    "default_route": "",
-    "all_routes": [],
+    "default_route": "insufflation",
+    "all_routes": [
+      "insufflation",
+      "intravenous",
+      "oral"
+    ],
     "routes_with_dose": [],
     "has_dose_data": false,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -30124,7 +30032,6 @@
     ],
     "data_gaps": [
       "dose_ranges_by_route",
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -30704,11 +30611,13 @@
       "anticonvulsant-Dravet",
       "valvulopathic"
     ],
-    "default_route": "",
-    "all_routes": [],
+    "default_route": "oral",
+    "all_routes": [
+      "oral"
+    ],
     "routes_with_dose": [],
     "has_dose_data": false,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 1200.0,
     "mechanism_summary": "",
@@ -30718,7 +30627,6 @@
     ],
     "data_gaps": [
       "dose_ranges_by_route",
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -31290,14 +31198,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -31433,14 +31340,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -31498,14 +31404,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -32605,14 +32510,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -32996,14 +32900,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "Gaboxadol acts on the GABA system, but in a different way from benzodiazepines and other GABAergic depressants. Lundbeck has stated that gaboxadol also increases deep (stage 4) sleep.",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -33503,14 +33406,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -34845,11 +34747,14 @@
     "tags": [
       "phenethylamine"
     ],
-    "default_route": "",
-    "all_routes": [],
+    "default_route": "insufflation",
+    "all_routes": [
+      "insufflation",
+      "oral"
+    ],
     "routes_with_dose": [],
     "has_dose_data": false,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -34857,7 +34762,6 @@
     "references": [],
     "data_gaps": [
       "dose_ranges_by_route",
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -35644,14 +35548,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -36897,14 +36800,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -37116,7 +37018,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -37125,7 +37027,6 @@
       "https://en.wikipedia.org/wiki/Isotonitazepyne"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -38982,14 +38883,13 @@
       "intravenous"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -40243,14 +40143,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -44268,14 +44167,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -44723,14 +44621,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -44840,7 +44737,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 1390.0,
     "mechanism_summary": "Partial μ-Opioid Agonist and Adrenergic/Serotonergic Modulator",
@@ -44848,9 +44745,7 @@
     "references": [
       "Pharmacokinetics of mitragynine in man"
     ],
-    "data_gaps": [
-      "duration_by_route"
-    ]
+    "data_gaps": []
   },
   {
     "name": "Mivacurium",
@@ -45322,14 +45217,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -45802,14 +45696,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -48267,14 +48160,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -48308,7 +48200,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -48317,7 +48209,6 @@
       "In Europe, an early, cold dawn for modern humans."
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -48596,7 +48487,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 342.0,
     "mechanism_summary": "Serotonin 5-HT3 Receptor Antagonist (Antiemetic)",
@@ -48604,9 +48495,7 @@
     "references": [
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0069-1441"
     ],
-    "data_gaps": [
-      "duration_by_route"
-    ]
+    "data_gaps": []
   },
   {
     "name": "Opium",
@@ -49412,7 +49301,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -49421,7 +49310,6 @@
       "https://erowid.org/library/books_online/pihkal/pihkal097.shtml"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -50468,7 +50356,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 480.0,
     "mechanism_summary": "",
@@ -50477,7 +50365,6 @@
       "Role of phenmetrazine as an active metabolite of phendimetrazine: evidence from studies of drug discrimination and pharmacokinetics in rhesus monkeys"
     ],
     "data_gaps": [
-      "duration_by_route",
       "mechanism_of_action"
     ]
   },
@@ -50747,6 +50634,7 @@
     ],
     "default_route": "oral",
     "all_routes": [
+      "intravenous",
       "oral"
     ],
     "routes_with_dose": [
@@ -50854,14 +50742,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -51050,14 +50937,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -51400,14 +51286,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -52139,14 +52024,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -52951,7 +52835,7 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -52960,7 +52844,6 @@
       "https://en.wikipedia.org/wiki/Protonitazene"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action"
     ]
@@ -53802,14 +53685,13 @@
       "rectal"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "Dopamine–Norepinephrine Reuptake Inhibitor (Pyrovalerone Cathinone)",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -54340,7 +54222,7 @@
       "intravenous"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 10.5,
     "mechanism_summary": "Mu-opioid receptor agonist rapidly hydrolyzed by nonspecific blood and tissue esterases.",
@@ -54348,9 +54230,7 @@
     "references": [
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=67457-198"
     ],
-    "data_gaps": [
-      "duration_by_route"
-    ]
+    "data_gaps": []
   },
   {
     "name": "Repaglinide",
@@ -56454,11 +56334,13 @@
       "low-IV-abuse-liability",
       "prodrug"
     ],
-    "default_route": "",
-    "all_routes": [],
+    "default_route": "oral",
+    "all_routes": [
+      "oral"
+    ],
     "routes_with_dose": [],
     "has_dose_data": false,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -56466,7 +56348,6 @@
     "references": [],
     "data_gaps": [
       "dose_ranges_by_route",
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -56786,14 +56667,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -56994,14 +56874,13 @@
       "intravenous"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -57086,14 +56965,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -57120,14 +56998,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -58747,14 +58624,13 @@
       "intravenous"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "GABA-A Positive Allosteric Modulator (Barbiturate)",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -59282,14 +59158,13 @@
       "insufflation"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -62763,14 +62638,13 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -62805,14 +62679,13 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"

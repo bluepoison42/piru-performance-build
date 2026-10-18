@@ -452,6 +452,16 @@ SOURCE_FIELD_PRIORITY: tuple[tuple[str, str, str, str], ...] = (
         "whole, and FreeOD's English is machine-translated from Chinese — so for "
         "this one field dose.wiki outranks the published literature as well.",
     ),
+    (
+        "durations",
+        "drug.community",
+        SOURCES[-1][0],
+        "substance.wiki records a timeline as single absolute boundaries "
+        "(onset ends at 0.5 min, peak runs 30–60 min), so every phase length "
+        "Piru derives from it is a point with no interval. Its timeline sits at "
+        "the very end, beneath every source that states an interval, so it "
+        "draws the curve only for the routes nobody else describes.",
+    ),
 )
 
 # --- FreeOD Wiki ingest helpers ---------------------------------------------
@@ -8914,6 +8924,31 @@ class Build:
                 self.stats["dc_reference_timelines"] += 1
                 self.stats["dc_source_exception_timelines"] += int(source_exception)
                 self.stats[f"dc_{timeline['kind']}"] += 1
+            # A complete legacy curve also feeds `durations`, ranked beneath every
+            # source that states an interval (see SOURCE_FIELD_PRIORITY), so a
+            # substance only substance.wiki describes still draws an effect curve.
+            # Partial curves, studies and the 0.3.0 duration charts stay reference
+            # material only.
+            for dc in s.get("duration_curves") or []:
+                curve = dc.get("duration_curve")
+                if not isinstance(curve, dict):
+                    continue
+                route = (dc.get("method") or "oral").lower()
+                route_key = normalise_route(route)
+                if (
+                    drop_routes is None
+                    or (drop_routes and route_key in drop_routes)
+                    or duration_exceptions is None
+                    or (duration_exceptions and route_key in duration_exceptions)
+                ):
+                    self.stats["duration_skipped"] += 1
+                    continue
+                profile = self._dc_duration_profile(curve)
+                if profile:
+                    self.add_duration_profile(sid, slug, route, profile)
+                    self.stats["dc_durations_derived"] += 1
+                else:
+                    self.stats["duration_skipped"] += 1
             for se in s.get("subjective_effects") or []:
                 if isinstance(se, str):
                     self.add_subjective_effect(sid, slug, se)
@@ -8987,6 +9022,97 @@ class Build:
                     ),
                 )
                 self.stats["reported_effects"] += 1
+
+    # Minutes per unit of a substance.wiki timeline. A curve whose unit is not
+    # here is not projected.
+    _DC_TIME_UNITS = {
+        "h": 60.0,
+        "hour": 60.0,
+        "hours": 60.0,
+        "m": 1.0,
+        "min": 1.0,
+        "mins": 1.0,
+        "minute": 1.0,
+        "minutes": 1.0,
+        "s": 1.0 / 60.0,
+        "sec": 1.0 / 60.0,
+        "secs": 1.0 / 60.0,
+        "second": 1.0 / 60.0,
+        "seconds": 1.0 / 60.0,
+        "d": 1440.0,
+        "day": 1440.0,
+        "days": 1440.0,
+    }
+
+    @classmethod
+    def _dc_duration_profile(cls, curve: dict) -> dict:
+        """Per-phase durations (minutes) from a substance.wiki legacy curve.
+
+        The source gives each phase as an ABSOLUTE [start, end] window counted
+        from the dose (onset/peak/offset/after_effects use start/end; only
+        total_duration uses min/max). Piru's DurationProfile stores per-phase
+        *lengths* and accumulates them by midpoint, so come-up, peak, offset and
+        afterglow are recovered by differencing consecutive ends. Onset is the
+        time-to-first-effects range and is kept verbatim as min/max; `total`
+        keeps its own min/max. Empty when the unit is unknown or no phase is
+        complete.
+        """
+        unit = (curve.get("units") or "").lower()
+        to_minutes = cls._DC_TIME_UNITS.get(unit)
+        if to_minutes is None:
+            return {}
+        onset_b = cls._dc_phase_bounds(curve.get("onset"))
+        peak_b = cls._dc_phase_bounds(curve.get("peak"))
+        offset_b = cls._dc_phase_bounds(curve.get("offset"))
+        after_b = cls._dc_phase_bounds(curve.get("after_effects"))
+
+        profile: dict = {}
+        if onset_b:
+            profile["onset"] = {"min": onset_b[0] * to_minutes, "max": onset_b[1] * to_minutes}
+        if onset_b and peak_b:
+            comeup = max(0.0, (peak_b[0] - onset_b[1]) * to_minutes)
+            if comeup > 0:
+                profile["comeup"] = {"min": comeup, "max": comeup}
+        if peak_b:
+            peak_len = max(0.0, (peak_b[1] - peak_b[0]) * to_minutes)
+            profile["peak"] = {"min": peak_len, "max": peak_len}
+        if peak_b and offset_b:
+            # Offset normally runs from the peak's end to the offset's end. When
+            # the source gives offset the same or an earlier window as peak, the
+            # offset window's own length still draws a comedown.
+            offset_len = (offset_b[1] - peak_b[1]) * to_minutes
+            if offset_len <= 0:
+                offset_len = (offset_b[1] - offset_b[0]) * to_minutes
+            if offset_len > 0:
+                profile["offset"] = {"min": offset_len, "max": offset_len}
+        if offset_b and after_b:
+            afterglow = max(0.0, (after_b[1] - offset_b[1]) * to_minutes)
+            if afterglow > 0:
+                profile["afterglow"] = {"min": afterglow, "max": afterglow}
+        td = curve.get("total_duration")
+        if isinstance(td, dict) and td.get("min") is not None and td.get("max") is not None:
+            try:
+                profile["total"] = {
+                    "min": float(td["min"]) * to_minutes,
+                    "max": float(td["max"]) * to_minutes,
+                }
+            except (TypeError, ValueError):
+                pass
+        return profile
+
+    @staticmethod
+    def _dc_phase_bounds(phase) -> tuple[float, float] | None:
+        """Absolute (start, end) of a substance.wiki phase dict, in source units;
+        None when the phase is absent or either side is missing."""
+        if not isinstance(phase, dict):
+            return None
+        start, end = phase.get("start"), phase.get("end")
+        if start is None or end is None:
+            return None
+        try:
+            return (float(start), float(end))
+        except (TypeError, ValueError):
+            return None
 
     # Unit-to-mg conversion factors. Anything not here keeps its row unit.
     _DC_UNIT_FACTORS = {
