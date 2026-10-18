@@ -1,49 +1,49 @@
 # Piru SQLite build report
 
-Built 2026-10-17.11 → `Piru/Data/piru-substances.sqlite` (20,987,904 bytes, sha256 `7075a49bb07c85feeecf27bb239c7d4be6f66a0b43eda536544e38adaf573c80`)
+Built 2026-10-18.13 → `Piru/Data/piru-substances.sqlite` (21,225,472 bytes, sha256 `7806186619beb9f4a615515a942d9a8437287607c1ac8475bf72e2f6875f16e0`)
 
 ## Row counts
 
 | Table | Rows |
 |---|---|
-| substances | 1,688 |
-| aliases | 5,730 |
+| substances | 1,676 |
+| aliases | 6,014 |
 | sources | 18 |
 | source_field_priority | 1 |
 | citations | 2,483 |
-| categories | 1,559 |
-| tags | 7,053 |
-| dose_ranges | 2,740 |
-| durations | 6,559 |
-| drug_community_timelines | 750 |
-| half_lives | 717 |
-| mechanisms_summary | 1,209 |
+| categories | 1,578 |
+| tags | 7,054 |
+| dose_ranges | 2,782 |
+| durations | 6,769 |
+| drug_community_timelines | 755 |
+| half_lives | 716 |
+| mechanisms_summary | 1,233 |
 | effects | 2,952 |
-| subjective_effects | 23,664 |
+| subjective_effects | 23,645 |
 | subjective_effect_concepts | 506 |
 | subjective_effect_concept_aliases | 1,178 |
-| tolerance | 322 |
+| tolerance | 321 |
 | diazepam_equivalents | 32 |
-| bindings | 1,459 |
+| bindings | 1,458 |
 | functional_assays | 179 |
 | biased_agonism | 23 |
 | receptor_oligomers | 8 |
-| downstream_signalling | 678 |
+| downstream_signalling | 677 |
 | neuroimaging | 52 |
 | pk_routes | 435 |
 | concentration_effects | 25 |
-| metabolism | 561 |
+| metabolism | 560 |
 | drug_interactions_pk | 205 |
 | pharmacogenetics | 305 |
 | off_targets | 209 |
 | class_contexts | 50 |
-| substance_classes | 680 |
-| molecule_shapes | 959 |
+| substance_classes | 679 |
+| molecule_shapes | 960 |
 | class_reference_compounds | 40 |
 | class_representatives | 7 |
 | substance_flags | 13 |
 | regional_names | 5 |
-| localized_names | 1,608 |
+| localized_names | 1,605 |
 | opioid_mme | 11 |
 | interaction_rules | 99 |
 | substance_interaction_classes | 213 |
@@ -63,8 +63,8 @@ Built 2026-10-17.11 → `Piru/Data/piru-substances.sqlite` (20,987,904 bytes, sh
 | saturable_kinetics | 6 |
 | bioavailability_by_dose | 10 |
 | attenuation_bands | 1 |
-| coded_products | 15,986 |
-| product_codes | 103,591 |
+| coded_products | 15,822 |
+| product_codes | 103,391 |
 
 ## Identifier corrections
 
@@ -72,11 +72,16 @@ Identifier columns a source was allowed to overwrite because the stored row cont
 
 | substance | column | rule | was | now |
 |---|---|---|---|---|
+| 1D-LSD | smiles | smiles_regains_stereo | `CCN(CC)C(=O)C1CN(C)C2Cc3cn(C(=O)C4(C)CCC4C)c4cccc(C2=C1)c34` | `CC1(C(CC1)C)C(=O)N1C=C2C[C@H]3N(C[C@@H](C=C3C=3C=CC=C1C32)C(=O)N(CC)CC)C` |
 | 1P-LSD | inchikey | key_from_own_smiles | `JSMQOVGXBIDBIE-UHFFFAOYSA-N` | `JSMQOVGXBIDBIE-OXQOHEQNSA-N` |
 | 4-EMC | inchikey | key_from_own_smiles | `FUYPDKFWOHBUFT-VIFPVBQESA-N` | `FUYPDKFWOHBUFT-UHFFFAOYSA-N` |
 | Buprenorphine | smiles | smiles_regains_stereo | `COC12CCC3(CC1C(C)(O)C(C)(C)C)C1Cc4ccc(O)c5OC2C3(CCN1CC1CC1)c45` | `CO[C@]12CC[C@@]3(C[C@@H]1[C@](C)(O)C(C)(C)C)[C@H]1CC4=C5C(O[C@@H]2[C@@]35CCN1CC1CC1)=C(O)C=C4` |
+| Zolpidem | cas | cas_check_digit | `82626-48-099294-93-6（酒石酸盐）` | `82626-48-0` |
 | ETH-LAD | inchikey | key_from_own_smiles | `MYNOUXJLOHVSMQ-UHFFFAOYSA-N` | `MYNOUXJLOHVSMQ-DNVCBOLYSA-N` |
 | 1P-ETH-LAD | smiles | smiles_regains_stereo | `CCN(CC)C(=O)C1CN(CC)C2Cc3cn(C(=O)CC)c4cccc(C2=C1)c34` | `CCN1C[C@@H](C=C2[C@H]1Cc1cn(c3c1c2ccc3)C(=O)CC)C(=O)N(CC)CC` |
+| 3,4-CTMP | inchikey | key_from_own_smiles | `JUKMAYKVHWKRKY-CHWSQXEVSA-N` | `JUKMAYKVHWKRKY-UHFFFAOYSA-N` |
+| Amfecloral | inchikey | key_from_own_smiles | `VBZDETYCYXPOAK-OVCLIPMQSA-N` | `VBZDETYCYXPOAK-UHFFFAOYSA-N` |
+| Dextropropoxyphene | smiles | smiles_regains_stereo | `CCC(=O)OC(Cc1ccccc1)(C(C)CN(C)C)c1ccccc1` | `CCC(=O)O[C@@](CC1=CC=CC=C1)([C@H](C)CN(C)C)C1=CC=CC=C1` |
 | Dihydrocodeine | smiles | smiles_regains_stereo | `COc1ccc2CC3N(C)CCC45C3CCC(O)C5Oc1c24` | `[H][C@@]12OC3=C4C(C[C@H]5N(C)CC[C@@]14[C@@]5([H])CC[C@@H]2O)=CC=C3OC` |
 | Ethylmorphine | smiles | smiles_regains_stereo | `CCOc1ccc2CC3N(C)CCC45C3C=CC(O)C5Oc1c24` | `CCOc1ccc2c3c1O[C@@H]1[C@@]43CCN([C@H](C2)[C@@H]4C=C[C@@H]1O)C` |
 | LSA | inchikey | key_from_own_smiles | `GENAHGKEFJLNJB-UHFFFAOYSA-N` | `GENAHGKEFJLNJB-QMTHXVAHSA-N` |
@@ -98,21 +103,21 @@ Identifier columns a source was allowed to overwrite because the stored row cont
 
 | Source | Dose ranges | Bindings | Categories | Tags |
 |---|---|---|---|---|
-| piru-curated | 220 | 444 | 650 | 2,268 |
-| peer-review-primary | 0 | 1,003 | 0 | 1,582 |
-| dosewiki | 290 | 12 | 0 | 0 |
-| drug.community | 820 | 0 | 0 | 124 |
+| piru-curated | 220 | 444 | 649 | 2,269 |
+| peer-review-primary | 0 | 1,002 | 0 | 1,580 |
+| dosewiki | 292 | 12 | 0 | 0 |
+| drug.community | 823 | 0 | 0 | 125 |
 | psychonautwiki | 377 | 0 | 63 | 316 |
-| tripsit | 574 | 0 | 411 | 1,266 |
+| tripsit | 573 | 0 | 410 | 1,265 |
 | dailymed | 0 | 0 | 0 | 0 |
 | erowid-pihkal | 102 | 0 | 167 | 426 |
 | erowid-tihkal | 36 | 0 | 48 | 121 |
 | pdsp | 0 | 0 | 0 | 0 |
 | pubchem | 0 | 0 | 0 | 0 |
-| wikidata | 0 | 0 | 94 | 338 |
+| wikidata | 0 | 0 | 95 | 340 |
 | dea-orange-book | 0 | 0 | 0 | 0 |
 | pyrls | 0 | 0 | 99 | 612 |
 | medtap | 0 | 0 | 0 | 0 |
 | benzos-cited | 0 | 0 | 0 | 0 |
 | nps-datahub | 0 | 0 | 0 | 0 |
-| freeodwiki | 321 | 0 | 27 | 0 |
+| freeodwiki | 359 | 0 | 47 | 0 |

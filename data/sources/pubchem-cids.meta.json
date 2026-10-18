@@ -1,11 +1,11 @@
 {
   "source": "PubChem PUG REST — CID by InChIKey (exact structural match)",
   "url_pattern": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/{inchikey}/cids/JSON",
-  "fetched_at": "2026-06-18T08:23:16+00:00",
-  "queried": 766,
-  "resolved": 744,
-  "unresolved": 22,
-  "ambiguous_count": 38,
+  "fetched_at": "2026-10-18T00:04:47+00:00",
+  "queried": 149,
+  "resolved": 134,
+  "unresolved": 15,
+  "ambiguous_count": 42,
   "ambiguous": {
     "AXOJRQLKMVSHHZ-UHFFFAOYSA-N": [
       9301,
@@ -16,6 +16,11 @@
     "AYXYPKUFHZROOJ-SSDOTTSWSA-N": [
       125889,
       40561619
+    ],
+    "BNRNXUUZRGQAQC-UHFFFAOYSA-N": [
+      5212,
+      5281023,
+      135398744
     ],
     "BTCSSZJGUNDROE-UHFFFAOYSA-N": [
       119,
@@ -82,6 +87,10 @@
     "IUJDSEJGGMCXSG-UHFFFAOYSA-N": [
       1244,
       3000715
+    ],
+    "JICJBGPOMZQUBB-UHFFFAOYSA-N": [
+      68870,
+      74652212
     ],
     "JSDRRTOADPPCHY-HSQYWUDLSA-N": [
       54892,
@@ -155,9 +164,19 @@
       2809,
       74648480
     ],
+    "XEHNLVMHWYPNEQ-UHFFFAOYSA-N": [
+      122764,
+      517392,
+      69086064
+    ],
     "XYSYRXOJSOXZPT-UHFFFAOYSA-N": [
       204385,
       91985693
+    ],
+    "YCIHPQHVWDULOY-FMZCEJRJSA-N": [
+      54704426,
+      54729290,
+      57508705
     ],
     "ZLBSUOGMZDXYKE-UHFFFAOYSA-M": [
       6452983,

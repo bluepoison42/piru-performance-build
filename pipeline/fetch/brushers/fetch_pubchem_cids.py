@@ -134,7 +134,12 @@ def main() -> int:
         if (i + 1) % 100 == 0:
             print(f"  …{i + 1}/{len(keys)} resolved={len(mapping)}", file=sys.stderr)
 
-    ordered = {ik: mapping[ik] for ik in sorted(mapping)}
+    # The DB queried above was built from the earlier snapshot, so it only lacks
+    # a CID for what that snapshot could not resolve. Writing ``mapping`` alone
+    # would drop every CID the earlier run found. Lay the new lookups over it.
+    earlier = json.loads(OUT.read_text()) if OUT.exists() else {}
+    earlier.update(mapping)
+    ordered = {ik: earlier[ik] for ik in sorted(earlier)}
     OUT.write_text(json.dumps(ordered, indent=2, ensure_ascii=False) + "\n")
     META.write_text(
         json.dumps(

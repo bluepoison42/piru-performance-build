@@ -2,6 +2,12 @@
   "_comment": "Adjudicated same-molecule pairs found by pipeline/audit/structural_dupes.py — two rows sharing the full InChIKey of their largest SMILES fragment, which folds a salt onto its freebase while keeping stereochemistry so enantiomers never collapse. The detector REPORTS; only pairs recorded here are merged, because a structural collision is ambiguous: it means either a genuine duplicate or a wrong SMILES, and those have opposite fixes. That is not hypothetical: an auto-merging first version would have folded Mephenmetrazine into 4-Methylphenmetrazine, which collide only because one of the two structures is wrong — see notMerged, where that pair is still unresolved. Auto-merge destroys a real compound to 'fix' a typo, and cannot tell the two cases apart. `keep` is the survivor (the row carrying more data or the more standard forensic name); `merge` folds into it, contributing its aliases and identifiers. Applied by SQLiteBuilder.apply_structural_duplicate_merges(), which re-verifies the shared key at build time and refuses to merge a pair that no longer collides.",
   "duplicates": [
     {
+      "keep": "Dextropropoxyphene",
+      "merge": "Propoxyphene",
+      "key": "XLMALTXPSGQGBX-GCJKJVERSA-N",
+      "why": "Propoxyphene is the US name (Darvon) for dextropropoxyphene, the INN, and the merged row stores dextropropoxyphene hydrochloride: CAS 1639-60-7 is the hydrochloride of CAS 469-62-5. The pair surfaced when dose.wiki supplied the survivor's stereochemistry. Survivor holds 3 dose rows and 9 durations to the other's 1 and 0."
+    },
+    {
       "keep": "N-Ethylpentylone",
       "merge": "Ephylone",
       "key": "VERDHJIMZYXGIW-UHFFFAOYSA-N",

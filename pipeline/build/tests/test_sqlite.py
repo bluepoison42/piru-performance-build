@@ -1232,6 +1232,15 @@ class TestBuiltDatabaseInvariants(unittest.TestCase):
             self.assertIsNotNone(row["logp"], f"{name} should carry logP")
             self.assertIsNotNone(row["tpsa"], f"{name} should carry TPSA")
 
+    def test_class_mechanism_fills_english_beside_chinese_only_summary(self):
+        """A FreeOD summary in Chinese leaves an English reader nothing, so the
+        class paragraph still fills English there (4-AcO-DMT's FreeOD page)."""
+        row = self.db.execute(
+            "SELECT 1 FROM mechanisms_summary m JOIN substances s ON s.id = m.substance_id "
+            "WHERE s.canonical_name = '4-AcO-DMT' AND m.language = 'en'"
+        ).fetchone()
+        self.assertIsNotNone(row, "4-AcO-DMT should carry an English mechanism summary")
+
     def test_effect_vocab_shape_present(self):
         """Stage 0 adds the controlled-vocabulary tables; Stage 2 seeds them."""
         tables = {

@@ -17,6 +17,14 @@
     "Research Support, U.S. Gov't, Non-P.H.S.",
     "Research Support, U.S. Gov't, P.H.S."
   ],
+  "10233211": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
+  "10376760": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "10384858": [
     "Journal Article",
     "Review"
@@ -88,9 +96,16 @@
     "Journal Article",
     "Research Support, U.S. Gov't, P.H.S."
   ],
+  "10792196": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "10799653": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "10820132": [
+    "Journal Article"
   ],
   "10883420": [
     "Clinical Trial",
@@ -141,10 +156,21 @@
     "Journal Article",
     "Review"
   ],
+  "11038435": [
+    "Clinical Trial",
+    "Comparative Study",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "11061418": [
     "Biography",
     "Historical Article",
     "Interview"
+  ],
+  "11069211": [
+    "Journal Article",
+    "Review"
   ],
   "11071707": [
     "Journal Article"
@@ -205,6 +231,10 @@
   "11403963": [
     "Journal Article"
   ],
+  "11417440": [
+    "Clinical Trial",
+    "Journal Article"
+  ],
   "11448454": [
     "Comparative Study",
     "Journal Article",
@@ -236,6 +266,11 @@
   "11640919": [
     "Comparative Study",
     "Journal Article"
+  ],
+  "11673747": [
+    "Clinical Trial",
+    "Journal Article",
+    "Research Support, U.S. Gov't, P.H.S."
   ],
   "11723224": [
     "Journal Article",
@@ -292,6 +327,10 @@
     "Comparative Study",
     "Journal Article"
   ],
+  "11967728": [
+    "Journal Article",
+    "Review"
+  ],
   "11994058": [
     "Clinical Trial",
     "Journal Article",
@@ -307,6 +346,9 @@
   "12163129": [
     "Journal Article",
     "Review"
+  ],
+  "12182761": [
+    "Journal Article"
   ],
   "12185406": [
     "Clinical Trial",
@@ -325,6 +367,11 @@
   "12231378": [
     "Comparative Study",
     "Journal Article"
+  ],
+  "12235455": [
+    "Comparative Study",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "12386133": [
     "Journal Article",
@@ -353,6 +400,12 @@
   "12485958": [
     "Comparative Study",
     "Journal Article"
+  ],
+  "12520625": [
+    "Clinical Trial",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
   ],
   "12584155": [
     "Comparative Study",
@@ -388,6 +441,11 @@
   "12848785": [
     "Journal Article"
   ],
+  "12865317": [
+    "Comparative Study",
+    "Journal Article",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
   "12902992": [
     "Comparative Study",
     "Journal Article",
@@ -401,6 +459,10 @@
   "1309873": [
     "Comparative Study",
     "Journal Article"
+  ],
+  "1350205": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "13572116": [
     "Journal Article"
@@ -508,6 +570,10 @@
     "Randomized Controlled Trial",
     "Research Support, Non-U.S. Gov't"
   ],
+  "15063480": [
+    "Journal Article",
+    "Review"
+  ],
   "15082749": [
     "Comparative Study",
     "Journal Article",
@@ -533,6 +599,12 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "15206993": [
+    "Clinical Trial",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "15210974": [
     "Journal Article",
     "Research Support, U.S. Gov't, P.H.S."
@@ -541,6 +613,11 @@
     "Clinical Trial",
     "Journal Article",
     "Randomized Controlled Trial"
+  ],
+  "15244501": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Review"
   ],
   "15266022": [
     "Journal Article",
@@ -596,6 +673,10 @@
   "15570192": [
     "Clinical Trial",
     "Controlled Clinical Trial",
+    "Journal Article",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
+  "1559217": [
     "Journal Article",
     "Research Support, U.S. Gov't, P.H.S."
   ],
@@ -767,6 +848,10 @@
   "16451075": [
     "Journal Article"
   ],
+  "16487221": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "16510126": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
@@ -787,6 +872,10 @@
   ],
   "16714321": [
     "Journal Article"
+  ],
+  "16720757": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "16723194": [
     "Comparative Study",
@@ -916,6 +1005,12 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "1768559": [
+    "Clinical Trial",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "17712521": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
@@ -971,6 +1066,10 @@
     "Journal Article",
     "Research Support, N.I.H., Extramural"
   ],
+  "18096568": [
+    "Journal Article",
+    "Review"
+  ],
   "1813896": [
     "Journal Article",
     "Review"
@@ -989,6 +1088,10 @@
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, U.S. Gov't, Non-P.H.S."
+  ],
+  "18285619": [
+    "Journal Article",
+    "Randomized Controlled Trial"
   ],
   "18294091": [
     "Journal Article",
@@ -1045,6 +1148,11 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "18650507": [
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "18717508": [
     "Journal Article",
     "Review"
@@ -1074,6 +1182,11 @@
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
   ],
+  "19158287": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "19184645": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
@@ -1084,6 +1197,10 @@
     "Research Support, N.I.H., Extramural"
   ],
   "19220294": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+  ],
+  "19223664": [
     "Journal Article",
     "Research Support, N.I.H., Extramural"
   ],
@@ -1203,6 +1320,10 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "20086031": [
+    "Journal Article",
+    "Randomized Controlled Trial"
+  ],
   "20126400": [
     "Journal Article",
     "Research Support, N.I.H., Extramural"
@@ -1232,6 +1353,10 @@
     "Research Support, Non-U.S. Gov't"
   ],
   "20504502": [
+    "Journal Article"
+  ],
+  "2050835": [
+    "Comparative Study",
     "Journal Article"
   ],
   "20632": [
@@ -1280,6 +1405,9 @@
   "20855444": [
     "Journal Article"
   ],
+  "20926621": [
+    "Journal Article"
+  ],
   "20942780": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
@@ -1314,6 +1442,11 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "21233690": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "21284706": [
     "Journal Article"
   ],
@@ -1321,6 +1454,11 @@
     "Journal Article",
     "Randomized Controlled Trial",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "21366359": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Review"
   ],
   "21474568": [
     "Comparative Study",
@@ -1340,6 +1478,10 @@
     "Research Support, Non-U.S. Gov't"
   ],
   "21651903": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
+  "21704641": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
@@ -1368,6 +1510,12 @@
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
   ],
+  "22078184": [
+    "Comparative Study",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "22169943": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
@@ -1383,6 +1531,11 @@
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, P.H.S."
+  ],
+  "22266354": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
   ],
   "22271821": [
     "Comparative Study",
@@ -1497,6 +1650,17 @@
     "Letter",
     "Comment"
   ],
+  "23469684": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
+  "23486447": [
+    "Journal Article",
+    "Practice Guideline",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
   "23492908": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
@@ -1505,12 +1669,23 @@
     "Journal Article",
     "Research Support, N.I.H., Extramural"
   ],
+  "23537664": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "23554428": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
   "23567998": [
     "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
+  "23625188": [
+    "Clinical Trial, Phase I",
+    "Journal Article",
+    "Randomized Controlled Trial",
     "Research Support, Non-U.S. Gov't"
   ],
   "23646826": [
@@ -1560,6 +1735,10 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "24197934": [
+    "Journal Article",
+    "Review"
+  ],
   "24244317": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
@@ -1574,6 +1753,9 @@
   "24275046": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "24301608": [
+    "Journal Article"
   ],
   "24317442": [
     "Journal Article",
@@ -1629,6 +1811,10 @@
   ],
   "2467611": [
     "Journal Article"
+  ],
+  "24697247": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "24706503": [
     "Clinical Trial, Phase I",
@@ -1727,6 +1913,10 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "25427746": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "25502630": [
     "Journal Article",
     "Research Support, N.I.H., Intramural",
@@ -1780,6 +1970,11 @@
   "25721705": [
     "Journal Article"
   ],
+  "25728721": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Review"
+  ],
   "25738459": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
@@ -1802,6 +1997,9 @@
     "Comparative Study",
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "2591418": [
+    "Journal Article"
   ],
   "25921407": [
     "Journal Article",
@@ -1924,6 +2122,11 @@
     "Randomized Controlled Trial",
     "Research Support, Non-U.S. Gov't"
   ],
+  "26659543": [
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "26721643": [
     "Journal Article",
     "Review"
@@ -1994,6 +2197,10 @@
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, N.I.H., Intramural"
+  ],
+  "27156124": [
+    "Case Reports",
+    "Journal Article"
   ],
   "27192616": [
     "Journal Article",
@@ -2089,8 +2296,17 @@
   "27736030": [
     "Journal Article"
   ],
+  "27855744": [
+    "Journal Article"
+  ],
   "27973993": [
     "Journal Article"
+  ],
+  "28002639": [
+    "Journal Article",
+    "Practice Guideline",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
   ],
   "28074670": [
     "Journal Article",
@@ -2098,6 +2314,9 @@
     "Research Support, Non-U.S. Gov't"
   ],
   "28103426": [
+    "Journal Article"
+  ],
+  "28138268": [
     "Journal Article"
   ],
   "28220701": [
@@ -2153,6 +2372,10 @@
     "Journal Article",
     "Systematic Review"
   ],
+  "2866242": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "28677876": [
     "Journal Article",
     "Validation Study"
@@ -2164,6 +2387,11 @@
     "Journal Article",
     "Research Support, U.S. Gov't, Non-P.H.S."
   ],
+  "2872061": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
   "2873494": [
     "Journal Article"
   ],
@@ -2171,7 +2399,23 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "2884857": [
+    "Journal Article"
+  ],
+  "28856569": [
+    "Clinical Trial, Phase I",
+    "Journal Article"
+  ],
+  "2889679": [
+    "Clinical Trial",
+    "Controlled Clinical Trial",
+    "Journal Article"
+  ],
   "28910145": [
+    "Journal Article",
+    "Review"
+  ],
+  "28910830": [
     "Journal Article",
     "Review"
   ],
@@ -2192,17 +2436,34 @@
     "Journal Article",
     "Research Support, U.S. Gov't, P.H.S."
   ],
+  "29067253": [
+    "Journal Article",
+    "Review"
+  ],
   "2907279": [
     "Comparative Study",
     "Journal Article"
   ],
+  "29145890": [
+    "Clinical Trial, Phase I",
+    "Journal Article",
+    "Randomized Controlled Trial"
+  ],
   "29181593": [
     "Journal Article"
+  ],
+  "29194389": [
+    "Journal Article",
+    "Review"
   ],
   "29202454": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "29271734": [
+    "Journal Article",
+    "Review"
   ],
   "29316249": [
     "Journal Article",
@@ -2308,6 +2569,10 @@
     "Journal Article",
     "Randomized Controlled Trial",
     "Research Support, N.I.H., Extramural"
+  ],
+  "30460547": [
+    "Journal Article",
+    "Review"
   ],
   "30553124": [
     "Journal Article"
@@ -2439,6 +2704,13 @@
     "Journal Article",
     "Randomized Controlled Trial"
   ],
+  "31808984": [
+    "Clinical Trial, Phase I",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "31849671": [
     "Journal Article"
   ],
@@ -2482,8 +2754,20 @@
   "32104896": [
     "Journal Article"
   ],
+  "32133778": [
+    "Clinical Trial, Phase I",
+    "Comparative Study",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "32180350": [
     "Journal Article"
+  ],
+  "32189324": [
+    "Journal Article",
+    "Practice Guideline",
+    "Research Support, N.I.H., Extramural"
   ],
   "32246840": [
     "Journal Article",
@@ -2505,6 +2789,12 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "32413436": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, U.S. Gov't, Non-P.H.S.",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
   "32415719": [
     "Journal Article"
   ],
@@ -2523,6 +2813,16 @@
   ],
   "32542207": [
     "Journal Article"
+  ],
+  "3271648": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
+  "32779747": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't",
+    "Practice Guideline"
   ],
   "32869039": [
     "Preprint",
@@ -2549,6 +2849,11 @@
   "32982255": [
     "Journal Article",
     "Review"
+  ],
+  "33009228": [
+    "Clinical Trial, Phase I",
+    "Journal Article",
+    "Randomized Controlled Trial"
   ],
   "33142953": [
     "Journal Article",
@@ -2619,12 +2924,21 @@
   "34139922": [
     "Editorial"
   ],
+  "34158473": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "34240442": [
     "Journal Article"
   ],
   "34268559": [
     "Journal Article",
     "Research Support, N.I.H., Intramural"
+  ],
+  "34321660": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "34348413": [
     "Journal Article"
@@ -2668,6 +2982,9 @@
   "34641457": [
     "Journal Article",
     "Review"
+  ],
+  "34690761": [
+    "Journal Article"
   ],
   "34786239": [
     "Case Reports",
@@ -2721,6 +3038,12 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "35296912": [
+    "Clinical Trial, Phase II",
+    "Journal Article",
+    "Multicenter Study",
+    "Randomized Controlled Trial"
+  ],
   "35308219": [
     "Journal Article"
   ],
@@ -2764,12 +3087,25 @@
   "3615341": [
     "Journal Article"
   ],
+  "36154844": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, Non-P.H.S."
+  ],
+  "36327391": [
+    "Journal Article",
+    "Practice Guideline"
+  ],
   "36407948": [
     "Journal Article"
   ],
   "36454409": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "36477925": [
+    "Journal Article"
   ],
   "36498963": [
     "Randomized Controlled Trial",
@@ -2778,6 +3114,10 @@
   "36499072": [
     "Journal Article",
     "Review"
+  ],
+  "3653227": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "36555217": [
     "Journal Article",
@@ -2806,9 +3146,17 @@
   "36976985": [
     "Journal Article"
   ],
+  "37002327": [
+    "Systematic Review",
+    "Journal Article",
+    "Practice Guideline"
+  ],
   "37005796": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
+  ],
+  "37082754": [
+    "Journal Article"
   ],
   "37132222": [
     "Journal Article",
@@ -2829,6 +3177,12 @@
   "37375403": [
     "Journal Article"
   ],
+  "3747266": [
+    "Journal Article"
+  ],
+  "3756066": [
+    "Journal Article"
+  ],
   "3760245": [
     "Comparative Study",
     "Journal Article",
@@ -2839,6 +3193,9 @@
     "Review"
   ],
   "37690187": [
+    "Journal Article"
+  ],
+  "3781673": [
     "Journal Article"
   ],
   "37847546": [
@@ -2919,12 +3276,22 @@
   "38844801": [
     "Journal Article"
   ],
+  "38877156": [
+    "Journal Article"
+  ],
   "38894658": [
     "Journal Article"
   ],
   "38898956": [
     "Journal Article",
     "Review"
+  ],
+  "38951961": [
+    "Journal Article",
+    "Practice Guideline",
+    "Systematic Review",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, N.I.H., Extramural"
   ],
   "39050746": [
     "Journal Article",
@@ -2949,6 +3316,10 @@
     "Review",
     "Research Support, Non-U.S. Gov't"
   ],
+  "39592887": [
+    "Journal Article",
+    "Clinical Trial, Phase I"
+  ],
   "39719487": [
     "Journal Article",
     "Randomized Controlled Trial"
@@ -2971,6 +3342,10 @@
   "40284409": [
     "Journal Article",
     "Review"
+  ],
+  "4037749": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "40381809": [
     "Journal Article",
@@ -3005,6 +3380,10 @@
     "Clinical Trial, Phase II",
     "Multicenter Study"
   ],
+  "40847765": [
+    "Journal Article",
+    "Randomized Controlled Trial"
+  ],
   "40936282": [
     "Journal Article"
   ],
@@ -3014,6 +3393,16 @@
   "40999236": [
     "Journal Article",
     "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+  ],
+  "41001841": [
+    "Clinical Trial, Phase III",
+    "Journal Article",
+    "Randomized Controlled Trial"
+  ],
+  "41273062": [
+    "Journal Article",
+    "Review",
     "Research Support, Non-U.S. Gov't"
   ],
   "41445539": [
@@ -3041,6 +3430,10 @@
     "Journal Article",
     "Review"
   ],
+  "41683852": [
+    "Journal Article",
+    "Review"
+  ],
   "41931242": [
     "Journal Article"
   ],
@@ -3048,9 +3441,25 @@
     "Journal Article",
     "Randomized Controlled Trial"
   ],
+  "42174196": [
+    "Journal Article"
+  ],
+  "42218107": [
+    "Journal Article"
+  ],
   "42257400": [
     "Journal Article",
     "Review"
+  ],
+  "42370028": [
+    "Journal Article"
+  ],
+  "455892": [
+    "Comparative Study",
+    "Journal Article"
+  ],
+  "456077": [
+    "Journal Article"
   ],
   "4758074": [
     "Journal Article"
@@ -3070,6 +3479,9 @@
     "Journal Article"
   ],
   "582130": [
+    "Journal Article"
+  ],
+  "6108174": [
     "Journal Article"
   ],
   "6109586": [
@@ -3134,7 +3546,19 @@
     "Journal Article",
     "Review"
   ],
+  "6519169": [
+    "Journal Article"
+  ],
+  "6661374": [
+    "Comparative Study",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "6684463": [
+    "Journal Article"
+  ],
+  "6790396": [
+    "English Abstract",
     "Journal Article"
   ],
   "6834256": [
@@ -3228,6 +3652,9 @@
   "7781267": [
     "Journal Article"
   ],
+  "7785989": [
+    "Journal Article"
+  ],
   "7791087": [
     "Journal Article",
     "Research Support, U.S. Gov't, Non-P.H.S."
@@ -3312,10 +3739,18 @@
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, P.H.S."
   ],
+  "8265621": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
   "8355251": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, P.H.S."
+  ],
+  "837647": [
+    "Journal Article"
   ],
   "8383736": [
     "Journal Article",
@@ -3360,12 +3795,21 @@
     "Journal Article",
     "Review"
   ],
+  "8549036": [
+    "Clinical Trial",
+    "Journal Article",
+    "Randomized Controlled Trial"
+  ],
   "8568801": [
     "Journal Article"
   ],
   "8582117": [
     "Journal Article",
     "Review"
+  ],
+  "8598183": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "8621444": [
     "Journal Article"
@@ -3439,6 +3883,16 @@
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, P.H.S."
   ],
+  "891094": [
+    "Comparative Study",
+    "Journal Article",
+    "Research Support, U.S. Gov't, Non-P.H.S."
+  ],
+  "8919637": [
+    "Comparative Study",
+    "Journal Article",
+    "Review"
+  ],
   "8925872": [
     "Journal Article"
   ],
@@ -3478,6 +3932,10 @@
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, P.H.S."
   ],
+  "9024887": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "9058409": [
     "Journal Article",
     "Research Support, U.S. Gov't, P.H.S."
@@ -3513,6 +3971,10 @@
   "923183": [
     "Journal Article"
   ],
+  "9264104": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+  ],
   "9272811": [
     "Clinical Trial",
     "Journal Article",
@@ -3531,6 +3993,12 @@
   "9323527": [
     "Clinical Trial",
     "Journal Article"
+  ],
+  "9384246": [
+    "Comparative Study",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
   ],
   "9400006": [
     "Journal Article",
@@ -3577,6 +4045,10 @@
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
   ],
+  "9642247": [
+    "Journal Article",
+    "Research Support, U.S. Gov't, P.H.S."
+  ],
   "9663813": [
     "Clinical Trial",
     "Journal Article",
@@ -3599,6 +4071,11 @@
   "9708845": [
     "Journal Article",
     "Review"
+  ],
+  "9714500": [
+    "Clinical Trial",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
   ],
   "9766762": [
     "Journal Article",

@@ -18,15 +18,25 @@ MODE="${1:-fast}"
 step() { printf '\n\033[1;36m▸ %s\033[0m\n' "$*"; }
 
 if [ "$MODE" = "full" ]; then
-  # ── Upstream source passes (network; refresh committed inputs) ──
+  # ── Upstream content sources (network; refresh committed inputs) ──
   step "1/8  Fetch PsychonautWiki  → data/sources/psychonautwiki.json"
   python3 pipeline/fetch/psychonautwiki.py
   step "1a/8 Fetch substance.wiki release → data/sources/drug-community*.json"
   python3 pipeline/fetch/brushers/fetch_drug_community.py
-  step "1b/8 Fetch SubFxOnEx ontology → data/sources/subfxonex.json"
-  python3 pipeline/fetch/subfxonex.py
-  step "1c/8 Fetch dose.wiki published articles → data/sources/dosewiki.json"
+  step "1b/8 Fetch dose.wiki articles, drafts included → data/sources/dosewiki.json"
   python3 pipeline/fetch/dosewiki.py
+  step "1c/8 Fetch TripSit drugs.json → data/sources/tripsit.json"
+  python3 pipeline/fetch/brushers/fetch_tripsit.py
+  step "1d/8 Update the FreeOD Wiki clone and extract → data/sources/freeodwiki.json"
+  # The clone lives beside the repo with the other out-of-repo data.
+  FREEOD="${PIRU_DATASOURCES:-../piru-data}/freeodwiki"
+  if [ -d "$FREEOD/.git" ]; then git -C "$FREEOD" pull -q --ff-only
+  else git clone -q --depth 1 https://github.com/SalviaSWC/FreeODwiki "$FREEOD"; fi
+  python3 pipeline/fetch/brushers/freeodwiki_translate.py
+  python3 pipeline/fetch/brushers/freeodwiki_extract.py "$FREEOD"
+  # SubFxOnEx (data/sources/subfxonex.json) is not refreshed: its upstream
+  # repository no longer exists, so the committed snapshot is the only copy.
+  # pipeline/fetch/subfxonex.py fetches a release URL if one is published again.
 
   step "2/8  Merge scraped web sources (Swift collector) → data/intermediate/sourced-substances.json"
   # TripSit + Wikidata + PubChem + Erowid + DEA. The collector also reads the
@@ -36,10 +46,27 @@ if [ "$MODE" = "full" ]; then
   # prints usage and exits 0, so this step silently did nothing while the
   # build reported success (sourced-substances.json went stale from May 31).
   # The CLI now also declares a defaultSubcommand, so both spellings work.
-  ( cd pipeline/fetch/collector && swift run SubstanceCollector build )
+  # A fresh cache directory per run: the collector's cache has no expiry, so
+  # reusing it would replay old responses instead of refreshing.
+  COLLECTOR_CACHE="$(mktemp -d)"
+  ( cd pipeline/fetch/collector && swift run SubstanceCollector build --cache-dir "$COLLECTOR_CACHE" )
 
   step "2b/8 Fetch barcode registries (openFDA NDC + BDPM) → data/sources/product-codes-*.json"
   python3 pipeline/fetch/product_codes.py
+
+  # ── Lookups keyed by the substance list (need a build of the sources above) ──
+  step "2c/8 Interim build, then refresh PubChem, Wikipedia, PubMed and MedTAP lookups"
+  python3 pipeline/fetch/brushers/extract.py
+  python3 pipeline/build/sqlite.py
+  python3 pipeline/fetch/brushers/fetch_pubchem_cids.py
+  # Properties are fetched for the CIDs in the DB, so the CIDs just resolved
+  # must be built in first.
+  python3 pipeline/build/sqlite.py
+  python3 pipeline/fetch/brushers/fetch_pubchem_properties.py
+  python3 pipeline/fetch/brushers/reconcile_identifiers_pubchem.py
+  python3 pipeline/fetch/brushers/fetch_wikipedia_popularity.py --all
+  python3 pipeline/fetch/pubmed_pubtypes.py
+  python3 pipeline/fetch/brushers/medtap_pk.py --write
 
   step "4/8  (manual) Enrichment swarm → data/enrichment/raw/*.json  — see pipeline/enrichment/"
 else

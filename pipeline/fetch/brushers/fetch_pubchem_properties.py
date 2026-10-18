@@ -81,6 +81,18 @@ def _get(url: str) -> bytes:
     raise last  # type: ignore[misc]
 
 
+def merged(path: Path, fresh: dict) -> dict:
+    """The earlier snapshot with ``fresh`` laid over it, sorted by key.
+
+    Each run only sees what the DB it reads still lacks, and that DB was built
+    from the earlier snapshot, so writing ``fresh`` alone would drop every entry
+    the earlier run supplied. Keys are structures or CIDs, so an entry no
+    substance uses any more stays inert."""
+    earlier = json.loads(path.read_text()) if path.exists() else {}
+    earlier.update(fresh)
+    return {k: earlier[k] for k in sorted(earlier)}
+
+
 def cids_from_db() -> list[int]:
     con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     try:
@@ -181,7 +193,8 @@ def main() -> int:
             time.sleep(SPACING)
 
     # Sort by CID for a stable, reviewable diff; keys as strings (JSON object keys).
-    ordered = {str(cid): props[cid] for cid in sorted(props)}
+    ordered = merged(OUT, {str(cid): props[cid] for cid in sorted(props)})
+    ordered = {k: ordered[k] for k in sorted(ordered, key=int)}
     OUT.write_text(json.dumps(ordered, indent=2, ensure_ascii=False) + "\n")
     META.write_text(
         json.dumps(
@@ -218,11 +231,11 @@ def main() -> int:
             ik_props[ik] = rec
         if i + 1 < len(iks):
             time.sleep(SPACING)
-    ordered_ik = {ik: ik_props[ik] for ik in sorted(ik_props)}
+    ordered_ik = merged(OUT_IK, ik_props)
     OUT_IK.write_text(json.dumps(ordered_ik, indent=2, ensure_ascii=False) + "\n")
     print(
         f"wrote {len(ordered_ik)} InChIKeys → {OUT_IK.relative_to(REPO)} "
-        f"({len(iks) - len(ordered_ik)} of {len(iks)} CID-less had no PubChem record)"
+        f"({len(iks) - len(ik_props)} of {len(iks)} CID-less had no PubChem record)"
     )
     return 0
 

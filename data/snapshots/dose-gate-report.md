@@ -8,7 +8,7 @@ Rows the build deleted because they fail a rule about themselves — a class cei
 
 | substance | source | route | detail |
 |---|---|---|---|
-| Methamphetamine | freeodwiki | oral | comeup 0.0833333–0.166667 min |
+| Alprazolam | freeodwiki | insufflation | onset 0.0833333–0.166667 min |
 | Nicotine | freeodwiki | oral | comeup 0.0833333–0.166667 min |
 
 ## class ceiling · benzimidazole-nitazenes ≤ 2 mg

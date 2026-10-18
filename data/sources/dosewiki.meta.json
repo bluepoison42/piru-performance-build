@@ -1,6 +1,6 @@
 {
   "api": "https://dose.wiki/api/v1",
-  "draft_skipped": 310,
+  "draft_count": 310,
   "dropped_fields": {
     "citations": "landing pages, not citeable works",
     "comparisons": "empty on every record",
@@ -11,8 +11,8 @@
     "source_citations": "landing pages, not citeable works",
     "subjective_effects": "effect prose Piru sources elsewhere"
   },
-  "expert_reviewed_count": 201,
-  "fetched_at": "2026-09-20T19:54:46+00:00",
+  "expert_reviewed_count": 202,
+  "fetched_at": "2026-10-17T23:51:13+00:00",
   "human_url_pattern": "https://dose.wiki/{slug}",
   "license": "CC0 1.0. The interaction and reagent fields are excluded: they carry TripSit's and ProtestKit's terms, not dose.wiki's.",
   "license_blocked_fields": [
@@ -21,10 +21,10 @@
     "reagent_testing_normalized"
   ],
   "license_url": "https://dose.wiki/docs/license",
-  "published_count": 267,
-  "records_unchanged": 167,
-  "records_written": 267,
-  "reference_count": 4258,
+  "listed_count": 577,
+  "records_unchanged": 264,
+  "records_written": 577,
+  "reference_count": 4283,
   "roster_total": 577,
   "source": "dose.wiki public API"
 }

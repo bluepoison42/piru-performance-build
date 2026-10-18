@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch dose.wiki's published substance articles into the bundled snapshot.
+"""Fetch dose.wiki's substance articles, drafts included, into the bundled snapshot.
 
 dose.wiki (https://dose.wiki, CC0 1.0) is an encyclopedia compiled from ten
 reference sites — PsychonautWiki, TripSit and Erowid among them — with an
@@ -11,13 +11,14 @@ The fetch takes the **API**, not the daily `SubstanceIndex.json` export: the
 export withholds ``expert_reviewed`` and ``publicRevision``, and every gate in
 ``Build.ingest_dosewiki`` is written against the first of those.
 
-Two filters run here rather than at build time, because a snapshot committed to
-this public repo is a redistribution of whatever is in it:
+Drafts (``priority: low``, withheld from dose.wiki's own export and almost all
+unreviewed) are fetched with everything else and keep their ``priority``. The
+build decides what a draft may contribute: never a number or prose, since those
+need ``expert_reviewed``.
 
-* ``priority: low`` is dose.wiki's unpublished-draft tier. Those articles are
-  withheld from its own export and 309 of 310 are unreviewed; they are never
-  requested.
-* ``LICENSE_BLOCKED`` names the fields Piru may not redistribute at all.
+One filter runs here rather than at build time, because a snapshot committed to
+this public repo is a redistribution of whatever is in it: ``LICENSE_BLOCKED``
+names the fields Piru may not redistribute at all.
 
 Usage:
     python3 pipeline/fetch/dosewiki.py
@@ -182,22 +183,20 @@ def previous_records() -> dict[str, dict]:
 
 def main() -> int:
     previews, total = roster()
-    published = sorted(
-        {row["slug"] for row in previews if row.get("slug") and row.get("priority") != "low"}
-    )
-    drafts = len(previews) - len(published)
-    print(f"dose.wiki roster: {total} substances, {len(published)} published, {drafts} drafts")
+    listed = sorted({row["slug"] for row in previews if row.get("slug")})
+    drafts = sum(1 for row in previews if row.get("slug") and row.get("priority") == "low")
+    print(f"dose.wiki roster: {total} substances, {drafts} of them drafts")
 
     committed = previous_records()
     with ThreadPoolExecutor(max_workers=CONCURRENCY) as pool:
-        fetched = list(pool.map(fetch_record, published))
+        fetched = list(pool.map(fetch_record, listed))
 
     records: list[dict] = []
     unchanged = 0
-    for slug, record in zip(published, fetched, strict=True):
+    for slug, record in zip(listed, fetched, strict=True):
         prior = committed.get(slug)
         if record is None:
-            # The article is still published; this run just could not read it.
+            # The article is still listed; this run just could not read it.
             # Keeping the committed projection loses nothing and drops nobody.
             if prior:
                 records.append(prior)
@@ -247,8 +246,8 @@ def main() -> int:
                 "dropped_fields": DROPPED,
                 "fetched_at": fetched_at,
                 "roster_total": total,
-                "published_count": len(published),
-                "draft_skipped": drafts,
+                "listed_count": len(listed),
+                "draft_count": drafts,
                 "records_written": len(records),
                 "records_unchanged": unchanged,
                 "expert_reviewed_count": reviewed,

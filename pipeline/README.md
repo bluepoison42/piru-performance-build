@@ -120,6 +120,11 @@ pipeline/build.sh          # fast: validate curated → build SQLite → snapsho
 pipeline/build.sh full     # also re-run upstream scrape/extract first (network + datasources)
 ```
 
+`full` takes about an hour, most of it PubChem's rate limit, and needs
+`defusedxml` for the PubMed step (`pip install defusedxml`). Every lookup it
+refreshes merges into its committed snapshot, because each one queries the
+built database for what is still missing and would otherwise write only that.
+
 `build.sh` is the source of truth for the steps and their order; it just
 invokes the per-step scripts (`fetch/psychonautwiki.py`, the Swift collector,
 `fetch/brushers/extract.py`, `build/validate_curated.py`, `build/sqlite.py`,
@@ -148,6 +153,16 @@ After a build, commit changed inputs, `Piru/Data/manifest.json`, and generated s
   primitives live in `pipeline/product_codes.py`.
 - **`dosewiki.py`** — dose.wiki's public API (CC0 1.0); writes
   `data/sources/dosewiki.json` + `.meta.json`. See [dose.wiki](#dosewiki).
+- **`brushers/freeodwiki_extract.py`** — parses a clone of FreeOD Wiki
+  (`SalviaSWC/FreeODwiki`, CC BY-SA 4.0, kept at `../piru-data/freeodwiki`) into
+  `data/sources/freeodwiki.json`. It skips a page whose content is another page's
+  article, and merges English from `data/sources/freeodwiki-en.json`.
+- **`data/sources/freeodwiki-en.json`** — the English layer for FreeOD's Chinese
+  pages. A description is PsychonautWiki's own lead prose where PsychonautWiki
+  covers the substance (refreshed by `brushers/freeodwiki_translate.py`), and
+  otherwise a machine translation in PsychonautWiki's register. Each translation
+  records the hash of the Chinese it was made from; the extractor applies it only
+  while that Chinese is unchanged and prints every field that needs a new one.
 - **`brushers/extract.py`** — extracts the four out-of-repo datasets
   (`~/Developer/piru-data`: TripSit-benzos, MedTAP, NPS DataHub,
   Pyrls) into `Substance`-shaped JSON written to `/tmp/piru-extract`
@@ -369,22 +384,25 @@ feature absent from that object is zero). So calibration is:
 
 `dose.wiki` is a CC0 encyclopedia compiled from ten reference sites —
 PsychonautWiki, TripSit and Erowid among them — with an editorial merge on top
-and a first-pass prose review recorded per article as `expert_reviewed`. It sits
-**last** in `SOURCES`, so appending it shifted no existing rank and
-`SubstanceStore.currentSourceOrderMigration` stays where it is. It is
-deliberately absent from `SubstanceStore.reorderableSourceSlugs`.
+and a first-pass prose review recorded per article as `expert_reviewed`. It leads the
+community sources in `SOURCES`, below Piru's editors and the published
+literature, because a defect reported there is corrected upstream within days.
+Users can reorder it like the other community sources.
 
 **The fetch decides what may be stored** (`fetch/dosewiki.py`). The projection is
-an allowlist, and two exclusions are load-bearing because a snapshot committed to
-this public repo is a redistribution of whatever is in it: `priority: low` drafts
-are never requested, and the `interactions` / `reagent_testing` fields carry
-TripSit's and ProtestKit's terms rather than dose.wiki's and may never reach
-`data/sources/`. `build/tests/test_dosewiki.py` walks the whole file asserting no
+an allowlist. One exclusion is load-bearing because a snapshot committed to this
+public repo is a redistribution of whatever is in it: the `interactions` /
+`reagent_testing` fields carry TripSit's and ProtestKit's terms rather than
+dose.wiki's and may never reach `data/sources/`. Drafts (`priority: low`,
+withheld from dose.wiki's own export and almost all unreviewed) are fetched and
+keep their `priority`; the gates below keep them to identity and links. `build/tests/test_dosewiki.py` walks the whole file asserting no
 blocked or dropped key survives at any depth.
 
 **The join is hand-reviewed and structural** —
 `data/curated/dosewiki-ids.json`, seeded from an InChIKey/CAS comparison of all
-577 articles against the catalog. `name` is what the ingest resolves (a
+577 articles against the catalog. Drafts are joined the same way: a draft whose
+structure no Piru substance shares, or that gives no structure at all, is left
+unmapped with the reason. `name` is what the ingest resolves (a
 `substance_uid` is assigned long after ingest), and `substance_uid` is checked
 against `substance-ids.json` so a rename cannot silently move a join. A slug the
 file does not decide **fails the build**: joining a dose.wiki article by name
@@ -395,8 +413,8 @@ value comparison can see that.
 
 | written | gate |
 |---|---|
-| `substances` chemistry — SMILES/InChIKey/CAS/formula/MW/IUPAC | any published article. Into a column that is NULL or empty at ingest; and, after the PubChem reconciliation passes, *over* a Piru row that contradicts itself — a key its own SMILES does not recompute to, a salt stored as the parent, a CAS that fails its check digit — when dose.wiki's consistent record names the same skeleton (`dosewiki_identity_corrections`; every write is listed in the build report). The InChIKey is recomputed with RDKit and must equal the stated one; a structure another substance already carries is refused (dose.wiki gives a plant its active molecule's structure); two stated stereo layers that disagree are counted and left to a person |
-| `aliases` | any published article |
+| `substances` chemistry — SMILES/InChIKey/CAS/formula/MW/IUPAC | any article, drafts included. Into a column that is NULL or empty at ingest; and, after the PubChem reconciliation passes, *over* a Piru row that contradicts itself — a key its own SMILES does not recompute to, a salt stored as the parent, a CAS that fails its check digit — when dose.wiki's consistent record names the same skeleton (`dosewiki_identity_corrections`; every write is listed in the build report). The InChIKey is recomputed with RDKit and must equal the stated one; a structure another substance already carries is refused (dose.wiki gives a plant its active molecule's structure); two stated stereo layers that disagree are counted and left to a person |
+| `aliases`, `substances.dosewiki_slug` (the page link) | any article, drafts included. Draft pages are public on dose.wiki |
 | `dose_ranges`, `durations`, `half_lives` | `expert_reviewed`. `moderate` → `common`; both micro signs fold to `µg`; `come_up`/`after_effects` → `comeup`/`afterglow`; `dose_context = recreational`; the half-life is written only where neither `half_lives` nor `pk_routes` has one |
 | `bindings` | `expert_reviewed`, a stated Ki/EC50/IC50 with a unit (never a `<`/`>` threshold), an action mapped explicitly from `tag`/`efficacy`, and an inline `[cite:…]` resolving to a DOI or PMID. `confidence = LOW` |
 | `descriptions` | `expert_reviewed`, after `prose.enforce_voice`, skipped if the banned phrase survives |

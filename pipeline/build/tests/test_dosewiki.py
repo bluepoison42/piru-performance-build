@@ -80,8 +80,11 @@ class TestSnapshot(unittest.TestCase):
         self.assertIn("CC0", self.payload["license"])
         self.assertTrue(self.payload["fetched_at"])
 
-    def test_drafts_are_absent(self):
-        self.assertEqual([], [r["slug"] for r in self.records if r.get("priority") == "low"])
+    def test_every_record_says_whether_it_is_a_draft(self):
+        """Drafts (`priority: low`) ship in the snapshot; the build keeps them to
+        identity and links, which needs the field on every record."""
+        for record in self.records:
+            self.assertIn(record.get("priority"), ("low", "normal", "high"), record["slug"])
 
     def test_every_reference_names_a_work_a_reader_can_reach(self):
         for record in self.records:
@@ -304,6 +307,25 @@ class TestBuiltDatabase(unittest.TestCase):
             self.assertIsNotNone(row["citation_id"])
             self.assertEqual("LOW", row["confidence"])
             self.assertNotEqual("modulator", row["action"])
+
+    def test_only_reviewed_articles_reach_numbers_or_prose(self):
+        """A draft contributes chemistry, aliases and its link, never a number or
+        a summary: those need `expert_reviewed`."""
+        records = json.loads(SNAPSHOT.read_text())["records"]
+        reviewed = {r["slug"] for r in records if r.get("expert_reviewed")}
+        names = {
+            entry["name"]
+            for slug, entry in build.load_dosewiki_ids().items()
+            if slug in reviewed and entry.get("name")
+        }
+        for table in ("dose_ranges", "durations", "half_lives", "bindings", "descriptions"):
+            rows = self.db.execute(
+                f"SELECT DISTINCT s.canonical_name FROM {table} t"
+                "  JOIN substances s ON s.id = t.substance_id WHERE t.source_id = ?",
+                (self.source_id,),
+            ).fetchall()
+            stray = sorted(row[0] for row in rows if row[0] not in names)
+            self.assertEqual([], stray, table)
 
     def test_dose_rows_carry_the_recreational_regime(self):
         """`salt_form` is deliberately not checked: dose.wiki never states a

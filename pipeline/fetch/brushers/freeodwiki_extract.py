@@ -19,6 +19,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -72,11 +73,14 @@ ROUTE_KEYWORDS = [
 # Chem-info card labels.
 CHEM_FORMULA = "分子式"
 CHEM_CAS = "CAS"  # matched as a substring ("CAS 号", "CAS号")
-CHEM_IUPAC = "系统名称"
-CHEM_COMMON_NAMES = "常用名称"
-CHEM_SUBST_NAME = "取代名称"
-CAT_PSYCHOACTIVE = "精神活性分类"
-CAT_CHEMICAL = "化学分类"
+# Each label set lists every spelling the wiki's pages use for that row.
+CHEM_IUPAC = ("系统名称", "系统命名")
+CHEM_NAMES = ("常用名称", "常见名称", "常用名", "取代名称")
+# The card's header cell, "可卡因（Cocaine）": the English name in the paren.
+CHEM_HEADER = "化学信息"
+CAT_PSYCHOACTIVE = ("精神活性分类", "精神活性类别", "精神药效分类")
+CAT_CHEMICAL = ("化学分类", "化学类别")
+ROUTE_HEADER = "给药途径"
 
 # Duration unit -> minutes multiplier.
 DURATION_UNITS = [
@@ -155,7 +159,7 @@ def strip_md(s: str) -> str:
 def clean_cell(s: str) -> str:
     # ⇣ (U+21E3) and ⬇ (U+2B07) are both decorative "route below" arrows the wiki
     # prefixes onto per-route section headers; strip them so the route name matches.
-    return strip_md(s).strip(" |：:⇣⬇").strip()
+    return strip_md(s).strip(" |：:⇣⬇🔽").strip()
 
 
 def match_route(text: str) -> str | None:
@@ -265,13 +269,36 @@ def split_names(value: str) -> list[str]:
     return rejoin_locant_splits(cleaned)
 
 
+def table_text(line: str) -> str:
+    """The row with the list marker removed: cards open each table with "- | …"."""
+    s = line.strip()
+    return s[2:].strip() if s.startswith("- |") else s
+
+
 def is_table_row(line: str) -> bool:
-    return line.lstrip().startswith("|") and line.count("|") >= 2
+    s = table_text(line)
+    return s.startswith("|") and s.count("|") >= 2
 
 
 def row_cells(line: str) -> list[str]:
-    cells = line.strip().strip("|").split("|")
+    cells = table_text(line).strip("|").split("|")
     return [c.strip() for c in cells]
+
+
+def route_columns(cells: list[str]) -> list[str | None] | None:
+    """Routes named by a 给药途径 header row, one per value column, or None when
+    the row names none. A column repeating an earlier route (two oral products
+    side by side) maps to None so it can't overwrite the first."""
+    named = [c for c in cells[1:] if clean_cell(c)]
+    if not named:
+        return None
+    routes = [match_route(c) for c in named]
+    if not all(routes):
+        return None
+    out: list[str | None] = []
+    for r in routes:
+        out.append(None if r in out else r)
+    return out
 
 
 def parse_page(path: Path) -> dict | None:
@@ -304,6 +331,8 @@ def parse_page(path: Path) -> dict | None:
     }
 
     current_route = "oral"
+    # Set by a multi-column 给药途径 header: the route each value column belongs to.
+    columns: list[str | None] | None = None
     interaction_table = False
 
     for raw_line in lines:
@@ -314,6 +343,7 @@ def parse_page(path: Path) -> dict | None:
             r = match_route(line.split("⇣", 1)[1])
             if r:
                 current_route = r
+                columns = None
                 continue
         stripped = line.strip()
         if stripped.startswith("**") and (
@@ -324,6 +354,7 @@ def parse_page(path: Path) -> dict | None:
             r = match_route(stripped)
             if r:
                 current_route = r
+                columns = None
                 continue
 
         if not is_table_row(line):
@@ -334,6 +365,14 @@ def parse_page(path: Path) -> dict | None:
             continue
         label = clean_cell(cells[0])
         value = cells[1]
+
+        if label == ROUTE_HEADER:
+            routes = route_columns(cells)
+            if routes:
+                current_route = routes[0] or current_route
+                columns = routes if len(routes) > 1 else None
+                interaction_table = False
+            continue
 
         # Per-route section header — a table row whose first cell is just a route
         # name and whose value cell is empty ("| [口服] | |" then a "---" separator
@@ -347,11 +386,12 @@ def parse_page(path: Path) -> dict | None:
             r = match_route(label)
             if r:
                 current_route = r
+                columns = None
                 interaction_table = False
                 continue
 
         # Interaction table header toggles capture of the emoji-severity rows.
-        if "相互作用" in label:
+        if "相互作用" in label or "药物联用" in label:
             interaction_table = True
             continue
         if interaction_table:
@@ -376,38 +416,45 @@ def parse_page(path: Path) -> dict | None:
         if label.startswith(CHEM_CAS) and not rec["cas"]:
             rec["cas"] = strip_md(value) or None
             continue
-        if label == CHEM_IUPAC and not rec["iupac"]:
+        if label in CHEM_IUPAC and not rec["iupac"]:
             rec["iupac"] = strip_md(value) or None
             continue
-        if label in (CHEM_COMMON_NAMES, CHEM_SUBST_NAME):
+        if label in CHEM_NAMES or label == CHEM_HEADER:
             rec["names"].extend(split_names(value))
             continue
-        if label == CAT_PSYCHOACTIVE:
+        if label in CAT_PSYCHOACTIVE:
             rec["categories"].extend(split_names(value))
             continue
-        if label == CAT_CHEMICAL:
+        if label in CAT_CHEMICAL:
             rec["tags"].extend(split_names(value))
             continue
 
         # Dose tier rows.
+        if columns and len(cells) - 1 >= len(columns):
+            per_route = [(r, v) for r, v in zip(columns, cells[1:], strict=False) if r]
+        else:
+            per_route = [(current_route, value)]
+
         if label in DOSE_TIERS:
-            parsed = parse_dose_value(value)
-            if parsed:
-                _, val, unit = parsed
-                d = rec["doses"].setdefault(current_route, {"unit": "mg"})
-                d[DOSE_TIERS[label]] = val
-                # Only a recognized, number-attached unit overrides the route's
-                # default — a prose/garbled tier row must not clobber the real
-                # unit set by a sibling row (the per-route unit is shared).
-                if unit:
-                    d["unit"] = unit
+            for route, cell in per_route:
+                parsed = parse_dose_value(cell)
+                if parsed:
+                    _, val, unit = parsed
+                    d = rec["doses"].setdefault(route, {"unit": "mg"})
+                    d[DOSE_TIERS[label]] = val
+                    # Only a recognized, number-attached unit overrides the route's
+                    # default — a prose/garbled tier row must not clobber the real
+                    # unit set by a sibling row (the per-route unit is shared).
+                    if unit:
+                        d["unit"] = unit
             continue
 
         # Duration phase rows.
         if label in DURATION_PHASES:
-            prof = parse_duration_value(value)
-            if prof:
-                rec["durations"].setdefault(current_route, {})[DURATION_PHASES[label]] = prof
+            for route, cell in per_route:
+                prof = parse_duration_value(cell)
+                if prof:
+                    rec["durations"].setdefault(route, {})[DURATION_PHASES[label]] = prof
             continue
 
     # Subjective effects: links into the 药效/ index.
@@ -580,10 +627,61 @@ def extract_section(lines: list[str], headers: tuple[str, ...]) -> str | None:
     return text or None
 
 
+ENGLISH = Path("data/sources/freeodwiki-en.json")
+
+
+def zh_sha(value) -> str:
+    """The hash a translation in `freeodwiki-en.json` records for its Chinese."""
+    blob = json.dumps(value, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()[:16]
+
+
+def merge_english(records: list[dict], store: Path) -> list[str]:
+    """Attach English text from `store` to each record, in place.
+
+    PsychonautWiki's own lead prose applies as is. A machine translation applies
+    only while the Chinese it was made from is unchanged, so an edited FreeOD
+    page never ships a translation of its old text. Returns the fields that need
+    a new translation, as "page_slug: field".
+    """
+    if not store.exists():
+        return []
+    entries = json.loads(store.read_text(encoding="utf-8")).get("records") or {}
+    stale: list[str] = []
+    for rec in records:
+        entry = entries.get(rec["page_slug"]) or {}
+        description = entry.get("description")
+        if description:
+            translated = description["source"] == "freeodwiki"
+            if not translated or description.get("zh_sha") == zh_sha(rec.get("description")):
+                rec["description_en"] = description["text"]
+                rec["description_en_source"] = description["source"]
+                rec["description_en_mt"] = translated
+            else:
+                stale.append(f"{rec['page_slug']}: description")
+        elif rec.get("description"):
+            stale.append(f"{rec['page_slug']}: description (none yet)")
+        mechanism = entry.get("mechanism")
+        if mechanism:
+            if mechanism.get("zh_sha") == zh_sha(rec.get("mechanism")):
+                rec["mechanism_en"] = mechanism["text"]
+                rec["mechanism_en_mt"] = True
+            else:
+                stale.append(f"{rec['page_slug']}: mechanism")
+        effects = entry.get("effects")
+        if effects:
+            if effects.get("zh_sha") == zh_sha(rec.get("subjective_effects")):
+                rec["subjective_effects_en"] = effects["names"]
+            else:
+                stale.append(f"{rec['page_slug']}: effects")
+    return stale
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("repo", type=Path, help="Path to a FreeODwiki clone")
     ap.add_argument("--out", type=Path, default=Path("data/sources/freeodwiki.json"))
+    ap.add_argument("--english", type=Path, default=ENGLISH, help="English text store to merge")
     args = ap.parse_args()
 
     drug_dir = args.repo / "药物"
@@ -610,6 +708,15 @@ def main() -> int:
         rec = parse_page(md)
         if not rec:
             continue
+        # A page titled as another page that exists is a copy of that article
+        # (麻黄碱.md, ephedrine, once carried 甲卡西酮's text). Ingesting it would
+        # file one compound's data under another, so it is skipped and named.
+        if rec["title"] != md.stem and (drug_dir / f"{rec['title']}.md").exists():
+            print(
+                f"  skipped {md.name}: its content is the {rec['title']} article", file=sys.stderr
+            )
+            stats["skipped_copies"] = stats.get("skipped_copies", 0) + 1
+            continue
         stats["parsed"] += 1
         stats["with_dose"] += bool(rec["doses"])
         stats["with_duration"] += bool(rec["durations"])
@@ -620,11 +727,16 @@ def main() -> int:
         stats["with_formula"] += bool(rec["formula"])
         records.append(rec)
 
+    stale = merge_english(records, args.english)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {len(records)} records to {args.out}")
     for k, v in stats.items():
         print(f"  {k}: {v}")
+    if stale:
+        print(f"  needs English ({len(stale)}): add to {args.english}")
+        for line in stale:
+            print(f"    {line}")
     return 0
 
 

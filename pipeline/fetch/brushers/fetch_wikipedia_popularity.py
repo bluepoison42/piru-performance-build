@@ -76,8 +76,16 @@ NON_DRUG_NAMES = {
 }
 
 
+class FetchFailed(Exception):
+    """A request that never succeeded. Distinct from a 404, which is an answer."""
+
+
 def _get(url: str) -> dict | None:
-    for _ in range(3):
+    """The JSON body, or None for a 404. Raises FetchFailed after the retries,
+    because a throttled request recorded as "no article" or "0 views" would
+    overwrite a real number in the snapshot."""
+    delay = 2.0
+    for _ in range(6):
         try:
             req = urllib.request.Request(
                 url, headers={"User-Agent": UA, "Accept": "application/json"}
@@ -87,10 +95,12 @@ def _get(url: str) -> dict | None:
         except urllib.error.HTTPError as exc:
             if exc.code == 404:
                 return None
-            time.sleep(1)
+            retry_after = exc.headers.get("Retry-After") if exc.headers else None
+            time.sleep(float(retry_after) if retry_after and retry_after.isdigit() else delay)
         except (urllib.error.URLError, TimeoutError):
-            time.sleep(1)
-    return None
+            time.sleep(delay)
+        delay = min(delay * 2, 60.0)
+    raise FetchFailed(url)
 
 
 def substances() -> list[dict]:
@@ -128,9 +138,10 @@ def _clean_candidates(s: dict) -> list[str]:
     return uniq[:6]
 
 
-def resolve_titles(titles: list[str]) -> dict[str, dict]:
+def resolve_titles(titles: list[str], failed: set[str]) -> dict[str, dict]:
     """Batch-resolve up to 50 titles → {input: {article, qid, disambig}} for the
-    ones that land on a real article (redirects followed)."""
+    ones that land on a real article (redirects followed). Titles in a batch that
+    never succeeded go into ``failed``."""
     out: dict[str, dict] = {}
     for i in range(0, len(titles), 50):
         chunk = titles[i : i + 50]
@@ -142,7 +153,11 @@ def resolve_titles(titles: list[str]) -> dict[str, dict]:
             "ppprop": "disambiguation|wikibase_item",
             "titles": "|".join(chunk),
         }
-        d = _get(f"{WP_API}?{urllib.parse.urlencode(params)}")
+        try:
+            d = _get(f"{WP_API}?{urllib.parse.urlencode(params)}")
+        except FetchFailed:
+            failed.update(chunk)
+            continue
         if not d:
             continue
         q = d.get("query", {})
@@ -166,8 +181,9 @@ def resolve_titles(titles: list[str]) -> dict[str, dict]:
     return out
 
 
-def chemical_qids(qids: list[str]) -> set[str]:
-    """The subset of Wikidata items carrying a chemical-identifier property."""
+def chemical_qids(qids: list[str], failed: set[str]) -> set[str]:
+    """The subset of Wikidata items carrying a chemical-identifier property. Items
+    in a batch that never succeeded go into ``failed``."""
     ok: set[str] = set()
     qids = [q for q in qids if q]
     for i in range(0, len(qids), 50):
@@ -178,7 +194,11 @@ def chemical_qids(qids: list[str]) -> set[str]:
             "props": "claims",
             "ids": "|".join(chunk),
         }
-        d = _get(f"{WD_API}?{urllib.parse.urlencode(params)}")
+        try:
+            d = _get(f"{WD_API}?{urllib.parse.urlencode(params)}")
+        except FetchFailed:
+            failed.update(chunk)
+            continue
         if not d:
             continue
         for qid, ent in d.get("entities", {}).items():
@@ -202,31 +222,45 @@ def _date_range() -> tuple[str, str]:
     return f"{sy:04d}{sm:02d}01", f"{end_y:04d}{end_m:02d}01"
 
 
-def pageviews(article: str, start: str, end: str) -> int:
+def pageviews(article: str, start: str, end: str) -> int | None:
+    """Total views over the window, 0 for an article with no pageview record, or
+    None when the request never succeeded."""
     title = urllib.parse.quote(article.replace(" ", "_"), safe="")
-    d = _get(f"{PV_API}/{title}/monthly/{start}/{end}")
+    try:
+        d = _get(f"{PV_API}/{title}/monthly/{start}/{end}")
+    except FetchFailed:
+        return None
     if not d:
         return 0
     return sum(item.get("views", 0) for item in d.get("items", []))
 
 
-def _fetch_views_for(subs: list[dict]) -> dict[str, dict]:
+def _fetch_views_for(subs: list[dict]) -> tuple[dict[str, dict], set[str]]:
     """Resolve → chemical-verify → pageviews for the given substances. Returns
-    {name: {article, monthly_views}} for the ones that map to a chemical article.
-    This is the only part that hits the network."""
+    {name: {article, monthly_views}} for the ones that map to a chemical article,
+    and the names whose lookup failed somewhere along the way, which keep their
+    earlier record. This is the only part that hits the network."""
     all_titles: list[str] = []
     for s in subs:
         s["candidates"] = _clean_candidates(s)
         all_titles.extend(s["candidates"])
-    resolved = resolve_titles(sorted(set(all_titles)))
+    failed_titles: set[str] = set()
+    failed_qids: set[str] = set()
+    resolved = resolve_titles(sorted(set(all_titles)), failed_titles)
     print(f"resolved {len(resolved)} / {len(set(all_titles))} candidate titles", file=sys.stderr)
 
     qids = {r["qid"] for r in resolved.values() if r["qid"] and not r["disambig"]}
-    chem = chemical_qids(sorted(qids))
+    chem = chemical_qids(sorted(qids), failed_qids)
     print(f"{len(chem)} / {len(qids)} resolved articles are chemicals", file=sys.stderr)
 
     article_of: dict[str, str] = {}
+    failed: set[str] = set()
     for s in subs:
+        if failed_titles & set(s["candidates"]) or any(
+            resolved.get(c, {}).get("qid") in failed_qids for c in s["candidates"]
+        ):
+            failed.add(s["name"])
+            continue
         for c in s["candidates"]:
             r = resolved.get(c)
             if r and not r["disambig"] and r["qid"] in chem:
@@ -235,17 +269,23 @@ def _fetch_views_for(subs: list[dict]) -> dict[str, dict]:
 
     start, end = _date_range()
     uniq = sorted(set(article_of.values()))
-    views: dict[str, int] = {}
-    with ThreadPoolExecutor(max_workers=12) as pool:
+    views: dict[str, int | None] = {}
+    with ThreadPoolExecutor(max_workers=4) as pool:
         futs = {pool.submit(pageviews, art, start, end): art for art in uniq}
         for i, fut in enumerate(as_completed(futs)):
             views[futs[fut]] = fut.result()
             if i % 200 == 0:
                 print(f"  pageviews {i}/{len(uniq)}", file=sys.stderr)
-    return {
+    failed |= {name for name, art in article_of.items() if views[art] is None}
+    print(
+        f"{len(failed)} substances kept their earlier record after a failed lookup", file=sys.stderr
+    )
+    fetched = {
         name: {"article": art, "monthly_views": round(views[art] / MONTHS)}
         for name, art in article_of.items()
+        if views[art] is not None
     }
+    return fetched, failed
 
 
 def main() -> int:
@@ -256,7 +296,8 @@ def main() -> int:
     fetched_at = datetime.now(UTC).isoformat(timespec="seconds")
     subs = [s for s in substances() if s["name"].lower() not in NON_DRUG_NAMES]
     db_names = {s["name"] for s in subs}
-    existing = {} if (force_all or not OUT.exists()) else json.loads(OUT.read_text())
+    earlier = json.loads(OUT.read_text()) if OUT.exists() else {}
+    existing = {} if force_all else earlier
     # The set of substances already *attempted* (mapped or not) lives in the meta
     # so unmapped ones aren't re-resolved every run — only genuinely new names are.
     checked = set()
@@ -269,15 +310,16 @@ def main() -> int:
         f"{len(existing)} cached, {len(todo)} to fetch",
         file=sys.stderr,
     )
-    fetched = _fetch_views_for(todo) if todo else {}
+    fetched, failed = _fetch_views_for(todo) if todo else ({}, set())
 
     # Merge cached + new, keyed by the live DB names (prunes removed substances).
+    # A failed lookup keeps the earlier record even on --all.
     merged: dict[str, dict] = {}
     for name in db_names:
         if name in fetched:
             merged[name] = fetched[name]
-        elif name in existing:
-            e = existing[name]
+        elif name in existing or (name in failed and name in earlier):
+            e = existing.get(name) or earlier[name]
             merged[name] = {"article": e["article"], "monthly_views": e["monthly_views"]}
 
     # Re-normalize ALL entries on the current global max — cheap, no network — so
@@ -304,7 +346,7 @@ def main() -> int:
                 "mapped": len(ordered),
                 "of_total": len(subs),
                 "normalization": "score = log10(monthly_views+1) / log10(max+1)",
-                "checked": sorted(db_names),
+                "checked": sorted(db_names - failed),
             },
             indent=2,
             ensure_ascii=False,

@@ -3,10 +3,11 @@
     "name": "1,3-Dimethyl-8-Chloroxanthine",
     "display_name": "",
     "aliases": [
+      "8-CTP",
       "8-氯茶碱"
     ],
-    "category": "",
-    "display_class": "medical_rx",
+    "category": "Stimulant",
+    "display_class": "recreational",
     "tags": [],
     "default_route": "",
     "all_routes": [],
@@ -80,7 +81,8 @@
       "One Four B-D-O",
       "One Four Bee",
       "Tetramethylene glycol",
-      "butane-1,4-DIOL"
+      "butane-1,4-DIOL",
+      "or One Four B-D-O"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -406,7 +408,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 240.0,
-    "mechanism_summary": "更多信息请见：迷幻剂\n\n基于其与 LSD 的结构相似性，1cP-LSD 可能作为 5-HT 受体的受体激动剂（部分激动剂）发挥作用喵。 迷幻剂效应被认为主要源于它在分布于整个大脑的 5-HT 受体上的效力。1cP-LSD 可能还对广泛的单胺受体显示出结合活性，例如多巴胺和去甲肾上腺素受体。不过，目前还没有数据支持这些说法呢。\n\n由于其与 LSD 的结构相似性，可以提出以下假设：大多数血清素类迷幻剂没有显著的多巴胺活性，因此 1cP-LSD 在这方面被认为是异类喵。在 D 受体上的任何激动活性都可能对其在人类身上的精神活性产生贡献。此外，1cP-LSD 可能会结合除 5-HT 和 5-HT 受体之外的大多数血清素受体亚型。然而，大多数这些受体的亲和力太低，不足以被大约 10–20 nM 的大脑浓度充分激活。娱乐剂量可能会影响 5-HT、5-HT、5-HT、5-HT、5-HT [在克隆的大鼠组织中] 和 5-HT 受体哦。\n\n1cP-LSD 可能是偏向激动剂，它会诱导血清素受体产生一种构象，从而优先招募 β-arrestin 而不是激活 G 蛋白。5-HT 与 1cP-LSD 结合的晶体结构显示，一个胞外环在结合腔的二乙酰胺端形成了一个“盖子”，这解释了它从血清素受体上解离速度缓慢的原因喵。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -553,7 +555,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 240.0,
-    "mechanism_summary": "基于它和LSD的结构相似性，1P-LSD很可能作为5-HT2A受体的部分激动剂起作用。它的迷幻效果被认为主要来自于它对分布在大脑各处的5-HT2A受体的作用呢。\n\n1P-LSD也很可能对各种单胺受体显示出结合活性，比如多巴胺和去甲肾上腺素受体。不过，目前还没有实验数据支持这些说法哦。\n\n理论上，1P-LSD可能是LSD的前药。虽然1P-LSD在小鼠体内的效力只有LSD的38%，但当1P-LSD在人血清中孵育时，通过LC-MS可以检测到LSD。目前正在进行后续研究，比较LSD和1P-LSD在5-HT受体上的亲和力和选择性，并确定1P-LSD是否在体内水解为LSD。除此之外，1P-LSD也有可能本身就具有活性呢。\n\n在上述研究发表之前，药物化学家和迷幻剂研究员David E. Nichols据报道在私人通信中评论了1P-LSD潜在的血清素受体结合动力学：\n\n“我确信1-丙酰基也会从吲哚上水解下来，但我不知道体内条件是否允许。在化学实验室里，你可以去掉N-苯甲酰基，所以N-丙酰基可能也会掉下来。但在体内呢？我不知道答案。不过，作为N-丙酰基化合物，它本身是没有活性的。LSD停靠在5-HT2A受体的方式是吲哚NH与丝氨酸5.46形成氢键。有了丙酰基，它就塞不进受体了。”",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "Analysis enhancement",
@@ -745,7 +747,7 @@
     "display_name": "",
     "aliases": [
       "2,5-dimethoxyamphetamine",
-      "5-二甲氧基苯丙胺",
+      "2,5-二甲氧基苯丙胺",
       "DOH"
     ],
     "category": "Psychedelic",
@@ -1029,7 +1031,8 @@
       "Ivory Wave",
       "Pippy",
       "Purple Wave",
-      "VanillaSky"
+      "VanillaSky",
+      "象牙浪"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -1155,12 +1158,14 @@
       "2-FDCK",
       "2-FL-2'-oxo-PCM",
       "2-FL-2'-氧代-PCM",
+      "2-氟去氯氯胺酮",
       "2f-DCK",
       "2f-KET",
       "2f-ketamine",
       "2fdck",
       "2fket",
-      "Fluoroketamine"
+      "Fluoroketamine",
+      "氟氯胺酮"
     ],
     "category": "Dissociative",
     "display_class": "recreational",
@@ -1198,9 +1203,9 @@
     "name": "2-FMA",
     "display_name": "",
     "aliases": [
-      "2-fluoromethamphetamine",
+      "2-Fluoromethamphetamine",
       "2-氟甲基苯丙胺",
-      "2fma"
+      "2FMA"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -1616,6 +1621,7 @@
     "display_name": "2-MEC",
     "aliases": [
       "2-MEC",
+      "ortho-Ethcathinone",
       "ortho-methylethcathinone"
     ],
     "category": "Stimulant",
@@ -2491,6 +2497,7 @@
     "display_name": "",
     "aliases": [
       "2C-I-NBF",
+      "Cimbi-21",
       "NBF-2C-I"
     ],
     "category": "Psychedelic",
@@ -2644,7 +2651,6 @@
     "all_routes": [
       "buccal",
       "insufflation",
-      "oral",
       "sublingual"
     ],
     "routes_with_dose": [
@@ -2762,7 +2768,7 @@
     "aliases": [
       "2-C-N-NBOMe",
       "25n",
-      "NBOMe-2C-N"
+      "2C-N-NBOMe"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -2799,6 +2805,7 @@
     "aliases": [
       "25T2-NBOMe",
       "2C-T-2-NBOMe",
+      "N-Bomb",
       "NBOMe-2C-T-2",
       "OZEBFZPAWCXEGK"
     ],
@@ -3127,7 +3134,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "更多信息请见：血清素能迷幻剂\n\n2C-C 的迷幻效果被认为源于它对 5-HT2A 受体的部分激动剂作用。不过呢，这些相互作用具体是如何导致迷幻体验的，目前的科学界还在持续研究中喵。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "Analysis enhancement",
@@ -3289,7 +3296,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "人们认为 2C-E 的迷幻效果来自其作为部分激动剂在 5-HT2A 受体上的功效。然而，这些相互作用的作用以及它们如何导致迷幻体验仍然是正在进行的科学研究的主题嘛。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "After images",
@@ -3624,7 +3631,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "2C-I 是 2C-x 家族的一种迷幻苯乙胺。2C-I 通常以片剂或胶囊形式口服，或以粉末形式鼻吸。也有发现它被浸泡在小方块吸墨纸上用于口服，这是一种常见于分发和滥用 LSD 的技术。2C-I 主要引起刺激和致幻效果，包括增强的视觉、听觉和触觉感受。中等剂量可能会引起完全的幻觉，也能产生欣快感。\n\n人们认为 2C-I 的迷幻效果来自于它作为部分激动剂在 5-HT2A 受体上的功效。然而，这些相互作用的作用机制以及它们如何导致迷幻体验，仍然是正在进行的科学研究的主题呢。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "Analysis enhancement",
@@ -3954,7 +3961,8 @@
     "display_name": "",
     "aliases": [
       "2ct",
-      "Tesseract"
+      "Tesseract",
+      "超立方体"
     ],
     "category": "Empathogen",
     "display_class": "recreational",
@@ -4346,7 +4354,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "2C-T-7 的迷幻作用已被证明来自于其作为部分激动剂在 5-HT2A 受体上的功效。然而，这些相互作用的作用机制以及它们如何导致迷幻体验仍然难以捉摸呢。\n\n由于该化合物过量服用会出现严重的副作用（可能是血清素综合征），并且 2C-T-7 的 2,5-去甲氧基衍生物已被证明是中等强度的单胺氧化酶 A 抑制剂，而且 2,5-二甲氧基苯乙胺类物质 系列的许多苯丙胺类似物是高选择性的 MAO-A 抑制剂（其中 ALEPH-7 是最有效的之一），因此人们普遍认为该物质也具有 单胺氧化酶抑制剂（MAOI） 效应。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "After images",
@@ -4606,8 +4614,9 @@
     "aliases": [
       "3,4-DCMP",
       "3,4-dichloromethylphenidate",
+      "3,4-二氯哌甲酯",
       "34ctmp",
-      "4-二氯哌甲酯"
+      "Dichloromethylphenidate"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -5017,7 +5026,8 @@
       "3-氯甲卡西酮",
       "3cmc",
       "Clophedrone",
-      "m-chloro-methcathinone"
+      "m-chloro-methcathinone",
+      "克洛芬酮"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -5369,12 +5379,11 @@
     "aliases": [
       "3-FPH",
       "3-Fluorophenmetrazine",
+      "3F-Phenmetrazine",
       "3FPM",
       "3f-P",
-      "3f-phenmetrazine",
       "3fp",
-      "PAL-593",
-      "PAL-593,3-Fluorophenmetrazine"
+      "PAL-593"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -5802,7 +5811,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 660.0,
-    "mechanism_summary": "3-MeO-PCP 充当 NMDA 受体拮抗剂。NMDA（N-甲基-D-天冬氨酸）受体是谷氨酸受体的一种特定亚型，调节大脑和脊髓神经元之间的电信号传递；为了传递信号，受体必须处于开放状态。\n\n解离剂通过结合并阻断 NMDA 受体来抑制其正常功能。这种对神经网络活动的破坏会导致正常的认知和情感处理能力丧失、精神运动功能丧失、麻醉，最终导致相当于“k-hole”的状态。\n\n3-MeO-PCP 对 NMDA 受体的 Ki 值为 20 nM，对 sigma-1 受体为 42 nM，对血清素转运体 (SERT) 为 216 nM，对 H1 受体为 2960 nM。 它与 NMDA 受体的结合亲和力高于 PCP，并且在三种同分异构的茴香基取代物中亲和力最高，其次是 2-MeO-PCP 和 4-MeO-PCP。 像它的姊妹化合物 PCP 一样，与氯胺酮不同，3-MeO-PCP 显示出抑制相对未被研究的 PCP2 谷氨酸受体的高亲和力。\n\n尽管曾有人声称 3-MeO-PCP 具有阿片类或多巴胺能活性， 但这一假设与数据相矛盾，数据显示 3-MeO-PCP 是 NMDA 受体的强效选择性配体，而对 µ-阿片受体或多巴胺转运体没有明显的亲和力。 3-MeO-PCP 之前是效力较低的解离剂 4-MeO-PCP，并于 2011 年首次作为研究用化学品上市。",
+    "mechanism_summary": "NMDA Receptor Antagonist (Dissociative)",
     "effects": [
       "Acuity enhancement",
       "Acuity suppression",
@@ -6465,6 +6474,7 @@
     "display_name": "",
     "aliases": [
       "3C-Escaline",
+      "3C-艾斯卡林",
       "3CE",
       "alpha-methyl escaline"
     ],
@@ -6503,6 +6513,7 @@
     "name": "3C-P",
     "display_name": "",
     "aliases": [
+      "3C-Proscaline",
       "3cp",
       "4-propoxy-3",
       "5-dimethoxyamphetamine",
@@ -6971,7 +6982,8 @@
     "display_name": "",
     "aliases": [
       "4-acetoxy-DPT",
-      "4acodpt"
+      "4acodpt",
+      "Depracetin"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -7267,7 +7279,9 @@
     "display_name": "4-CA",
     "aliases": [
       "4-CA",
+      "4-CMP",
       "4-氯苯丙胺",
+      "P-CMP",
       "PCA",
       "p-Chloroamphetamine",
       "para-Chloroamphetamine",
@@ -7796,7 +7810,8 @@
     "aliases": [
       "4-FEPH",
       "4-氟哌乙酯",
-      "4F-EPH"
+      "4F-EPH",
+      "4F-TEP"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -8201,7 +8216,8 @@
     "name": "4-HO-MCPT",
     "display_name": "",
     "aliases": [
-      "4-hydroxy-McPT"
+      "4-Hydroxy-McPT",
+      "Meprocin"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -8266,7 +8282,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "4-HO-MET 的迷幻作用被认为来自于它作为部分激动剂在 5-HT2A 受体上的活性。然而，这些相互作用的作用以及它们如何导致迷幻体验仍然是正在进行的科学研究的主题呢。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "Analysis enhancement",
@@ -8329,6 +8345,7 @@
     "tags": [
       "5-HT2A-selective-vs-2B",
       "TIHKAL",
+      "class:4-Hydroxytryptamine",
       "no-human-data",
       "research-chemical",
       "tryptamine"
@@ -8344,7 +8361,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "4-HO-MiPT的迷幻效应被认为来自于它作为部分激动剂对5-HT2A受体的功效。然而，这些相互作用的作用以及它们如何导致迷幻体验仍然难以捉摸。4-HO-MiPT被认为是一种血清素能迷幻剂。与其他血清素能迷幻剂一样，其作用机制被认为源于其对5-HT2A和5-HT1A血清素受体的部分激动作用。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "After images",
@@ -8470,7 +8487,9 @@
   {
     "name": "4-HO-PiPT",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "Piprocin"
+    ],
     "category": "Psychedelic",
     "display_class": "recreational",
     "tags": [
@@ -8855,6 +8874,7 @@
       "4-MPM",
       "4-Me-phenmetrazine",
       "Mephenmetrazine",
+      "PAL-747",
       "p-Methylphenmetrazine",
       "para-methylphenmetrazine"
     ],
@@ -9506,6 +9526,7 @@
     "display_name": "",
     "aliases": [
       "4'-fluoro-Α-PHP",
+      "4-Fluoro-Pyrrolidinohexanophenone",
       "4F-alpha-PHP",
       "4F-Α-PHP"
     ],
@@ -9852,11 +9873,13 @@
     "name": "5-APDI",
     "display_name": "",
     "aliases": [
+      "2-API",
       "5-IAP",
       "IAP",
       "Indanyl-aminopropane",
       "Indanylaminopropane",
-      "Indanylamphetamine"
+      "Indanylamphetamine",
+      "indanametamine"
     ],
     "category": "Empathogen",
     "display_class": "recreational",
@@ -9931,6 +9954,7 @@
     "aliases": [
       "5-BR-DMT",
       "5-bromodimethyltryptamine",
+      "Sea DMT",
       "SpongeBob DMT"
     ],
     "category": "Psychedelic",
@@ -10076,11 +10100,14 @@
     "display_name": "",
     "aliases": [
       "5-HTP",
+      "5-Hydroxytryptophan L-FORM",
+      "5-hydroxy-tryptophan",
       "5-hydroxytryptophan DL-FORM",
       "5htp",
       "Cincofarm",
       "DL-5-HTP",
       "DL-5-hydroxytryptophan",
+      "Hydroxy-5 L-tryptophane",
       "Levothym",
       "Levotonine",
       "Oxitriptan",
@@ -10456,6 +10483,7 @@
     "name": "5-MeO-DIBF",
     "display_name": "",
     "aliases": [
+      "5-MeO-DiPBF",
       "5-Methoxy-diisopropylbenzofuranethylamine",
       "benzofuran analogue of 5-MeO-DiPT"
     ],
@@ -11391,7 +11419,8 @@
     "name": "6-APDB",
     "display_name": "",
     "aliases": [
-      "4-desoxy-MDA",
+      "4-Desoxy-MDA",
+      "EMA-3",
       "EMA-4"
     ],
     "category": "Empathogen",
@@ -12779,7 +12808,10 @@
     "display_name": "",
     "aliases": [
       "Adinazolam mesylate",
-      "Deracyn"
+      "Adinazolamum",
+      "Deracyn",
+      "U-41,123",
+      "U-41123"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -12967,6 +12999,7 @@
     "aliases": [
       "Aflocualona",
       "Afloqualon",
+      "Aroft",
       "Arofuto",
       "HQ 495",
       "HQ-495"
@@ -13209,7 +13242,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "更多信息请参阅：血清素能迷幻剂\n\nAL-LAD 可能作为 血清素 部分激动剂发挥作用喵。迷幻效果被认为源于 AL-LAD 对血清素受体的效力。然而，这些相互作用的作用以及它们如何导致迷幻体验，仍然是科学阐明对象呢。\n\nAL-LAD 与其母体化合物 LSD 有许多共同特征；在人类身上，它的效力似乎大致相等（虽然略低），机制也相似，尽管效果的进展和持续时间被压缩了（同时在性质上保持较低的强度且更易于管理——可能是因为更容易被代谢掉喵）。然而在老鼠身上，测得 AL-LAD 的效力大约是 LSD 的两倍，尽管人类的轶事报告称其精神活性效力与 LSD 相当甚至略低哦。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "After images",
@@ -13412,7 +13445,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 240.0,
-    "mechanism_summary": "ALD-52 通过其代谢产物 LSD 作用于大多数血清素受体亚型，作为部分激动剂，包括 5-HT1A、5-HT2A、5-HT2B、5-HT2C 和 5-HT6 受体喵。它也可以预期作为多巴胺受体（如 D2）的激动剂。人们认为其致幻效果源于 ALD-52 在 5-HT2A 受体亚型的效能呢。\n\nALD-52 与 1P-LSD 和 1B-LSD 一样，是 LSD 的前药，目前尚不清楚它作为母体物质是否能发挥自身的效果。研究发现，ALD-52 除了主要代谢物 LSD 外，还会代谢成两种不同的代谢产物：N-脱乙基 ALD-52 和 N-脱甲基 ALD-52（nor-ALD-52）喵。ALD-52 由 CYP3A4 酶进行 N-脱烷基化代谢，此外，CYP2D6 也参与了羟基化过程哦。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -14121,8 +14154,6 @@
       "alpha-PHP",
       "aphp",
       "α-PHP",
-      "α-PHiP",
-      "α-PiHP",
       "α-Pyrrolidinohexiophenone",
       "αphp"
     ],
@@ -14190,7 +14221,9 @@
       "prazolam",
       "贊安諾",
       "赞安诺",
+      "赞安诺（Xanax）",
       "阿普唑仑",
+      "阿普唑仑（Alprazolam）",
       "阿普唑侖"
     ],
     "category": "Benzodiazepine",
@@ -14209,10 +14242,12 @@
     "default_route": "inhalation",
     "all_routes": [
       "inhalation",
+      "insufflation",
       "oral"
     ],
     "routes_with_dose": [
       "inhalation",
+      "insufflation",
       "oral"
     ],
     "has_dose_data": true,
@@ -14400,7 +14435,11 @@
   {
     "name": "AM-694",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "Pulse Ultra",
+      "Shamrock",
+      "Warrior Ultimate"
+    ],
     "category": "Cannabinoid",
     "display_class": "recreational",
     "tags": [
@@ -14434,7 +14473,8 @@
     "name": "Amanita Muscaria",
     "display_name": "",
     "aliases": [
-      "毒蝇伞"
+      "毒蝇伞",
+      "蝇鹅膏"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -14446,7 +14486,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "毒蝇伞醇具有一种比较非典型的作用机制。与经典迷幻剂（通常是5-HT受体激动剂）和经典解离剂（通常是NMDA受体拮抗剂类药物）不同，毒蝇伞醇是一种强效的GABA激动剂，也就是说，它会激活GABA的受体；而GABA是大脑中主要的抑制性神经递质。作为激动剂，毒蝇伞醇会结合到GABA受体上与GABA本身相同的位点。这一点与苯二氮卓类物质和巴比妥类物质不同，后两者结合的是GABA受体上的其他变构位点。\n\n研究还显示，毒蝇伞醇也是GABA受体的部分激动剂，这可能也是它产生精神活性效应的原因之一。某些GABA能化合物（例如包括唑吡坦在内的Z-药物）之所以会产生致幻效应，与α1亚基GABA受体的激活有关，毒蝇伞醇也是如此。\n\n单独摄入毒蝇伞醇后，效应大约会在1小时后开始，约3小时达到高峰，总时长可持续10-24小时。\n\n研究表明，鹅膏蕈氨酸既是强效的NMDA受体激动剂，也是I类和II类代谢型谷氨酸受体的强效激动剂。由于它在体内会脱羧转化为毒蝇伞醇，因此在药理学上也与毒蝇伞醇有许多相似之处。",
+    "mechanism_summary": "毒蝇伞醇具有一种比较非典型的作用机制。与经典迷幻剂（通常是5-HT受体激动剂）和经典解离剂（通常是NMDA受体拮抗剂类药物）不同，毒蝇伞醇是一种强效的GABA激动剂，也就是说，它会激活GABA的受体；而GABA是大脑中主要的抑制性神经递质。作为激动剂，毒蝇伞醇会结合到GABA受体上与GABA本身相同的位点。这一点与苯二氮䓬类物质和巴比妥类物质不同，后两者结合的是GABA受体上的其他变构位点。\n\n研究还显示，毒蝇伞醇也是GABA受体的部分激动剂，这可能也是它产生精神活性效应的原因之一。某些GABA能化合物（例如包括唑吡坦在内的Z-药物）之所以会产生致幻效应，与α1亚基GABA受体的激活有关，毒蝇伞醇也是如此。\n\n单独摄入毒蝇伞醇后，效应大约会在1小时后开始，约3小时达到高峰，总时长可持续10-24小时。\n\n研究表明，鹅膏蕈氨酸既是强效的NMDA受体激动剂，也是I类和II类代谢型谷氨酸受体的强效激动剂。由于它在体内会脱羧转化为毒蝇伞醇，因此在药理学上也与毒蝇伞醇有许多相似之处。",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -14460,6 +14500,8 @@
     "name": "Amanita Pantherina",
     "display_name": "",
     "aliases": [
+      "假赭盖鹅膏",
+      "豹帽",
       "豹斑鹅膏"
     ],
     "category": "",
@@ -14487,6 +14529,10 @@
     "name": "Amantadine",
     "display_name": "",
     "aliases": [
+      "Mantadix",
+      "Midantan",
+      "PK-Merz",
+      "Symmetrel",
       "金刚烷胺"
     ],
     "category": "Dissociative",
@@ -14767,6 +14813,8 @@
     "name": "Aminorex",
     "display_name": "",
     "aliases": [
+      "Apiquel",
+      "McN-742",
       "Menocil"
     ],
     "category": "Stimulant",
@@ -15169,7 +15217,9 @@
       "β-phenylisopropylamine",
       "安非他命",
       "安非他明",
-      "苯丙胺"
+      "苯丙胺",
+      "苯丙胺（Amphetamine）",
+      "苯基乙丙胺"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -15338,14 +15388,16 @@
       "魔鬼的苹果",
       "魔鬼草"
     ],
-    "category": "",
+    "category": "Deliriant",
     "display_class": "medical_rx",
     "tags": [],
-    "default_route": "",
-    "all_routes": [],
+    "default_route": "oral",
+    "all_routes": [
+      "oral"
+    ],
     "routes_with_dose": [],
     "has_dose_data": false,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "",
@@ -15353,7 +15405,6 @@
     "references": [],
     "data_gaps": [
       "dose_ranges_by_route",
-      "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
       "references"
@@ -15366,6 +15417,7 @@
       "Ampamet",
       "Draganon",
       "Memodrin",
+      "Referan",
       "Ro 13-5057",
       "Sarple/Sarpul",
       "Sarpul",
@@ -15392,7 +15444,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 90.0,
-    "mechanism_summary": "茴拉西坦被认为会增加海马细胞内乙酰胆碱的释放。由于乙酰胆碱参与记忆功能，这或许可以解释它的益智药效应。\n\n此外，研究表明茴拉西坦还会调节AMPA受体、GABA能神经传递以及多巴胺能神经传递。",
+    "mechanism_summary": "Racetam Nootropic (Glutamatergic/Cholinergic Modulator)",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Aniracetam"
@@ -15636,7 +15688,9 @@
       "Dimoxamine",
       "alpha-Et-2C-D",
       "Α-Et-2C-D",
-      "Α-ethyl-2C-D"
+      "Α-ethyl-2C-D",
+      "Α-乙基-2C-D",
+      "α-乙基-DOM"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -15822,6 +15876,9 @@
       "Sensoril",
       "Winter Cherry",
       "Withania somnifera",
+      "南非醉茄",
+      "印度人参",
+      "毒醋栗和冬樱桃",
       "睡茄"
     ],
     "category": "Supplement",
@@ -16843,6 +16900,7 @@
     "name": "Belladonna",
     "display_name": "",
     "aliases": [
+      "致命龙葵",
       "颠茄"
     ],
     "category": "",
@@ -17891,9 +17949,11 @@
     "name": "Blue Lotus",
     "display_name": "",
     "aliases": [
+      "Nymphaea nouchali var. caerulea",
+      "莲花",
       "蓝莲花"
     ],
-    "category": "",
+    "category": "Depressant",
     "display_class": "recreational",
     "tags": [],
     "default_route": "inhalation",
@@ -18441,6 +18501,7 @@
     "display_name": "",
     "aliases": [
       "ADK-709",
+      "Adamantylbromphenylamine",
       "Bromantan",
       "Bromontan",
       "Ladasten",
@@ -18926,13 +18987,19 @@
       "5-hydroxy-DMT",
       "Bufotenine",
       "Cinobufotenine",
+      "Cohoba",
       "DM5-HT",
+      "Hataj",
+      "Jopo",
       "Mappin",
       "N,N-dimethylserotonin",
       "N,N-二甲基血清素",
+      "Niopo",
+      "Parica",
       "cebilcin",
       "dimethylserotonin",
-      "mappine"
+      "mappine",
+      "蟾毒色胺"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -19132,9 +19199,10 @@
       "Wellbutrin SR",
       "Wellbutrin XL",
       "Zyban",
-      "威博隽",
+      "威博隽（Wellbutrin）",
       "安非他酮",
-      "载班"
+      "安非他酮（Bupropion）",
+      "载班（Zyban）"
     ],
     "category": "Antidepressant",
     "display_class": "dual_use",
@@ -19148,11 +19216,15 @@
       "seizure-risk",
       "smoking-cessation"
     ],
-    "default_route": "oral",
+    "default_route": "inhalation",
     "all_routes": [
+      "inhalation",
+      "insufflation",
       "oral"
     ],
     "routes_with_dose": [
+      "inhalation",
+      "insufflation",
       "oral"
     ],
     "has_dose_data": true,
@@ -19344,7 +19416,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "MDNMB是一种同时具有神经递质再摄取抑制剂与神经递质释放剂作用的物质，可作用于血清素、去甲肾上腺素和多巴胺。这些神经递质主要负责愉悦、奖赏、动机与专注等功能。它通过抑制神经递质在完成神经冲动传递后的再摄取与再吸收，使它们得以积累并被再次利用，从而产生身体上的刺激感与欣快效应呢。\n\n与MDMC相比，它对去甲肾上腺素转运体的亲和力大约低4倍以上，而对血清素和多巴胺转运体的亲和力则相近。与MDMA相比，这些药理差异意味着MDNMB和它的近缘类似物MDEC一样，在剂量效力上更低，儿茶酚胺能效应相对血清素能效应更加均衡，并且行为方式更接近像哌甲酯这样的神经递质再摄取抑制剂，而不是像苯丙胺那样的释放剂；不过，MDNMB仍然保留了相当明显的释放能力哦。",
+    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Butylone"
@@ -19434,8 +19506,7 @@
     "name": "Caffeine",
     "display_name": "",
     "aliases": [
-      "1,3,7-trimethylxanthine",
-      "1,3,7-三甲基黄嘌呤",
+      "1,3,7-Trimethylxanthine",
       "7-methyltheophylline",
       "Cafeína",
       "Caffeinum",
@@ -19448,6 +19519,7 @@
       "Methyltheobromine",
       "Theine",
       "咖啡因",
+      "咖啡因（Caffeine）",
       "咖啡碱"
     ],
     "category": "Stimulant",
@@ -20084,7 +20156,8 @@
       "Soma",
       "Somadril",
       "Vanadom",
-      "卡立普多"
+      "卡立普多",
+      "索马"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -20347,7 +20420,8 @@
     "aliases": [
       "Cannabidiol",
       "Epidiolex",
-      "大麻二酚"
+      "大麻二酚",
+      "艾匹迪莱克斯"
     ],
     "category": "Cannabinoid",
     "display_class": "recreational",
@@ -20588,6 +20662,7 @@
       "Citicoline",
       "Cognizin",
       "Cytidine Diphosphocholine",
+      "Cytidine diphosphate choline",
       "cytidine diphosphate-choline",
       "胞磷胆碱",
       "胞苷二磷酸胆碱"
@@ -20863,7 +20938,9 @@
     "name": "Centrophenoxine",
     "display_name": "",
     "aliases": [
+      "ANP 235",
       "ANP-235",
+      "Helfergin",
       "Lucidril",
       "Meclofenoxate",
       "centrophenoxin"
@@ -21014,7 +21091,7 @@
     "name": "Changa",
     "display_name": "",
     "aliases": [
-      "泛相思汤"
+      "相思皮"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -21044,14 +21121,14 @@
     "display_name": "",
     "aliases": [
       "Aquachloral",
-      "Knockout drops",
+      "Knockout Drops",
       "Mickey Finn",
       "Noctec",
+      "Somnos",
       "Somnote",
       "Trichloroacetaldehyde monohydrate",
       "Welldorm",
-      "chloral-hydrate",
-      "somnos"
+      "chloral-hydrate"
     ],
     "category": "GABAergic",
     "display_class": "recreational",
@@ -21124,6 +21201,7 @@
       "Chlordiazepoxidum",
       "Clopoxide",
       "Librium",
+      "利眠宁",
       "氯氮䓬"
     ],
     "category": "Benzodiazepine",
@@ -21966,9 +22044,12 @@
       "Asenlix",
       "Dinintel",
       "Finedal",
+      "Giranza",
       "Itravil",
+      "Obeclox",
       "SD-271-12",
-      "氯苄雷司"
+      "氯苄雷司",
+      "绿药丸"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -22183,7 +22264,8 @@
       "Rivotril",
       "kpin",
       "氯硝安定",
-      "氯硝西泮"
+      "氯硝西泮",
+      "氯硝西泮（Clonazepam）"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -22238,7 +22320,8 @@
       "C-lam",
       "Clam",
       "Clonitrazolam",
-      "氯硝唑仑"
+      "氯硝唑仑",
+      "氯硝唑仑（Clonazolam）"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -22263,7 +22346,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 900.0,
-    "mechanism_summary": "苯二氮卓类物质通过结合到苯二氮卓受体位点并放大神经递质γ-氨基丁酸 (GABA)对其受体的作用效率和效应，从而产生各种效果。 由于该位点是大脑中最多产的抑制性受体组，其调节导致了氯硝唑仑对神经系统的镇静（或镇静效应）。\n\n苯二氮卓类物质的抗惊厥特性可能部分或全部归因于结合到电压依赖性钠通道（VDSC）而不是苯二氮卓受体。 氯硝唑仑被羟基化，主要还原为 7-氨基苯二氮卓，然后被乙酰化。\n\n在一系列三唑苯二氮卓类物质中，它是总体上最活跃的，有时证明在小鼠中小于 10 μg/kg 就有效。",
+    "mechanism_summary": "GABA-A Positive Allosteric Modulator (Benzodiazepine)",
     "effects": [
       "Amnesia",
       "Analysis suppression",
@@ -22548,7 +22631,9 @@
       "Clozaril",
       "FazaClo",
       "Versacloz",
-      "氯氮平"
+      "可致律",
+      "氯氮平",
+      "氯氮平口腔崩解片"
     ],
     "category": "Antipsychotic",
     "display_class": "medical_rx",
@@ -22617,7 +22702,9 @@
       "yeyo",
       "古柯碱",
       "古柯鹼",
-      "可卡因"
+      "可卡因",
+      "可卡因（Cocaine）",
+      "苯甲酰芽子碱甲酯"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -22899,7 +22986,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "考拉西坦能够增强高亲和性胆碱摄取（HACU），而这正是乙酰胆碱（ACh）合成过程中的限速步骤。这个过程本质上会让乙酰胆碱积累到高于正常水平的程度。由于乙酰胆碱参与记忆功能，因此这或许可以解释它的益智药效应呢。",
+    "mechanism_summary": "Racetam Nootropic (Glutamatergic/Cholinergic Modulator)",
     "effects": [
       "Acuity enhancement",
       "Anxiety suppression",
@@ -23158,6 +23245,8 @@
       "Creapure",
       "Creatine",
       "Methylguanidoacetic acid",
+      "N-胍酰-N-甲基甘氨酸",
+      "甲基胍乙酸",
       "肌酸"
     ],
     "category": "Supplement",
@@ -23991,7 +24080,14 @@
       "Thorn Apple",
       "Toloache",
       "jimsonweed",
-      "曼陀罗属"
+      "刺苹果",
+      "地狱铃",
+      "天使喇叭",
+      "曼陀罗属",
+      "曼陀罗草",
+      "月花",
+      "魔鬼喇叭",
+      "魔鬼草"
     ],
     "category": "Deliriant",
     "display_class": "recreational",
@@ -24384,7 +24480,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Thienodiazepines produce their effects by binding to the benzodiazepine receptor site and amplifying the efficiency and potency of the neurotransmitter γ-aminobutyric acid (GABA) at its receptor. Because this site is the most prolific inhibitory receptor complex in the brain, its modulation accounts for the sedative (or depressant) effects of deschloroetizolam on the nervous system.",
+    "mechanism_summary": "Thienodiazepines produce their effects by binding to the benzodiazepine receptor site and amplifying the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA) at its receptor. Because this site is the most prolific inhibitory receptor system in the brain, its modulation produces deschloroetizolam's sedative effects on the nervous system.",
     "effects": [
       "Amnesia",
       "Analysis suppression",
@@ -25133,12 +25229,15 @@
     "display_name": "",
     "aliases": [
       "Co-proxamol",
+      "Darvocet",
       "Darvon",
+      "Propoxyphene",
       "capadex",
       "coproxamol",
-      "darvocet",
       "di-gesic",
-      "右丙氧芬"
+      "丙氧芬",
+      "右丙氧芬",
+      "达尔冯"
     ],
     "category": "Opioid",
     "display_class": "recreational",
@@ -25148,6 +25247,7 @@
       "class:phenylpropylamine",
       "hERG-strong",
       "habit-forming",
+      "withdrawn",
       "withdrawn-multiple-markets"
     ],
     "default_route": "oral",
@@ -25212,6 +25312,7 @@
       "Valium",
       "Valtoco",
       "地西泮",
+      "地西泮（Diazepam）",
       "安定"
     ],
     "category": "Benzodiazepine",
@@ -25334,7 +25435,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 2520.0,
-    "mechanism_summary": "Benzodiazepine substances produce their effects by binding to the benzodiazepine receptor site and acting at GABA receptors, thereby amplifying the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA). Because this site represents the most prolific inhibitory receptor cluster in the brain, its modulation results in the sedating (or anxiolytic) effects of diclazepam on the nervous system.\n\nThe elimination half-life of diclazepam is approximately 42 hours; it is metabolized in the body to delorazepam via N-demethylation, which can be detected in urine for 6 days following administration. Other metabolites detected in urine include lorazepam and lormetazepam, detectable for 19 and 11 days respectively, indicating that cytochrome P450-mediated hydroxylation occurs concurrently with N-demethylation.\n\nThe anticonvulsant properties of benzodiazepines may be attributable in part or entirely to binding at voltage-dependent sodium channels rather than the benzodiazepine receptor.",
+    "mechanism_summary": "Benzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on GABA receptors, amplifying the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA). Because this site is the most prolific inhibitory receptor system in the brain, its modulation produces diclazepam's sedative (or anxiolytic) effects on the nervous system.\n\nDiclazepam has an elimination half-life of about 42 hours and is metabolized in the body by N-demethylation to delorazepam, which can be detected in urine for up to 6 days after administration. Other metabolites detected in urine include lorazepam and lormetazepam, detectable for up to 19 and 11 days respectively, which indicates that hydroxylation by cytochrome P450 enzymes occurs alongside N-demethylation.\n\nThe anticonvulsant properties of benzodiazepines may be partly or wholly due to binding at voltage-dependent sodium channels rather than at benzodiazepine receptors.",
     "effects": [
       "Amnesia",
       "Analysis suppression",
@@ -26140,7 +26241,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "二苯尼定作为一种NMDA受体拮抗剂起作用。NMDA受体允许电信号在大脑和脊柱的神经元之间传递；为了传递信号，受体必须处于开放状态。解离剂通过阻断NMDA受体来关闭它们。这种神经元的断连导致感觉丧失、运动困难，并最终导致著名的“K洞”。\n\n尽管二苯尼定的供应商声称该化合物充当多巴胺-再摄取抑制剂和血清素再摄取抑制剂，并具有μ-阿片受体亲和力和典型的解离效应，但迄今为止，二苯尼定尚未针对多巴胺转运体亲和力进行筛查。然而，如果情况确实如此，这就解释了其欣快和经常出现的刺激作用。\n\n二苯尼定及相关二芳基乙胺类物质已在体外研究中作为神经毒性损伤的治疗方法。对于神经发生、神经修复和神经保护，二苯尼定可能比其他更常见的NMDA受体拮抗解离剂（如氯胺酮、右美沙芬、PCP类似物、伊波加因和MXE）是更强的NMDA受体拮抗剂。",
+    "mechanism_summary": "NMDA Receptor Antagonist (Dissociative)",
     "effects": [
       "Acuity suppression",
       "Amnesia",
@@ -26461,7 +26562,7 @@
       "Phenylalanine"
     ],
     "category": "Supplement",
-    "display_class": "recreational",
+    "display_class": "otc",
     "tags": [
       "OTC",
       "amino-acid",
@@ -26500,6 +26601,7 @@
       "1,3-DMAA",
       "1,3-dimethylamylamine",
       "1,3-二甲基戊胺",
+      "2-氨基-4-甲基己烷",
       "Geranamine",
       "methylhexanamine",
       "甲基己胺"
@@ -27011,7 +27113,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "DOB 的致幻效果被认为来自它作为部分激动剂在 血清素受体家族中的效力。DOB 似乎对 5-HT2 受体具有相当的选择性，在研究 5-HT 受体亚家族时经常用于科学研究。有人建议 DOB 是一种在肺部代谢的前体药物。然而，这些相互作用的作用以及它们如何导致致幻体验仍不清楚喵。\n\n过高剂量的这种致幻剂可能会导致弥漫性动脉痉挛。血管痉挛对动脉内和静脉内血管扩张剂（如妥拉唑林）反应良好。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [],
     "references": [
       "https://erowid.org/library/books_online/pihkal/pihkal062.shtml"
@@ -27085,7 +27187,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "更多信息请看这里：血清素能迷幻剂\n\nDOC是5-HT2A、5-HT2B和5-HT2C受体的部分激动剂，具有选择性。它的迷幻效果主要是通过作用于5-HT2A受体产生的喵。\n\n大家认为DOC的迷幻效果源于它作为部分激动剂在5-HT2A受体上的功效。不过，这些相互作用究竟是如何导致迷幻体验的，目前还像个谜一样呢。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [],
     "references": [
       "https://erowid.org/library/books_online/pihkal/pihkal064.shtml"
@@ -27259,7 +27361,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "DOI 的迷幻效应被认为源于它对 5-HT2A、5-HT2B 和 5-HT2C受体的激动剂效能喵。然而，这些相互作用的具体角色以及它们如何导致迷幻体验，仍然是目前科学研究的主题呢。\n\n除了作为迷幻剂的作用外，细胞研究显示 DOI 在皮摩尔浓度下是肿瘤坏死因子-α（TNF-α）炎症的极强抑制剂。TNF-α 是研究类风湿性关节炎和阿尔茨海默病等退行性疾病的重要靶点，这些疾病的病理过程涉及慢性炎症导致的组织损伤。这可能使 DOI 和其他 5-HT2A 激动剂成为开发这些疾病新型治疗方法的一个全新领域喵。\n\nDOI 还被证明能诱导树突状棘和与其他神经元的突触连接快速生长和重组，这些过程被认为是神经塑料性的基础哦。\n\n一项研究表明，DOI、DMT、LSD 和去甲伊博格碱（伊博格碱的代谢产物）在体内和体外都能促进神经突触生成喵。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [],
     "references": [
       "https://erowid.org/library/books_online/pihkal/pihkal067.shtml"
@@ -27306,7 +27408,8 @@
     "display_name": "",
     "aliases": [
       "2,5-二甲氧基-4-甲基苯丙胺",
-      "STP"
+      "STP",
+      "Serenity"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -27330,7 +27433,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "DOM 是 5-HT2 受体家族的选择性部分激动剂。其迷幻效应由其在 5-HT2A 和 5-HT2B 受体上的激动特性介导，但在 5-HT2C 受体上较少。由于其选择性，DOM 经常在科学研究中用于研究 5-HT2 受体亚家族。DOM 是一个手性分子，R-(-)-DOM 是更活跃的对映异构体，作为血清素受体家族（主要是 5-HT2 亚型）的强效激动剂发挥作用。 然而，这些相互作用的作用以及它们如何导致迷幻体验仍然难以捉摸。\n\nDOM 的 2,6-二甲氧基位置异构体，称为 Ψ-DOM，在 PiHKAL 中也被提及为具有活性，其 α-乙基同系物 Ariadne 也是如此。作为识别 DOM 在 5-HT2A 受体上的结合模式的努力的一部分，芳香环 2,5- 位上的甲氧基被改变的类似物也已被合成和测试。2- 和 5- O-去甲基衍生物 2-DM-DOM 和 5-DM-DOM，以及 2- 和 5- 乙基类似物 2-Et-DOM 和 5-Et-DOM 都已被测试，但在所有情况下，其效力都明显低于相应的甲氧基化合物，表明氧孤对电子在 5-HT2A 结合中的重要性。\n\n有强烈的暗示表明肺部发生了一些代谢转化，只有在此之后，真正的活性代谢物才能用于中枢作用。这与相对缓慢的起效和非常长的作用持续时间相一致。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [],
     "references": [
       "https://erowid.org/library/books_online/pihkal/pihkal068.shtml"
@@ -27539,11 +27642,14 @@
     "aliases": [
       "Bonjesta",
       "Diclegis",
+      "Doxyl",
       "NyQuil",
       "Shoprite Sleep-aid",
       "Unisom",
       "Unisom SleepTabs",
-      "多拉西敏"
+      "多拉西敏",
+      "多西拉敏",
+      "琥珀酸多西拉敏"
     ],
     "category": "Deliriant",
     "display_class": "recreational",
@@ -27654,7 +27760,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "对啮齿动物的研究发现，选择性 5-HT2A 受体拮抗剂能有效阻断该化合物的行为作用，这强烈暗示 5-HT2A 受体是 DPT 的重要作用位点，但 5-HT1A 受体拮抗剂的调节作用也意味着 DPT 的作用中有 5-HT1A 介导的成分。[](#参考文献) 这些相互作用的角色以及它们如何导致致幻体验，仍然是正在进行的科学研究的主题呢。",
+    "mechanism_summary": "Serotonin 5-HT2A Receptor Agonist (Classical Psychedelic)",
     "effects": [
       "Acuity enhancement",
       "After images",
@@ -28651,8 +28757,7 @@
       "Ephedra",
       "Isofedrol",
       "Ma huang",
-      "racemic ephedrine",
-      "麻黄碱"
+      "racemic ephedrine"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -28676,13 +28781,15 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 360.0,
-    "mechanism_summary": "麻黄碱的主要作用机制是通过增加儿茶酚胺在 α、β1 和 β2 肾上腺素能 受体上的活性。 它也作为一种 NDRAs（去甲肾上腺素-多巴胺 释放剂）。\n\n麻黄碱是一种拟交感胺，作用于交感神经系统 (SNS) 的一部分。主要作用机制依赖于它通过增加突触后 α 和 β 受体上的去甲肾上腺素活性来间接刺激肾上腺素能受体系统。 是否存在与 α 受体的直接相互作用是不太可能的，但仍有争议。 L-麻黄碱，特别是其立体异构体去甲伪麻黄碱（也存在于恰特草中）具有间接的拟交感神经作用，由于其能够穿过血脑屏障，它是一种类似于苯丙胺的中枢神经系统兴奋剂，但不那么明显，因为它在黑质中释放去甲肾上腺素和多巴胺。\n\n与去甲麻黄碱相比，N-甲基的存在降低了在 α 受体上的结合亲和力。不过，麻黄碱的结合力比 N-甲基麻黄碱好，后者在氮原子上有一个额外的甲基。此外，羟基的空间取向对于受体结合和功能活性也很重要。",
+    "mechanism_summary": "",
     "effects": [],
     "references": [
       "https://www.ncbi.nlm.nih.gov/books/NBK547661/",
       "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=0143-3145"
     ],
-    "data_gaps": []
+    "data_gaps": [
+      "mechanism_of_action"
+    ]
   },
   {
     "name": "Ephenidine",
@@ -28725,7 +28832,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "更多信息请参见：NMDA 受体拮抗剂\n\n依芬尼定作为 NMDA 受体 的拮抗剂起作用（Ki = 66.4 nM）。 NMDA（N-甲基-D-天冬氨酸）受体是谷氨酸的主要受体亚型之一，而谷氨酸是中枢神经系统（CNS）中主要的兴奋性神经递质。当 NMDA 通道被阻断时，会导致感觉丧失（麻醉）、移动困难（固定），在较高剂量下，会产生相当于「K-hole」的效果。\n\n依芬尼定对多巴胺和去甲肾上腺素转运蛋白也具有较弱的亲和力（分别为 379 nM 和 841 nM），并能结合 σ1 受体（629 nM）和 σ2 受体（722 nM）位点。",
+    "mechanism_summary": "更多信息请参见：NMDA 受体拮抗剂\n\n依芬尼定作为 NMDA 受体的拮抗剂起作用（Ki = 66.4 nM）。 NMDA（N-甲基-D-天冬氨酸）受体是谷氨酸的主要受体亚型之一，而谷氨酸是中枢神经系统（CNS）中主要的兴奋性神经递质。当 NMDA 通道被阻断时，会导致感觉丧失（麻醉）、移动困难（固定），在较高剂量下，会产生相当于 K-hole 的效果。\n\n依芬尼定对多巴胺和去甲肾上腺素转运蛋白也具有较弱的亲和力（分别为 379 nM 和 841 nM），并能结合 σ1（Sigma-1）受体（629 nM）和 σ2 受体（722 nM）。",
     "effects": [
       "Acuity suppression",
       "Amnesia",
@@ -29638,7 +29745,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "MDEC是一种对血清素、去甲肾上腺素和多巴胺都起作用的混合型神经递质再摄取抑制剂/神经递质释放剂。这些都是负责愉悦、奖赏、动机和专注的神经递质。它的作用机制在于抑制这些神经递质在完成神经冲动传递后的再摄取与再吸收，从而让它们得以积累并再次被利用，进而产生身体上的刺激感与欣快感。\n\n与甲酮隆相比，MDEC对血清素转运体的亲和力大约又低了 3 倍以上（而甲酮隆本身对血清素转运体的亲和力又比 MDMA 低 3 倍），而它对去甲肾上腺素与多巴胺转运体的亲和力则相近。相较于甲酮隆，这些药理学差异带来的结果是：MDEC在剂量层面上的效力更低，相对血清素能效应而言，它的儿茶酚胺能效应更为平衡，并且它的行为方式更像哌甲酯这类神经递质再摄取抑制剂，而不是像苯丙胺那样的释放剂；不过，MDEC依然保有相当明显的释放能力。",
+    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Ethylone"
@@ -29824,7 +29931,8 @@
       "lamet",
       "towa",
       "zoly",
-      "依替唑仑"
+      "依替唑仑",
+      "依替唑仑（Etizolam）"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -29854,7 +29962,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 204.0,
-    "mechanism_summary": "噻吩二氮卓类物质通过结合 GABAA 受体复合物上的苯二氮卓结合位点产生各种效应，通过增加神经递质 γ-氨基丁酸 (GABA) 结合受体的能力，来增强其效能和效应。 这被称为正向变构调节。 由于该位点是大脑内最丰富的抑制性受体群，对其进行调节会导致依替唑仑对神经系统产生镇静（或镇静效果）。",
+    "mechanism_summary": "GABA-A Positive Allosteric Modulator (Benzodiazepine)",
     "effects": [
       "Amnesia",
       "Analysis suppression",
@@ -30083,7 +30191,9 @@
     "aliases": [
       "ED-DB",
       "EDB",
+      "MDNEB",
       "N-Ethylbutylone",
+      "N-乙基MDNMB",
       "bk-EBDB",
       "euty",
       "β-keto-ethylbenzodioxolylbutanamine"
@@ -30108,16 +30218,15 @@
       "oral"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
+    "mechanism_summary": "MDNEB acts simultaneously as a reuptake inhibitor and releasing agent for the neurotransmitters serotonin, norepinephrine, and dopamine. MDNEB modulates these neurotransmitters, which are responsible for pleasure, reward, motivation, and focus. By inhibiting the reuptake and reabsorption of these neurotransmitters following completion of neural impulse transmission, it allows them to accumulate extracellularly and be re-utilized, producing stimulant and euphoric effects.\n\nCompared to MDMC, MDNEB has a substantially lower affinity for the norepinephrine transporter, while its affinity for the serotonin and dopamine transporters is similar. Despite this lower affinity, MDNEB remains a more potent reuptake inhibitor than MDMA, though with lower overall potency and a more balanced catecholaminergic profile. As a substance with both releasing and reuptake-inhibiting properties, it also possesses relatively robust releasing activity.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Eutylone"
     ],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes"
     ]
   },
@@ -30535,10 +30644,13 @@
     "display_name": "",
     "aliases": [
       "Amfetyline",
+      "Biocapton",
       "Captagon",
       "Ethyltheophylline-amphetamine codrug",
       "Fenetylline",
       "Fenetyllinum",
+      "Fitton",
+      "Phenethylline",
       "amphetaminoethyltheophylline"
     ],
     "category": "Stimulant",
@@ -30956,7 +31068,6 @@
       "Fluoromodafinil",
       "Lauflumide",
       "NLS-4",
-      "二氟莫达菲尼",
       "二氟莫达非尼",
       "氟代莫达非尼",
       "氟莫达非尼",
@@ -30990,7 +31101,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Difluoromodafinil is a dopamine reuptake inhibitor. It has lower affinity for the DAT receptor than modafinil.",
+    "mechanism_summary": "Bisfluoromodafinil is a dopamine reuptake inhibitor. Its affinity for the dopamine transporter is lower than that of modafinil.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Flmodafinil"
@@ -31077,7 +31188,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 6360.0,
-    "mechanism_summary": "Flubromazepam has been shown to carry both risks and potential value in humans, as it may be used as an analgesic. Its muscle-relaxant properties allow it to provide pain relief. Although its precise pharmacological activity has not been formally established, available evidence suggests it has some anxiolytic, sedative, and muscle-relaxant potential.\n\nBenzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on receptors to amplify the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA). Because this site represents the most abundant inhibitory receptor set in the brain, its modulation results in the sedating (or depressant) effect of flubromazepam on the nervous system.\n\nThe anticonvulsant properties of benzodiazepines may be attributable in part or in full to binding at voltage-dependent sodium channels rather than at the benzodiazepine receptor.",
+    "mechanism_summary": "Flubromazepam has been shown to be both risky and of value to humans, as it can be used as a pain reliever: its muscle-relaxant effect can ease pain. Although its exact pharmacological activity has not been confirmed, existing research appears to show some potential for anxiety suppression, sedation, and muscle relaxation.\n\nBenzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on the receptor to amplify the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA). Because this site is the most abundant inhibitory receptor system in the brain, its modulation produces flubromazepam's sedative effects on the nervous system.\n\nThe anticonvulsant properties of benzodiazepines may be partly or wholly due to binding at voltage-dependent sodium channels rather than at benzodiazepine receptors.",
     "effects": [
       "Amnesia",
       "Analysis suppression",
@@ -31354,7 +31465,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "氟马西尼是一种咪唑并苯二氮卓衍生物，可拮抗苯二氮卓类药物对中枢神经系统的作用。氟马西尼竞争性地抑制 GABA/苯二氮卓受体复合物上苯二氮卓识别位点的活性。它还对含有 α6 型单体的 GABA 受体复合物表现出微弱的部分激动作用；其临床相关性尚不清楚。\n\n氟马西尼不会通过苯二氮卓受体以外的途径拮抗影响 GABA 能神经元的药物（包括乙醇、巴比妥类和大多数麻醉剂）的所有中枢神经系统效应，也不会拮抗阿片类药物的效应。然而，它会拮抗非苯二氮卓类 Z-药物（如唑吡坦和佐匹克隆）的作用，因为它们通过 GABA 受体的苯二氮卓位点起作用——它已成功用于治疗 Z-药物过量。\n\n静脉注射氟马西尼已被证明可以拮抗健康人类志愿者由苯二氮卓类药物引起的镇静、记忆受损、精神运动障碍和通气抑制。苯二氮卓镇静效应的逆转程度和持续时间与氟马西尼的剂量和血浆浓度有关。\n\n氟马西尼在全球范围内以 Anexate、Lanexat、Mazicon、Romazicon 等多种品牌名称销售。在印度，它由罗氏孟加拉制药公司和 USAN 制药公司制造。\n\n低剂量、缓慢的皮下氟马西尼给药对于长期、大剂量苯二氮卓类药物依赖的戒断患者是一种安全的程序。即使是那些在之前尝试戒断苯二氮卓类药物时经历过惊厥的人，其癫痫发作的风险也很低。",
+    "mechanism_summary": "氟马西尼是一种咪唑并苯二氮䓬衍生物，可拮抗苯二氮䓬类药物对中枢神经系统的作用。氟马西尼竞争性地抑制 GABA/苯二氮䓬受体复合物上苯二氮䓬识别位点的活性。它还对含有 α6 型单体的 GABA 受体复合物表现出微弱的部分激动作用；其临床相关性尚不清楚。\n\n氟马西尼不会通过苯二氮䓬受体以外的途径拮抗影响 GABA 能神经元的药物（包括乙醇、巴比妥类和大多数麻醉剂）的所有中枢神经系统效应，也不会拮抗阿片类药物的效应。然而，它会拮抗非苯二氮䓬类 Z-药物（如唑吡坦和佐匹克隆）的作用，因为它们通过 GABA 受体的苯二氮䓬位点起作用——它已成功用于治疗 Z-药物过量。\n\n静脉注射氟马西尼已被证明可以拮抗健康人类志愿者由苯二氮䓬类药物引起的镇静、记忆受损、精神运动障碍和通气抑制。苯二氮䓬镇静效应的逆转程度和持续时间与氟马西尼的剂量和血浆浓度有关。\n\n氟马西尼在全球范围内以 Anexate、Lanexat、Mazicon、Romazicon 等多种品牌名称销售。在印度，它由罗氏孟加拉制药公司和 USAN 制药公司制造。\n\n低剂量、缓慢的皮下氟马西尼给药对于长期、大剂量苯二氮䓬类药物依赖的戒断患者是一种安全的程序。即使是那些在之前尝试戒断苯二氮䓬类药物时经历过惊厥的人，其癫痫发作的风险也很低。",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -31467,6 +31578,7 @@
     "display_name": "",
     "aliases": [
       "Circles",
+      "FM2",
       "Forget Me Pill",
       "Forget Pill",
       "Forget-me pill",
@@ -31486,7 +31598,12 @@
       "Rophies",
       "Ruffies",
       "Wolfies",
-      "氟硝西泮"
+      "十字架",
+      "氟硝基安定",
+      "氟硝安定",
+      "氟硝西泮",
+      "氟硝西泮（Flunitrazepam）",
+      "罗眠乐（Rohypnol）"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -31511,7 +31628,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 1320.0,
-    "mechanism_summary": "苯二氮卓类药物通过结合苯二氮卓受体位点并通过作用于其受体来放大神经递质 γ-氨基丁酸（GABA）的效率和作用，从而产生各种效果。 由于该位点是大脑中最丰富的抑制性受体组，其调节导致氟硝西泮对神经系统的镇静（或镇静作用）。\n\n苯二氮卓类药物的抗惊厥特性可能部分或全部归因于与电压依赖性钠通道的结合，而不是苯二氮卓受体。\n\n已知足量的氟硝西泮会诱导顺行性遗忘（个体无法记住他们在药物影响下经历的某些事件）。这种效果可能特别危险，如果氟硝西泮被用来协助实施性侵犯，因为受害者可能无法清楚地回忆起袭击、袭击者或袭击周围的事件。\n\n口服摄入的氟硝西泮有 80% 被吸收，但栓剂形式的生物利用度接近 50%。",
+    "mechanism_summary": "GABA-A Positive Allosteric Modulator (Benzodiazepine)",
     "effects": [],
     "references": [
       "Pharmacokinetics of flunitrazepam following single dose oral administration in liver disease patients compared with healthy volunteers"
@@ -31550,7 +31667,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "苯二氮卓类药物通过与苯二氮卓受体位点结合，并放大神经递质γ-氨基丁酸 (GABA)通过作用于其受体的效率和效应，从而产生各种效应。由于该位点是大脑中最多产的抑制性受体组，其调节导致了氟硝唑仑对神经系统的镇静（或平静效应）。\n\n苯二氮卓类药物的抗惊厥特性可能部分或全部归因于与电压依赖性钠通道的结合，而不是苯二氮卓受体。\n\n氟硝唑仑的实验结果通常表现为镇静、去抑制、梦境强化、残留困倦、思维减速和肌肉松弛喵。",
+    "mechanism_summary": "苯二氮䓬类药物通过与苯二氮䓬受体位点结合，并放大神经递质γ-氨基丁酸 (GABA)通过作用于其受体的效率和效应，从而产生各种效应。由于该位点是大脑中最多产的抑制性受体组，其调节导致了氟硝唑仑对神经系统的镇静（或平静效应）。\n\n苯二氮䓬类药物的抗惊厥特性可能部分或全部归因于与电压依赖性钠通道的结合，而不是苯二氮䓬受体。\n\n氟硝唑仑的实验结果通常表现为镇静、去抑制、梦境强化、残留困倦、思维减速和肌肉松弛喵。",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -31768,6 +31885,7 @@
     "display_name": "",
     "aliases": [
       "2-F-DPPy",
+      "2-FPPP",
       "2F-DPPy"
     ],
     "category": "Dissociative",
@@ -32234,6 +32352,7 @@
     "display_name": "",
     "aliases": [
       "FZP",
+      "KB-509",
       "N-desalkylflutoprazepam",
       "Restas"
     ],
@@ -32879,7 +32998,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Gaboxadol acts on the GABA system, but in a manner distinct from benzodiazepines and other GABAergic depressants. Lundbeck has reported that gaboxadol also increases deep sleep (stage 4).",
+    "mechanism_summary": "Gaboxadol acts on the GABA system, but in a different way from benzodiazepines and other GABAergic depressants. Lundbeck has stated that gaboxadol also increases deep (stage 4) sleep.",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -34214,7 +34333,9 @@
     "name": "Hawaiian Baby Woodrose",
     "display_name": "",
     "aliases": [
-      "夏威夷小木玫瑰"
+      "HBW",
+      "夏威夷小木玫瑰",
+      "象藤"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -34456,6 +34577,9 @@
     "name": "Hexedrone",
     "display_name": "",
     "aliases": [
+      "HEX",
+      "MACP",
+      "alpha-Methylamino-Caprophenone",
       "α-Methylamino-hexanophenone"
     ],
     "category": "Stimulant",
@@ -34970,7 +35094,9 @@
       "HupA",
       "Huperzine-a",
       "Selagine",
-      "h-a"
+      "h-a",
+      "石山碱甲",
+      "石杉碱甲"
     ],
     "category": "Nootropic",
     "display_class": "recreational",
@@ -34997,14 +35123,12 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 720.0,
-    "mechanism_summary": "",
+    "mechanism_summary": "Huperzine A is a reversible acetylcholinesterase inhibitor and an NMDA receptor antagonist.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Huperzine_A"
     ],
-    "data_gaps": [
-      "mechanism_of_action"
-    ]
+    "data_gaps": []
   },
   {
     "name": "HXE",
@@ -35800,7 +35924,7 @@
     "data_gaps": []
   },
   {
-    "name": "IHCH-711",
+    "name": "IHCH-7113",
     "display_name": "",
     "aliases": [],
     "category": "",
@@ -36470,7 +36594,9 @@
     "name": "Ipomoea Tricolor",
     "display_name": "",
     "aliases": [
-      "三色牵牛"
+      "Tlitliltzin",
+      "三色牵牛",
+      "墨西哥牵牛花"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -37271,7 +37397,8 @@
     "name": "JWH-073",
     "display_name": "",
     "aliases": [
-      "Spice"
+      "Spice",
+      "香料"
     ],
     "category": "Cannabinoid",
     "display_class": "recreational",
@@ -37309,8 +37436,8 @@
     "aliases": [
       "氟溴唑仑"
     ],
-    "category": "",
-    "display_class": "medical_rx",
+    "category": "Depressant",
+    "display_class": "recreational",
     "tags": [],
     "default_route": "oral",
     "all_routes": [
@@ -37323,7 +37450,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Benzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on receptors to amplify the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA). Because this site represents the most abundant inhibitory receptor set in the brain, its modulation results in the sedating (or depressant) effect of flubrotizolam on the nervous system. The anticonvulsant properties of benzodiazepines may be attributable in part or in full to binding at voltage-dependent sodium channels rather than at the benzodiazepine receptor.\n\nLife-threatening adverse reactions have been observed at flubrotizolam doses as low as 3 mg.",
+    "mechanism_summary": "Benzodiazepines produce their effects by binding to the benzodiazepine receptor site and acting on the receptor to amplify the efficiency and effects of the neurotransmitter gamma-aminobutyric acid (GABA). Because this site is the most abundant inhibitory receptor system in the brain, its modulation produces flubromazolam's sedative effects on the nervous system. The anticonvulsant properties of benzodiazepines may be partly or wholly due to binding at voltage-dependent sodium channels rather than at benzodiazepine receptors.\n\nLife-threatening adverse reactions have been observed at doses of flubromazolam as low as 3 mg.",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -37374,8 +37501,15 @@
     "display_name": "",
     "aliases": [
       "Piper methysticum",
+      "ava",
       "kava-kava",
-      "卡瓦"
+      "malogu",
+      "malok",
+      "sakau",
+      "yaqona",
+      "ʻawa",
+      "卡瓦",
+      "卡瓦（卡瓦-卡瓦）"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -37872,10 +38006,14 @@
     "name": "L-Tryptophan",
     "display_name": "",
     "aliases": [
+      "Indole-3-alanine",
+      "L(-)-Tryptophan",
+      "L-(-)-Tryptophan",
       "L-Trp",
       "Optimax",
       "Trp",
-      "Tryptophan"
+      "Tryptophan",
+      "W"
     ],
     "category": "Supplement",
     "display_class": "otc",
@@ -37885,9 +38023,11 @@
       "OTC",
       "amino-acid",
       "essential-amino-acid",
+      "no-human-data",
       "serotonin-syndrome-risk",
       "sleep",
-      "supplement"
+      "supplement",
+      "tryptamine"
     ],
     "default_route": "oral",
     "all_routes": [
@@ -38053,7 +38193,10 @@
   {
     "name": "LAE-32",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "LAE-52",
+      "d-麦角酸乙胺"
+    ],
     "category": "Psychedelic",
     "display_class": "recreational",
     "tags": [
@@ -38070,37 +38213,10 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "mechanism_of_action",
-      "references"
-    ]
-  },
-  {
-    "name": "LAE-52",
-    "display_name": "",
-    "aliases": [
-      "d-麦角酸乙胺"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "",
-    "all_routes": [],
-    "routes_with_dose": [],
-    "has_dose_data": false,
-    "has_duration_data": false,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
     "mechanism_summary": "LAE-32 most likely produces its effects by binding to serotonin receptors in the brain. Like LSD, it may also bind to dopamine receptors.",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "dose_ranges_by_route",
-      "duration_by_route",
       "half_life_minutes",
       "references"
     ]
@@ -38706,8 +38822,10 @@
       "Tyvense",
       "Vyvanse",
       "lisdextroamfetamine",
+      "二甲磺酸利右苯丙胺",
       "利右苯丙胺",
-      "利右苯丙胺（Lisdexamfetamine）"
+      "利右苯丙胺（Lisdexamfetamine）",
+      "赖右苯丙胺"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -38916,6 +39034,7 @@
     "display_name": "",
     "aliases": [
       "Dg Health Anti Diarrheal",
+      "Entrocalm",
       "Imodium",
       "Kirkland Signature Anti Diarrheal",
       "Medex Anti-diarrheal Relief",
@@ -39092,7 +39211,9 @@
       "Tavor",
       "Temesta",
       "o-Chloroxazepam",
-      "劳拉西泮"
+      "劳拉西泮",
+      "劳拉西泮（Lorazepam）",
+      "安定文（Ativan，注意不是安定片）"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -39323,7 +39444,9 @@
       "hbwr",
       "morning_glory",
       "morningglory",
-      "ololiuqui"
+      "ololiuqui",
+      "麦角碱",
+      "麦角酸酰胺"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -39514,8 +39637,11 @@
     "name": "LSM-775",
     "display_name": "",
     "aliases": [
+      "LA-Morph",
+      "LSM",
+      "Morpholine lysergamide",
+      "N-Morpholinyllysergamide",
       "N-吗啉基麦角酰胺",
-      "lsm",
       "麦角酸吗啉"
     ],
     "category": "Psychedelic",
@@ -40053,6 +40179,8 @@
     "name": "mCPP",
     "display_name": "",
     "aliases": [
+      "m-CPP",
+      "meta-Chlorophenylpiperazine",
       "间氯苯哌嗪"
     ],
     "category": "Stimulant",
@@ -40131,8 +40259,8 @@
     "display_name": "",
     "aliases": [
       "5,6-亚甲双氧基-2-氨基茚",
-      "mindy",
-      "sparkle"
+      "Mindy",
+      "Sparkle"
     ],
     "category": "Empathogen",
     "display_class": "recreational",
@@ -40446,6 +40574,7 @@
       "methylenedioxymethamphetamine",
       "midomafetamine",
       "stacy",
+      "亚甲二氧甲基苯丙胺（MDMA）",
       "快乐丸",
       "快樂丸",
       "搖頭丸",
@@ -40620,62 +40749,6 @@
       "dose_ranges_by_route",
       "half_life_minutes",
       "mechanism_of_action"
-    ]
-  },
-  {
-    "name": "MDNEB",
-    "display_name": "",
-    "aliases": [
-      "N-乙基MDNMB"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "MDNEB acts simultaneously as a reuptake inhibitor and releasing agent for the neurotransmitters serotonin, norepinephrine, and dopamine. MDNEB modulates these neurotransmitters, which are responsible for pleasure, reward, motivation, and focus. By inhibiting the reuptake and reabsorption of these neurotransmitters following completion of neural impulse transmission, it allows them to accumulate extracellularly and be re-utilized, producing stimulant and euphoric effects.\n\nCompared to MDMC, MDNEB has a substantially lower affinity for the norepinephrine transporter, while its affinity for the serotonin and dopamine transporters is similar. Despite this lower affinity, MDNEB remains a more potent reuptake inhibitor than MDMA, though with lower overall potency and a more balanced catecholaminergic profile. As a substance with both releasing and reuptake-inhibiting properties, it also possesses relatively robust releasing activity.",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
-    "name": "MDNMP",
-    "display_name": "",
-    "aliases": [
-      "3,4-亚甲二氧基戊酮"
-    ],
-    "category": "Stimulant",
-    "display_class": "recreational",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "Virtually no data exist on the pharmacokinetics and pharmacodynamics of MDNMP and other substituted cathinones in humans. Similarly to amphetamines, synthetic cathinones produce their stimulant and sympathomimetic effects by increasing the concentration of catecholamines — such as dopamine, serotonin, and norepinephrine — in the synaptic cleft. These molecules inhibit monoamine reuptake transporters, thereby slowing the clearance of these neurotransmitters from the synapse. They may additionally promote the release of biogenic amines from intracellular stores.\n\nCompared to amphetamines, synthetic cathinones generally cross the blood-brain barrier less readily, as the β-keto group increases the polarity of the molecule. Unlike other synthetic cathinones, pyrrolidine derivatives cross the blood-brain barrier more easily because the pyrrolidine ring confers lower polarity on these molecules. Research on the metabolism of synthetic cathinones indicates that they undergo N-demethylation, reduction of the keto group to a hydroxyl group, and oxidation of the alkyl substituents on the ring.",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
     ]
   },
   {
@@ -40957,17 +41030,20 @@
     "aliases": [
       "3,4-Methylenedioxypyrovalerone",
       "Bath Salts",
+      "Bath Salts（浴盐）",
       "Cloud Nine",
       "Ivory Wave",
       "MDPK",
       "Magic",
       "Methylenedioxypyrovalerone",
       "Monkey Dust",
+      "Monkey Dust（猴尘）",
       "NRG-1",
-      "NRG-1,3,4-亚甲双氧基吡咯戊酮",
       "Super Coke",
       "Vanilla Sky",
-      "bath_salts"
+      "bath_salts",
+      "丧尸浴盐",
+      "亚甲基二氧吡咯戊酮（MDPV）"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -41005,7 +41081,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 470.0,
-    "mechanism_summary": "据信 MDPV 主要作为一种强效的去甲肾上腺素-多巴胺 再摄取抑制剂（NDRIs）发挥作用。去甲肾上腺素和多巴胺的再摄取减少，导致这两种儿茶酚胺 神经递质在突触间隙（即神经元之间的间隙）中的浓度升高。\n\n这种抑制的结果是，接收神经元上的多巴胺和去甲肾上腺素受体的多巴胺能和去甲肾上腺素能信号传导的浓度和产生的突触后效应增强并延长了。血清素 也起作用，虽然程度要小得多。大脑中神经递质浓度的突然增加被认为是 MDPV 产生快感的原因。\n\n由于主要具有再摄取抑制特性而不是释放特性，MDPV 在作用方式上可能更像可卡因或哌甲酯，而不是苯丙胺。 相比之下，苯丙胺主要作为激动剂，通过激活 TAAR1 受体间接释放多巴胺和去甲肾上腺素。",
+    "mechanism_summary": "Dopamine–Norepinephrine Reuptake Inhibitor (Pyrovalerone Cathinone)",
     "effects": [],
     "references": [
       "Experimental study on external contamination of hair by synthetic cannabinoids and effect of hair treatment"
@@ -41214,19 +41290,23 @@
     "display_name": "",
     "aliases": [
       "Ansilan",
+      "Azepamid",
       "Debrum",
+      "Enobrin",
       "Lerisum",
       "Medacepan",
       "Megasedan",
+      "Mezapam",
+      "Narsis",
+      "Nivelton",
       "Nobritol",
       "Nobrium",
+      "Raporan",
+      "Resmit",
       "Rudotel",
       "Rusedal",
       "Tranko-Buskas",
       "Tranquirax",
-      "azepamid",
-      "mezapam",
-      "raporan",
       "talis"
     ],
     "category": "Benzodiazepine",
@@ -41320,8 +41400,11 @@
       "Lariam",
       "Mefloquina",
       "Mefloquinum",
+      "Mephaquin",
       "RO 21-5998",
-      "WR 142,490"
+      "WR 142,490",
+      "WR-177602",
+      "WR142490"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -41398,11 +41481,15 @@
       "Melatonin (synth.) ultra-pure",
       "Melatonine",
       "Melatoninum",
+      "Melatonin（MT）",
       "Melovine",
+      "N-乙酰-5-甲氧基色胺",
       "Pineal hormone",
       "Regulin",
+      "松果体素",
       "褪黑激素",
-      "褪黑素"
+      "褪黑素",
+      "褪黑素（Melatonin）"
     ],
     "category": "Supplement",
     "display_class": "otc",
@@ -41668,7 +41755,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 130.0,
-    "mechanism_summary": "鉴于其化学结构，4-MMC很可能作为单胺类神经递质（如多巴胺、血清素和去甲肾上腺素）的释放剂和再摄取抑制剂起作用。\n\n2011年底发表的几篇文章研究了4-MMC在大鼠大脑中的作用，以及其强化潜力。研究使用微透析收集多巴胺和血清素，并测量了它们的增加量。注射4-MMC导致多巴胺增加约500%，血清素增加约950%。它们分别在40分钟和20分钟达到峰值浓度，并在注射后120分钟内恢复到基线水平。\n\n对多巴胺和血清素比率的分析表明，4-MMC优先作为血清素释放剂，其比率为1.22:1（血清素 vs. 多巴胺）。此外，计算了多巴胺和血清素减少的半衰期，发现衰减率分别为24.5分钟和25.5分钟。\n\n这些发现表明，4-MMC诱导了多巴胺和血清素的大量增加，并伴随着快速清除。神经递质的这种增加解释了该体验引起的欣快和刺激的主观效应。多巴胺水平的快速上升和随后的下降也可以解释4-MMC在一些用户中表现出的成瘾特性。",
+    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [
       "Analysis enhancement",
       "Anxiety",
@@ -41768,10 +41855,12 @@
     "name": "Meprobamate",
     "display_name": "",
     "aliases": [
-      "甲丙氨酯"
+      "伊奎尼尔",
+      "甲丙氨酯",
+      "米尔顿"
     ],
-    "category": "",
-    "display_class": "medical_rx",
+    "category": "Depressant",
+    "display_class": "recreational",
     "tags": [],
     "default_route": "",
     "all_routes": [],
@@ -41780,7 +41869,7 @@
     "has_duration_data": false,
     "has_protocol_dosing": false,
     "half_life_minutes": 600.0,
-    "mechanism_summary": "The precise mechanism of action of meprobamate has not been fully elucidated. It is generally believed, however, to act as a positive allosteric modulator of GABA receptors in a manner similar to benzodiazepines and barbiturates. Unlike barbiturates and benzodiazepines, animal studies show that meprobamate retains most of its effects even in the absence of GABA, suggesting it may also act as a direct agonist at GABA receptors. Additional research indicates that meprobamate is an adenosine reuptake inhibitor, a property that distinguishes it considerably among sedative-hypnotics.",
+    "mechanism_summary": "The precise mechanism of action of meprobamate has not been fully worked out. It is generally thought to act like benzodiazepines and barbiturates, as a positive allosteric modulator of the GABA receptor. Unlike barbiturates and benzodiazepines, animal studies show that meprobamate retains most of its effects even in the absence of gamma-aminobutyric acid, so it may also be a direct agonist of the GABA receptor. Other research indicates that meprobamate is also an adenosine reuptake inhibitor, which makes it quite unusual among hypnotics.",
     "effects": [],
     "references": [
       "FDA label for Carisoprodol tablets, Clinical Pharmacology/Pharmacokinetics: meprobamate half-life approximately 10 hours"
@@ -41986,7 +42075,8 @@
     "display_name": "",
     "aliases": [
       "Methylethyltryptamine",
-      "N-乙基-N-甲基色胺"
+      "N-乙基-N-甲基色胺",
+      "甲基乙基色胺"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -42409,12 +42499,19 @@
       "pure",
       "racemic methamphetamine",
       "shards",
+      "tee",
       "tik",
       "wax",
       "whiz",
+      "冰",
       "冰毒",
+      "去氧麻黄碱",
+      "水晶",
+      "玻璃",
       "甲基安非他命",
-      "甲基苯丙胺"
+      "甲基苯丙胺",
+      "甲基苯丙胺（Methamphetamine）",
+      "碎片"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -42595,6 +42692,7 @@
       "Kat",
       "M-Kat",
       "MC",
+      "MCAT",
       "Methcat",
       "Mulka",
       "N-methylcathinone",
@@ -42606,7 +42704,17 @@
       "monomethylpropion",
       "α-methylamino-propiophenone",
       "α-methylaminopropiophenone",
-      "甲卡西酮"
+      "α-甲氨基苯丙酮",
+      "丧尸药",
+      "光环",
+      "喵喵",
+      "浴盐",
+      "甲卡西酮",
+      "甲卡西酮（Methcathinone）",
+      "象牙",
+      "长治筋",
+      "香草的天空",
+      "麻黄酮（Ephedrone）"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -42633,7 +42741,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "虽然甲卡西酮的效果尚未像苯丙胺类物质那样得到同等水平的正式研究，但可以推测，像其他简单的取代卡西酮类物质一样，它最主要的作用是作为多巴胺和去甲肾上腺素 神经递质再摄取抑制剂（NDRIs）。 这导致大脑中与奖励和快乐相关的关键区域内的去甲肾上腺素和多巴胺神经递质水平有效增加，这是通过结合并部分阻断通常从突触间隙清除这些单胺的转运蛋白来实现的。这使得多巴胺和去甲肾上腺素积累到超内源性水平，从而产生兴奋、激励和欣快的效果。",
+    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Methcathinone"
@@ -43002,7 +43110,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "更多信息请参阅：NMDA受体拮抗剂\n\nMXP 作为 NMDA受体拮抗剂发挥作用喵。NMDA 受体允许电信号在脑部和脊柱的神经元之间传递；为了让信号通过，受体必须处于开放状态呢。解离剂通过阻断 NMDA 受体来使其关闭哦。这种神经元的断连会导致感觉丧失、移动困难，并最终产生与“K-hole”几乎相同的效果喵。\n\n虽然尚未经过正式研究，但许多用户报告的身体和情感欣快感表明，它可能还具有多巴胺和/或去甲肾上腺素再摄取抑制剂的作用呢。",
+    "mechanism_summary": "NMDA Receptor Antagonist (Dissociative)",
     "effects": [
       "Acuity suppression",
       "Amnesia",
@@ -43351,10 +43459,10 @@
     "name": "Methylenedioxydeschlorobupropion",
     "display_name": "MDPT",
     "aliases": [
-      "D-Tertylone",
+      "D-tertylone",
       "MDPT",
-      "Tertylone",
-      "tBuONE"
+      "tBuONE",
+      "tertylone"
     ],
     "category": "Other",
     "display_class": "recreational",
@@ -43490,7 +43598,9 @@
     "display_name": "",
     "aliases": [
       "HDMP-28",
-      "methylnaphtidate"
+      "Methylnapthidate",
+      "methylnaphtidate",
+      "萘哌甲酯"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -43513,12 +43623,11 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
+    "mechanism_summary": "Methylnaphthidate is believed to act primarily as a monoamine triple reuptake inhibitor: it binds to and partially blocks the transporter proteins normally responsible for clearing dopamine, norepinephrine, and serotonin from the synaptic cleft. The resulting rise, particularly in reward pathways, produces stimulant and euphoric effects.",
     "effects": [],
     "references": [],
     "data_gaps": [
       "half_life_minutes",
-      "mechanism_of_action",
       "references"
     ]
   },
@@ -43560,7 +43669,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 384.0,
-    "mechanism_summary": "MDMC是一种对血清素、去甲肾上腺素与多巴胺都起作用的混合型神经递质再摄取抑制剂/神经递质释放剂。这些神经递质被认为负责调节愉悦感、动机、专注以及幸福感。其作用机制是抑制这些神经递质在完成神经冲动传递之后的再摄取与再吸收，使它们能够积累并被再次利用，从而产生刺激性与欣快性效应。\n\n与 MDMA 相比，MDMC对血清素转运体的亲和力大约低 3 倍（MDMC Ki=242.1 nM，而 MDMA 的 Ki=72 nM），而它对去甲肾上腺素与多巴胺转运体的亲和力则较为接近。值得注意的是，MDMC对囊泡单胺转运体 2（VMAT2）的亲和力大约比 MDMA 低 13 倍。\n\n由于与 MDMA 在药理学上存在这些差异，MDMC在剂量层面上的效力较低，相比血清素能效应，它的儿茶酚胺能效应更为平衡，而且它的行为方式更接近于像哌甲酯这样的神经递质再摄取抑制剂，而不是像苯丙胺那样的释放剂；不过，MDMC依然具有相当明显的释放能力。",
+    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [
       "Analysis enhancement",
       "Anxiety",
@@ -43616,6 +43725,7 @@
       "Jornay PM",
       "Kibbles and bits",
       "Kiddie cocaine",
+      "MPD",
       "MPH",
       "Medikinet",
       "Medikinet Retard",
@@ -43647,7 +43757,8 @@
       "d-threo-methylphenidate",
       "利他林",
       "哌甲酯",
-      "哌甲酯（Methylphenidate）"
+      "哌甲酯（Methylphenidate）",
+      "哌醋甲酯"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -44209,7 +44320,8 @@
       "Nayzilam",
       "Seizalam",
       "Versed",
-      "咪达唑仑"
+      "咪达唑仑",
+      "咪达唑仑（Midazolam）"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -44240,7 +44352,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 180.0,
-    "mechanism_summary": "咪达唑仑对成人是一种短效苯二氮卓类药物，消除半衰期为 1.5 ~ 2.5 小时。 咪达唑仑代谢成活性代谢物 α1-羟基咪达唑仑。然而，咪达唑仑的活性代谢物很少，仅占咪达唑仑生物活性的 10%。咪达唑仑口服吸收差，只有 50% 的药物到达血液。\n\n咪达唑仑由细胞色素 P450 (CYP) 酶和葡萄糖醛酸结合代谢。咪达唑仑的治疗和不良反应是其对 GABAA 受体作用的结果；咪达唑仑不直接激活 GABAA 受体，但与其他苯二氮卓类药物一样，它增强了神经递质 GABA 对 GABAA 受体的作用（增加 Cl-通道开放的频率），导致神经抑制。几乎所有的药代动力学特性都可以用苯二氮卓类药物对 GABAA 受体的作用来解释。",
+    "mechanism_summary": "GABA-A Positive Allosteric Modulator (Benzodiazepine)",
     "effects": [],
     "references": [
       "Pharmacokinetic-pharmacodynamic modeling of the central nervous system effects of midazolam and its main metabolite alpha-hydroxymidazolam in healthy volunteers"
@@ -44380,6 +44492,11 @@
     "name": "Mimosa Hostilis",
     "display_name": "",
     "aliases": [
+      "Cabrera",
+      "Calumbi",
+      "Carbonal",
+      "Tepezcohuite",
+      "朱雷玛黑",
       "细花含羞草"
     ],
     "category": "",
@@ -44997,9 +45114,15 @@
     "name": "Moclobemide",
     "display_name": "",
     "aliases": [
+      "Amira",
       "Aurorex",
       "Aurorix",
+      "Clobemix",
+      "Depnil",
       "Manerix",
+      "Mobemid",
+      "Moclamine",
+      "RIMA",
       "Ro 11-1163"
     ],
     "category": "Other",
@@ -45046,9 +45169,9 @@
       "Provigil",
       "R-Modawake",
       "Waklert",
-      "莫达菲尼",
+      "莫达非尼",
       "莫达非尼（Modafinil）",
-      "阿莫达菲尼"
+      "阿莫达非尼"
     ],
     "category": "Eugeroic",
     "display_class": "recreational",
@@ -45551,37 +45674,6 @@
     ]
   },
   {
-    "name": "MT",
-    "display_name": "",
-    "aliases": [
-      "Melatonin（MT）",
-      "N-乙酰-5-甲氧基色胺",
-      "松果体素",
-      "褪黑素"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "褪黑素是褪黑素受体 1（皮摩尔结合亲和力）和褪黑素受体 2（纳摩尔结合亲和力）的完全激动剂，两者都属于 G 蛋白偶联受体（GPCRs）类别。 褪黑素受体 1 和 2 都是 Gi/o 偶联 GPCRs，尽管褪黑素受体 1 也是 Gq 偶联的。 褪黑素还作为线粒体内的强效自由基清除剂，并通过褪黑素受体的信号转导促进抗氧化酶的表达，如超氧化物歧化酶、谷胱甘肽过氧化物酶、谷胱甘肽还原酶和过氧化氢酶。 褪黑素在肝脏中由细胞色素 P450 酶 CYP1A2 代谢为 6-羟基褪黑素。代谢物与硫酸或葡萄糖醛酸结合后通过尿液排出。5% 的褪黑素以原形药物通过尿液排出。 褪黑素与自由基反应形成的一些代谢物包括环状 3-羟基褪黑素、N1-乙酰-N2-甲酰-5-甲氧基犬尿胺 (AFMK) 和 N1-乙酰-5-甲氧基犬尿胺 (AMK)。",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
     "name": "MT-45",
     "display_name": "",
     "aliases": [
@@ -45956,7 +46048,6 @@
       "NEP",
       "NEPD",
       "alpha-ethylaminopentiophenone",
-      "nor",
       "α-EAPP",
       "α-ethylamino-valerophenone",
       "α-ethylaminopentiophenone"
@@ -46030,7 +46121,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "关于 MDEC 与其他取代卡西酮在人类体内的药代动力学与药效动力学，目前几乎没有多少数据。与苯丙胺类似，合成卡西酮是通过提高突触间隙中儿茶酚胺（如多巴胺、血清素和去甲肾上腺素）的浓度，来发挥其兴奋与拟交感效应的。这些分子能够抑制单胺再摄取转运体，从而降低这些神经递质从突触中的清除速度。此外，它们还可能促使生物胺从细胞内储存中释放出来。\n\n一般来说，合成卡西酮穿过血脑屏障的能力弱于苯丙胺，这是因为 β-酮基会提高分子的极性。与其他合成卡西酮不同，吡咯烷衍生物因其吡咯烷环赋予分子较低极性，所以更容易穿过血脑屏障。关于合成卡西酮代谢的研究表明，它们会经历 N-去甲基化，酮基被还原为羟基，而环上的烷基则会被氧化。",
+    "mechanism_summary": "Non-selective Monoamine Releaser (Substituted Cathinone)",
     "effects": [],
     "references": [
       "https://www.dea.gov/sites/default/files/2018-07/N-Ethylpentylone-2018.pdf",
@@ -46079,6 +46170,8 @@
       "N-methyl-cyclaz",
       "N-methyl-cyclazadone",
       "N-methylcyclazodone",
+      "N-环丙基-N-甲基匹莫林",
+      "N-甲基环唑酮",
       "NMC",
       "NMCY"
     ],
@@ -46098,16 +46191,14 @@
       "sublingual"
     ],
     "has_dose_data": true,
-    "has_duration_data": false,
+    "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
+    "mechanism_summary": "N-methyl cyclazodone is an N,N-methylcyclopropyl derivative of pemoline, with approximately 4- to 6-fold greater potency. Pemoline is believed to have dopaminergic activity, although its precise mechanism has not been fully established. Pemoline has very low affinity for norepinephrine receptors, resulting in relatively mild sympathomimetic side effects (although increased dopamine release is thought to secondarily drive increased norepinephrine release, producing sympathomimetic effects).",
     "effects": [],
     "references": [],
     "data_gaps": [
-      "duration_by_route",
       "half_life_minutes",
-      "mechanism_of_action",
       "references"
     ]
   },
@@ -46118,9 +46209,10 @@
       "4'-difluoro-modafinil",
       "Dehydroxy-fluorafinil",
       "Dehydroxyfluorafinil",
+      "Fiendz",
       "Modafiendz",
       "N-Methyl-4",
-      "N-甲基二氟莫达菲尼"
+      "N-甲基二氟莫达非尼"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -46178,34 +46270,6 @@
       "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
-      "references"
-    ]
-  },
-  {
-    "name": "N-nicotinoyl-γ-aminobutyric acid",
-    "display_name": "",
-    "aliases": [
-      "匹卡米隆"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "Picamilon is able to cross the blood-brain barrier (BBB), an effect attributed primarily to niacin's vasodilatory properties. Once inside the brain, the molecule is hydrolyzed into GABA and niacin.\n\nOnce in the brain, GABA activates GABA receptors (including GABAA and GABAB), potentially producing relaxing and anxiolytic effects, while niacin increases cerebral blood flow through vasodilation. This additional cerebral blood flow is generally considered to account for picamilon's neuroprotective and nootropic benefits. Fresh blood entering the brain delivers new oxygen and enhances the delivery and uptake of glucose and other nutrients, which may improve alertness and overall brain energy.\n\nResearch indicates that the combination of niacin and GABA affects the regulation of neurotransmitters in the brain. One study on Parkinson's disease found that picamilon can normalize levels of serotonin and dopamine in the brain, as well as dopamine uptake.",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
       "references"
     ]
   },
@@ -46280,32 +46344,6 @@
       "duration_by_route",
       "half_life_minutes",
       "mechanism_of_action",
-      "references"
-    ]
-  },
-  {
-    "name": "N-甲基环唑酮",
-    "display_name": "",
-    "aliases": [],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "N-methyl cyclazodone is an N,N-methylcyclopropyl derivative of pemoline, with approximately 4- to 6-fold greater potency. Pemoline is believed to have dopaminergic activity, although its precise mechanism has not been fully established. Pemoline has very low affinity for norepinephrine receptors, resulting in relatively mild sympathomimetic side effects (although increased dopamine release is thought to secondarily drive increased norepinephrine release, producing sympathomimetic effects).",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
       "references"
     ]
   },
@@ -46535,6 +46573,7 @@
       "NRG-1",
       "Naphthylpyrovalerone",
       "O-2482",
+      "Rave",
       "α-naphyrone",
       "β-naphyrone"
     ],
@@ -46989,7 +47028,9 @@
       "nicotinic acetylcholine receptor agonist",
       "tobacco alkaloid",
       "尼古丁",
+      "尼古丁（Nicotine）",
       "烟碱",
+      "烟草素",
       "菸鹼"
     ],
     "category": "Stimulant",
@@ -47138,8 +47179,11 @@
     "aliases": [
       "Erimin",
       "Erimin 5",
+      "Erimin-5",
       "Happy 5",
-      "Hypnon"
+      "Hypnon",
+      "Lavol",
+      "Ro 5-3453"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -47608,8 +47652,8 @@
     "name": "NMH",
     "display_name": "",
     "aliases": [],
-    "category": "",
-    "display_class": "medical_rx",
+    "category": "Stimulant",
+    "display_class": "recreational",
     "tags": [],
     "default_route": "oral",
     "all_routes": [
@@ -47623,36 +47667,6 @@
     "has_protocol_dosing": false,
     "half_life_minutes": null,
     "mechanism_summary": "Due to the scarcity of research on this substance, discussion of its pharmacology is largely based on its chemical structure and its subjective similarity to other cathinone-class substances such as alpha-methylaminopentiophenone. NMH likely acts as both a dopamine and norepinephrine reuptake inhibitor, causing dopamine and norepinephrine to accumulate in the brain and producing effects such as stimulation and physical euphoria.\n\nCompared to alpha-methylaminopentiophenone and ethyl-hexedrone, NMH has lower potency, which is relatively straightforward to explain. It bears a larger non-polar side chain than alpha-methylaminopentiophenone, while ethyl-hexedrone carries an ethyl rather than a methyl group, producing a notable shift in electronegativity.",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
-    "name": "NMP",
-    "display_name": "",
-    "aliases": [
-      "α-甲氨基苯戊酮"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "insufflation",
-    "all_routes": [
-      "insufflation",
-      "oral"
-    ],
-    "routes_with_dose": [
-      "insufflation",
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "由于缺乏关于该物质的研究，以下关于其药理学的讨论都只是基于其结构，以及其主观效应与其他卡西酮类物质及相关分子（如普罗林坦、α-PVP、α-PHP 以及诸如 N-ethyl-(nor)-pentedrone（即 NEP）等类似物）之间相似性的推测哦。\n\n与许多同时具有再摄取抑制剂与神经递质释放剂特性的取代卡西酮类物质不同，NMP 已被证明对于主要的儿茶酚胺类神经递质——多巴胺与去甲肾上腺素——表现为一种纯粹的再摄取抑制剂，而对血清素的活性则相当有限。这使它的药理活性与哌甲酯、可卡因或 MDPV 相似（尽管后两者还具有较强的额外促血清素活性）。这些纯摄取抑制剂很可能不会通过转运体进入突触的细胞内空间，因此相较于底物型释放剂，它们可能伴随更少的细胞内药理效应与毒性。这使得内源性的多巴胺与去甲肾上腺素能在大脑不同突触区域中积累，从而产生兴奋与躯体欣快感效应。\n\n值得注意的是，在 NMP 分子的末端胺基（-NH2）上增加一个乙基，似乎会显著提高其效力；这一点也体现在它的后续类似物 N-ethyl-(nor)-pentedrone（即 NEP）上，而后者通常被认为具有更偏向娱乐性使用的特征呢。",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -48335,6 +48349,7 @@
       "Zyprexa",
       "Zyprexa Relprevv",
       "Zyprexa Zydis",
+      "再普乐",
       "奥氮平"
     ],
     "category": "Antipsychotic",
@@ -49355,11 +49370,18 @@
     "display_name": "PMA",
     "aliases": [
       "4-MA",
+      "4-MeOA",
       "4-methoxyamphetamine",
       "4-甲氧基苯丙胺",
+      "Chicken Powder",
+      "Chicken Yellow",
+      "Death",
+      "Dr Death",
       "Dr. Death",
+      "Killer",
       "PMA",
-      "death",
+      "Pink Ecstasy",
+      "Red Mitsubishi",
       "paramethoxyamphetamine",
       "对甲氧基苯丙胺"
     ],
@@ -49950,7 +49972,9 @@
     "display_name": "",
     "aliases": [
       "Drone",
-      "α-Methylamino-valerophenone"
+      "NMP",
+      "α-Methylamino-valerophenone",
+      "α-甲氨基苯戊酮"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -49976,14 +50000,13 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
+    "mechanism_summary": "由于缺乏关于该物质的研究，以下关于其药理学的讨论都只是基于其结构，以及其主观效应与其他卡西酮类物质及相关分子（如普罗林坦、α-PVP、α-PHP 以及诸如 N-ethyl-(nor)-pentedrone（即 NEP）等类似物）之间相似性的推测哦。\n\n与许多同时具有再摄取抑制剂与神经递质释放剂特性的取代卡西酮类物质不同，NMP 已被证明对于主要的儿茶酚胺类神经递质——多巴胺与去甲肾上腺素——表现为一种纯粹的再摄取抑制剂，而对血清素的活性则相当有限。这使它的药理活性与哌甲酯、可卡因或 MDPV 相似（尽管后两者还具有较强的额外促血清素活性）。这些纯摄取抑制剂很可能不会通过转运体进入突触的细胞内空间，因此相较于底物型释放剂，它们可能伴随更少的细胞内药理效应与毒性。这使得内源性的多巴胺与去甲肾上腺素能在大脑不同突触区域中积累，从而产生兴奋与躯体欣快感效应。\n\n值得注意的是，在 NMP 分子的末端胺基（-NH2）上增加一个乙基，似乎会显著提高其效力；这一点也体现在它的后续类似物 N-ethyl-(nor)-pentedrone（即 NEP）上，而后者通常被认为具有更偏向娱乐性使用的特征呢。",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Pentedrone"
     ],
     "data_gaps": [
-      "half_life_minutes",
-      "mechanism_of_action"
+      "half_life_minutes"
     ]
   },
   {
@@ -50020,7 +50043,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 1014.0,
-    "mechanism_summary": "巴比妥类药物的行为与苯二氮卓类物质相似。戊巴比妥结合于GABAA受体的变构位点，并增强内源性配体γ-氨基丁酸（GABA）的效应。当巴比妥类药物结合到GABAA受体时，会导致离子孔开放时间延长，从而引起细胞内氯离子浓度增加。由于该位点是大脑中最多产的抑制性受体组，其调节导致了巴比妥类药物对神经系统的镇静（或平复）效应。\n\n戊巴比妥的生物利用度为70-90%。45-60%的戊巴比妥会与蛋白质结合。其生物半衰期为15-48小时。戊巴比妥由肝脏代谢并由肾脏排泄。",
+    "mechanism_summary": "GABA-A Positive Allosteric Modulator (Barbiturate)",
     "effects": [],
     "references": [
       "Effects of delta-9-tetrahydrocannabinol on drug distribution and metabolism. Antipyrine, pentobarbital, and ethanol."
@@ -50031,10 +50054,13 @@
     "name": "Pentylone",
     "display_name": "",
     "aliases": [
+      "3,4-亚甲二氧基戊酮",
       "4-meppp",
+      "MDNMP",
       "bk-MBDP",
       "bk-methyl-K",
-      "β-Keto-methylbenzodioxolylpentanamine"
+      "β-Keto-methylbenzodioxolylpentanamine",
+      "βk-MBDP"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -50058,14 +50084,13 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
+    "mechanism_summary": "Virtually no data exist on the pharmacokinetics and pharmacodynamics of MDNMP and other substituted cathinones in humans. Similarly to amphetamines, synthetic cathinones produce their stimulant and sympathomimetic effects by increasing the concentration of catecholamines — such as dopamine, serotonin, and norepinephrine — in the synaptic cleft. These molecules inhibit monoamine reuptake transporters, thereby slowing the clearance of these neurotransmitters from the synapse. They may additionally promote the release of biogenic amines from intracellular stores.\n\nCompared to amphetamines, synthetic cathinones generally cross the blood-brain barrier less readily, as the β-keto group increases the polarity of the molecule. Unlike other synthetic cathinones, pyrrolidine derivatives cross the blood-brain barrier more easily because the pyrrolidine ring confers lower polarity on these molecules. Research on the metabolism of synthetic cathinones indicates that they undergo N-demethylation, reduction of the keto group to a hydroxyl group, and oxidation of the alkyl substituents on the ring.",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Pentylone"
     ],
     "data_gaps": [
-      "half_life_minutes",
-      "mechanism_of_action"
+      "half_life_minutes"
     ]
   },
   {
@@ -50143,6 +50168,7 @@
     "name": "Peruvian Torch",
     "display_name": "",
     "aliases": [
+      "秘鲁火炬",
       "秘鲁火炬仙人掌"
     ],
     "category": "",
@@ -50174,7 +50200,11 @@
       "Dolantin",
       "Dolcontral",
       "Meperidine",
-      "哌替啶"
+      "哌替啶",
+      "多兰汀",
+      "多尔康曲尔",
+      "度冷丁",
+      "美哌利定"
     ],
     "category": "Opioid",
     "display_class": "recreational",
@@ -50301,7 +50331,9 @@
     "name": "Phalaris",
     "display_name": "",
     "aliases": [
-      "水虉草"
+      "哈丁草",
+      "水虉草",
+      "球茎金丝雀草"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -50337,6 +50369,7 @@
       "Phenzitat",
       "Soviet Benzo",
       "Феназепам",
+      "溴二氢氯苯基苯二氮䓬",
       "芬纳西泮"
     ],
     "category": "Benzodiazepine",
@@ -50369,7 +50402,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 3600.0,
-    "mechanism_summary": "尽管芬纳西泮相对于剂量而言毒性较低，但它仍具有与苯二氮卓类药物相关的成瘾、过量和戒断风险。此外，该药物在地西泮常规剂量的十分之一左右就能表现出活性。较高剂量的芬纳西泮有时会被用于治疗严重焦虑或癫痫发作。\n\n芬纳西泮是 γ-氨基丁酸 A 型（GABAA）受体的激动剂，并会产生中枢神经系统抑制作用。在雄性大鼠的高架迷宫和冲突试验中，极低剂量的芬纳西泮表现出了抗焦虑效应。常规剂量下，芬纳西泮可作为一种效力很强的镇静安定剂。研究显示，在经过戊巴比妥与生理盐水辨别训练的成年大鼠中，芬纳西泮可以完全替代戊巴比妥。在拮抗试验中，芬纳西泮的辨别效应可被选择性的苯二氮卓类拮抗剂氟马西尼完全拮抗。芬纳西泮的半衰期最长可达 60 小时，口服后的效应起始时间大约为 2-3 小时；正因如此，使用者在尚未观察到其效应前就提前补量的风险会更高。芬纳西泮的代谢产物 3-羟基芬纳西泮同样也是 GABAA 受体激动剂。以上药代动力学数据提示，芬纳西泮具有较高的过量潜力。",
+    "mechanism_summary": "GABA-A Positive Allosteric Modulator (Benzodiazepine)",
     "effects": [],
     "references": [
       "https://en.wikipedia.org/wiki/Phenazepam"
@@ -50919,7 +50952,8 @@
       "Carphedon",
       "Fonturacetam",
       "Phenotropil",
-      "苯基吡拉西坦"
+      "苯基吡拉西坦",
+      "苯基吡拉西坦（Phenylpiracetam）"
     ],
     "category": "Nootropic",
     "display_class": "recreational",
@@ -51132,7 +51166,9 @@
     "aliases": [
       "N-Nicotinoyl-GABA",
       "Pikamilon",
-      "Pycamilon"
+      "Pycamilon",
+      "Пикамилон",
+      "匹卡米隆"
     ],
     "category": "Nootropic",
     "display_class": "recreational",
@@ -51155,7 +51191,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "",
+    "mechanism_summary": "Picamilon is able to cross the blood-brain barrier (BBB), an effect attributed primarily to niacin's vasodilatory properties. Once inside the brain, the molecule is hydrolyzed into GABA and niacin.\n\nOnce in the brain, GABA activates GABA receptors (including GABAA and GABAB), potentially producing relaxing and anxiolytic effects, while niacin increases cerebral blood flow through vasodilation. This additional cerebral blood flow is generally considered to account for picamilon's neuroprotective and nootropic benefits. Fresh blood entering the brain delivers new oxygen and enhances the delivery and uptake of glucose and other nutrients, which may improve alertness and overall brain energy.\n\nResearch indicates that the combination of niacin and GABA affects the regulation of neurotransmitters in the brain. One study on Parkinson's disease found that picamilon can normalize levels of serotonin and dopamine in the brain, as well as dopamine uptake.",
     "effects": [
       "Cerebral vasodilation"
     ],
@@ -51163,8 +51199,7 @@
       "https://en.wikipedia.org/wiki/Picamilon"
     ],
     "data_gaps": [
-      "half_life_minutes",
-      "mechanism_of_action"
+      "half_life_minutes"
     ]
   },
   {
@@ -51904,6 +51939,7 @@
       "CI-879",
       "Neupramir",
       "Pramistar",
+      "Remen",
       "普拉西坦"
     ],
     "category": "Nootropic",
@@ -51998,17 +52034,18 @@
     "name": "Prazepam",
     "display_name": "",
     "aliases": [
+      "Centrac",
       "Centrax",
       "Demetrin",
       "Lysanxia",
+      "Mono Demetrin",
+      "Pozapam",
+      "Prasepine",
+      "Prazene",
       "Prazepamum",
+      "Reapam",
       "Sedapran",
-      "Trepidan",
-      "centrac",
-      "pozapam",
-      "prasepine",
-      "prazene",
-      "reapam"
+      "Trepidan"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -52076,6 +52113,7 @@
     "name": "PRE-084",
     "display_name": "",
     "aliases": [
+      "Fenclimorate",
       "Research ligand PRE-084"
     ],
     "category": "Other",
@@ -52344,7 +52382,9 @@
   {
     "name": "PRO-LAD",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "N-PropylnorLSD"
+    ],
     "category": "Psychedelic",
     "display_class": "recreational",
     "tags": [
@@ -52512,10 +52552,10 @@
     "aliases": [
       "1-(α-propylphenethyl)pyrrolidine",
       "ATC N06BX14",
+      "Catovit",
       "Katovit",
-      "catovit",
-      "promotil",
-      "villescon",
+      "Promotil",
+      "Villescon",
       "βk-Prolintane analog class relates to α-PVP",
       "普罗林坦",
       "苯基吡咯烷基戊烷"
@@ -52563,7 +52603,9 @@
       "Pipolphen",
       "Promethegan",
       "Romergan",
-      "异丙嗪"
+      "勒吉甘",
+      "异丙嗪",
+      "非那根"
     ],
     "category": "Antihistamine",
     "display_class": "dual_use",
@@ -52675,41 +52717,6 @@
     ]
   },
   {
-    "name": "Propoxyphene",
-    "display_name": "",
-    "aliases": [
-      "Darvon"
-    ],
-    "category": "Opioid",
-    "display_class": "recreational",
-    "tags": [
-      "MOR-weak",
-      "cardiotoxic",
-      "habit-forming",
-      "withdrawn"
-    ],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": false,
-    "has_protocol_dosing": false,
-    "half_life_minutes": 900.0,
-    "mechanism_summary": "",
-    "effects": [],
-    "references": [
-      "Pharmacokinetics of dextropropoxyphene and nordextropropoxyphene in young and elderly volunteers after single and multiple dextropropoxyphene dosage"
-    ],
-    "data_gaps": [
-      "duration_by_route",
-      "mechanism_of_action"
-    ]
-  },
-  {
     "name": "Propranolol",
     "display_name": "",
     "aliases": [
@@ -52772,6 +52779,7 @@
     "aliases": [
       "Benzedrex",
       "Hexahydromethamphetamine",
+      "Obesin",
       "hexahdromethamphetamine",
       "propylhexadrine",
       "奥贝辛",
@@ -52985,7 +52993,12 @@
     "display_name": "",
     "aliases": [
       "Sudafed",
-      "伪麻黄碱"
+      "Sudafed（苏达菲）",
+      "pseudo",
+      "伪麻黄碱",
+      "伪麻黄碱（Pseudoephedrine）",
+      "伪麻黄素",
+      "假麻黄碱"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -53102,6 +53115,8 @@
     "name": "Psilocybe Cyanescens",
     "display_name": "",
     "aliases": [
+      "强效裸盖菇",
+      "波浪帽",
       "蓝柄裸盖菇"
     ],
     "category": "",
@@ -53129,7 +53144,9 @@
     "name": "Psilocybe Mexicana",
     "display_name": "",
     "aliases": [
-      "墨西哥裸盖菇"
+      "Shrooms",
+      "墨西哥裸盖菇",
+      "魔法蘑菇"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -53219,11 +53236,13 @@
       "Teonanacatl",
       "mushroom",
       "psylocybin",
-      "古巴裸盖菇"
+      "古巴裸盖菇",
+      "魔法蘑菇"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
     "tags": [
+      "common",
       "psilocybin-containing",
       "tryptamine"
     ],
@@ -53910,7 +53929,10 @@
       "Ketilept",
       "Ketipinor",
       "Seroquel",
-      "Seroquel XR"
+      "Seroquel XR",
+      "Xeroquel",
+      "喹硫平",
+      "思瑞康"
     ],
     "category": "Antipsychotic",
     "display_class": "dual_use",
@@ -54710,7 +54732,8 @@
     "aliases": [
       "Risperdal",
       "Risperdal Consta",
-      "利培酮"
+      "利培酮",
+      "理思必妥"
     ],
     "category": "Antipsychotic",
     "display_class": "dual_use",
@@ -55027,7 +55050,8 @@
     "name": "RTI-111",
     "display_name": "",
     "aliases": [
-      "Dichloropane"
+      "Dichloropane",
+      "O-401"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -55799,7 +55823,9 @@
     "display_name": "",
     "aliases": [
       "Methylguanidoacetic Acid",
-      "S-Adenosyl Methionine"
+      "S-Adenosyl Methionine",
+      "S-腺苷蛋氨酸",
+      "甲基胍基乙酸"
     ],
     "category": "Nootropic",
     "display_class": "recreational",
@@ -56484,7 +56510,8 @@
     "aliases": [
       "Lustral",
       "Sertraline Hydrochloride Tablets",
-      "Zoloft"
+      "Zoloft",
+      "舍曲林"
     ],
     "category": "Antidepressant",
     "display_class": "medical_rx",
@@ -57197,9 +57224,13 @@
     "display_name": "",
     "aliases": [
       "Chronogesic",
+      "Dsuvia",
       "Sufenta",
       "Sufentanyl",
-      "舒芬太尼"
+      "克罗诺吉西克",
+      "舒芬塔",
+      "舒芬太尼",
+      "舒芬太尼（另一拼写）"
     ],
     "category": "Opioid",
     "display_class": "recreational",
@@ -57568,6 +57599,9 @@
     "name": "Syrian Rue",
     "display_name": "",
     "aliases": [
+      "叙利亚芸香",
+      "埃斯凡德",
+      "埃斯潘德",
       "骆驼蓬"
     ],
     "category": "",
@@ -58612,8 +58646,10 @@
     "name": "Theacrine",
     "display_name": "",
     "aliases": [
+      "1,3,7,9-四甲基尿酸",
       "Temorine",
-      "Temurin"
+      "Temurin",
+      "苦茶碱"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -58938,7 +58974,13 @@
     "name": "Thujone",
     "display_name": "",
     "aliases": [
-      "侧柏酮"
+      "侧柏酮",
+      "普通鼠尾草",
+      "白鼠尾草",
+      "苦艾",
+      "苦艾酒",
+      "药用鼠尾草",
+      "鼠尾草"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -59128,6 +59170,11 @@
     "display_name": "",
     "aliases": [
       "CI-634",
+      "CL-399",
+      "CN 54521-2",
+      "NSC 167740",
+      "O-TCE",
+      "Polar bear ket",
       "Telazol",
       "Telazol component",
       "Tiletaminum",
@@ -59177,10 +59224,13 @@
     "name": "Tilidine",
     "display_name": "",
     "aliases": [
+      "Darby",
+      "Generika",
       "Valoron",
       "Valtran",
       "tilidate",
       "tilidin",
+      "替利丁",
       "替利定"
     ],
     "category": "Opioid",
@@ -59371,7 +59421,10 @@
       "2,1,3-苯并噻二唑",
       "Sirdalud",
       "Zanaflex",
-      "替扎尼定"
+      "扎纳弗莱克斯",
+      "替扎尼定",
+      "特里内克斯",
+      "锡尔达鲁德"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -59443,9 +59496,11 @@
       "3,4,5-TMA",
       "3,4,5-Trimethoxyamphetamine",
       "5-Trimethoxyamphetamine",
+      "Mescalamphetamine",
       "Mescaline amphetamine analog",
       "TMA-1",
-      "Trimethoxyamphetamine"
+      "Trimethoxyamphetamine",
+      "α-Methylmescaline"
     ],
     "category": "Psychedelic",
     "display_class": "recreational",
@@ -60307,7 +60362,10 @@
       "Novodorm",
       "Trilam",
       "Up Johns",
-      "三唑仑"
+      "三唑仑",
+      "三唑仑（Triazolam）",
+      "海乐神",
+      "酣乐欣"
     ],
     "category": "Benzodiazepine",
     "display_class": "recreational",
@@ -61293,8 +61351,11 @@
     "display_name": "",
     "aliases": [
       "Catatrol",
+      "Emovit",
       "Qelbree",
-      "Vivalan"
+      "Vicilan",
+      "Vivalan",
+      "Vivarint"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -62010,35 +62071,6 @@
     ]
   },
   {
-    "name": "Xeroquel",
-    "display_name": "",
-    "aliases": [
-      "Ketipinor",
-      "喹硫平"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "喹硫平是一种强效的多巴胺、血清素和肾上腺素受体拮抗剂，同时也是一种强效的抗组胺药，其抗胆碱能特性在临床上可以忽略不计。喹硫平与血清素受体结合紧密；它还是 5-HT1A 受体的部分受体激动剂。就其抗精神病作用而言，精确的作用机制尚不明确，但根据精神分裂症的多巴胺理论，抗精神病效果可能与该药物降低中脑边缘通路内的多巴胺能神经递质传递的能力有关呢喵。",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
     "name": "Xylazine",
     "display_name": "",
     "aliases": [
@@ -62132,10 +62164,12 @@
     "name": "Yohimbine",
     "display_name": "",
     "aliases": [
+      "优可拉尔或克布拉辛",
+      "优康",
       "育亨宾"
     ],
-    "category": "",
-    "display_class": "medical_rx",
+    "category": "Stimulant",
+    "display_class": "recreational",
     "tags": [],
     "default_route": "oral",
     "all_routes": [
@@ -62218,8 +62252,11 @@
     "name": "Zaleplon",
     "display_name": "",
     "aliases": [
+      "Andante",
       "Sonata",
-      "扎来普隆"
+      "Starnoc",
+      "扎来普隆",
+      "扎来普隆（Zaleplon）"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -62537,7 +62574,9 @@
       "Zolpimist",
       "Zolsana",
       "Zoltis",
-      "唑吡坦"
+      "唑吡坦",
+      "唑吡坦（Zolpidem）",
+      "思诺思（Stilnox，原研药商品名）"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -62631,7 +62670,6 @@
     "name": "Zopiclone",
     "display_name": "",
     "aliases": [
-      "(右)佐匹克隆",
       "Eszop",
       "Eszopiclone",
       "Imovane",
@@ -62650,7 +62688,9 @@
       "Zopiclon TAD",
       "Zopiclon-neuraxpharm",
       "Zopiclon-ratiopharm",
-      "Zopitan"
+      "Zopitan",
+      "佐匹克隆（Zopiclone）",
+      "（右）佐匹克隆"
     ],
     "category": "Depressant",
     "display_class": "recreational",
@@ -62677,7 +62717,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": 300.0,
-    "mechanism_summary": "Binds the benzodiazepine site of GABA-A receptors, enhancing GABA's inhibitory action on neurons.",
+    "mechanism_summary": "GABA-A Receptor Agonist (α1-Selective)",
     "effects": [
       "Amnesia",
       "Anxiety suppression",
@@ -62701,7 +62741,8 @@
     "aliases": [
       "A-PCYP",
       "alpha-PCyP",
-      "alpha-PyrrolidinoCyclohexanoPhenone"
+      "alpha-PyrrolidinoCyclohexanoPhenone",
+      "α-PyrrolidinoCyclohexanoPhenone"
     ],
     "category": "Stimulant",
     "display_class": "recreational",
@@ -62931,32 +62972,6 @@
     "category": "Stimulant",
     "display_class": "recreational",
     "tags": [],
-    "default_route": "",
-    "all_routes": [],
-    "routes_with_dose": [],
-    "has_dose_data": false,
-    "has_duration_data": false,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "环唑酮是匹莫林的大约3x - 5x更强的N-环丙基衍生物。匹莫林被认为是多巴胺能的，但其确切作用方式尚未完全确定。匹莫林对去甲肾上腺素受体有最小亲和力，因此与典型的多巴胺能中枢神经系统兴奋剂如哌甲酯和右旋-苯丙胺相比，具有最小的拟交感副作用哦。\n\n根据发明人提交的专利，环唑酮表现出中枢神经系统刺激特性以及比匹莫林和其他N-低烷基取代匹莫林衍生物更强的食欲抑制特性。当时环唑酮也提供了比匹莫林和其他N-低烷基取代匹莫林衍生物更有利的治疗指数和安全边际呢。\n\n在动物模型中，环唑酮表现出中枢神经系统兴奋剂和抗抑郁药效和效力至少等于右旋-苯丙胺。最大活性持续时间为180分钟，总兴奋持续时间超过6小时。而且，根据发明人的专利，环唑酮在动物模型中也具有至少等于右旋-苯丙胺的食欲抑制效力和效力，但环唑酮的毒性与其活性相比被发现较低欸。\n\n环唑酮很可能是一种苯丙胺样的Trace Amine Associated Receptor 1 (TAAR1)的激动剂，这是常见和微量脑单胺如多巴胺、血清素和去甲肾上腺素的关键调节器。这一组受体的激动导致突触间隙中多巴胺、血清素和去甲肾上腺素浓度的增加。这导致用户内的认知和躯体刺激嘛。",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "dose_ranges_by_route",
-      "duration_by_route",
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
-    "name": "石山碱甲",
-    "display_name": "",
-    "aliases": [
-      "石杉碱甲"
-    ],
-    "category": "",
-    "display_class": "medical_rx",
-    "tags": [],
     "default_route": "oral",
     "all_routes": [
       "oral"
@@ -62968,7 +62983,7 @@
     "has_duration_data": true,
     "has_protocol_dosing": false,
     "half_life_minutes": null,
-    "mechanism_summary": "Huperzine A is a reversible acetylcholinesterase inhibitor and an NMDA receptor antagonist.",
+    "mechanism_summary": "环唑酮是匹莫林的大约3x - 5x更强的N-环丙基衍生物。匹莫林被认为是多巴胺能的，但其确切作用方式尚未完全确定。匹莫林对去甲肾上腺素受体有最小亲和力，因此与典型的多巴胺能中枢神经系统兴奋剂如哌甲酯和右旋-苯丙胺相比，具有最小的拟交感副作用哦。\n\n根据发明人提交的专利，环唑酮表现出中枢神经系统刺激特性以及比匹莫林和其他N-低烷基取代匹莫林衍生物更强的食欲抑制特性。当时环唑酮也提供了比匹莫林和其他N-低烷基取代匹莫林衍生物更有利的治疗指数和安全边际呢。\n\n在动物模型中，环唑酮表现出中枢神经系统兴奋剂和抗抑郁药效和效力至少等于右旋-苯丙胺。最大活性持续时间为180分钟，总兴奋持续时间超过6小时。而且，根据发明人的专利，环唑酮在动物模型中也具有至少等于右旋-苯丙胺的食欲抑制效力和效力，但环唑酮的毒性与其活性相比被发现较低欸。\n\n环唑酮很可能是一种苯丙胺样的Trace Amine Associated Receptor 1 (TAAR1)的激动剂，这是常见和微量脑单胺如多巴胺、血清素和去甲肾上腺素的关键调节器。这一组受体的激动导致突触间隙中多巴胺、血清素和去甲肾上腺素浓度的增加。这导致用户内的认知和躯体刺激嘛。",
     "effects": [],
     "references": [],
     "data_gaps": [
@@ -62980,7 +62995,8 @@
     "name": "羟吗啡酮腙",
     "display_name": "",
     "aliases": [
-      "吗啡喃-6-酮"
+      "吗啡喃-6-酮",
+      "羟吗啡腙"
     ],
     "category": "",
     "display_class": "medical_rx",
@@ -63007,7 +63023,9 @@
   {
     "name": "翠冠玉",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "假乌羽玉"
+    ],
     "category": "",
     "display_class": "medical_rx",
     "tags": [],
@@ -63055,66 +63073,11 @@
     ]
   },
   {
-    "name": "苦茶碱",
-    "display_name": "",
-    "aliases": [
-      "1,3,7,9-四甲基尿酸"
-    ],
-    "category": "Stimulant",
-    "display_class": "recreational",
-    "tags": [],
-    "default_route": "insufflation",
-    "all_routes": [
-      "insufflation",
-      "oral"
-    ],
-    "routes_with_dose": [
-      "insufflation",
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "mechanism_of_action",
-      "references"
-    ]
-  },
-  {
-    "name": "萘哌甲酯",
-    "display_name": "",
-    "aliases": [],
-    "category": "Stimulant",
-    "display_class": "recreational",
-    "tags": [],
-    "default_route": "oral",
-    "all_routes": [
-      "oral"
-    ],
-    "routes_with_dose": [
-      "oral"
-    ],
-    "has_dose_data": true,
-    "has_duration_data": true,
-    "has_protocol_dosing": false,
-    "half_life_minutes": null,
-    "mechanism_summary": "Methylnaphthidate is believed to act primarily as a monoamine triple reuptake inhibitor: it binds to and partially blocks the transporter proteins normally responsible for clearing dopamine, norepinephrine, and serotonin from the synaptic cleft. The resulting rise, particularly in reward pathways, produces stimulant and euphoric effects.",
-    "effects": [],
-    "references": [],
-    "data_gaps": [
-      "half_life_minutes",
-      "references"
-    ]
-  },
-  {
     "name": "银冠玉",
     "display_name": "",
-    "aliases": [],
+    "aliases": [
+      "假佩奥特"
+    ],
     "category": "",
     "display_class": "medical_rx",
     "tags": [],

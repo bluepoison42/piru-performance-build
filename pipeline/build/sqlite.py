@@ -494,6 +494,15 @@ FREEOD_CATEGORY_MAP = {
 }
 
 
+# Effect links the FreeOD extractor reads from a page's prose that are not the
+# page's own effects. The extractor takes every link into 药效/ on the page, so
+# a page that mentions an effect it counteracts or an etymology claims it.
+FREEOD_EFFECT_EXCLUSIONS: dict[str, dict[str, str]] = {
+    "8-氯茶碱": {"困倦": "the drowsiness of diphenhydramine it counteracts"},
+    "颠茄": {"扩大": "etymology: the eye drops once used to dilate pupils"},
+}
+
+
 # Curated zh→English canonical map for FreeOD pages written with a fully
 # Chinese intro (no English name anywhere on the page) where the auto-miner
 # can't recover one. Targets are verified to exist in the bundled DB by an
@@ -505,6 +514,21 @@ FREEOD_NAME_OVERRIDE = {
     "1,4-丁二醇": "1,4-Butanediol",
     # The page URL is 多拉西敏; its article is about 多西拉敏, doxylamine.
     "多拉西敏": "Doxylamine",
+    # Neither page lists a name Piru already carries, so without these they
+    # would each mint a substance titled in Chinese.
+    "二氟莫达非尼": "Flmodafinil",
+    "阿莫达非尼": "Modafinil",
+    # The α-PHP page also lists the short name "alpha-PHP", which an earlier
+    # source carries as its own row until the InChIKey merge folds it in.
+    "α-PHP": "alpha-Pyrrolidinohexiophenone",
+    # The α-PiHP page lists α-PHP's systematic name among its own.
+    "α-PiHP": "alpha-PiHP",
+    # Each of these pages lists a short name another substance owns ("Drone"
+    # belongs to mephedrone and pentedrone alike, "Hexen" folds onto hexedrone,
+    # "8-CTP" would rename the existing row).
+    "NMP": "Pentedrone",
+    "NEH": "N-Ethylhexedrone",
+    "8-氯茶碱": "1,3-Dimethyl-8-Chloroxanthine",
     "麻黄碱": "Ephedrine",
     "伪麻黄碱": "Pseudoephedrine",
     "尼古丁": "Nicotine",
@@ -4821,7 +4845,7 @@ COMMON_CARD_ALLOWLIST = {
     "heroin",
     "mdma",
     "lsd",
-    "mushrooms",
+    "psilocybin mushrooms",
     "methamphetamine",
     "ketamine",
     "amphetamine",
@@ -5720,6 +5744,10 @@ _NAME_REMAP: dict[str, str] = {
     # CAS at all), but merging under "Mephenmetrazine" would have left a canonical
     # that half the world reads as the other drug.
     "mephenmetrazine": "4-Methylphenmetrazine",
+    # AMT is the collision registry's merge winner for this molecule. FreeOD's
+    # αMT page lists both names, which joins them under the long one unless
+    # the long one folds here.
+    "alpha-methyltryptamine": "AMT",
 }
 
 
@@ -5986,6 +6014,9 @@ _INERT_TAGS: set[str] = {
 # Keys are normalised canonical names (lowercase). Values are sets of
 # normalised alias strings to drop on insert.
 _ALIAS_BLOCKLIST: dict[str, set[str]] = {
+    # FreeOD's α-PiHP page lists α-PHP's systematic name among its own; α-PiHP is
+    # the isohexyl isomer, so the name stays on alpha-Pyrrolidinohexiophenone.
+    "alpha-pihp": {"alpha-pyrrolidinohexiophenone"},
     # ── The arylcyclohexylamine tangle (SAFETY) ──────────────────────────────
     # Three distinct molecules, cross-wired so that two of the names resolved to
     # the wrong compound. This is the one dissociative family where getting the
@@ -8366,7 +8397,8 @@ class Build:
         for the same reason in two registers — a class generalisation may never displace a
         per-substance fact:
 
-        * **Prose is written ONLY where the substance has no ``mechanisms_summary`` row at all.**
+        * **Prose is written ONLY where no reader of that language has a ``mechanisms_summary``
+          row**: English where the substance has no English row, Chinese where it has none at all.
           ``piru-curated`` outranks every other source, so a class paragraph written over a
           substance that already has a pyrls or medtap summary would put "Selective Serotonin
           Reuptake Inhibitor (SSRI)" above the text written about that specific drug.
@@ -8425,26 +8457,32 @@ class Build:
                 if sid is None:
                     unmatched.append(name)
                     continue
-                # Prose: only for a substance no source has described at all.
-                if (
-                    prose
-                    and not self.cur.execute(
-                        "SELECT 1 FROM mechanisms_summary WHERE substance_id = ? LIMIT 1", (sid,)
-                    ).fetchone()
-                ):
-                    for lang, text in prose.items():
-                        if not isinstance(text, dict) or not text.get("summary"):
-                            continue
-                        self.add_mechanism_summary(
-                            sid,
-                            "piru-curated",
-                            text["summary"],
-                            description=text.get("description"),
-                            language=lang,
-                        )
-                        prose_written += 1
-                elif prose:
-                    prose_skipped += 1
+                # Prose: only where no reader of that language already has a summary.
+                # An English reader sees only English rows, so a FreeOD summary in
+                # Chinese leaves them nothing and the class paragraph fills English. A
+                # Chinese reader falls back to any row, English included, so Chinese
+                # class prose goes only to a substance with no summary at all.
+                described = {
+                    r[0]
+                    for r in self.cur.execute(
+                        "SELECT language FROM mechanisms_summary WHERE substance_id = ?", (sid,)
+                    )
+                }
+                for lang, text in prose.items():
+                    if not isinstance(text, dict) or not text.get("summary"):
+                        continue
+                    english = lang in ("en", "und")
+                    if (described & {"en", "und"}) if english else described:
+                        prose_skipped += 1
+                        continue
+                    self.add_mechanism_summary(
+                        sid,
+                        "piru-curated",
+                        text["summary"],
+                        description=text.get("description"),
+                        language=lang,
+                    )
+                    prose_written += 1
 
                 have = {
                     fold(r[0])
@@ -9305,7 +9343,13 @@ class Build:
                 + [canonical]
                 + [n for n in names if n and not _CJK_RE.search(n)]
             )
-            canonical = resolve_existing(latin_cands) or override or canonical
+            # An override is the decision for that page: it resolves through the
+            # existing names ("DXM" is Dextromethorphan) or becomes the new row,
+            # and a common name the page also lists ("Shrooms") never outbids it.
+            if override:
+                canonical = resolve_existing([override]) or override
+            else:
+                canonical = resolve_existing(latin_cands) or canonical
             # All FreeOD names + the zh title become searchable aliases.
             aliases = list(dict.fromkeys([n for n in ([title] + names) if n and n != canonical]))
             before = self.stats["substances"]
@@ -9374,8 +9418,10 @@ class Build:
                 self.add_description(sid, slug, rec["description"], language="zh-Hans")
             if rec.get("mechanism"):
                 self.add_mechanism_summary(sid, slug, rec["mechanism"], language="zh-Hans")
+            excluded = FREEOD_EFFECT_EXCLUSIONS.get(title, {})
             for eff in rec.get("subjective_effects") or []:
-                self.add_subjective_effect(sid, slug, eff, language="zh-Hans")
+                if eff not in excluded:
+                    self.add_subjective_effect(sid, slug, eff, language="zh-Hans")
 
             # English text for the Overview. Authentic PsychonautWiki lead prose is
             # attributed to `psychonautwiki` (not machine-translated); the remainder
@@ -9444,7 +9490,8 @@ class Build:
         field alone.
 
         Two gates, and they draw the line at what a reader could act on.
-        **Every published article** contributes chemistry and aliases, because
+        **Every article, drafts included,** contributes chemistry, aliases and
+        its page link, because
         an identifier is right or wrong rather than better or worse, and
         dose.wiki's are internally consistent — across all 577 records every
         stated InChIKey recomputes from its own SMILES and every CAS passes its
@@ -9452,11 +9499,12 @@ class Build:
         that contradicts itself (see ``dosewiki_identity_corrections``); every
         such overwrite is listed in the build report. **Only `expert_reviewed`
         articles** contribute a dose, a duration, a half-life, a binding or
-        prose.
+        prose, which keeps drafts (`priority: low`, almost all unreviewed) to
+        identity and links.
 
-        Nothing here creates a substance. dose.wiki's 267 are a subset of a
-        catalog Piru already covers at 1,689, and a new row from the bottom of
-        the order is a dedup hazard that buys nothing.
+        Nothing here creates a substance. An article joins only the Piru
+        substance `data/curated/dosewiki-ids.json` maps it to, and a new row
+        from the bottom of the order is a dedup hazard that buys nothing.
         """
         if not path.exists():
             return
@@ -9490,7 +9538,7 @@ class Build:
         undecided = [rec["slug"] for rec in records if rec["slug"] not in entries]
         if undecided:
             raise SystemExit(
-                "dose.wiki published these articles and data/curated/dosewiki-ids.json "
+                "dose.wiki lists these articles and data/curated/dosewiki-ids.json "
                 "does not say which substance they are about. Add each one with the "
                 "Piru substance it names, or an explicit null with the reason:\n  "
                 + "\n  ".join(sorted(undecided))
@@ -14273,8 +14321,11 @@ class Build:
                 # so medical_rx — even if drug.community lists a clinical dose.
                 # OTC drugs (ibuprofen, cetirizine, …) keep their on-package dose.
                 cls = "otc" if is_otc else "medical_rx"
-            elif weak_signal or is_rec_cat or rec_tag:
+            elif weak_signal or is_rec_cat or (rec_tag and not is_supplement):
                 # Non-medical: drug.community dose / recreational category / RC tag.
+                # A tag alone never outranks a Supplement category: Wikidata tags
+                # every tryptophan derivative "tryptamine", and L-tryptophan is
+                # sold beside vitamins.
                 cls = "recreational"
             elif is_otc or is_supplement:
                 cls = "otc"
@@ -14834,7 +14885,7 @@ def main() -> int:
     print(
         f"After class mechanisms: {build.stats.get('class_mechanism_prose', 0)} prose rows + "
         f"{build.stats.get('class_mechanism_bindings', 0)} bindings written; skipped "
-        f"{build.stats.get('class_mechanism_prose_skipped', 0)} already-described substances and "
+        f"{build.stats.get('class_mechanism_prose_skipped', 0)} already-described languages and "
         f"{build.stats.get('class_mechanism_bindings_skipped', 0)} already-measured targets",
         file=sys.stderr,
     )

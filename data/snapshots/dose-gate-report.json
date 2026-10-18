@@ -36,9 +36,9 @@
   },
   {
     "rule": "absorption floor · phase under 1 min on an absorbed route",
-    "substance": "Methamphetamine",
+    "substance": "Alprazolam",
     "source": "freeodwiki",
-    "route": "oral",
-    "detail": "comeup 0.0833333–0.166667 min"
+    "route": "insufflation",
+    "detail": "onset 0.0833333–0.166667 min"
   }
 ]

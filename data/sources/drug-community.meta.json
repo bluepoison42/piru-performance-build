@@ -3,26 +3,26 @@
   "api": "https://substance.wiki/api/data/manifest",
   "api_docs": "https://substance.wiki/api/docs",
   "human_url_pattern": "https://substance.wiki/drug/{slug}",
-  "fetched_at": "2026-10-13T21:12:39+00:00",
-  "release_id": "8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9",
-  "release_generated_at": "2026-10-13T18:51:16.224Z",
+  "fetched_at": "2026-10-17T23:51:28+00:00",
+  "release_id": "cb32a5fd7e3babb3bdeb8386bed2dd0b713ff431fcc6975faad7a2be77d39217",
+  "release_generated_at": "2026-10-17T13:47:15.490Z",
   "schema_version": 2,
   "pipeline_version": "catalog-v2-backfill/2",
-  "substance_count": 431,
-  "snapshot_sha256": "b45c447ff50ec23f456a9ed8863c103b52247cdead3fcb3fe2de0bc83b8de097",
+  "substance_count": 433,
+  "snapshot_sha256": "2634cbbdfdbc1b8d2dd6d788c0f2b5b578c7f59519107ab106db683d2f95c80b",
   "verified_datasets": {
     "bootstrap": {
-      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/bootstrap",
-      "sha256": "178f9b5bcff62149c85b629f98585c77150e3c3533b2d6e8be7684bde2b2ae07",
-      "bytes": 4108010
+      "url": "/api/data/releases/cb32a5fd7e3babb3bdeb8386bed2dd0b713ff431fcc6975faad7a2be77d39217/bootstrap",
+      "sha256": "721281169223450ad257c9c4b472720289c8498551028193cc36df090f7f96e0",
+      "bytes": 4573610
     },
     "intensity-spectra": {
-      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/intensity-spectra",
+      "url": "/api/data/releases/cb32a5fd7e3babb3bdeb8386bed2dd0b713ff431fcc6975faad7a2be77d39217/intensity-spectra",
       "sha256": "7cb9774a57233a69cca1a0e2a3a2d7d51a95c88be797c2f565ce0e1165a2f3c5",
       "bytes": 1134713
     },
     "effects": {
-      "url": "/api/data/releases/8c10bfe843f09117beed4b3f509d5df4f844bbc3cb16da37219a300b1dfda4e9/effects",
+      "url": "/api/data/releases/cb32a5fd7e3babb3bdeb8386bed2dd0b713ff431fcc6975faad7a2be77d39217/effects",
       "sha256": "e6d94e79afa16e189357fca928f57aaf340c12b11be6693b1509795f1795a82d",
       "bytes": 17048022
     }

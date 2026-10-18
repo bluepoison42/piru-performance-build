@@ -1,5 +1,5 @@
 {
-  "_comment": "dose.wiki slug -> the Piru substance its article is about. Seeded from a 577-row structural comparison (InChIKey recomputed from both sides' SMILES, CAS check-digit validated, contested cases adjudicated against PubChem) and reviewed by hand. `name` is how the ingest resolves the row, because substance_uid is assigned long after ingest; `substance_uid` is the durable half, checked against data/curated/substance-ids.json so a rename cannot silently move a join. `substance_uid: null` means deliberately unmapped and the note says why. Every published dose.wiki slug must appear here or ingest_dosewiki fails the build — a slug nobody has decided about is the one way a whole article lands on the wrong molecule. `skip_chemistry: true` keeps one article's structure off its Piru row while its names, doses and prose still land: dose.wiki describes a preparation with its active molecule's structure, and copying that onto the preparation would file one molecule under two identities.",
+  "_comment": "dose.wiki slug -> the Piru substance its article is about. Seeded from a 577-row structural comparison (InChIKey recomputed from both sides' SMILES, CAS check-digit validated, contested cases adjudicated against PubChem) and reviewed by hand. `name` is how the ingest resolves the row, because substance_uid is assigned long after ingest; `substance_uid` is the durable half, checked against data/curated/substance-ids.json so a rename cannot silently move a join. `substance_uid: null` means deliberately unmapped and the note says why. Every dose.wiki slug, drafts included, must appear here or ingest_dosewiki fails the build — a slug nobody has decided about is the one way a whole article lands on the wrong molecule. `skip_chemistry: true` keeps one article's structure off its Piru row while its names, doses and prose still land: dose.wiki describes a preparation with its active molecule's structure, and copying that onto the preparation would file one molecule under two identities.",
   "1-4-butanediol": {
     "name": "1,4-Butanediol",
     "substance_uid": "WERYXYBDKMZEQL"
@@ -21,6 +21,11 @@
   "1cp-mipla": {
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: 1cP-MiPLA) — missing structure on Piru side"
+  },
+  "1d-lsd": {
+    "name": "1D-LSD",
+    "substance_uid": "RNVFVHAKGPSAIU",
+    "note": "draft; identical structure"
   },
   "1p-eth-lad": {
     "name": "1P-ETH-LAD",
@@ -61,9 +66,48 @@
     "name": "2-FMA",
     "substance_uid": "XNWIKJYFOIDUGD"
   },
+  "2-ma": {
+    "name": "2-Methylamphetamine",
+    "substance_uid": "ZEMQBDFHXOOXLY",
+    "note": "draft; identical structure"
+  },
+  "2-me-dmt": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 2-ME-DMT, whose structure differs or is missing)"
+  },
+  "2-mec": {
+    "name": "2-Methylethcathinone",
+    "substance_uid": "DGQUHAZEXMTKBQ",
+    "note": "draft; identical structure"
+  },
+  "2-meo-ketamine": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Methoxmetamine, whose structure differs or is missing)"
+  },
   "2-mmc": {
     "substance_uid": null,
     "note": "dose.wiki's structure is a different compound (nearest: 2-MMC) — dose.wiki's 2-MMC page carries plain METHCATHINONE's structure (CNC(C(=O)C1=CC=CC=C1)C, LPLLVINFLBSFRP-UHFFFAOYSA-N, C10H13NO, 163.22) — the 2-methyl on the ring is missing, and the page is byte-identical in structure to their own `methcathinone` page. Piru's 2-MMC (id 23, CC(NC)C(=O)c1ccccc1C, PRGXFAWAMOFULD-UHFFFAOYSA-N, C11H15NO, 177.24, CAS 1246911-71-6) is correct. dose.wiki marks this page expert_reviewed: true."
+  },
+  "2-mppp": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 2-MPPP, whose structure differs or is missing)"
+  },
+  "2-nmc": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 2-NMC, whose structure differs or is missing)"
+  },
+  "2-pa": {
+    "name": "Cathinone",
+    "substance_uid": "PUAQLLVFLMYYJJ",
+    "note": "draft; identical structure"
+  },
+  "2-pta": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 2-PTA, whose structure differs or is missing)"
+  },
+  "25-dma": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
   },
   "25b-nboh": {
     "name": "25B-NBOH",
@@ -93,6 +137,20 @@
     "name": "25E-NBOMe",
     "substance_uid": "PXDVGFGXPVCNAB"
   },
+  "25g-nbome": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 25G-NBOMe)"
+  },
+  "25h-nbome": {
+    "name": "25H-NBOMe",
+    "substance_uid": "RMLXCDMTGWSEOU",
+    "note": "draft; identical structure"
+  },
+  "25i-nbf": {
+    "name": "25I-NBF",
+    "substance_uid": "LPBKNBHMWRBPHT",
+    "note": "draft; identical structure"
+  },
   "25i-nbmd": {
     "name": "25I-NBMD",
     "substance_uid": "NJNMIPDEUMTYNV"
@@ -109,13 +167,40 @@
     "name": "25Ip-NBOMe",
     "substance_uid": "KMZZEEDFQLXSQF"
   },
+  "25n-nbome": {
+    "name": "25N-NBOMe",
+    "substance_uid": "TXCKTIBHURMASQ",
+    "note": "draft; identical structure"
+  },
+  "25p-nbome": {
+    "name": "2C-P-NBOMe",
+    "substance_uid": "4FONIXPDHTRLXG",
+    "note": "draft; identical structure"
+  },
+  "25t-2-nbome": {
+    "name": "25T-2-NBOMe",
+    "substance_uid": "OZEBFZPAWCXEGK",
+    "note": "draft; identical structure"
+  },
+  "25t-4-nbome": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 2C-T-4-NBOMe)"
+  },
   "2c-b": {
     "name": "2C-B",
     "substance_uid": "YMHOBZXQZVXHBM"
   },
+  "2c-b-an": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 2C-B-AN, whose structure differs or is missing)"
+  },
   "2c-b-fly": {
     "name": "2C-B-FLY",
     "substance_uid": "YZDFADGMVOSVIX"
+  },
+  "2c-b-fly-nbome": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 2C-B-FLY-NBOMe, whose structure differs or is missing)"
   },
   "2c-c": {
     "name": "2C-C",
@@ -136,6 +221,16 @@
   "2c-i": {
     "name": "2C-I",
     "substance_uid": "PQHQBRJAAZQXHL"
+  },
+  "2c-ip": {
+    "name": "2C-IP",
+    "substance_uid": "XUGPCRRUMVWELT",
+    "note": "draft; identical structure"
+  },
+  "2c-n": {
+    "name": "2C-N",
+    "substance_uid": "ZMUSDZGRRJGRAO",
+    "note": "draft; identical structure"
   },
   "2c-p": {
     "name": "2C-P",
@@ -165,6 +260,19 @@
     "name": "2-Methyl-2-Butanol",
     "substance_uid": "MSXVEPNJUHWQHW"
   },
+  "3-4-ctmp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "3-4-dichloromethylphenidate": {
+    "name": "3,4-CTMP",
+    "substance_uid": "JUKMAYKVHWKRKY",
+    "note": "draft; same connectivity, stereo or salt differs"
+  },
+  "3-cl-pcp": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 3-CL-PCP, whose structure differs or is missing)"
+  },
   "3-cmc": {
     "name": "3-Chloromethcathinone",
     "substance_uid": "VOEFELLSAAJCHJ"
@@ -178,9 +286,18 @@
     "substance_uid": "4PTGYOCOZRIQXA",
     "note": "dw frags=1 piru frags=2"
   },
+  "3-fma": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 3-FMA)"
+  },
   "3-fmc": {
     "name": "3-Fluoromethcathinone",
     "substance_uid": "PQIBROLLUQSNQI"
+  },
+  "3-fpm": {
+    "name": "3-FPM",
+    "substance_uid": "VHYVKJAQSJCYCK",
+    "note": "draft; identical structure"
   },
   "3-ho-pce": {
     "name": "3-HO-PCE",
@@ -218,9 +335,41 @@
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: 3-MeO-PCPY) — missing structure on Piru side"
   },
+  "3-meomc": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 3-Meomc)"
+  },
   "3-mmc": {
     "name": "3-MMC",
     "substance_uid": "QDNXSIYWHYGMCD"
+  },
+  "3-oh-phenazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 3-OH-Phenazepam)"
+  },
+  "3c-e": {
+    "name": "3C-E",
+    "substance_uid": "AHLXCGRWNKUNTQ",
+    "note": "draft; identical structure"
+  },
+  "3c-p": {
+    "name": "3C-P",
+    "substance_uid": "KKMCHCCXGKYEKJ",
+    "note": "draft; identical structure"
+  },
+  "3f-pcp": {
+    "name": "3-F-PCP",
+    "substance_uid": "PFPLGKFWWBXTNP",
+    "note": "draft; identical structure"
+  },
+  "4-4-dmar": {
+    "name": "4,4-DMAR",
+    "substance_uid": "4VJZYLCCBYMFTP",
+    "note": "draft; identical structure"
+  },
+  "4-aco-dalt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4-AcO-DALT)"
   },
   "4-aco-det": {
     "name": "4-AcO-DET",
@@ -234,6 +383,11 @@
     "name": "4-AcO-DMT",
     "substance_uid": "RTLRUOSYLFOFHV"
   },
+  "4-aco-dpt": {
+    "name": "4-AcO-DPT",
+    "substance_uid": "KRUGABVNKKKCJN",
+    "note": "draft; identical structure"
+  },
   "4-aco-met": {
     "name": "4-AcO-MET",
     "substance_uid": "OMDKHOOGGJRLLX",
@@ -244,6 +398,16 @@
     "substance_uid": "CIDMXLOVFPIHDS",
     "note": "The row was structure-less until 2026-09-11; the PSID family was re-pinned to CIDMXLOVFPIHDS on 2026-09-12."
   },
+  "4-benzylpiperidine": {
+    "name": "4-Benzylpiperidine",
+    "substance_uid": "ABGXADJDTPFFSZ",
+    "note": "draft; identical structure"
+  },
+  "4-cbc": {
+    "name": "4-Chlorobuphedrone",
+    "substance_uid": "8BMPOTWZFYTDCE",
+    "note": "draft; identical structure"
+  },
   "4-cmc": {
     "name": "4-CMC",
     "substance_uid": "UEJBEYOXRNGPEI"
@@ -252,13 +416,26 @@
     "name": "4-EMC",
     "substance_uid": "FUYPDKFWOHBUFT"
   },
+  "4-epd": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 4-EPD, whose structure differs or is missing)"
+  },
   "4-fa": {
     "name": "4-Fluoroamphetamine",
     "substance_uid": "DGXWNDGLEOIEGT"
   },
+  "4-fea": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 4-Fluoroethamphetamine, whose structure differs or is missing)"
+  },
   "4-fluorobutyrfentanyl": {
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: Parafluorobutyrfentanyl) — missing structure on Piru side"
+  },
+  "4-fluoropentedrone": {
+    "name": "4-Fluoropentedrone",
+    "substance_uid": "QBFXBDUCRNGHSA",
+    "note": "draft; identical structure"
   },
   "4-fma": {
     "name": "4-FMA",
@@ -268,9 +445,32 @@
     "name": "Flephedrone",
     "substance_uid": "MWKQPIROPJSFRI"
   },
+  "4-fpp": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 4-Fluorophenylpiperazine, whose structure differs or is missing)"
+  },
+  "4-ho-det": {
+    "name": "4-HO-DET",
+    "substance_uid": "OHHYMKDBKJPILO",
+    "note": "draft; identical structure"
+  },
   "4-ho-dipt": {
     "name": "4-HO-DiPT",
     "substance_uid": "KBRYKXCBGISXQV"
+  },
+  "4-ho-dpt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4-HO-DPT)"
+  },
+  "4-ho-ept": {
+    "name": "4-HO-EPT",
+    "substance_uid": "JQELEPKHBXEAHR",
+    "note": "draft; identical structure"
+  },
+  "4-ho-mcpt": {
+    "name": "4-HO-MCPT",
+    "substance_uid": "GFVJBFIXZYLVPO",
+    "note": "draft; identical structure"
   },
   "4-ho-met": {
     "name": "4-HO-MET",
@@ -280,6 +480,20 @@
     "name": "4-HO-MiPT",
     "substance_uid": "RXKGHZCQFXXWFQ"
   },
+  "4-ho-mpmi": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4-HO-MPMI)"
+  },
+  "4-ho-mpt": {
+    "name": "4-HO-MPT",
+    "substance_uid": "XFQDDPQGBLSNCN",
+    "note": "draft; identical structure"
+  },
+  "4-ho-pipt": {
+    "name": "4-HO-PiPT",
+    "substance_uid": "CUTUPKOZXNFVHK",
+    "note": "draft; identical structure"
+  },
   "4-mec": {
     "name": "4-MEC",
     "substance_uid": "ZOXZWYWOECCBSH"
@@ -288,22 +502,123 @@
     "name": "4-Methoxybutyrfentanyl",
     "substance_uid": "FNVSEQCPMXWQKG"
   },
+  "4-meo-mipt": {
+    "name": "4-MeO-MiPT",
+    "substance_uid": "BJIWLHLNPTWSGD",
+    "note": "draft; identical structure"
+  },
   "4-meo-pcp": {
     "name": "4-MeO-PCP",
     "substance_uid": "MUZGGFNYVLGUFS"
+  },
+  "4-methylaminorex": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4-Methylaminorex)"
   },
   "4-methylmethylphenidate": {
     "name": "4-Methylmethylphenidate",
     "substance_uid": "WJZNCJIOIACDBR",
     "note": "dose.wiki resolved / Piru flat"
   },
+  "4-mpd": {
+    "name": "4-MPD",
+    "substance_uid": "AKVKBEDACKJNPO",
+    "note": "draft; identical structure"
+  },
+  "4-mpm": {
+    "name": "4-Methylphenmetrazine",
+    "substance_uid": "NWNCIXFIIDVRKE",
+    "note": "draft; identical structure"
+  },
+  "4-pro-dmt": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 4-PrO-DMT, whose structure differs or is missing)"
+  },
+  "4f-eph": {
+    "name": "4-Fluoroethylphenidate",
+    "substance_uid": "RKXQYWFDJDYSEN",
+    "note": "draft; identical structure"
+  },
+  "4f-mph": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4F-MPH)"
+  },
+  "4f-neb": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4F-NEB)"
+  },
+  "4f-php": {
+    "name": "4F-PHP",
+    "substance_uid": "BCJXLSGKMNRRKO",
+    "note": "draft; identical structure"
+  },
+  "4f-pvp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 4F-PVP)"
+  },
   "5-apb": {
     "name": "5-APB",
     "substance_uid": "VKUMKUZDZWHMQU"
   },
+  "5-apdb": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-APDB)"
+  },
+  "5-apdi": {
+    "name": "5-APDI",
+    "substance_uid": "QYVNZHBQYJRLEX",
+    "note": "draft; identical structure"
+  },
+  "5-bpdi": {
+    "name": "5-BPDI",
+    "substance_uid": "WETQQOQCDBNIKE",
+    "note": "draft; identical structure"
+  },
+  "5-bromo-dmt": {
+    "name": "5-Bromo-DMT",
+    "substance_uid": "ATEYZYQLBQUZJE",
+    "note": "draft; identical structure"
+  },
+  "5-dbfpv": {
+    "name": "5-Dbfpv",
+    "substance_uid": "CIGWUZUBQBQZAO",
+    "note": "draft; identical structure"
+  },
+  "5-eapb": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: 5-EAPB, whose structure differs or is missing)"
+  },
+  "5-hydroxytryptophan": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-Hydroxytryptophan)"
+  },
+  "5-iai": {
+    "name": "5-IAI",
+    "substance_uid": "BIHPYCDDPGNWQO",
+    "note": "draft; identical structure"
+  },
+  "5-it": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-IT)"
+  },
   "5-mapb": {
     "name": "5-MAPB",
     "substance_uid": "ZOVRTIPCNFERHY"
+  },
+  "5-mapdb": {
+    "name": "5-Mapdb",
+    "substance_uid": "PLQTZOCLUHHCOI",
+    "note": "draft; identical structure"
+  },
+  "5-meo-dalt": {
+    "name": "5-MeO-DALT",
+    "substance_uid": "HGRHWEAUHXYNNP",
+    "note": "draft; identical structure"
+  },
+  "5-meo-dibf": {
+    "name": "5-MeO-DIBF",
+    "substance_uid": "NBFMSQBTYHYVKP",
+    "note": "draft; identical structure"
   },
   "5-meo-dipt": {
     "name": "5-MeO-DiPT",
@@ -313,25 +628,101 @@
     "name": "5-MeO-DMT",
     "substance_uid": "ZSTKHSQDNIGFLM"
   },
+  "5-meo-dpt": {
+    "name": "5-MeO-DPT",
+    "substance_uid": "PNHPVNBKLQWBKH",
+    "note": "draft; identical structure"
+  },
+  "5-meo-eipt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-MeO-EiPT)"
+  },
+  "5-meo-malt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-MeO-MALT)"
+  },
+  "5-meo-met": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-MeO-MET)"
+  },
   "5-meo-mipt": {
     "name": "5-MeO-MiPT",
     "substance_uid": "HEDOODBJFVUQMS"
+  },
+  "5-meo-mt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "5-meo-nipt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-MeO-NIPT)"
+  },
+  "5-meo-pyr-t": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-MeO-PYR-T)"
   },
   "5-methylethylone": {
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: 5-Methyl-bk-MDEA) — missing structure on Piru side"
   },
+  "5-ppdi": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-PPDI)"
+  },
+  "5f-akb48": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5F-Akb48)"
+  },
+  "5f-pb-22": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5F-PB-22)"
+  },
   "6-apb": {
     "name": "6-APB",
     "substance_uid": "FQDAMYLMQQKPRX"
+  },
+  "6-apdb": {
+    "name": "6-APDB",
+    "substance_uid": "VRNGXHJGMCJRSQ",
+    "note": "draft; identical structure"
+  },
+  "6-eapb": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 6-EAPB)"
+  },
+  "6-mapb": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 6-MAPB)"
+  },
+  "6-mddm": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 6-MDDM)"
+  },
+  "a-php": {
+    "name": "alpha-Pyrrolidinohexiophenone",
+    "substance_uid": "KYIJLDDXQWBNGX",
+    "note": "draft; identical structure"
+  },
+  "a-pihp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: alpha-PiHP)"
   },
   "a-pvp": {
     "name": "A-pvp",
     "substance_uid": "YDIIDRWHPFMLGR"
   },
+  "ab-chminaca": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ab-chminaca)"
+  },
   "ab-fubinaca": {
     "name": "Ab-fubinaca",
     "substance_uid": "AKOOIMKXADOPDA"
+  },
+  "acetildenafil": {
+    "name": "Acetildenafil",
+    "substance_uid": "RRBRQNALHKQCAI",
+    "note": "draft; identical structure"
   },
   "acetylfentanyl": {
     "name": "Acetylfentanyl",
@@ -341,9 +732,23 @@
     "name": "Acrylfentanyl",
     "substance_uid": "RFQNLMWUIJJEQF"
   },
+  "adinazolam": {
+    "name": "Adinazolam",
+    "substance_uid": "GJSLOMWRLALDCT",
+    "note": "draft; identical structure"
+  },
   "adrafinil": {
     "name": "Adrafinil",
     "substance_uid": "CGNMLOKEMNBUAI"
+  },
+  "afloqualone": {
+    "name": "Afloqualone",
+    "substance_uid": "VDOSWXIDETXFET",
+    "note": "draft; identical structure"
+  },
+  "ah-7921": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: AH-7921)"
   },
   "al-lad": {
     "name": "AL-LAD",
@@ -366,13 +771,53 @@
     "name": "ALEPH-2",
     "substance_uid": "MCYCODJKXUJSAT"
   },
+  "allobarbital": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Allobarbital)"
+  },
   "allylescaline": {
     "name": "Allylescaline",
     "substance_uid": "JNUAYHHGCXYBHX"
   },
+  "alpha-gpc": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Alpha-GPC)"
+  },
+  "alpha-pcyp": {
+    "name": "α-PCYP",
+    "substance_uid": "FKEHRWJWTWDTDB",
+    "note": "draft; identical structure"
+  },
   "alprazolam": {
     "name": "Alprazolam",
     "substance_uid": "VREFGVBLTWBCJP"
+  },
+  "am-2201": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: AM-2201)"
+  },
+  "am-694": {
+    "name": "AM-694",
+    "substance_uid": "LFFIIZFINPPEMC",
+    "note": "draft; identical structure"
+  },
+  "amfecloral": {
+    "name": "Amfecloral",
+    "substance_uid": "VBZDETYCYXPOAK",
+    "note": "draft; same connectivity, stereo or salt differs"
+  },
+  "amfonelic-acid": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "aminorex": {
+    "name": "Aminorex",
+    "substance_uid": "SYAKTDIEAPMBAL",
+    "note": "draft; identical structure"
+  },
+  "aminotadalafil": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Aminotadalafil)"
   },
   "amobarbital": {
     "name": "Amobarbital",
@@ -386,10 +831,27 @@
     "name": "AMT",
     "substance_uid": "QSQQQURBVYWZKJ"
   },
+  "aniracetam": {
+    "name": "Aniracetam",
+    "substance_uid": "ZXNRTKGTQJPIJK",
+    "note": "draft; identical structure"
+  },
   "armodafinil": {
     "name": "Armodafinil",
     "substance_uid": "YFGHCGITMMYXAQ",
     "note": "An enantiomer article. Joined to the enantiomer's own row, which fold_isomer_families later files under the racemic parent with an isomer facet; joined to the parent directly, its ladder landed as a second unfaceted racemic ladder (the 3.75 mg 'amphetamine' threshold was dextroamphetamine's)."
+  },
+  "ashwagandha": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ashwagandha)"
+  },
+  "aspirin": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Aspirin)"
+  },
+  "atomoxetine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Atomoxetine)"
   },
   "ayahuasca": {
     "substance_uid": null,
@@ -399,9 +861,30 @@
     "name": "Baclofen",
     "substance_uid": "KPYSYYIEGFHWSV"
   },
+  "barbital": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Barbital)"
+  },
+  "bentazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Bentazepam)"
+  },
+  "benzydamine": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Benzydamine, whose structure differs or is missing)"
+  },
   "bk-2c-b": {
     "name": "bk-2C-B",
     "substance_uid": "HFYJGAIOBIDRPX"
+  },
+  "bod": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: BOD)"
+  },
+  "bromantane": {
+    "name": "Bromantane",
+    "substance_uid": "LWJALJDRFBXHKX",
+    "note": "draft; identical structure"
   },
   "bromazepam": {
     "name": "Bromazepam",
@@ -419,6 +902,10 @@
     "name": "Brotizolam",
     "substance_uid": "UMSGKTJDUHERQW"
   },
+  "buphedrone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Buphedrone)"
+  },
   "buprenorphine": {
     "name": "Buprenorphine",
     "substance_uid": "RMRJXGBAOAMLHD",
@@ -428,6 +915,10 @@
     "name": "Bupropion",
     "substance_uid": "SNPPWIUOZRMYNY"
   },
+  "buspirone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Buspirone)"
+  },
   "butylone": {
     "name": "Butylone",
     "substance_uid": "CGKQZIULZRXRRJ"
@@ -436,9 +927,25 @@
     "name": "Butyrfentanyl",
     "substance_uid": "QQOMYEQLWQJRKK"
   },
+  "bzp": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: BZP, whose structure differs or is missing)"
+  },
   "caffeine": {
     "name": "Caffeine",
     "substance_uid": "RYYVLZVUVIJVGH"
+  },
+  "cake": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cake)"
+  },
+  "camazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Camazepam)"
+  },
+  "canket": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Canket, whose structure differs or is missing)"
   },
   "cannabis": {
     "name": "Cannabis",
@@ -449,9 +956,51 @@
     "name": "Carisoprodol",
     "substance_uid": "OFZCIYFFPZCNJE"
   },
+  "cathinone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cathinone)"
+  },
+  "changa": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Changa)"
+  },
+  "chloral-betaine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Chloral-betaine)"
+  },
+  "chloral-hydrate": {
+    "name": "Chloral Hydrate",
+    "substance_uid": "RNFNDJAIBTYOQL",
+    "note": "draft; identical structure"
+  },
+  "chloroform": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Chloroform)"
+  },
+  "choline-bitartrate": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Choline bitartrate, whose structure differs or is missing)"
+  },
+  "cinolazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cinolazepam)"
+  },
+  "citalopram": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Citalopram)"
+  },
+  "citicoline": {
+    "name": "CDP-Choline",
+    "substance_uid": "RZZPDXZPRHQOCG",
+    "note": "draft; identical structure"
+  },
   "clobazam": {
     "name": "Clobazam",
     "substance_uid": "CXOXHMZGEKVPMT"
+  },
+  "clomethiazole": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Clomethiazole)"
   },
   "clonazepam": {
     "name": "Clonazepam",
@@ -460,6 +1009,30 @@
   "clonazolam": {
     "name": "Clonazolam",
     "substance_uid": "XJRGLCAWBRZUFC"
+  },
+  "clonidine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Clonidine)"
+  },
+  "cloniprazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cloniprazepam)"
+  },
+  "clonitazene": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Clonitazene)"
+  },
+  "clorazepate": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Clorazepate)"
+  },
+  "clotiazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Clotiazepam)"
+  },
+  "cloxazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cloxazolam)"
   },
   "cocaine": {
     "name": "Cocaine",
@@ -470,10 +1043,60 @@
     "name": "Codeine",
     "substance_uid": "OROGSEYTTFOCAN"
   },
+  "coluracetam": {
+    "name": "Coluracetam",
+    "substance_uid": "PSPGQHXMUKWNDI",
+    "note": "draft; identical structure"
+  },
+  "creatine": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Creatine Monohydrate, whose structure differs or is missing)"
+  },
+  "crl-40-940": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Flmodafinil)"
+  },
+  "crl-40-941": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Fladrafinil)"
+  },
+  "cyclazodone": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Cyclazodone, whose structure differs or is missing)"
+  },
+  "cyclizine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cyclizine)"
+  },
+  "cyclo-methiodrone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cyclo-methiodrone)"
+  },
+  "cyclobenzaprine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cyclobenzaprine)"
+  },
+  "cyclopropylmescaline": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Cyclopropylmescaline)"
+  },
+  "d2pm": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: D2pm, whose structure differs or is missing)"
+  },
+  "dalt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Dalt)"
+  },
   "datura": {
     "name": "Datura",
     "substance_uid": "9QSGXAVGWSSHOJ",
     "note": "Plant (Datura spp.). Piru has a dedicated Datura row (235) with no structure; dose.wiki's identification block carries scopolamine. Not a match to Piru's Scopolamine row (1264-family)."
+  },
+  "dehydroxyfluorafinil": {
+    "name": "N-Methylbisfluoromodafinil",
+    "substance_uid": "1TGXSMPPWCHGVU",
+    "note": "draft; identical structure"
   },
   "delorazepam": {
     "name": "Delorazepam",
@@ -518,18 +1141,43 @@
     "name": "Dextromethorphan",
     "substance_uid": "6SQMQNZLQDDIBX"
   },
+  "dextromoramide": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Palfium)"
+  },
+  "dextropropoxyphene": {
+    "name": "Dextropropoxyphene",
+    "substance_uid": "XLMALTXPSGQGBX",
+    "note": "draft; identical structure"
+  },
   "diazepam": {
     "name": "Diazepam",
     "substance_uid": "AAOVKJBEBIDNHE"
+  },
+  "dichloropane": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: RTI-111, whose structure differs or is missing)"
   },
   "diclazepam": {
     "name": "Diclazepam",
     "substance_uid": "VPAYQWRBBOGGPY"
   },
+  "diclofensine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Diclofensine)"
+  },
+  "diethyl-ether": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Diethyl-ether)"
+  },
   "dihydrocodeine": {
     "name": "Dihydrocodeine",
     "substance_uid": "RBOXVHNMENFORY",
     "note": "dose.wiki resolved / Piru flat"
+  },
+  "dimemebfe": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Dimemebfe)"
   },
   "dimenhydrinate": {
     "substance_uid": null,
@@ -543,9 +1191,17 @@
     "name": "Diphenidine",
     "substance_uid": "JQWJJJYHVHNXJH"
   },
+  "dipipanone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Dipipanone)"
+  },
   "dipt": {
     "name": "DIPT",
     "substance_uid": "ZRVAAGAZUWXRIP"
+  },
+  "dmaa": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: DMAA)"
   },
   "dmt": {
     "name": "DMT",
@@ -571,9 +1227,25 @@
     "name": "DOI",
     "substance_uid": "BGMZUEKZENQUJY"
   },
+  "doip": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Doip)"
+  },
   "dom": {
     "name": "DOM",
     "substance_uid": "NTJQREUGJKIARY"
+  },
+  "don": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: DON)"
+  },
+  "dopr": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: DOPR)"
+  },
+  "doxylamine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Doxylamine)"
   },
   "dpt": {
     "name": "DPT",
@@ -587,18 +1259,47 @@
     "name": "Ephenidine",
     "substance_uid": "IGFZMQXEKIZPDR"
   },
+  "ephylone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: N-Ethylpentylone)"
+  },
+  "ept": {
+    "name": "Ethylpropyltryptamine",
+    "substance_uid": "LCDYRMYSOIVPRS",
+    "note": "draft; identical structure"
+  },
   "escaline": {
     "name": "Escaline",
     "substance_uid": "RHOGRSKNWDNCDN"
+  },
+  "estazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Estazolam)"
   },
   "eszopiclone": {
     "name": "Eszopiclone",
     "substance_uid": "GBBSUAFBMRNDJC",
     "note": "An enantiomer article. Joined to the enantiomer's own row, which fold_isomer_families later files under the racemic parent with an isomer facet; joined to the parent directly, its ladder landed as a second unfaceted racemic ladder (the 3.75 mg 'amphetamine' threshold was dextroamphetamine's)."
   },
+  "et": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "eth-cat": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ethylcathinone)"
+  },
   "eth-lad": {
     "name": "ETH-LAD",
     "substance_uid": "MYNOUXJLOHVSMQ"
+  },
+  "ethaqualone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ethaqualone)"
+  },
+  "ethchlorvynol": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
   },
   "ethketamine": {
     "name": "Ethketamine",
@@ -629,9 +1330,23 @@
     "name": "4-Fluorophenibut",
     "substance_uid": "QWHXHLDNSXLAPX"
   },
+  "fasoracetam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Fasoracetam)"
+  },
+  "fenethylline": {
+    "name": "Fenethylline",
+    "substance_uid": "NMCHYWGKBADVMK",
+    "note": "draft; identical structure"
+  },
   "fentanyl": {
     "name": "Fentanyl",
     "substance_uid": "PJMPHNIQZUBGLI"
+  },
+  "flmodafinil": {
+    "name": "Flmodafinil",
+    "substance_uid": "YEAQNUMCWMRYMU",
+    "note": "draft; identical structure"
   },
   "flualprazolam": {
     "name": "Flualprazolam",
@@ -657,9 +1372,37 @@
     "name": "Flunitrazolam",
     "substance_uid": "RDLAGIOILLWVTM"
   },
+  "fluorolintane": {
+    "name": "Fluorolintane",
+    "substance_uid": "ZAGWVXYVNFPCLW",
+    "note": "draft; identical structure"
+  },
+  "fluorophenibut": {
+    "name": "4-Fluorophenibut",
+    "substance_uid": "QWHXHLDNSXLAPX",
+    "note": "draft; identical structure"
+  },
+  "flurazepam": {
+    "name": "Flurazepam",
+    "substance_uid": "SAADBVWGJQAEFS",
+    "note": "draft; identical structure"
+  },
+  "flutazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Flutazolam)"
+  },
+  "flutoprazepam": {
+    "name": "Flutoprazepam",
+    "substance_uid": "OFVXPDXXVSGEPX",
+    "note": "draft; identical structure"
+  },
   "furanylfentanyl": {
     "name": "Furanylfentanyl",
     "substance_uid": "FZJVHWISUGFFQV"
+  },
+  "gaba": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: GABA)"
   },
   "gabapentin": {
     "name": "Gabapentin",
@@ -673,13 +1416,59 @@
     "name": "GHB",
     "substance_uid": "SJZRECIVHVDYJC"
   },
+  "glaucine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Glaucine)"
+  },
+  "glutethimide": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Glutethimide)"
+  },
   "h-2c-b": {
     "name": "βH-2C-B",
     "substance_uid": "PCSKDXWCLQXURQ"
   },
+  "halazepam": {
+    "name": "Halazepam",
+    "substance_uid": "WYCLKVQLVUQKNZ",
+    "note": "draft; identical structure"
+  },
+  "haloperidol": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Haloperidol)"
+  },
+  "hdep-28": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: HDEP-28)"
+  },
   "heroin": {
     "name": "Heroin",
     "substance_uid": "GVGLGOZIDCSQPN"
+  },
+  "hexedrone": {
+    "name": "Hexedrone",
+    "substance_uid": "BHIZKPHLTVLXIV",
+    "note": "draft; identical structure"
+  },
+  "hexobarbital": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Hexobarbital)"
+  },
+  "homosildenafil": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Homosildenafil)"
+  },
+  "hot-2": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: HOT-2)"
+  },
+  "hot-7": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: HOT-7)"
+  },
+  "huperzine-a": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Huperzine A)"
   },
   "hxe": {
     "name": "HXE",
@@ -702,9 +1491,33 @@
     "substance_uid": "HSIBGVUMFOSJPD",
     "note": "Piru resolved / dose.wiki flat"
   },
+  "ibuprofen": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ibuprofen)"
+  },
+  "indapex": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: 5-MeO-TMT)"
+  },
+  "indapyrophenidone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Indapyrophenidone)"
+  },
   "isomethadone": {
     "name": "Isomethadone",
     "substance_uid": "IFKPLJWIEQBPGG"
+  },
+  "isophenmetrazine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Isophenmetrazine)"
+  },
+  "isopropylphenidate": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Isopropylphenidate)"
+  },
+  "isoproscaline": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Isoproscaline)"
   },
   "jwh-018": {
     "name": "JWH-018",
@@ -714,9 +1527,17 @@
     "name": "JWH-073",
     "substance_uid": "VCHHHSMPMLNVGS"
   },
+  "k-2c-b": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
   "k-2c-i": {
     "name": "bk-2C-I",
     "substance_uid": "5WJKQMUCVHFJMG"
+  },
+  "k-ivp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
   },
   "kanna": {
     "substance_uid": null,
@@ -730,6 +1551,14 @@
     "name": "Ketamine",
     "substance_uid": "YQEZLKZALYSWHR"
   },
+  "ketazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ketazolam)"
+  },
+  "ketobemidone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ketobemidone)"
+  },
   "khat": {
     "name": "Khat",
     "substance_uid": "6CIWTAUTAIXGZP",
@@ -741,10 +1570,22 @@
     "skip_chemistry": true,
     "note": "Plant (Mitragyna speciosa). The structural seed matched Mitragynine because dose.wiki's identification block carries the alkaloid's IUPAC name and structure, but the article is about the leaf — its own dose note says the ranges \"apply to plain leaf material only\" — so the ladder is grams of leaf and belongs on Piru's Kratom row, not on the pure alkaloid. Same shape as the khat entry below. Not yet reported upstream."
   },
+  "lae-32": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: LAE-32)"
+  },
+  "lagochilus-inebrians": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
   "lean": {
     "name": "Codeine",
     "substance_uid": "OROGSEYTTFOCAN",
     "note": "Preparation (codeine + promethazine syrup). Neither side carries a structure; Piru has no Lean row but holds Lean/Purple Drank/sizzurp as aliases of Codeine (id 218). Baseline matched Dextromethorphan, which is wrong."
+  },
+  "librium": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Chlordiazepoxide)"
   },
   "lisdexamfetamine": {
     "name": "Lisdexamfetamine",
@@ -755,9 +1596,17 @@
     "substance_uid": null,
     "note": "dose.wiki's structure is a different compound (nearest: Lithium) — block1 WHXSMMKQMYFTQS vs KRKNYBCHXYNGOX"
   },
+  "loprazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Loprazolam)"
+  },
   "lorazepam": {
     "name": "Lorazepam",
     "substance_uid": "DIWRORZWFLOCLC"
+  },
+  "lormetazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Lormetazepam)"
   },
   "lsa": {
     "name": "LSA",
@@ -767,29 +1616,106 @@
     "name": "LSD",
     "substance_uid": "VAYOSLLFUXYJDT"
   },
+  "lsm-775": {
+    "name": "LSM-775",
+    "substance_uid": "OTQWCDNEJVKXKG",
+    "note": "draft; identical structure"
+  },
   "lsz": {
     "name": "LSZ",
     "substance_uid": "DUKNIHFTDAXJON"
+  },
+  "mal": {
+    "name": "Methallylescaline",
+    "substance_uid": "FOXJFBFFGULACD",
+    "note": "draft; identical structure"
+  },
+  "marinol": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: THC)"
+  },
+  "mbdb": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MBDB)"
+  },
+  "mbzp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MBZP)"
+  },
+  "mcpp": {
+    "name": "mCPP",
+    "substance_uid": "VHFVKMTVMIZMIK",
+    "note": "draft; identical structure"
   },
   "mda": {
     "name": "3,4-Methylenedioxyamphetamine",
     "substance_uid": "NGBBVGZWCFBOGO"
   },
+  "mdai": {
+    "name": "MDAI",
+    "substance_uid": "FQDRMHHCWZAXJM",
+    "note": "draft; identical structure"
+  },
+  "mdea": {
+    "name": "Mdea",
+    "substance_uid": "PVXVWWANJIWJOO",
+    "note": "draft; identical structure"
+  },
   "mdma": {
     "name": "MDMA",
     "substance_uid": "SHXWCVYOXRDMCX"
+  },
+  "mdoh": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MDOH)"
+  },
+  "mdpa": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MDPA)"
+  },
+  "mdphp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MDPHP)"
   },
   "mdpv": {
     "name": "MDPV",
     "substance_uid": "SYHGEUNFJIGTRX"
   },
+  "meai": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "mebroqualone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Mebroqualone)"
+  },
+  "meclofenoxate": {
+    "name": "Centrophenoxine",
+    "substance_uid": "XZTYGFHCIAKPGJ",
+    "note": "draft; identical structure"
+  },
   "meclonazepam": {
     "name": "Meclonazepam",
     "substance_uid": "LMUVYJCAFWGNSY"
   },
+  "medazepam": {
+    "name": "Medazepam",
+    "substance_uid": "YLCXGBZIZBEVPZ",
+    "note": "draft; identical structure"
+  },
+  "mefloquine": {
+    "name": "Mefloquine",
+    "substance_uid": "XEEQGYMUWCZPDN",
+    "note": "draft; identical structure"
+  },
   "melatonin": {
     "name": "Melatonin",
     "substance_uid": "DRLFMBDRBRZALE"
+  },
+  "mem": {
+    "name": "EMM",
+    "substance_uid": "SKRNTJDDBVAEGB",
+    "note": "draft; identical structure"
   },
   "memantine": {
     "name": "Memantine",
@@ -799,6 +1725,10 @@
     "name": "Mephedrone",
     "substance_uid": "YELGFTGWJGBAQU"
   },
+  "mephenaqualone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Mephenaqualone)"
+  },
   "mescaline": {
     "name": "Mescaline",
     "substance_uid": "8EJQJHALTLWLLY"
@@ -807,6 +1737,14 @@
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: Met) — missing structure on Piru side"
   },
+  "metaclazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Metaclazepam)"
+  },
+  "metaxalone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Metaxalone)"
+  },
   "methadone": {
     "name": "Methadone",
     "substance_uid": "USSIQXCVUWKGNF"
@@ -814,6 +1752,10 @@
   "methallylescaline": {
     "name": "Methallylescaline",
     "substance_uid": "FOXJFBFFGULACD"
+  },
+  "methamnetamine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Methamnetamine)"
   },
   "methamphetamine": {
     "name": "Methamphetamine",
@@ -835,6 +1777,10 @@
     "name": "Methoxetamine",
     "substance_uid": "LPKTWLVEGBNOOX"
   },
+  "methoxphenidine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Methoxphenidine)"
+  },
   "methoxyacetyl-fentanyl": {
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: Methoxyacetyl-fentanyl) — missing structure on Piru side"
@@ -843,9 +1789,18 @@
     "substance_uid": null,
     "note": "no Piru row carries this structure — dose.wiki's compound is 2-(2-methoxyphenyl)-2-(methylamino)cyclohexan-1-one, PubChem CID 57483650, OYAUVHORXFUVAJ-UHFFFAOYSA-N (ortho-OMe, the direct ketamine analogue). Piru's Methoxmetamine (472) is the meta-OMe regioisomer ZGQWDAOLJNAADS-UHFFFAOYSA-N / CID 117067863. Piru has no row for the ortho compound (no InChIKey or name hit)."
   },
+  "methoxypiperamide": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
   "methylmethaqualone": {
     "name": "Methylmethaqualone",
     "substance_uid": "MPMDMUROZIYIIM"
+  },
+  "methylnaphthidate": {
+    "name": "Methylnaphthidate",
+    "substance_uid": "1DAXDYWXBKQGPV",
+    "note": "draft; identical structure"
   },
   "methylone": {
     "name": "Methylone",
@@ -855,9 +1810,22 @@
     "name": "Methylphenidate",
     "substance_uid": "DUGOZIWVEXMGBE"
   },
+  "methyprylon": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Methyprylon)"
+  },
   "metizolam": {
     "name": "Metizolam",
     "substance_uid": "NQSSWDKQLVBUQN"
+  },
+  "mexazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Mexazolam)"
+  },
+  "mexedrone": {
+    "name": "Mexedrone",
+    "substance_uid": "JHGDCSPZKQLBOP",
+    "note": "draft; identical structure"
   },
   "midazolam": {
     "name": "Midazolam",
@@ -867,18 +1835,74 @@
     "substance_uid": null,
     "note": "one side carries no structure, so the join could not be checked (nearest: MiPLA) — missing structure on Piru side"
   },
+  "mipt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MIPT)"
+  },
+  "mk-801": {
+    "name": "Dizocilpine",
+    "substance_uid": "LBOJYSIDWZQNJS",
+    "note": "draft; same connectivity, stereo or salt differs"
+  },
+  "moclobemide": {
+    "name": "Moclobemide",
+    "substance_uid": "YHXISWVBGDMDLQ",
+    "note": "draft; identical structure"
+  },
   "modafinil": {
     "name": "Modafinil",
     "substance_uid": "YFGHCGITMMYXAQ"
+  },
+  "morpheridine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Morpheridine)"
   },
   "morphine": {
     "name": "Morphine",
     "substance_uid": "BQJCRHHNABKAKU",
     "note": "both resolved, different"
   },
+  "mt-45": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: MT-45)"
+  },
+  "mxm": {
+    "name": "Methoxmetamine",
+    "substance_uid": "ZGQWDAOLJNAADS",
+    "note": "draft; identical structure"
+  },
+  "n-acetylcysteine": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: N-Acetylcysteine, whose structure differs or is missing)"
+  },
+  "n-ethylhexedrone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: N-Ethylhexedrone)"
+  },
   "n-methylbisfluoromodafinil": {
     "name": "N-Methylbisfluoromodafinil",
     "substance_uid": "1TGXSMPPWCHGVU"
+  },
+  "naloxone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Naloxone)"
+  },
+  "naphyrone": {
+    "name": "Naphyrone",
+    "substance_uid": "DTNUPBSOODGRKW",
+    "note": "draft; identical structure"
+  },
+  "naproxen": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Naproxen)"
+  },
+  "neb": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Neb)"
+  },
+  "nefiracetam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Nefiracetam)"
   },
   "nep": {
     "name": "N-Ethylpentedrone",
@@ -897,13 +1921,26 @@
     "name": "Nifoxipam",
     "substance_uid": "UHFIFTRHLBAWGY"
   },
+  "nimetazepam": {
+    "name": "Nimetazepam",
+    "substance_uid": "GWUSZQUVEVMBPI",
+    "note": "draft; identical structure"
+  },
   "nitemazepam": {
     "name": "Nitemazepam",
     "substance_uid": "QRWVNMAJJIQCEG"
   },
+  "nitracaine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Nitracaine)"
+  },
   "nitrazepam": {
     "name": "Nitrazepam",
     "substance_uid": "KJONHKAYOJNZEC"
+  },
+  "nitrazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Nitrazolam)"
   },
   "nitrous": {
     "name": "Nitrous",
@@ -916,6 +1953,15 @@
   "noopept": {
     "name": "Noopept",
     "substance_uid": "PJNSMUBMSNAEEN"
+  },
+  "nordazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Nordazepam)"
+  },
+  "norflurazepam": {
+    "name": "Norflurazepam",
+    "substance_uid": "UVCOILFBWYKHHB",
+    "note": "draft; identical structure"
   },
   "nutmeg": {
     "name": "Myristicin",
@@ -930,9 +1976,22 @@
     "name": "O-pce",
     "substance_uid": "IDLSBAANXISGEI"
   },
+  "opium": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Opium)"
+  },
   "oxazepam": {
     "name": "Oxazepam",
     "substance_uid": "ADIMAYPTOBDMTL"
+  },
+  "oxazolam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Oxazolam)"
+  },
+  "oxiracetam": {
+    "name": "Oxiracetam",
+    "substance_uid": "IHLAQQPQKRMGSS",
+    "note": "draft; identical structure"
   },
   "oxycodone": {
     "name": "Oxycodone",
@@ -942,9 +2001,25 @@
     "name": "Oxymorphone",
     "substance_uid": "UQCNKQCJZOAFTQ"
   },
+  "pagoclone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pagoclone)"
+  },
+  "paracetamol": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Acetaminophen)"
+  },
   "parafluorofentanyl": {
     "name": "Parafluorofentanyl",
     "substance_uid": "KXUBAVLIJFTASZ"
+  },
+  "pargy-lad": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: PARGY-LAD)"
+  },
+  "pbp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
   },
   "pce": {
     "name": "PCE",
@@ -954,9 +2029,36 @@
     "name": "PCP",
     "substance_uid": "JTJMJGYZQZDUJJ"
   },
+  "pemoline": {
+    "name": "Pemoline",
+    "substance_uid": "NRNCYVBFPDDJNE",
+    "note": "draft; identical structure"
+  },
+  "pentazocine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pentazocine)"
+  },
+  "pentedrone": {
+    "name": "Pentedrone",
+    "substance_uid": "WLIWIUNEJRETFX",
+    "note": "draft; identical structure"
+  },
   "pentobarbital": {
     "name": "Pentobarbital",
     "substance_uid": "WEXRUCMBJFQVBZ"
+  },
+  "pentylone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pentylone)"
+  },
+  "pethidine": {
+    "name": "Pethidine",
+    "substance_uid": "XADCESSVHJOZHK",
+    "note": "draft; identical structure"
+  },
+  "pfbt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pfbt)"
   },
   "phenazepam": {
     "name": "Phenazepam",
@@ -966,42 +2068,138 @@
     "name": "Phenethylamine",
     "substance_uid": "BHHGXPLMPWCGHP"
   },
+  "phenetrazine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Phenetrazine)"
+  },
   "phenibut": {
     "name": "Phenibut",
     "substance_uid": "DAFOCGYVTAOKAJ"
+  },
+  "phenmetrazine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Phenmetrazine)"
   },
   "phenobarbital": {
     "name": "Phenobarbital",
     "substance_uid": "DDBREPKUVSBGFI"
   },
+  "phentermine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Phentermine)"
+  },
   "phenylpiracetam": {
     "name": "Phenylpiracetam",
     "substance_uid": "LYONXVJRBWWGQO"
+  },
+  "picamilon": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Picamilon)"
+  },
+  "pinazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pinazepam)"
   },
   "pipradrol": {
     "name": "Pipradrol",
     "substance_uid": "XSWHNYGMWWVAIE"
   },
+  "pipt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: PiPT)"
+  },
   "piracetam": {
     "name": "Piracetam",
     "substance_uid": "GMZVRMREEHBGGF"
+  },
+  "pma": {
+    "name": "Para-Methoxyamphetamine",
+    "substance_uid": "NEGYEDYHPHMHGK",
+    "note": "draft; identical structure"
+  },
+  "pmma": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: PMMA, whose structure differs or is missing)"
+  },
+  "pramiracetam": {
+    "name": "Pramiracetam",
+    "substance_uid": "ZULJGOSFKWFVRX",
+    "note": "draft; identical structure"
+  },
+  "prazepam": {
+    "name": "Prazepam",
+    "substance_uid": "MWQCHHACWWAQLJ",
+    "note": "draft; identical structure"
+  },
+  "pre-084": {
+    "name": "PRE-084",
+    "substance_uid": "RQHKZUBCUZVZEF",
+    "note": "draft; identical structure"
   },
   "pregabalin": {
     "name": "Pregabalin",
     "substance_uid": "AYXYPKUFHZROOJ",
     "note": "both resolved, different"
   },
+  "prl-8-53": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: PRL-8-53)"
+  },
+  "pro-lad": {
+    "name": "PRO-LAD",
+    "substance_uid": "HZKYLVLOBYNKKM",
+    "note": "draft; identical structure"
+  },
+  "prochlorperazine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Prochlorperazine)"
+  },
+  "progesterone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Progesterone)"
+  },
+  "prolintane": {
+    "name": "Prolintane",
+    "substance_uid": "OJCPSBCUMRIPFL",
+    "note": "draft; identical structure"
+  },
   "promethazine": {
     "name": "Promethazine",
     "substance_uid": "PWWVAXIEGOYWEE"
+  },
+  "propofol": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Propofol)"
+  },
+  "propoxyphene": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Propoxyphene)"
   },
   "propranolol": {
     "name": "Propranolol",
     "substance_uid": "AQHHHDLHHXJYJD"
   },
+  "propylhexedrine": {
+    "name": "Propylhexedrine",
+    "substance_uid": "JCRIVQIOJSSCQD",
+    "note": "draft; identical structure"
+  },
+  "propylphenidate": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Propylphenidate)"
+  },
   "proscaline": {
     "name": "Proscaline",
     "substance_uid": "HYWLMSUAZVDUFW"
+  },
+  "pseudoephrine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "psilocin": {
+    "name": "Psilocin",
+    "substance_uid": "SPCIYGNTAMCTRO",
+    "note": "draft; identical structure"
   },
   "psilocybin-mushrooms": {
     "name": "Psilocybin mushrooms",
@@ -1009,17 +2207,61 @@
     "skip_chemistry": true,
     "note": "Fungi (Psilocybe spp.). The structural seed matched Psilocybin because dose.wiki's identification block carries the prodrug's IUPAC name and SMILES, but the article is about the mushrooms: its oral ladder is grams of dried P. cubensis (\"Values refer to dried P. cubensis mushrooms\"), so it belongs on Piru's Psilocybin mushrooms row, not on the pure molecule dosed in milligrams. dose.wiki has no separate psilocybin article, so the Psilocybin row carries no dose.wiki mapping. Same shape as the kratom entry. Not yet reported upstream."
   },
+  "pst": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pst)"
+  },
+  "pv-8": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: PV-8)"
+  },
+  "pvt": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
   "pyrazolam": {
     "name": "Pyrazolam",
     "substance_uid": "BGRWSFIQQPVEML"
+  },
+  "pyrophenidone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Pyrophenidone)"
+  },
+  "quazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Quazepam)"
   },
   "quetiapine": {
     "name": "Quetiapine",
     "substance_uid": "URKOMYMAXPYINW"
   },
+  "rilmazafone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Rilmazafone)"
+  },
+  "risperidone": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Risperidone)"
+  },
+  "rolicyclidine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Rolicyclidine)"
+  },
+  "ronlax": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Ronlax)"
+  },
   "salvia": {
     "name": "Salvinorin A",
     "substance_uid": "OBSYBRPAKCASQB"
+  },
+  "salvinorin-b-methoxymethyl-ether": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
+  "sam-e": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: SAM-e, whose structure differs or is missing)"
   },
   "scopolamine": {
     "name": "Scopolamine",
@@ -1030,9 +2272,38 @@
     "name": "Secobarbital",
     "substance_uid": "KQPKPCNLIDLUMF"
   },
+  "sentia": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
   "sertraline": {
     "name": "Sertraline",
     "substance_uid": "VGKDLMBJGBXTGI"
+  },
+  "sildenafil": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Sildenafil)"
+  },
+  "sinicuichi": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Sinicuichi)"
+  },
+  "sonata": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Zaleplon)"
+  },
+  "sufentanil": {
+    "name": "Sufentanil",
+    "substance_uid": "GGCSSNBKKAUURC",
+    "note": "draft; identical structure"
+  },
+  "sulbutiamine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Sulbutiamine)"
+  },
+  "tadalafil": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Tadalafil)"
   },
   "tapentadol": {
     "name": "Tapentadol",
@@ -1043,9 +2314,25 @@
     "name": "Temazepam",
     "substance_uid": "SEQDDYPDSLOBDC"
   },
+  "tetrazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Tetrazepam)"
+  },
+  "th-pvp": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Th-pvp)"
+  },
+  "theacrine": {
+    "substance_uid": null,
+    "note": "draft; no Piru substance has this structure (nearest by name: Theacrine, whose structure differs or is missing)"
+  },
   "theanine": {
     "name": "L-Theanine",
     "substance_uid": "5IMXSDQYAJPWJT"
+  },
+  "theobromine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Theobromine)"
   },
   "thiopental": {
     "name": "Thiopental",
@@ -1059,6 +2346,24 @@
   "tianeptine": {
     "name": "Tianeptine",
     "substance_uid": "JICJBGPOMZQUBB"
+  },
+  "tiletamine": {
+    "name": "Tiletamine",
+    "substance_uid": "QAXBVGVYDCAVLV",
+    "note": "draft; identical structure"
+  },
+  "tilidine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Tilidine)"
+  },
+  "tizanidine": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Tizanidine)"
+  },
+  "tma": {
+    "name": "TMA",
+    "substance_uid": "WGTASENVNYJZBK",
+    "note": "draft; identical structure"
   },
   "tma-2": {
     "name": "TMA-2",
@@ -1084,18 +2389,52 @@
     "name": "Triazolam",
     "substance_uid": "JOFWLTCLBGQGBO"
   },
+  "troparil": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Troparil)"
+  },
   "u-47700": {
     "name": "U-47700",
     "substance_uid": "JGPNMZWFVRQNGU",
     "note": "both resolved, different"
   },
+  "u-51754": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: U-51754)"
+  },
+  "ur-144": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked"
+  },
   "valerylfentanyl": {
     "name": "Valerylfentanyl",
     "substance_uid": "VCCPXHWAJYWQMR"
   },
+  "viloxazine": {
+    "name": "Viloxazine",
+    "substance_uid": "YWPHCCPCQOJSGZ",
+    "note": "draft; identical structure"
+  },
+  "w-15": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: W-15)"
+  },
+  "yerba-mate": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Yerba-mate)"
+  },
+  "yopo": {
+    "name": "Bufotenin",
+    "substance_uid": "VTTONGPRPXSUTJ",
+    "note": "draft; identical structure"
+  },
   "zaleplon": {
     "name": "Zaleplon",
     "substance_uid": "HUNXMJYCHXQEGX"
+  },
+  "zolazepam": {
+    "substance_uid": null,
+    "note": "draft; dose.wiki gives no structure or CAS, so the join could not be checked (nearest by name: Zolazepam)"
   },
   "zolpidem": {
     "name": "Zolpidem",

@@ -443,11 +443,6 @@
       "half_life_corroborated": true
     },
     {
-      "substance": "Chloramphenicol",
-      "ndc": "63323-011",
-      "brand": "Chloramphenicol Sodium Succinate"
-    },
-    {
       "substance": "Chlordiazepoxide",
       "ndc": "61919-711",
       "brand": ""
@@ -2511,7 +2506,8 @@
       "half_life_minutes": 360.0,
       "half_life_low_minutes": 360.0,
       "half_life_high_minutes": 360.0,
-      "half_life_label": "6 hours"
+      "half_life_label": "6 hours",
+      "half_life_corroborated": true
     }
   ],
   "refused_half_lives": [

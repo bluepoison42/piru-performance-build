@@ -1,4 +1,8 @@
 {
+  "1,3-Dimethyl-8-Chloroxanthine": {
+    "smiles": "CN1C2=C(C(=O)N(C1=O)C)NC(=N2)Cl",
+    "cid": 10661
+  },
   "1-(2,3,4-Trimethoxybenzyl)piperazine": {
     "smiles": "COC1=C(C(=C(C=C1)CN2CCNCC2)OC)OC",
     "cid": 21109
@@ -12,17 +16,9 @@
     "smiles": "CCC(=O)N1C=C2C[C@@H]3C(=C[C@H](CN3C)C(=O)N(CC)CC)C4=C2C1=CC=C4",
     "cid": 119025985
   },
-  "2,3-Dimethoxyamphetamine": {
-    "smiles": "CC(CC1=C(C(=CC=C1)OC)OC)N",
-    "cid": 91255
-  },
   "2,5-DMA": {
     "smiles": "CC(CC1=C(C=CC(=C1)OC)OC)N",
     "cid": 62787
-  },
-  "2-Bromodeschloroketamine": {
-    "inchikey": "XPMMBFIMXKSQIQ-UHFFFAOYSA-N",
-    "cid": 71588007
   },
   "2-CMC": {
     "inchikey": "UHVGPEBZWPKWNT-UHFFFAOYSA-N",
@@ -48,10 +44,6 @@
     "smiles": "CC1=CC(=C(C=C1OC)CC(C)N)SC",
     "cid": 15915345
   },
-  "2-hydroxy-N-methyltryptamine": {
-    "smiles": "CNCCC1=C(NC2=CC=CC=C21)O",
-    "cid": 101412996
-  },
   "25B-NBOMe": {
     "inchikey": "SUXGNJVVBGJEFB-UHFFFAOYSA-N",
     "cid": 9977044
@@ -75,10 +67,6 @@
   "2C-G-3": {
     "smiles": "COC1=C2CCCC2=C(C(=C1)CCN)OC",
     "cid": 44350123
-  },
-  "2C-G-4": {
-    "smiles": "COC1=C2CCCCC2=C(C(=C1)CCN)OC",
-    "cid": 44719505
   },
   "2C-G-5": {
     "smiles": "COC1=C2[C@@H]3CC[C@@H](C3)C2=C(C(=C1)CCN)OC",
@@ -136,14 +124,6 @@
     "inchikey": "VHYVKJAQSJCYCK-UHFFFAOYSA-N",
     "cid": 54673723
   },
-  "3-Fluorophenmetrazine": {
-    "inchikey": "VHYVKJAQSJCYCK-UHFFFAOYSA-N",
-    "cid": 54673723
-  },
-  "3-Hydroxytyramine hydrobromide": {
-    "smiles": "C1=CC(=C(C=C1CCN)O)O.Br",
-    "cid": 71564
-  },
   "3-Me-PCP": {
     "smiles": "CC1=CC(=CC=C1)C2(CCCCC2)N3CCCCC3",
     "cid": 611899
@@ -160,10 +140,6 @@
   "3-TSB": {
     "smiles": "CCOC1=C(C(=CC(=C1)CCN)SCC)OC",
     "cid": 44374939
-  },
-  "4,5-MDO-DMT": {
-    "smiles": "CN(C)CCC1=CNC2=C1C3=C(C=C2)OCO3",
-    "cid": 44278540
   },
   "4,5-MDO-DiPT": {
     "smiles": "CC(C)N(CCC1=CNC2=C1C3=C(C=C2)OCO3)C(C)C",
@@ -197,22 +173,6 @@
   "4-Chloromethamphetamine": {
     "inchikey": "XXLWNLKEOWWHDC-UHFFFAOYSA-N",
     "cid": 3128
-  },
-  "4-FPP": {
-    "inchikey": "AVJKDKWRVSSJPK-UHFFFAOYSA-N",
-    "cid": 75260
-  },
-  "4-Fluoro-alpha-PHP": {
-    "inchikey": "BCJXLSGKMNRRKO-UHFFFAOYSA-N",
-    "cid": 132989300
-  },
-  "4-Fluoromethylphenidate": {
-    "inchikey": "XISBAJBPDVRSPG-CHWSQXEVSA-N",
-    "cid": 52944002
-  },
-  "4-Fluorotryptamine": {
-    "smiles": "C1=CC2=C(C(=C1)F)C(=CN2)CCN",
-    "cid": 20976025
   },
   "4-HO-DBT": {
     "smiles": "CCCCN(CCCC)CCC1=CNC2=C1C(=CC=C2)O",
@@ -268,14 +228,6 @@
     "inchikey": "NWNCIXFIIDVRKE-UHFFFAOYSA-N",
     "cid": 43169333
   },
-  "4-Methylthiodimethyltryptamine": {
-    "smiles": "CN(C)CCC1=CNC2=C1C(=CC=C2)SC",
-    "cid": 193459
-  },
-  "4-O-methyldopamine": {
-    "smiles": "COC1=C(C=C(C=C1)CCN)O",
-    "cid": 1748
-  },
   "4-T-TRIS": {
     "smiles": "CCOC1=CC(=CC(=C1SCC)OCC)CCN",
     "cid": 44374794
@@ -297,10 +249,6 @@
     "smiles": "CN(C)CCC1=CNC2=CC3=C(C=C21)OCO3",
     "cid": 13140993
   },
-  "5,6-MDO-DiPT": {
-    "smiles": "CC(C)N(CCC1=CNC2=CC3=C(C=C21)OCO3)C(C)C",
-    "cid": 13141004
-  },
   "5,6-MDO-MiPT": {
     "smiles": "CC(C)N(C)CCC1=CNC2=CC3=C(C=C21)OCO3",
     "cid": 13140997
@@ -316,18 +264,6 @@
   "5-Bromo-DMT": {
     "smiles": "CN(C)CCC1=CNC2=C1C=C(C=C2)Br",
     "cid": 360252
-  },
-  "5-Bromotryptamine": {
-    "smiles": "C1=CC2=C(C=C1Br)C(=CN2)CCN",
-    "cid": 77158
-  },
-  "5-Carboxamidotryptamine": {
-    "smiles": "C1=CC2=C(C=C1C(=O)N)C(=CN2)CCN",
-    "cid": 1809
-  },
-  "5-Hydroxydopamine": {
-    "smiles": "C1=C(C=C(C(=C1O)O)O)CCN",
-    "cid": 114772
   },
   "5-Hydroxytryptophan": {
     "smiles": "C1=CC2=C(C=C1O)C(=CN2)CC(C(=O)O)N",
@@ -377,10 +313,6 @@
     "smiles": "COC1=CC2=C(C=C1)NC=C2CCN3CCCC3",
     "cid": 17053
   },
-  "5-Methoxytryptamine": {
-    "smiles": "COC1=CC2=C(C=C1)NC=C2CCN",
-    "cid": 1833
-  },
   "5-TASB": {
     "smiles": "CCOC1=C(C(=CC(=C1)CCN)SC)OCC",
     "cid": 44349932
@@ -396,14 +328,6 @@
   "5-chloro-N,N-dimethyltryptamine": {
     "smiles": "CN(C)CCC1=CNC2=C1C=C(C=C2)Cl",
     "cid": 2762739
-  },
-  "5-fluoro-N,N-dimethyltryptamine": {
-    "smiles": "CN(C)CCC1=CNC2=C1C=C(C=C2)F",
-    "cid": 2762738
-  },
-  "5-methoxy-N-isopropyltryptamine": {
-    "smiles": "CC(C)NCCC1=CNC2=C1C=C(C=C2)OC",
-    "cid": 707167
   },
   "ADB-INACA": {
     "smiles": "CC(C)(C)[C@@H](C(=O)N)NC(=O)C1=NNC2=CC=CC=C21",
@@ -584,19 +508,9 @@
     "smiles": "CC1=C(C=CC2=C1N=C(N2)[C@@]3(CCCN3C(=O)C4=C(C=CC(=C4)OC)N5N=CC=N5)C)Cl",
     "cid": 91801202
   },
-  "Dichloropane": {
-    "inchikey": "JFUNLJPTPCQLIR-PJQZNRQZSA-N",
-    "cid": 127024,
-    "smiles": "COC(=O)[C@@H]1[C@H]2CC[C@H](N2)C[C@@H]1C3=CC(=C(C=C3)Cl)Cl"
-  },
   "Dihydroergotamine": {
     "smiles": "C[C@@]1(C(=O)N2[C@H](C(=O)N3CCC[C@H]3[C@@]2(O1)O)CC4=CC=CC=C4)NC(=O)[C@@H]5C[C@H]6[C@@H](CC7=CNC8=CC=CC6=C78)N(C5)C",
     "cid": 10531
-  },
-  "Dimiracetam": {
-    "inchikey": "XTXXOHPHLNROBN-UHFFFAOYSA-N",
-    "cid": 65955,
-    "smiles": "C1CC(=O)N2C1NC(=O)C2"
   },
   "Dizocilpine": {
     "inchikey": "LBOJYSIDWZQNJS-CVEARBPZSA-N",
@@ -627,10 +541,6 @@
     "smiles": "C1C[C@H]2C(=O)N[C@@H](CSSCCC(=O)N[C@H](C(=O)NCC(=O)N[C@H](C(=O)N[C@H](C(=O)N2C1)CC3=CNC4=CC=CC=C43)CC(=O)O)CCCCN=C(N)N)C(=O)N",
     "cid": 448812
   },
-  "Esketamine": {
-    "smiles": "CN[C@@]1(CCCCC1=O)C2=CC=CC=C2Cl",
-    "cid": 182137
-  },
   "Ethaqualone": {
     "smiles": "CCC1=CC=CC=C1N2C(=NC3=CC=CC=C3C2=O)C",
     "cid": 23914
@@ -642,14 +552,6 @@
   "Ethylpropyltryptamine": {
     "smiles": "CCCN(CC)CCC1=CNC2=CC=CC=C21",
     "cid": 74405184
-  },
-  "Eticyclidone": {
-    "inchikey": "IDLSBAANXISGEI-UHFFFAOYSA-N",
-    "cid": 132989542
-  },
-  "Etryptamine": {
-    "smiles": "CCC(CC1=CNC2=CC=CC=C21)N",
-    "cid": 8367
   },
   "Exenatide": {
     "smiles": "CC[C@H](C)[C@@H](C(=O)N[C@@H](CCC(=O)O)C(=O)N[C@@H](CC1=CNC2=CC=CC=C21)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CC(=O)N)C(=O)NCC(=O)NCC(=O)N3CCC[C@H]3C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)NCC(=O)N[C@@H](C)C(=O)N4CCC[C@H]4C(=O)N5CCC[C@H]5C(=O)N6CCC[C@H]6C(=O)N[C@@H](CO)C(=O)N)NC(=O)[C@H](CC7=CC=CC=C7)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](C(C)C)NC(=O)[C@H](C)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCSC)NC(=O)[C@H](CCC(=O)N)NC(=O)[C@H](CCCCN)NC(=O)[C@H](CO)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CO)NC(=O)[C@H]([C@@H](C)O)NC(=O)[C@H](CC8=CC=CC=C8)NC(=O)[C@H]([C@@H](C)O)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)CNC(=O)[C@H](CC9=CNC=N9)N",
@@ -735,10 +637,6 @@
     "cid": 5284570,
     "smiles": "CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3C(=O)CC4"
   },
-  "Hydroxetamine": {
-    "inchikey": "CQERUJSORROCGH-UHFFFAOYSA-N",
-    "cid": 163192347
-  },
   "Ibogaine": {
     "inchikey": "HSIBGVUMFOSJPD-CFDPKNGZSA-N",
     "cid": 197060,
@@ -747,10 +645,6 @@
   "Ibotenic acid": {
     "smiles": "C1=C(ONC1=O)C(C(=O)O)N",
     "cid": 1233
-  },
-  "Imuracetam": {
-    "smiles": "C1CC(=O)N(C1)CNC(=O)NCN2CCCC2=O",
-    "cid": 163319
   },
   "Indacaterol": {
     "smiles": "CCC1=C(C=C2CC(CC2=C1)NC[C@@H](C3=C4C=CC(=O)NC4=C(C=C3)O)O)CC",
@@ -764,13 +658,13 @@
     "smiles": "CN1CCC(=C2C3=C(C(=O)CC4=CC=CC=C42)SC=C3)CC1",
     "cid": 3827
   },
-  "LHRH, N-epsilon-azidobenzoyl-lys(6)-": {
-    "smiles": "CC(C)C[C@@H](C(=O)N[C@@H](CCCN=C(N)N)C(=O)N1CCC[C@H]1C(=O)NCC(=O)N)NC(=O)[C@@H](CCCCNC(=O)C2=CC=C(C=C2)N=[N+]=[N-])NC(=O)[C@H](CC3=CC=C(C=C3)O)NC(=O)[C@H](CO)NC(=O)[C@H](CC4=CNC5=CC=CC=C54)NC(=O)[C@H](CC6=CN=CN6)NC(=O)[C@@H]7CCC(=O)N7",
-    "cid": 25079037
-  },
   "LSA": {
     "smiles": "CN1C[C@@H](C=C2[C@H]1CC3=CNC4=CC=CC2=C34)C(=O)N",
     "cid": 442072
+  },
+  "LSD": {
+    "smiles": "CCN(CC)C(=O)[C@H]1CN([C@@H]2CC3=CNC4=CC=CC(=C34)C2=C1)C",
+    "cid": 5761
   },
   "LSM-775": {
     "smiles": "CN1C[C@@H](C=C2[C@H]1CC3=CNC4=CC=CC2=C34)C(=O)N5CCOCC5",
@@ -779,15 +673,6 @@
   "LSZ": {
     "smiles": "C[C@H]1C[C@@H](N1C(=O)[C@H]2CN([C@@H]3CC4=CNC5=CC=CC(=C45)C3=C2)C)C",
     "cid": 71301249
-  },
-  "LY-451646": {
-    "inchikey": "HOQAVGZLYRYHSO-HNNXBMFYSA-N",
-    "cid": 66857735,
-    "smiles": "C[C@@H](CNS(=O)(=O)C(C)C)C1=CC=C(C=C1)C2=CC=C(C=C2)C#N"
-  },
-  "LSD": {
-    "smiles": "CCN(CC)C(=O)[C@H]1CN([C@@H]2CC3=CNC4=CC=CC(=C34)C2=C1)C",
-    "cid": 5761
   },
   "MDHOET": {
     "inchikey": "SCUUYKMQDUDNBP-UHFFFAOYSA-N",
@@ -835,19 +720,10 @@
     "smiles": "CCCN(C)CCC1=CNC2=CC=CC=C21",
     "cid": 74405270
   },
-  "Marinol": {
-    "inchikey": "CYQFCXCEBYINGO-IAGOWNOFSA-N",
-    "cid": 16078,
-    "smiles": "CCCCCC1=CC(=C2[C@@H]3C=C(CC[C@H]3C(OC2=C1)(C)C)C)O"
-  },
   "Mazindol": {
     "inchikey": "ZPXSCAKFGYXMGA-UHFFFAOYSA-N",
     "cid": 4020,
     "smiles": "C1CN2C(=N1)C3=CC=CC=C3C2(C4=CC=C(C=C4)Cl)O"
-  },
-  "Medifoxamine": {
-    "inchikey": "QNMGHBMGNRQPNL-UHFFFAOYSA-N",
-    "cid": 36109
   },
   "Mefloquine": {
     "inchikey": "XEEQGYMUWCZPDN-UHFFFAOYSA-N",
@@ -883,29 +759,13 @@
     "cid": 3034396,
     "smiles": "CC[C@@H]1CN2CCC3=C([C@@H]2C[C@@H]1/C(=C\\OC)/C(=O)OC)NC4=C3C(=CC=C4)OC"
   },
-  "Modafinil acid": {
-    "inchikey": "QARQPIWTMBRJFX-UHFFFAOYSA-N",
-    "cid": 3085267
-  },
-  "Modafinil sulfone": {
-    "inchikey": "ZESNOWZYHYRSRY-UHFFFAOYSA-N",
-    "cid": 6460146
-  },
   "Montelukast": {
     "inchikey": "UCHDWCPVSPXUMX-TZIWLTJVSA-N",
     "cid": 5281040
   },
-  "N,N-diethyltryptamine": {
-    "smiles": "CCN(CC)CCC1=CNC2=CC=CC=C21",
-    "cid": 6090
-  },
-  "N-desmethyl zolmitriptan": {
-    "smiles": "CNCCC1=CNC2=C1C=C(C=C2)C[C@H]3COC(=O)N3",
-    "cid": 178536
-  },
-  "N-methyltryptamine": {
-    "smiles": "CNCCC1=CNC2=CC=CC=C21",
-    "cid": 6088
+  "N-Ethylpentedrone": {
+    "inchikey": "QQAHEGDXEXIQPR-UHFFFAOYSA-N",
+    "cid": 205593
   },
   "NM-2-AI": {
     "inchikey": "SXWZQUCTTOBHJT-UHFFFAOYSA-N",
@@ -995,17 +855,9 @@
     "inchikey": "MFOCDFTXLCYLKU-CMPLNLGQSA-N",
     "cid": 30487
   },
-  "Phenethyl Isothiocyanate": {
-    "smiles": "C1=CC=C(C=C1)CCN=C=S",
-    "cid": 16741
-  },
   "Pimozide": {
     "smiles": "C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F",
     "cid": 16362
-  },
-  "Podocarpamide": {
-    "smiles": "CN(CCC1=CC=C(C=C1)OC)C(=O)/C=C/C2=CC3=C(C=C2)OCO3",
-    "cid": 5320643
   },
   "Propoxyphene": {
     "smiles": "CCC(=O)O[C@](CC1=CC=CC=C1)(C2=CC=CC=C2)[C@H](C)CN(C)C.Cl",
@@ -1019,10 +871,6 @@
   "RAD-150": {
     "smiles": "CC1=C(C=CC(=C1Cl)C#N)N[C@@H](C2=NN=C(O2)C3=CC=C(C=C3)C#N)[C@H](C)OC(=O)C4=CC=CC=C4",
     "cid": 68547459
-  },
-  "RTI-150": {
-    "smiles": "CC1=CC=C(C=C1)[C@H]2C[C@@H]3CC[C@H]([C@H]2C(=O)OC4CCC4)N3C",
-    "cid": 9972881
   },
   "RTI-55": {
     "inchikey": "JRPRINGETIYVSV-LJISPDSOSA-N",
@@ -1058,18 +906,9 @@
     "smiles": "CSCC[C@@H](C(=O)N[C@@H](CCC(=O)O)C(=O)N[C@@H](CC1=CN=CN1)C(=O)N[C@@H](CC2=CC=CC=C2)C(=O)N3CCC[C@H]3C(=O)NCC(=O)N4CCC[C@H]4C(=O)O)N",
     "cid": 9811102
   },
-  "Serotonin(1+)": {
-    "smiles": "C1=CC2=C(C=C1O)C(=CN2)CC[NH3+]",
-    "cid": 4048638
-  },
   "Sildenafil": {
     "smiles": "CCCC1=NN(C2=C1N=C(NC2=O)C3=C(C=CC(=C3)S(=O)(=O)N4CCN(CC4)C)OCC)C.C(C(=O)O)C(CC(=O)O)(C(=O)O)O",
     "cid": 135413523
-  },
-  "Sonata": {
-    "inchikey": "HUNXMJYCHXQEGX-UHFFFAOYSA-N",
-    "cid": 5719,
-    "smiles": "CCN(C1=CC=CC(=C1)C2=CC=NC3=C(C=NN23)C#N)C(=O)C"
   },
   "Sumatriptan": {
     "smiles": "CNS(=O)(=O)CC1=CC2=C(C=C1)NC=C2CCN(C)C",
@@ -1096,10 +935,6 @@
     "smiles": "C[C@@H]1C2=C(CCN1)C3=C(N2)C=C(C=C3)OC",
     "cid": 442118
   },
-  "Tianeptine sodium": {
-    "smiles": "CN1C2=CC=CC=C2C(C3=C(S1(=O)=O)C=C(C=C3)Cl)NCCCCCCC(=O)[O-].[Na+]",
-    "cid": 23663953
-  },
   "Tilidine": {
     "inchikey": "WDEFBBTXULIOBB-WBVHZDCISA-N",
     "cid": 30131,
@@ -1108,10 +943,6 @@
   "Tropacocaine": {
     "smiles": "CN1[C@@H]2CC[C@H]1CC(C2)OC(=O)C3=CC=CC=C3",
     "cid": 637578
-  },
-  "Tryptophan": {
-    "smiles": "C1=CC=C2C(=C1)C(=CN2)C[C@@H](C(=O)O)N",
-    "cid": 6305
   },
   "Varenicline": {
     "inchikey": "TWYFGYXQSYOKLK-CYUSMAIQSA-N",
@@ -1131,10 +962,6 @@
     "inchikey": "ZAFYATHCZYHLPB-UHFFFAOYSA-N",
     "cid": 5732,
     "smiles": "CC1=CC=C(C=C1)C2=C(N3C=C(C=CC3=N2)C)CC(=O)N(C)C"
-  },
-  "Zoptarelin Doxorubicin": {
-    "smiles": "C[C@H]1[C@H]([C@H](C[C@@H](O1)O[C@H]2C[C@@](CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)COC(=O)CCCC(=O)NCCCC[C@H](C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N6CCC[C@H]6C(=O)NCC(=O)N)NC(=O)[C@H](CC7=CC=C(C=C7)O)NC(=O)[C@H](CO)NC(=O)[C@H](CC8=CNC9=CC=CC=C98)NC(=O)[C@H](CC1=CN=CN1)NC(=O)[C@@H]1CCC(=O)N1)O)N)O",
-    "cid": 16134409
   },
   "alpha-PiHP": {
     "inchikey": "UOZWZANRCOALQL-UHFFFAOYSA-N",

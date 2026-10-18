@@ -572,7 +572,7 @@
   },
   {
     "aliases" : [
-
+      "2,4,5-Trimethoxyamphetamine"
     ],
     "category" : "Stimulant",
     "defaultRoute" : "oral",
@@ -1133,9 +1133,6 @@
     "routes" : [
 
     ],
-    "sources" : [
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/19053744\/"
-    ],
     "tags" : [
       "kappa-opioid-agonist",
       "no-human-data",
@@ -1381,7 +1378,7 @@
           "target" : "5-HT2A"
         }
       ],
-      "description" : "N1-acyl LSD prodrug bearing a 1,2-dimethylcyclobutane-1-carbonyl group. The strained cyclobutane ring reportedly accelerates ester hydrolysis relative to most acyl-LSD prodrugs, producing faster onset (~20–30 min vs ~45–60 min for LSD). Pharmacological activity is attributed entirely to released LSD. Prodrug conversion t½ estimated ~3–4 h (not formally measured). All LSD-class risks apply: serotonin syndrome with MAOIs\/SSRIs\/lithium\/tramadol, HPPD, full 5-HT2A cross-tolerance.",
+      "description" : "N1-acyl LSD prodrug bearing a 1,2-dimethylcyclobutane-1-carbonyl group. The strained cyclobutane ring reportedly accelerates ester hydrolysis relative to most acyl-LSD prodrugs, producing faster onset. Pharmacological activity is attributed entirely to released LSD. Prodrug conversion half-life has not been formally measured. All LSD-class risks apply: serotonin syndrome with MAOIs\/SSRIs\/lithium\/tramadol, HPPD, full 5-HT2A cross-tolerance.",
       "primaryTargets" : [
         "5-HT2A"
       ],
@@ -1389,7 +1386,7 @@
         "https:\/\/en.wikipedia.org\/wiki\/1D-LSD",
         "https:\/\/www.ncbi.nlm.nih.gov\/pmc\/articles\/PMC9191647\/"
       ],
-      "summary" : "LSD prodrug — strained cyclobutane ring hydrolyzes to release LSD → 5-HT2A partial agonist."
+      "summary" : "LSD prodrug: its strained cyclobutane ring hydrolyzes to release LSD → 5-HT2A partial agonist."
     },
     "molarMass" : 433.6,
     "name" : "1D-LSD",
@@ -2355,29 +2352,6 @@
   },
   {
     "aliases" : [
-      "1-aminoethyl phenyl ketone"
-    ],
-    "category" : "Other",
-    "defaultRoute" : "oral",
-    "effects" : [
-
-    ],
-    "name" : "2-aminopropiophenone",
-    "routes" : [
-
-    ],
-    "sources" : [
-      "CAS 5265-18-9",
-      "PubChem CID 107786: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/107786",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27126636"
-    ],
-    "tags" : [
-      "no-human-data",
-      "phenethylamine"
-    ]
-  },
-  {
-    "aliases" : [
       "1-(6-bromo-1,3-benzodioxol-5-yl)propan-2-amine",
       "1-(6-bromo-2H-1,3-benzodioxol-5-yl)propan-2-amine",
       "2-bromo-4,5-methylenedioxyamphetamine",
@@ -2907,7 +2881,7 @@
           "target" : "NMDA receptor"
         }
       ],
-      "description" : "Tentative IUPAC: 2-(2-fluorophenyl)-2-(isopropylamino)cyclohexan-1-one. The ortho-fluoro isomer replaces the methoxy group of MXE's pharmacophore. NMR-confirmed as ortho-F isomer. Sibling: 2-FXPr (n-propyl variant). Only a single anecdotal intranasal report exists (nervewing blog, 2025) — not a validated dose source; rapid tolerance noted in that report. No CAS\/CID available.",
+      "description" : "Tentative IUPAC: 2-(2-fluorophenyl)-2-(isopropylamino)cyclohexan-1-one. The ortho-fluoro isomer replaces the methoxy group of MXE's pharmacophore. NMR-confirmed as ortho-F isomer. Sibling: 2-FXPr (n-propyl variant). Only a single anecdotal intranasal report exists (nervewing blog, 2025). It is not a validated dose source; it notes rapid tolerance. No CAS\/CID available.",
       "primaryTargets" : [
         "NMDA receptor"
       ],
@@ -3031,6 +3005,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "category" : "Empathogen",
+    "effects" : [
+
+    ],
+    "name" : "2-MAPB",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "2-methyl-diethyltryptamine"
     ],
     "category" : "Psychedelic",
@@ -3142,7 +3129,7 @@
         "https:\/\/pubmed.ncbi.nlm.nih.gov\/40992254\/",
         "https:\/\/www.ncbi.nlm.nih.gov\/pmc\/articles\/PMC11051472\/"
       ],
-      "summary" : "Highly DAT-selective reuptake inhibitor (DAT IC50 = 7.6 nM); DAT\/SERT selectivity ratio >40× cocaine → very high addiction and abuse potential."
+      "summary" : "Highly DAT-selective reuptake inhibitor (DAT IC50 = 7.6 nM), with a DAT\/SERT selectivity ratio over 40× that of cocaine."
     },
     "name" : "2-Me-PiHP",
     "routes" : [
@@ -3260,8 +3247,7 @@
 
     ],
     "sources" : [
-      "https:\/\/en.wikipedia.org\/wiki\/Salvinorin_B_methoxymethyl_ether",
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/16108680\/"
+      "https:\/\/en.wikipedia.org\/wiki\/Salvinorin_B_methoxymethyl_ether"
     ],
     "tags" : [
       "kappa-opioid-agonist",
@@ -3510,6 +3496,31 @@
   },
   {
     "aliases" : [
+      "ortomephedrone"
+    ],
+    "category" : "Stimulant",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "2-methylmethcathinone",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 1246911-71-6",
+      "PubChem CID 56603536: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/56603536",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27271222"
+    ],
+    "tags" : [
+      "cathinone",
+      "DRI",
+      "no-human-data",
+      "phenethylamine"
+    ]
+  },
+  {
+    "aliases" : [
       "2-Methylmethcathinone"
     ],
     "category" : "Stimulant",
@@ -3707,59 +3718,6 @@
     ],
     "tags" : [
       "inactive"
-    ]
-  },
-  {
-    "aliases" : [
-      "2-phenylacetamide"
-    ],
-    "category" : "Stimulant",
-    "defaultRoute" : "oral",
-    "effects" : [
-      "Amphetamine with the alpha-methyl replaced by ketone. There are very few reports and there is limited information about toxicity. As always treat with caution."
-    ],
-    "name" : "2-pa",
-    "routes" : [
-      {
-        "doses" : {
-          "common" : {
-            "lower" : 25,
-            "upper" : 50
-          },
-          "light" : {
-            "lower" : 10,
-            "upper" : 25
-          },
-          "strong" : {
-            "lower" : 50,
-            "upper" : 100
-          }
-        },
-        "duration" : {
-          "afterglow" : {
-            "max" : 600,
-            "min" : 60
-          },
-          "onset" : {
-            "max" : 45,
-            "min" : 15
-          },
-          "total" : {
-            "max" : 300,
-            "min" : 180
-          }
-        },
-        "route" : "oral",
-        "unit" : "mg"
-      }
-    ],
-    "sources" : [
-      "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
-    ],
-    "tags" : [
-      "habit-forming",
-      "research-chemical",
-      "tentative"
     ]
   },
   {
@@ -3968,9 +3926,6 @@
     "name" : "22-Thiocyanatosalvinorin A",
     "routes" : [
 
-    ],
-    "sources" : [
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/16108680\/"
     ],
     "tags" : [
       "kappa-opioid-agonist",
@@ -7323,19 +7278,17 @@
       {
         "doses" : {
           "common" : {
-            "lower" : 75,
-            "upper" : 150
-          },
-          "heavy" : 250,
-          "light" : {
             "lower" : 40,
-            "upper" : 75
+            "upper" : 80
+          },
+          "light" : {
+            "lower" : 20,
+            "upper" : 40
           },
           "strong" : {
-            "lower" : 150,
-            "upper" : 200
-          },
-          "threshold" : 25
+            "lower" : 80,
+            "upper" : 100
+          }
         },
         "route" : "insufflation",
         "unit" : "mg"
@@ -7964,7 +7917,7 @@
           "target" : "NMDA receptor"
         }
       ],
-      "description" : "N-ethyl-substituted arylcyclohexylamine with 3-methyl phenyl ring substitution. NMDA antagonism confirmed by Wallach et al. 2015. Secondary pharmacology unstudied. First reported to EUDA March 2024. Structurally distinct from 3-MeO-PCE — do not transfer doses. Same arylcyclohexylamine risk profile as 3-Me-PCP.",
+      "description" : "N-ethyl-substituted arylcyclohexylamine with 3-methyl phenyl ring substitution. NMDA antagonism confirmed by Wallach et al. 2015. Secondary pharmacology unstudied. First reported to EUDA March 2024. Structurally distinct from 3-MeO-PCE, so do not transfer doses. Same arylcyclohexylamine risk profile as 3-Me-PCP.",
       "primaryTargets" : [
         "NMDA receptor"
       ],
@@ -8030,7 +7983,7 @@
           "target" : "NMDA receptor"
         }
       ],
-      "description" : "Piperidine-substituted arylcyclohexylamine; 3-methyl substitution on the phenyl ring (meta). Confirmed NMDA antagonist by class pharmacology. Structurally distinct from 3-MeO-PCP (methoxy vs methyl) — do not transfer doses. First reported to UK forensic services. PCP-family dissociatives carry high psychosis\/mania risk, bladder toxicity with chronic use, and dangerous respiratory depression with CNS depressants\/opioids.",
+      "description" : "Piperidine-substituted arylcyclohexylamine; 3-methyl substitution on the phenyl ring (meta). Confirmed NMDA antagonist by class pharmacology. Structurally distinct from 3-MeO-PCP (methoxy vs methyl), so do not transfer doses. First reported to UK forensic services. PCP-family dissociatives carry high psychosis\/mania risk, bladder toxicity with chronic use, and dangerous respiratory depression with CNS depressants\/opioids.",
       "primaryTargets" : [
         "NMDA receptor"
       ],
@@ -9243,6 +9196,62 @@
   },
   {
     "aliases" : [
+      "2-[4-(dimethylamino)phenyl]-7,8-dihydroxychromen-4-one",
+      "4'-Dimethylamino-7,8-dihydroxyflavone",
+      "4'-DMA-DHF"
+    ],
+    "category" : "Nootropic",
+    "defaultRoute" : "oral",
+    "effects" : [
+      "Synthetic 7,8-dihydroxyflavone (7,8-DHF) derivative",
+      "Selective small-molecule TrkB (BDNF receptor) agonist",
+      "Orally bioavailable and brain-penetrant",
+      "Preclinical antidepressant, pro-neurogenic, and neuroprotective activity",
+      "No established human dosing, pharmacokinetic, or safety data"
+    ],
+    "formula" : "C17H15NO4",
+    "inchikey" : "YPAYCZOHGRSGJS-UHFFFAOYSA-N",
+    "mechanismOfAction" : {
+      "bindings" : [
+        {
+          "action" : "agonist",
+          "affinity" : 3,
+          "target" : "TrkB (NTRK2)"
+        }
+      ],
+      "description" : "4'-DMA-7,8-DHF is a synthetic derivative of 7,8-dihydroxyflavone (7,8-DHF), the small-molecule TrkB agonist. A 4'-dimethylamino substituent gives it higher TrkB agonistic activity than the parent and a more robust, longer-lasting TrkB activation in animals, along with greater antiapoptotic activity; chronic oral dosing promotes hippocampal neurogenesis and produces marked antidepressant effects in mice. In the Huntington's-disease mouse model, chronic low-dose 4'-DMA-7,8-DHF improved motor deficits, reduced brain atrophy, preserved striatal DARPP32, and extended survival. All evidence is preclinical (rodent); no human pharmacokinetic, dose, or safety data exist.",
+      "primaryTargets" : [
+        "TrkB (NTRK2)"
+      ],
+      "references" : [
+        "https:\/\/doi.org\/10.1021\/jm101206p",
+        "https:\/\/doi.org\/10.1093\/hmg\/ddt098"
+      ],
+      "summary" : "A small-molecule agonist of TrkB, the receptor for brain-derived neurotrophic factor (BDNF), that activates TrkB signaling directly, mimicking BDNF. A synthetic 7,8-DHF derivative with higher potency and longer action than the parent."
+    },
+    "molarMass" : 297.3,
+    "name" : "4'-DMA-7,8-DHF",
+    "pubchemCID" : 44610701,
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/doi.org\/10.1021\/jm101206p",
+      "https:\/\/doi.org\/10.1093\/hmg\/ddt098",
+      "https:\/\/en.wikipedia.org\/wiki\/7,8-Dihydroxyflavone",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/44610701"
+    ],
+    "tags" : [
+      "BDNF",
+      "flavonoid",
+      "neurotrophic",
+      "nootropic",
+      "research-chemical",
+      "TrkB-agonist"
+    ]
+  },
+  {
+    "aliases" : [
 
     ],
     "displayName" : "4-FPO",
@@ -9426,20 +9435,23 @@
   },
   {
     "aliases" : [
-      "(2S)-2-azaniumyl-3-[4-(3-methylbut-2-en-1-yl)-1H-indol-3-yl]propanoate"
+      "4-dimethylallyl-L-tryptophan",
+      "4-dimethylallyltryptophan",
+      "DMATrp"
     ],
     "category" : "Other",
     "defaultRoute" : "oral",
     "effects" : [
 
     ],
-    "name" : "4-(3-methylbut-2-enyl)-L-tryptophan zwitterion",
+    "name" : "4-(3-methylbut-2-enyl)-L-tryptophan",
     "routes" : [
 
     ],
     "sources" : [
+      "CAS 29702-35-0",
       "PubChem CID 440286: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/440286",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q106345542"
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27102483"
     ],
     "tags" : [
       "no-human-data",
@@ -9637,7 +9649,6 @@
       "4-acetoxy-dmt",
       "4-aco",
       "4acodmt",
-      "acetylpsilocin",
       "psilacetin"
     ],
     "effects" : [
@@ -9725,15 +9736,11 @@
       }
     ],
     "sources" : [
-      "CAS 92292-84-7",
-      "PubChem CID 15429212: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/15429212",
-      "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q3491364"
+      "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
     ],
     "tags" : [
       "5-HT2A-agonist",
       "common",
-      "no-human-data",
       "research-chemical",
       "tryptamine"
     ]
@@ -10268,26 +10275,6 @@
     ],
     "name" : "4-CMC",
     "routes" : [
-      {
-        "doses" : {
-          "common" : {
-            "lower" : 75,
-            "upper" : 150
-          },
-          "heavy" : 250,
-          "light" : {
-            "lower" : 40,
-            "upper" : 75
-          },
-          "strong" : {
-            "lower" : 150,
-            "upper" : 200
-          },
-          "threshold" : 25
-        },
-        "route" : "insufflation",
-        "unit" : "mg"
-      },
       {
         "doses" : {
           "common" : {
@@ -13467,8 +13454,7 @@
     ],
     "sources" : [
       "https:\/\/en.wikipedia.org\/wiki\/5-Amino-1-methylquinolinium",
-      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/2737",
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/34799658\/"
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/2737"
     ],
     "tags" : [
       "anti-obesity",
@@ -14364,12 +14350,15 @@
   },
   {
     "aliases" : [
-      "5-hydroxy-DL-tryptophan",
+      "5-Hydroxy-L-Tryptophan",
       "5-Hydroxytryptophan",
-      "5-hydroxytryptophan DL-form",
-      "DL-2-Amino-3-(5-hydroxyindolyl)propionic acid",
+      "5-Hydroxytryptophan L-form",
+      "Cincofarm",
+      "Hydroxy-5 L-tryptophane",
       "L-5-HTP",
+      "Levothym",
       "Oxitriptan",
+      "Tript-OH",
       "tryptophan"
     ],
     "category" : "Supplement",
@@ -14416,13 +14405,13 @@
       }
     ],
     "sources" : [
-      "CAS 56-69-9",
+      "CAS 4350-09-8",
       "https:\/\/en.wikipedia.org\/wiki\/5-Hydroxytryptophan",
       "https:\/\/examine.com\/supplements\/5-htp\/",
       "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/144",
-      "PubChem CID 144: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/144",
+      "PubChem CID 439280: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/439280",
       "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27103541"
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q238544"
     ],
     "tags" : [
       "5HT-precursor",
@@ -14462,41 +14451,18 @@
   },
   {
     "aliases" : [
-      "(2S)-2-azaniumyl-3-(5-hydroxy-1H-indol-3-yl)propanoate"
+      "3,4,5-trihydroxyphenethylamine",
+      "3,4,5-trihydroxyphenylethylamine",
+      "5-(2-aminoethyl)-1,2,3-benzenetriol",
+      "5-(2-aminoethyl)benzene-1,2,3-triol",
+      "5-(2-aminoethyl)pyrogallol"
     ],
     "category" : "Other",
     "defaultRoute" : "oral",
     "effects" : [
 
     ],
-    "name" : "5-hydroxy-L-tryptophan zwitterion",
-    "routes" : [
-
-    ],
-    "sources" : [
-      "CAS 4350-09-8",
-      "PubChem CID 439280: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/439280",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q106345490"
-    ],
-    "tags" : [
-      "no-human-data",
-      "tryptamine"
-    ]
-  },
-  {
-    "aliases" : [
-      "3,4,5-Trihydroxyphenethylamine",
-      "3,4,5-Trihydroxyphenylethylamine",
-      "5-(2-Aminoethyl)-Pyrogallol",
-      "5-(2-Aminoethyl)1,2,3-Benzenetriol",
-      "5-(2-Aminoethyl)benzene-1,2,3-triol"
-    ],
-    "category" : "Other",
-    "defaultRoute" : "oral",
-    "effects" : [
-
-    ],
-    "name" : "5-Hydroxydopamine",
+    "name" : "5-hydroxydopamine",
     "routes" : [
 
     ],
@@ -14656,12 +14622,11 @@
     "aliases" : [
       "5mapb"
     ],
-    "category" : "Empathogen",
-    "defaultRoute" : "oral",
     "effects" : [
       "Empathogen structurally similar to MDMA. The drug is reported to be more visual and less stimulating than other empathogens. The drug is also reported to have less psychedelic effects than 6-APB. The drug lasts longer than MDMA."
     ],
-    "name" : "5-mapb",
+    "halfLifeMinutes" : 390,
+    "name" : "5-MAPB",
     "routes" : [
       {
         "doses" : {
@@ -17436,9 +17401,6 @@
         "unit" : "mg"
       }
     ],
-    "sources" : [
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/22483621\/"
-    ],
     "tags" : [
       "beta-carboline",
       "MAOI-A-weak",
@@ -17555,31 +17517,6 @@
     ],
     "tags" : [
       "TIHKAL",
-      "tryptamine"
-    ]
-  },
-  {
-    "aliases" : [
-      "(2S)-1-(1H-INDOL-3-YL)-3-{[5-(3-METHYL-1H-INDAZOL-5-YL)PYRIDIN-3-YL]OXY}PROPAN-2-AMINE",
-      "(alphaS)-alpha-[[[5-(3-Methyl-1H-indazol-5-yl)-3-pyridinyl]oxy]methyl]-(S)-1H-indole-3-ethanamine",
-      "A443654"
-    ],
-    "category" : "Other",
-    "defaultRoute" : "oral",
-    "effects" : [
-
-    ],
-    "name" : "A-443654",
-    "routes" : [
-
-    ],
-    "sources" : [
-      "CAS 552325-16-3",
-      "PubChem CID 10172943: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/10172943",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27074073"
-    ],
-    "tags" : [
-      "no-human-data",
       "tryptamine"
     ]
   },
@@ -18084,7 +18021,7 @@
           "target" : "Androgen receptor"
         }
       ],
-      "description" : "Bicyclic azabicyclooctane scaffold SARM; AR partial agonist with EC50 ~1.58 nM in luciferase assay; selective over 47 other nuclear receptors at 10 µM. Never tested in humans — all data from rat studies. No published PK or t½ in any species.",
+      "description" : "Bicyclic azabicyclooctane scaffold SARM; potent AR partial agonist in cell-based assays, selective over other nuclear receptors. Never tested in humans: all data from rat studies. No published PK in any species.",
       "primaryTargets" : [
         "Androgen receptor"
       ],
@@ -18092,7 +18029,7 @@
         "PubChem CID 44512434",
         "https:\/\/en.wikipedia.org\/wiki\/AC-262,536"
       ],
-      "summary" : "Nonsteroidal AR partial agonist (Ki ~5 nM, ~64% DHT efficacy); anabolic:androgenic ratio ~2.45:1 in rat."
+      "summary" : "Nonsteroidal AR partial agonist (Ki ~5 nM, ~64% of the maximal DHT response); anabolic:androgenic ratio ~2.45:1 in rat."
     },
     "molarMass" : 278.3,
     "name" : "AC-262536",
@@ -18183,6 +18120,33 @@
       "GABA-modulator",
       "NMDA-modulator",
       "prescription-only"
+    ]
+  },
+  {
+    "aliases" : [
+      "Paracetamol"
+    ],
+    "category" : "Analgesic",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "Acetaminophen",
+    "routes" : [
+      {
+        "doses" : {
+          "common" : {
+            "lower" : 650,
+            "upper" : 1000
+          }
+        },
+        "route" : "oral",
+        "unit" : "mg"
+      }
+    ],
+    "sources" : [
+      "https:\/\/dailymed.nlm.nih.gov\/dailymed\/drugInfo.cfm?setid=015a6179-bacb-452d-b594-4de628ddc11d",
+      "https:\/\/dailymed.nlm.nih.gov\/dailymed\/drugInfo.cfm?setid=01f41fae-4abb-4b96-ab09-a7d3dfc286cd"
     ]
   },
   {
@@ -18738,7 +18702,7 @@
         },
         "protocolDosing" : {
           "frequency" : "research only",
-          "notes" : "no validated human dosing (primate studies only) — research\/community protocol. NEPHROTOXIC: renal toxicity observed in primates"
+          "notes" : "no validated human dosing (primate studies only); research\/community protocol. NEPHROTOXIC: renal toxicity observed in primates"
         },
         "route" : "subcutaneous",
         "unit" : "mg"
@@ -18767,6 +18731,7 @@
       "Wakefulness promotion",
       "Hepatic metabolism — long-term liver enzyme monitoring advised",
       "Withdrawn from European market 2011",
+      "Dose ladder deliberately not curated — PsychonautWiki, TripSit and FreeOD Wiki agree (common 250–400 mg) and outrank any figure we could invent",
       "A prodrug to modafinil, this compound is often used to increase wakefulness and alertness. Due to hepatic metabolism it has a slower onset than modafinil and may cause liver damage in excess. Some users have reported acne as an adverse effect. Unregulated in the US."
     ],
     "halfLifeMinutes" : 60,
@@ -18775,36 +18740,28 @@
       {
         "doses" : {
           "common" : {
-            "lower" : 600,
-            "upper" : 900
+            "lower" : 250,
+            "upper" : 400
           },
-          "heavy" : 1500,
+          "heavy" : 600,
           "light" : {
-            "lower" : 300,
-            "upper" : 600
+            "lower" : 150,
+            "upper" : 250
           },
-          "strong" : {
-            "lower" : 900,
-            "upper" : 1200
-          },
-          "threshold" : 150
+          "threshold" : 100
         },
         "duration" : {
-          "offset" : {
-            "max" : 600,
-            "min" : 360
+          "afterglow" : {
+            "max" : 720,
+            "min" : 60
           },
           "onset" : {
             "max" : 120,
             "min" : 45
           },
-          "peak" : {
-            "max" : 360,
-            "min" : 180
-          },
           "total" : {
-            "max" : 900,
-            "min" : 600
+            "max" : 720,
+            "min" : 480
           }
         },
         "route" : "oral",
@@ -19731,6 +19688,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 210,
+    "name" : "Almotriptan",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1260,
+    "name" : "Alogliptin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "alpha,alpha-Dimethyl-1H-indole-3-acetonitrile"
     ],
     "category" : "Other",
@@ -19981,26 +19964,6 @@
     ],
     "name" : "alpha-PHP",
     "routes" : [
-      {
-        "doses" : {
-          "common" : {
-            "lower" : 15,
-            "upper" : 25
-          },
-          "heavy" : 50,
-          "light" : {
-            "lower" : 7,
-            "upper" : 15
-          },
-          "strong" : {
-            "lower" : 25,
-            "upper" : 40
-          },
-          "threshold" : 5
-        },
-        "route" : "insufflation",
-        "unit" : "mg"
-      },
       {
         "doses" : {
           "common" : {
@@ -20381,6 +20344,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 450,
+    "name" : "Amiloride",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Stimulant",
     "defaultRoute" : "oral",
     "effects" : [
@@ -20627,6 +20603,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 480,
+    "name" : "Amoxapine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 61,
+    "name" : "Amoxicillin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "1-phenyl-2-aminopropane",
       "1-Phenylpropan-2-amin",
       "alpha-methylphenylethylamine",
@@ -20638,7 +20640,9 @@
       "amphetamines",
       "beta-phenylisopropylamin",
       "desoxynorephedrine",
+      "Dexedrine Spansule",
       "Dextroamphetamine-Amphetamine",
+      "Evekeo",
       "goey",
       "hearts",
       "louee",
@@ -20796,6 +20800,19 @@
     "tags" : [
       "no-human-data",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 3000,
+    "name" : "Anastrozole",
+    "routes" : [
+
     ]
   },
   {
@@ -20986,6 +21003,19 @@
     "tags" : [
       "no-human-data",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 480,
+    "name" : "Apraclonidine",
+    "routes" : [
+
     ]
   },
   {
@@ -21689,6 +21719,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 300,
+    "name" : "Avanafil",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "AZD5928"
     ],
     "category" : "Other",
@@ -21919,6 +21962,19 @@
       "ophthalmic",
       "prescription-only",
       "second-gen-antihistamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 4080,
+    "name" : "Azithromycin",
+    "routes" : [
+
     ]
   },
   {
@@ -22219,6 +22275,32 @@
   },
   {
     "aliases" : [
+      "Beconase",
+      "QVAR",
+      "QVAR RediHaler",
+      "倍氯米松"
+    ],
+    "category" : "Endocrine",
+    "defaultRoute" : "insufflation",
+    "effects" : [
+
+    ],
+    "name" : "Beclomethasone",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Beclometasone_dipropionate",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/21700"
+    ],
+    "tags" : [
+      "anti-inflammatory",
+      "corticosteroid",
+      "prescription-only"
+    ]
+  },
+  {
+    "aliases" : [
 
     ],
     "category" : "Antidepressant",
@@ -22238,6 +22320,19 @@
     "tags" : [
       "antidepressant",
       "discontinued"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 66,
+    "name" : "Belinostat",
+    "routes" : [
+
     ]
   },
   {
@@ -22273,7 +22368,7 @@
           "frequency" : "2×\/day",
           "highAmount" : 500,
           "lowAmount" : 250,
-          "notes" : "up to 750–1000 mg\/day in some protocols; accumulates with repeated doses — course-based dosing with breaks manages this; human t½ not published; Russian pharmaceutical standard (Metaprot)"
+          "notes" : "up to 750–1000 mg\/day in some protocols; accumulates with repeated doses, which course-based dosing with breaks manages; human t½ not published; Russian pharmaceutical standard (Metaprot)"
         },
         "route" : "oral",
         "unit" : "mg"
@@ -22713,6 +22808,71 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 660,
+    "name" : "Betamethasone",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1140,
+    "name" : "Betrixaban",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 420,
+    "name" : "Bexarotene",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1050,
+    "name" : "Bezitramide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 8352,
+    "name" : "Bicalutamide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Blexten",
       "Ilaxten",
       "Obalix"
@@ -23083,7 +23243,7 @@
       "references" : [
         "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/762654"
       ],
-      "summary" : "DA\/NE-releasing stimulant (piperazine class); mechanism based on rodent data only — human receptor binding data absent. NOT a cathinone despite the 'bk' prefix."
+      "summary" : "DA\/NE-releasing stimulant (piperazine class); mechanism based on rodent data only, and human receptor binding data are absent. NOT a cathinone despite the 'bk' prefix."
     },
     "molarMass" : 190.24,
     "name" : "bk-BZP",
@@ -23149,6 +23309,19 @@
     "tags" : [
       "research-chemical",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 120,
+    "name" : "Bleomycin",
+    "routes" : [
+
     ]
   },
   {
@@ -23535,7 +23708,7 @@
         "https:\/\/pubmed.ncbi.nlm.nih.gov\/8799523\/",
         "https:\/\/www.ncbi.nlm.nih.gov\/pmc\/articles\/PMC12858478\/"
       ],
-      "summary" : "Non-selective GABA-A BZD-site partial agonist (~35–58% intrinsic efficacy vs full agonist); wide therapeutic window with reduced tolerance\/dependence potential compared to full agonists."
+      "summary" : "Non-selective GABA-A BZD-site partial agonist (~35–58% intrinsic activity vs full agonist), with reduced tolerance and dependence potential compared to full agonists."
     },
     "molarMass" : 420.29,
     "name" : "Bretazenil",
@@ -23577,7 +23750,7 @@
       "REMS program — inpatient administration only",
       "Not suitable for maintenance therapy — single-course treatment"
     ],
-    "halfLifeMinutes" : 270,
+    "halfLifeMinutes" : 540,
     "name" : "Brexanolone",
     "routes" : [
       {
@@ -24099,11 +24272,10 @@
     "aliases" : [
       "lendormin"
     ],
-    "category" : "Benzodiazepine",
-    "defaultRoute" : "oral",
     "effects" : [
       "Benzodiazepine analogue which is sedating, hypnotic and anxiolytic. It is available as prescription medicine in much of Europe, and is an extremely potent drug active at only 80ug. May cause amnesia and lowered inhibitions in overdose. Danger of respiratory depression when combined with other depressants. Short half-life."
     ],
+    "halfLifeMinutes" : 306,
     "name" : "Brotizolam",
     "routes" : [
       {
@@ -24226,6 +24398,19 @@
     "tags" : [
       "no-human-data",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 75,
+    "name" : "Bumetanide",
+    "routes" : [
+
     ]
   },
   {
@@ -24481,6 +24666,19 @@
       "azapirone",
       "prescription-only",
       "serotonin-agonist"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 156,
+    "name" : "Busulfan",
+    "routes" : [
+
     ]
   },
   {
@@ -24864,7 +25062,7 @@
         },
         "protocolDosing" : {
           "frequency" : "once weekly",
-          "notes" : "blend\/co-formulation of the amylin analog cagrilintide + the GLP-1 agonist semaglutide; investigational (Phase 3 REDEFINE). No validated standalone dosing — research\/community protocol"
+          "notes" : "blend\/co-formulation of the amylin analog cagrilintide + the GLP-1 agonist semaglutide; investigational (Phase 3 REDEFINE). No validated standalone dosing; research\/community protocol"
         },
         "route" : "subcutaneous",
         "unit" : "mg"
@@ -25283,7 +25481,7 @@
       "Modest weight gain; minimal metabolic burden",
       "D3 selectivity rationale: addresses negative symptoms and cognitive deficits"
     ],
-    "halfLifeMinutes" : 72000,
+    "halfLifeMinutes" : 30240,
     "name" : "Cariprazine",
     "routes" : [
       {
@@ -25443,6 +25641,183 @@
   },
   {
     "aliases" : [
+      "Adiposetten",
+      "Exponcit",
+      "Norpseudoephedrine",
+      "卡西宁",
+      "去甲伪麻黄碱"
+    ],
+    "cas" : "492-39-7",
+    "category" : "Stimulant",
+    "defaultRoute" : "oral",
+    "effects" : [
+      "The second khat alkaloid — cathinone decays to cathine as the leaf dries, which is why khat is chewed fresh",
+      "Roughly an order of magnitude weaker than cathinone; mostly noradrenergic",
+      "Plasma half-life 5.2 ± 3.4 h after khat chewing — far longer than cathinone's 1.5 h",
+      "Formerly sold in Europe as an appetite suppressant (Exponcit, Adiposetten)",
+      "US Schedule IV and UN 1971 Schedule III; also a phenylpropanolamine stereoisomer, so it turns up in doping tests"
+    ],
+    "formula" : "C9H13NO",
+    "halfLifeMinutes" : 312,
+    "inchikey" : "DLNKOYKMWOXYQA-IONNQARKSA-N",
+    "mechanismOfAction" : {
+      "bindings" : [
+        {
+          "action" : "releasingAgent",
+          "affinity" : 2,
+          "target" : "NET"
+        },
+        {
+          "action" : "releasingAgent",
+          "affinity" : 1,
+          "target" : "DAT"
+        }
+      ],
+      "description" : "Cathine is (1S,2S)-2-amino-1-phenylpropan-1-ol: cathinone with the ketone reduced to an alcohol. That reduction costs most of the potency. Releasing activity is retained but roughly 7–10× weaker, and skewed toward noradrenaline over dopamine, giving a peripheral sympathomimetic and anorectic profile rather than a euphoriant one. Its much longer half-life is why khat's tail outlasts its peak.",
+      "primaryTargets" : [
+        "NET",
+        "DAT"
+      ],
+      "references" : [
+        "doi:10.1046\/j.1365-2125.2003.01834.x",
+        "https:\/\/en.wikipedia.org\/wiki\/Cathine"
+      ],
+      "summary" : "Weak substrate-type releasing agent, NET > DAT. The reduced, β-hydroxy relative of cathinone."
+    },
+    "molarMass" : 151.21,
+    "name" : "Cathine",
+    "pubchemCID" : 441457,
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Cathine",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/441457",
+      "https:\/\/pubmed.ncbi.nlm.nih.gov\/12848785\/"
+    ],
+    "tags" : [
+      "anorectic",
+      "khat",
+      "natural-product",
+      "stimulant"
+    ]
+  },
+  {
+    "aliases" : [
+      "1-aminoethyl phenyl ketone",
+      "2-Aminopropiophenone",
+      "2-PA",
+      "2-phenylacetamide",
+      "bk-AMP",
+      "bk-amphetamine",
+      "Norephedrone",
+      "β-keto-amphetamine",
+      "卡西酮",
+      "阿拉伯茶碱"
+    ],
+    "cas" : "5265-18-9",
+    "category" : "Stimulant",
+    "defaultRoute" : "oral",
+    "effects" : [
+      "The parent compound of the whole cathinone class — amphetamine with a ketone at the β-position",
+      "Natural khat (Catha edulis) alkaloid; the leaf's fresh-cut potency is cathinone decaying to cathine",
+      "Roughly amphetamine-like but shorter and less potent — the β-keto group is polar and slows brain entry",
+      "Plasma half-life 1.5 ± 0.8 h after khat chewing; partly metabolized to norephedrine",
+      "US Schedule I and UN 1971 Schedule I; sold on RC markets under the code name 2-PA",
+      "Amphetamine with the alpha-methyl replaced by ketone. There are very few reports and there is limited information about toxicity. As always treat with caution."
+    ],
+    "formula" : "C9H11NO",
+    "halfLifeMinutes" : 90,
+    "inchikey" : "PUAQLLVFLMYYJJ-UHFFFAOYSA-N",
+    "mechanismOfAction" : {
+      "bindings" : [
+        {
+          "action" : "releasingAgent",
+          "affinity" : 3,
+          "target" : "DAT"
+        },
+        {
+          "action" : "releasingAgent",
+          "affinity" : 3,
+          "target" : "NET"
+        },
+        {
+          "action" : "releasingAgent",
+          "affinity" : 1,
+          "target" : "SERT"
+        }
+      ],
+      "description" : "Cathinone is transported into the neuron by DAT\/NET and reverses the transporter, driving dopamine and noradrenaline efflux in the same manner as amphetamine. The β-keto substituent raises polarity and lowers blood-brain-barrier permeability, which is why the same intrinsic releasing potency reads as a weaker, shorter subjective effect. Serotonergic release is minor, so the profile is stimulant rather than entactogenic. Natural khat contains the (S)-(−) enantiomer, the more active of the two.",
+      "primaryTargets" : [
+        "DAT",
+        "NET"
+      ],
+      "references" : [
+        "doi:10.1046\/j.1365-2125.2003.01834.x",
+        "https:\/\/en.wikipedia.org\/wiki\/Cathinone"
+      ],
+      "summary" : "Substrate-type releasing agent at DAT and NET, weak at SERT. The β-keto analogue of amphetamine."
+    },
+    "molarMass" : 149.19,
+    "name" : "Cathinone",
+    "pubchemCID" : 107786,
+    "routes" : [
+      {
+        "doses" : {
+          "common" : {
+            "lower" : 25,
+            "upper" : 50
+          },
+          "light" : {
+            "lower" : 10,
+            "upper" : 25
+          },
+          "strong" : {
+            "lower" : 50,
+            "upper" : 100
+          }
+        },
+        "duration" : {
+          "afterglow" : {
+            "max" : 600,
+            "min" : 60
+          },
+          "onset" : {
+            "max" : 45,
+            "min" : 15
+          },
+          "total" : {
+            "max" : 300,
+            "min" : 180
+          }
+        },
+        "route" : "oral",
+        "unit" : "mg"
+      }
+    ],
+    "sources" : [
+      "CAS 5265-18-9",
+      "https:\/\/en.wikipedia.org\/wiki\/Cathinone",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/107786",
+      "https:\/\/pubmed.ncbi.nlm.nih.gov\/12848785\/",
+      "PubChem CID 107786: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/107786",
+      "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27126636"
+    ],
+    "tags" : [
+      "cathinone",
+      "habit-forming",
+      "khat",
+      "natural-product",
+      "no-human-data",
+      "phenethylamine",
+      "research-chemical",
+      "stimulant",
+      "tentative"
+    ]
+  },
+  {
+    "aliases" : [
       "Cannabichrome",
       "Cannabichromene"
     ],
@@ -25594,9 +25969,9 @@
       "Anticonvulsant (being investigated for Rett syndrome and autism spectrum disorder)",
       "Anti-nausea",
       "Analgesic via TRPV1\/TRPA1 modulation",
-      "Propyl analogue of CBD (shorter side chain)"
+      "Propyl analogue of CBD (shorter side chain)",
+      "No human pharmacokinetic study has been published — half-life unknown, deliberately not modeled"
     ],
-    "halfLifeMinutes" : 1440,
     "name" : "CBDV",
     "routes" : [
 
@@ -26050,6 +26425,45 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 83,
+    "name" : "Cefadroxil",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 78,
+    "name" : "Cefprozil",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 72,
+    "name" : "Cefuroxime",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Lucidril",
       "Meclofenoxate"
     ],
@@ -26388,6 +26802,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 83,
+    "name" : "Chlorothiazide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Chlor-Trimeton",
       "Chlortab",
       "Piriton"
@@ -26597,6 +27024,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 150,
+    "name" : "Cidofovir",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 60,
+    "name" : "Cilastatin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Tagamet",
       "Tagamet HB"
     ],
@@ -26691,11 +27144,10 @@
     "aliases" : [
       "geroderm"
     ],
-    "category" : "Depressant",
-    "defaultRoute" : "oral",
     "effects" : [
       "A benzodiazepine derivative drug with anxiolytic effects but mainly hypnotic effects. It is extremely effective as a sleep aid but has mild euphoria compared to other benzodiazepines."
     ],
+    "halfLifeMinutes" : 540,
     "name" : "Cinolazepam",
     "routes" : [
       {
@@ -26908,7 +27360,7 @@
           "target" : "GABA-A"
         }
       ],
-      "description" : "Triazolopyridazine (not a benzodiazepine). Historically used as a research tool to pharmacologically dissect α1 (BZ1)-mediated sedation\/amnesia from α2 (BZ2)-mediated anxiolysis — preceding zolpidem as a selective α1 tool. Zolpidem-like selectivity profile but lower maximal efficacy (partial agonism). No human studies.",
+      "description" : "Triazolopyridazine (not a benzodiazepine). Historically used as a research tool to pharmacologically dissect α1 (BZ1)-mediated sedation\/amnesia from α2 (BZ2)-mediated anxiolysis, preceding zolpidem as a selective α1 tool. Zolpidem-like selectivity profile but lower maximal efficacy (partial agonism). No human studies.",
       "primaryTargets" : [
         "GABA-A"
       ],
@@ -26939,6 +27391,19 @@
       "lab-reagent",
       "no-human-data",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 210,
+    "name" : "Clarithromycin",
+    "routes" : [
+
     ]
   },
   {
@@ -27492,11 +27957,10 @@
       "trecalmo",
       "veratran"
     ],
-    "category" : "Benzodiazepine",
-    "defaultRoute" : "oral",
     "effects" : [
       "Is a thienodiazepine substance. It differs from most other benzodiazepines in which the benzene ring has been replaced by a thiophene ring."
     ],
+    "halfLifeMinutes" : 612,
     "name" : "Clotiazepam",
     "routes" : [
       {
@@ -27803,6 +28267,68 @@
     "sources" : [
       "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
     ],
+    "subjectiveEffects" : [
+      {
+        "description" : "The effect codeine is prescribed for, and the one that varies most between people. In pooled single-dose surgical trials it separated from placebo but by a narrow margin: around a quarter of participants reached at least half their maximum possible relief, against a sixth on placebo. Part of that flat average is a population in which some people convert enough to morphine and some convert almost none.",
+        "name" : "pain relief"
+      },
+      {
+        "description" : "A settling, heavy quality rather than sleep itself: attention gets easier to let go of and harder to hold. Milder than an equivalent impression of morphine for most people, and one of the effects that shows up even in poor metabolizers, which is part of the evidence that codeine and codeine-6-glucuronide act at mu receptors themselves.",
+        "name" : "sedation"
+      },
+      {
+        "description" : "Sleepiness that arrives on the rising limb and often outlasts the analgesia. Compounds sharply with alcohol, benzodiazepines, gabapentinoids, and sedating antihistamines, all of which add respiratory depression to the same picture.",
+        "name" : "drowsiness"
+      },
+      {
+        "description" : "Present for some people, absent for others, and the difference is substantially pharmacogenetic rather than psychological. Where it occurs it is the familiar opioid warmth (contentment and a lowering of urgency), but muted and slower to arrive than with morphine, because the active species have to be formed before they equilibrate with the brain.",
+        "name" : "euphoria"
+      },
+      {
+        "description" : "Worry loses its grip rather than its content: the same concerns remain but stop demanding attention. A mu-opioid effect that tracks the analgesia closely in time, and fades with it.",
+        "name" : "anxiety relief"
+      },
+      {
+        "description" : "A warm, weighted ease in the body, most noticeable while the effect is climbing. It is the subjective face of the peripheral vasodilation the FDA label describes, the same mechanism that produces flushing and, on standing, occasional lightheadedness.",
+        "name" : "physical comfort"
+      },
+      {
+        "description" : "Usually on the face, nose, and upper chest, and often without a rash. It comes from histamine release and direct mu-receptor action rather than from an allergy, so it can accompany an otherwise ordinary experience. Hives, swelling, or breathing difficulty are a different event.",
+        "name" : "itching"
+      },
+      {
+        "description" : "One of the most common effects, driven by the chemoreceptor trigger zone rather than by the stomach, and reported more often with codeine than with placebo in controlled trials. It tends to be worst around the peak and to lessen with repeat exposure.",
+        "name" : "nausea"
+      },
+      {
+        "description" : "Reduced propulsive peristalsis in the colon with increased smooth-muscle tone; the FDA label describes tone rising to the point of spasm. Unlike most opioid effects, this one does not reliably fade with continued exposure; it is present at doses well below those producing noticeable euphoria, which is why codeine has a long history as an antidiarrheal.",
+        "name" : "constipation"
+      },
+      {
+        "description" : "Direct action on the brainstem cough center, and the reason codeine appears in cough preparations. It is a separate effect from analgesia and shows up at lower exposures.",
+        "name" : "cough suppression"
+      },
+      {
+        "description" : "Pupils narrow, and continue to do so in total darkness. That is what makes pupil diameter a reliable objective read on opioid effect, and why the studies that mapped codeine's time course used pupillometry rather than self-report. In overdose, hypoxia can widen the pupils instead, so small pupils are a sign of opioid action and large ones do not rule it out.",
+        "name" : "miosis (pupil constriction)"
+      },
+      {
+        "description" : "Breathing slows because the brainstem becomes less responsive to rising carbon dioxide. This is the effect that determines the ceiling of an opioid experience, and codeine's version of it is unpredictable in a specific way: CYP2D6 ultrarapid metabolizers reach substantially higher morphine exposures from the same amount, which is the basis of the FDA contraindication in that group and in children after tonsillectomy.",
+        "name" : "respiratory depression"
+      },
+      {
+        "description" : "Most noticeable on standing up, and a consequence of the peripheral vasodilation that also produces the warmth. The FDA label lists orthostatic hypotension and syncope among codeine's cardiovascular effects.",
+        "name" : "lightheadedness"
+      },
+      {
+        "description" : "Bladder emptying becomes harder to initiate through increased sphincter tone. Common, benign at the scale most people encounter it, and it resolves as the drug clears.",
+        "name" : "urinary hesitancy"
+      },
+      {
+        "description" : "Not an effect so much as the shape of every other one. Because CYP2D6 does the activating step, the same amount produces morphine exposures that differ roughly thirtyfold between poor and ultrarapid metabolizers. A person whose experience of codeine is nothing at all and a person for whom it is strongly opioid are both reporting their own pharmacology correctly, and comparing logs across people tells you less here than it does for almost any other substance.",
+        "name" : "variable response"
+      }
+    ],
     "tags" : [
       "common",
       "habit-forming"
@@ -27944,7 +28470,7 @@
       "Take with fat-containing meal — highly lipophilic",
       "Very safe; mild GI symptoms occasionally reported"
     ],
-    "halfLifeMinutes" : 5760,
+    "halfLifeMinutes" : 1991,
     "name" : "CoQ10",
     "routes" : [
       {
@@ -28128,6 +28654,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 162,
+    "name" : "Creatine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Creapure",
       "Creatine",
       "Creatine Monohydrate"
@@ -28245,6 +28784,19 @@
       "no-human-data",
       "research-chemical",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 108,
+    "name" : "Cromolyn",
+    "routes" : [
+
     ]
   },
   {
@@ -28746,7 +29298,7 @@
       "d-N-methylamphetamine",
       "d-phenylisopropylmethylamine",
       "desoxyephedrine",
-      "dextromethamphetamine",
+      "Dextromethamphetamine",
       "fast",
       "glass",
       "ice",
@@ -28760,6 +29312,7 @@
       "pure",
       "S-methamphetamine",
       "speed",
+      "tee",
       "tweak",
       "wax",
       "whiz"
@@ -28997,6 +29550,32 @@
   },
   {
     "aliases" : [
+      "(2R)-2-amino-3-(1H-indol-3-yl)propanoic acid",
+      "(R)-tryptophan",
+      "D-Trp",
+      "DTR"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "D-Tryptophan",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 153-94-6",
+      "PubChem CID 9060: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/9060",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27077125"
+    ],
+    "tags" : [
+      "no-human-data",
+      "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
       "(S)-2-Amino-3-(1H-indol-3-yl)-propionic acid methyl ester hydrochloride",
       "Methyl (2R)-2-amino-3-(1H-indol-3-yl)propanoate hydrochloride"
     ],
@@ -29013,29 +29592,6 @@
       "CAS 14907-27-8",
       "PubChem CID 11184387: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/11184387",
       "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q72515659"
-    ],
-    "tags" : [
-      "no-human-data",
-      "tryptamine"
-    ]
-  },
-  {
-    "aliases" : [
-      "(2R)-2-azaniumyl-3-(1H-indol-3-yl)propanoate"
-    ],
-    "category" : "Other",
-    "defaultRoute" : "oral",
-    "effects" : [
-
-    ],
-    "name" : "D-tryptophan zwitterion",
-    "routes" : [
-
-    ],
-    "sources" : [
-      "CAS 153-94-6",
-      "PubChem CID 9060: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/9060",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q106345497"
     ],
     "tags" : [
       "no-human-data",
@@ -29306,6 +29862,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 960,
+    "name" : "Darifenacin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "(1R,4S)-Sertraline analog",
       "Dasotraline",
       "SEP-225289"
@@ -29434,6 +30003,19 @@
       "no-human-data",
       "TIHKAL",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 108,
+    "name" : "Deferiprone",
+    "routes" : [
+
     ]
   },
   {
@@ -29921,7 +30503,7 @@
         },
         "protocolDosing" : {
           "frequency" : "research only",
-          "notes" : "no validated human dosing — potent μ-opioid (~30–40× morphine); respiratory depression risk. Research\/community protocol only"
+          "notes" : "no validated human dosing. Potent μ-opioid (~30–40× morphine); respiratory depression risk. Research\/community protocol only"
         },
         "route" : "intravenous",
         "unit" : "mcg"
@@ -29968,18 +30550,30 @@
         "doses" : {
           "common" : {
             "lower" : 4,
-            "upper" : 8
+            "upper" : 6
           },
-          "heavy" : 15,
           "light" : {
             "lower" : 2,
             "upper" : 4
           },
           "strong" : {
-            "lower" : 8,
+            "lower" : 6,
             "upper" : 12
+          }
+        },
+        "duration" : {
+          "afterglow" : {
+            "max" : 480,
+            "min" : 60
           },
-          "threshold" : 1
+          "onset" : {
+            "max" : 5,
+            "min" : 1
+          },
+          "total" : {
+            "max" : 600,
+            "min" : 480
+          }
         },
         "route" : "oral",
         "unit" : "mg"
@@ -30235,6 +30829,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 153,
+    "name" : "Desirudin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Aerius",
       "Clarinex",
       "NeoClarityn"
@@ -30356,6 +30963,19 @@
       "GABAA-PAM",
       "habit-forming",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1668,
+    "name" : "Desogestrel",
+    "routes" : [
+
     ]
   },
   {
@@ -30616,7 +31236,21 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 120,
+    "name" : "Dexmedetomidine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "dexmethylphenidate",
+      "Dexmethylphenidate Hydrochloride Extended-release",
       "dextromethylphenidate",
       "Focalin",
       "Focalin XR"
@@ -31059,6 +31693,32 @@
       "habit-forming",
       "research-chemical",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 42,
+    "name" : "Dicloxacillin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 108,
+    "name" : "Dicyclomine",
+    "routes" : [
+
     ]
   },
   {
@@ -31946,6 +32606,33 @@
   },
   {
     "aliases" : [
+      "3-[2-(dipropylamino)ethyl]-1H-indol-4-ol",
+      "4-hydroxy-N,N-dipropyltryptamine",
+      "4-hydroxydipropyltryptamine",
+      "deprocin",
+      "dipropyl-4-hydroxytryptamine"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "dipropyl-4-hydroxytryptamine",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 63065-88-3",
+      "PubChem CID 21854223: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/21854223",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q4637138"
+    ],
+    "tags" : [
+      "no-human-data",
+      "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
       "diisopropyltryptamine"
     ],
     "category" : "Psychedelic",
@@ -32139,6 +32826,33 @@
   },
   {
     "aliases" : [
+      "5-hydroxy-DL-tryptophan",
+      "5-hydroxytryptophan DL-form",
+      "DL-2-Amino-3-(5-hydroxyindolyl)propionic acid",
+      "DL-5-HTP",
+      "DL-5-Hydroxytryptophan"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "DL-5-hydroxytryptophan",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 56-69-9",
+      "PubChem CID 144: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/144",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27103541"
+    ],
+    "tags" : [
+      "no-human-data",
+      "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
       "2-amino-3-(6-fluoro-1H-indol-3-yl)propanoic acid",
       "2-amino-3-(6-fluoroindol-3-yl)propanoic acid",
       "343-92-0",
@@ -32234,11 +32948,9 @@
       "(R,S)-dopa",
       "2-Amino-3-(3,4-dihydroxyphenyl)propanoate",
       "2-Amino-3-(3,4-dihydroxyphenyl)propanoic acid",
-      "3',4'-dihydroxyphenylalanine",
       "3,4-Dihydroxy-DL-phenylalanine",
       "3-(3,4-Dihydroxyphenyl)-DL-alanine",
       "3-hydroxy-DL-tyrosine",
-      "3-hydroxytyrosine",
       "a-Amino-3,4-dihydroxy-Benzenepropanoate",
       "a-Amino-3,4-dihydroxy-Benzenepropanoic acid",
       "alpha-Amino-3,4-dihydroxy-Benzenepropanoate",
@@ -32247,9 +32959,11 @@
       "b-(3,4-Dihydroxyphenyl)-a-alanine",
       "beta-(3,4-dihydroxyphenyl)-DL-alpha-alanine",
       "DL-3,4-dopa",
+      "DL-3-Hydroxytyrosine",
       "DL-4,5-Dihydroxyphenylalanine",
       "DL-b-(3,4-Dihydroxyphenyl)alanine",
       "dl-beta-(3,4-dihydroxyphenyl)-alpha-alanine",
+      "DL-beta-(3,4-dihydroxyphenyl)alanine",
       "DL-dihydroxyphenylalanine",
       "DL-dioxyphenylalanine"
     ],
@@ -32264,7 +32978,7 @@
     ],
     "sources" : [
       "CAS 63-84-3",
-      "PubChem CID 58663891: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/58663891",
+      "PubChem CID 836: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/836",
       "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27121510"
     ],
     "tags" : [
@@ -32275,8 +32989,7 @@
   {
     "aliases" : [
       "DL-metamphetamine",
-      "methamphetamine (not stereospecifc)",
-      "methamphetamine (racemic)",
+      "methamphetamine",
       "N-methyl-1-phenylpropan-2-amine"
     ],
     "category" : "Stimulant",
@@ -32378,6 +33091,34 @@
       "OTC",
       "phenethylamine",
       "supplement"
+    ]
+  },
+  {
+    "aliases" : [
+      "2-amino-3-(1H-indol-3-yl)propanoic acid",
+      "alpha-amino-beta-3-indolepropionic acid",
+      "beta-3-indolylalanine",
+      "Htrp",
+      "Trp",
+      "W"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "DL-tryptophan",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 54-12-6",
+      "PubChem CID 1148: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/1148",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27103394"
+    ],
+    "tags" : [
+      "no-human-data",
+      "tryptamine"
     ]
   },
   {
@@ -34417,6 +35158,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 720,
+    "name" : "Edoxaban",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Psychedelic",
     "defaultRoute" : "oral",
     "effects" : [
@@ -34457,6 +35211,19 @@
       "no-human-data",
       "phenethylamine",
       "PIHKAL"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 2850,
+    "name" : "Efavirenz",
+    "routes" : [
+
     ]
   },
   {
@@ -34628,7 +35395,7 @@
         },
         "protocolDosing" : {
           "frequency" : "once weekly",
-          "notes" : "no validated dosing — investigational (Phase 2), research\/community protocol"
+          "notes" : "no validated dosing; investigational (Phase 2), research\/community protocol"
         },
         "route" : "subcutaneous",
         "unit" : "mg"
@@ -34700,6 +35467,19 @@
       "no-human-data",
       "phenethylamine",
       "PIHKAL"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 744,
+    "name" : "Empagliflozin",
+    "routes" : [
+
     ]
   },
   {
@@ -35203,8 +35983,7 @@
     ],
     "sources" : [
       "https:\/\/en.wikipedia.org\/wiki\/Epitalon",
-      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/219042",
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/34960435\/"
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/219042"
     ],
     "tags" : [
       "anti-aging",
@@ -35213,6 +35992,19 @@
       "peptide",
       "research-chemical",
       "telomerase-activator"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 270,
+    "name" : "Eplerenone",
+    "routes" : [
+
     ]
   },
   {
@@ -35255,6 +36047,19 @@
       "research-chemical",
       "tentative",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 150,
+    "name" : "Eptifibatide",
+    "routes" : [
+
     ]
   },
   {
@@ -35492,15 +36297,27 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 75,
+    "name" : "Esomeprazole",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "elprazolam",
       "eurodin",
       "prosom"
     ],
-    "category" : "Benzodiazepine",
-    "defaultRoute" : "oral",
     "effects" : [
       "A rarely prescribed medium-duration prescription benzodiazepine. Mainly used as a hypnotic, it can cause amnesia and lowered inhibitions in higher dosages."
     ],
+    "halfLifeMinutes" : 1020,
     "name" : "Estazolam",
     "routes" : [
       {
@@ -35749,6 +36566,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 738,
+    "name" : "Ethotoin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Psychedelic",
     "defaultRoute" : "oral",
     "effects" : [
@@ -35797,6 +36627,47 @@
       "no-human-data",
       "phenethylamine",
       "PIHKAL"
+    ]
+  },
+  {
+    "aliases" : [
+      "n-ethylpentedrone",
+      "nep"
+    ],
+    "category" : "Empathogen",
+    "defaultRoute" : "insufflation",
+    "effects" : [
+      "The drug is cathinone and related to Pentedrone. It became known around the same time as Ethyl-Hexedrone. There is limited information on the drug and caution, as always, is recommended."
+    ],
+    "name" : "Ethyl-pentedrone",
+    "routes" : [
+      {
+        "doses" : {
+          "light" : {
+            "lower" : 10,
+            "upper" : 20
+          },
+          "strong" : {
+            "lower" : 40,
+            "upper" : 60
+          }
+        },
+        "duration" : {
+          "afterglow" : {
+            "max" : 1440,
+            "min" : 60
+          }
+        },
+        "route" : "insufflation",
+        "unit" : "mg"
+      }
+    ],
+    "sources" : [
+      "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
+    ],
+    "tags" : [
+      "research-chemical",
+      "tentative"
     ]
   },
   {
@@ -36316,6 +37187,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 75,
+    "name" : "Etomidate",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Opioid",
     "defaultRoute" : "insufflation",
     "effects" : [
@@ -36339,6 +37223,19 @@
       "fentanyl-stronger",
       "nitazene",
       "US-Schedule-I"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 450,
+    "name" : "Etoposide",
+    "routes" : [
+
     ]
   },
   {
@@ -36414,6 +37311,19 @@
       "fatalities-reported",
       "MDMA-analog",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1800,
+    "name" : "Everolimus",
+    "routes" : [
+
     ]
   },
   {
@@ -36513,6 +37423,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1320,
+    "name" : "Ezetimibe",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Psychedelic",
     "defaultRoute" : "oral",
     "effects" : [
@@ -36596,6 +37519,19 @@
       "GABAergic",
       "high-dependence-risk",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 138,
+    "name" : "Famciclovir",
+    "routes" : [
+
     ]
   },
   {
@@ -36772,6 +37708,45 @@
       "racetam",
       "research-chemical",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 390,
+    "name" : "Febuxostat",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1290,
+    "name" : "Felbamate",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 180,
+    "name" : "Fenoprofen",
+    "routes" : [
+
     ]
   },
   {
@@ -37052,6 +38027,19 @@
       "no-human-data",
       "phenethylamine",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 660,
+    "name" : "Flibanserin",
+    "routes" : [
+
     ]
   },
   {
@@ -37351,6 +38339,32 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1200,
+    "name" : "Fludarabine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 90,
+    "name" : "Flunisolide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Opioid",
     "defaultRoute" : "insufflation",
     "effects" : [
@@ -37497,7 +38511,7 @@
           "target" : "GABA-A"
         }
       ],
-      "description" : "Designer imidazobenzodiazepine; fluorinated analog of loprazolam (NOT flualprazolam — distinct compound). Described as 'very high potency' in NPS literature; no published Ki\/EC50. Reported '1–2 mg' dosing is unsourced and unreliable. No validated human dosing data. Loprazolam t½ ~6–12 h — extrapolation to this compound is uncertain.",
+      "description" : "Designer imidazobenzodiazepine; fluorinated analog of loprazolam (NOT flualprazolam, a distinct compound). Described as very high potency in NPS literature; no published Ki\/EC50. No validated human dosing data. Loprazolam's half-life cannot be reliably extrapolated to this compound.",
       "primaryTargets" : [
         "GABA-A"
       ],
@@ -37686,6 +38700,19 @@
     "tags" : [
       "habit-forming",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 14,
+    "name" : "Fluorouracil",
+    "routes" : [
+
     ]
   },
   {
@@ -37946,6 +38973,33 @@
   },
   {
     "aliases" : [
+      "Cutivate",
+      "Flonase",
+      "Flovent",
+      "氟替卡松"
+    ],
+    "category" : "Endocrine",
+    "defaultRoute" : "insufflation",
+    "effects" : [
+
+    ],
+    "name" : "Fluticasone",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Fluticasone",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/5311101"
+    ],
+    "tags" : [
+      "anti-inflammatory",
+      "corticosteroid",
+      "OTC-nasal",
+      "prescription-only"
+    ]
+  },
+  {
+    "aliases" : [
       "restas"
     ],
     "category" : "Benzodiazepine",
@@ -37995,6 +39049,19 @@
       "benzodiazepine",
       "GABAA-PAM",
       "habit-forming"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 180,
+    "name" : "Fluvastatin",
+    "routes" : [
+
     ]
   },
   {
@@ -38242,6 +39309,19 @@
       "no-human-data",
       "peptide",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1560,
+    "name" : "Frovatriptan",
+    "routes" : [
+
     ]
   },
   {
@@ -38905,7 +39985,7 @@
       "Dizziness, nausea, insomnia; slow onset of therapeutic effect",
       "Azapirone related to buspirone — delayed anxiolytic benefit"
     ],
-    "halfLifeMinutes" : 150,
+    "halfLifeMinutes" : 300,
     "name" : "Gepirone",
     "routes" : [
       {
@@ -39842,6 +40922,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 990,
+    "name" : "Griseofulvin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "growth hormone-releasing hexapeptide",
       "SKF-110679"
     ],
@@ -40023,7 +41116,7 @@
           "target" : "PPARδ"
         }
       ],
-      "description" : "Peroxisome proliferator-activated receptor delta (PPARδ\/PPARβ) agonist; does not bind the androgen receptor. Upregulates genes for fatty acid oxidation and mitochondrial biogenesis. Human PK is sparse — GSK discontinued development in 2007 due to multi-organ carcinogenicity in 2-year rodent studies at human-equivalent doses. WADA issued a specific safety warning.",
+      "description" : "Peroxisome proliferator-activated receptor delta (PPARδ\/PPARβ) agonist; does not bind the androgen receptor. Upregulates genes for fatty acid oxidation and mitochondrial biogenesis. Human PK is sparse. GSK discontinued development in 2007 due to multi-organ carcinogenicity in 2-year rodent studies at human-equivalent doses. WADA issued a specific safety warning.",
       "primaryTargets" : [
         "PPARδ"
       ],
@@ -41671,6 +42764,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 2.1,
+    "name" : "Hyaluronidase",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Dihydroergotoxine",
       "Ergoloid mesylates"
     ],
@@ -41742,6 +42848,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 612,
+    "name" : "Hydrochlorothiazide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "hydro",
       "vicodin",
       "氢可酮",
@@ -41803,6 +42922,32 @@
       "common",
       "habit-forming",
       "US-Schedule-II"
+    ]
+  },
+  {
+    "aliases" : [
+      "Cortaid",
+      "Cortef",
+      "Cortizone",
+      "氢化可的松"
+    ],
+    "category" : "Endocrine",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "Hydrocortisone",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Hydrocortisone",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/5754"
+    ],
+    "tags" : [
+      "anti-inflammatory",
+      "corticosteroid",
+      "OTC-topical"
     ]
   },
   {
@@ -42223,6 +43368,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1320,
+    "name" : "Idarubicin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Catena",
       "Raxone"
     ],
@@ -42325,6 +43483,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 420,
+    "name" : "Ifosfamide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "DES(1-3) IGF-1"
     ],
     "cas" : "112603-35-3",
@@ -42349,7 +43520,7 @@
       "references" : [
         "https:\/\/en.wikipedia.org\/wiki\/Insulin-like_growth_factor_1"
       ],
-      "summary" : "Truncated IGF-1 (DES 1-3) — IGF-1R agonist."
+      "summary" : "Truncated IGF-1 (DES 1-3): IGF-1R agonist."
     },
     "molarMass" : 7372,
     "name" : "IGF-1 DES",
@@ -42421,7 +43592,7 @@
       "references" : [
         "https:\/\/en.wikipedia.org\/wiki\/IGF-1_LR3"
       ],
-      "summary" : "Modified recombinant IGF-1 (83-aa analog) — IGF-1R agonist."
+      "summary" : "Modified recombinant IGF-1 (83-aa analog): IGF-1R agonist."
     },
     "molarMass" : 9111,
     "name" : "IGF-1 LR3",
@@ -42971,6 +44142,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 81,
+    "name" : "Insulin aspart",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 42,
+    "name" : "Insulin glulisine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "KI",
       "Lugol's Iodine",
       "Nascent Iodine",
@@ -43157,6 +44354,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 120,
+    "name" : "Ipratropium",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "IQM-97,423"
     ],
     "category" : "Other",
@@ -43175,6 +44385,19 @@
     "tags" : [
       "no-human-data",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 780,
+    "name" : "Irbesartan",
+    "routes" : [
+
     ]
   },
   {
@@ -43706,6 +44929,19 @@
     "tags" : [
       "no-human-data",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1080,
+    "name" : "Ivermectin",
+    "routes" : [
+
     ]
   },
   {
@@ -44544,7 +45780,7 @@
       "Fishy body odor possible via gut microbiome TMAO production",
       "GI upset at doses above 2g"
     ],
-    "halfLifeMinutes" : 240,
+    "halfLifeMinutes" : 1044,
     "name" : "L-Carnitine",
     "routes" : [
       {
@@ -44712,11 +45948,14 @@
   },
   {
     "aliases" : [
-      "2-amino-3-(1H-indol-3-yl)propanoic acid",
-      "alpha-amino-beta-3-indolepropionic acid",
-      "beta-3-indolylalanine",
-      "Htrp",
+      "(S)-2-Amino-3-(1H-indol-3-yl)propanoic acid",
+      "(S)-alpha-Amino-beta-(3-indolyl)-propionic acid",
+      "(S)-α-amino-1H-indole-3-propanoic acid",
+      "Indole-3-alanine",
+      "L(-)-Tryptophan",
+      "L-alpha-Amino-3-indolepropionic acid",
       "L-Trp",
+      "L-β-3-indolylalanine",
       "Optimax",
       "Tryptophan",
       "W"
@@ -44774,12 +46013,12 @@
       }
     ],
     "sources" : [
-      "CAS 54-12-6",
+      "CAS 73-22-3",
       "https:\/\/en.wikipedia.org\/wiki\/Tryptophan",
       "https:\/\/ods.od.nih.gov\/factsheets\/Tryptophan-HealthProfessional\/",
       "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/6305",
-      "PubChem CID 1148: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/1148",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27103394"
+      "PubChem CID 6305: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/6305",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q181003"
     ],
     "tags" : [
       "5HT-precursor",
@@ -44838,29 +46077,6 @@
       "CAS 86632-67-9",
       "PubChem CID 46905044: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/46905044",
       "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27105157"
-    ],
-    "tags" : [
-      "no-human-data",
-      "tryptamine"
-    ]
-  },
-  {
-    "aliases" : [
-      "(2S)-2-azaniumyl-3-(1H-indol-3-yl)propanoate"
-    ],
-    "category" : "Other",
-    "defaultRoute" : "oral",
-    "effects" : [
-
-    ],
-    "name" : "L-tryptophan zwitterion",
-    "routes" : [
-
-    ],
-    "sources" : [
-      "CAS 27813-82-7",
-      "PubChem CID 6305: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/6305",
-      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q106345470"
     ],
     "tags" : [
       "no-human-data",
@@ -45207,6 +46423,31 @@
   },
   {
     "aliases" : [
+      "Lamictal",
+      "拉莫三嗪"
+    ],
+    "category" : "Anticonvulsant",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "Lamotrigine",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Lamotrigine",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/3878"
+    ],
+    "tags" : [
+      "anticonvulsant",
+      "mood-stabilizer",
+      "prescription-only",
+      "sodium-channel-blocker"
+    ]
+  },
+  {
+    "aliases" : [
       "LY303870"
     ],
     "category" : "Other",
@@ -45412,6 +46653,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 372,
+    "name" : "Leucovorin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "5-Oxo-L-prolyl-L-histidyl-L-tryptophyl-L-seryl-L-tryosyl-D-leucyl-L-leucyl-L-arginyl-N-ethyl-L-prolinamide monoacetate",
       "Leuprorelin acetate",
       "Pyr-His-Trp-Ser-Tyr-D-Leu-Leu-Arg-Pro-NHEt.HOAc"
@@ -45433,6 +46687,19 @@
     "tags" : [
       "no-human-data",
       "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 198,
+    "name" : "Levalbuterol",
+    "routes" : [
+
     ]
   },
   {
@@ -45604,6 +46871,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 420,
+    "name" : "Levofloxacin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Fetzima"
     ],
     "category" : "Antidepressant",
@@ -45682,11 +46962,10 @@
     "aliases" : [
       "chlordiazepoxide"
     ],
-    "category" : "Benzodiazepine",
-    "defaultRoute" : "oral",
     "effects" : [
       "Chlordiazepoxide, a medium-acting benzodiazepine drug typically prescribed for sleep purposes. The drug is reported to be sedative and hypnotic. The drug may  lower inhibitions and cause amnesia."
     ],
+    "halfLifeMinutes" : 600,
     "name" : "Librium",
     "routes" : [
       {
@@ -45725,8 +47004,20 @@
     "tags" : [
       "benzodiazepine",
       "GABAA-PAM",
-      "habit-forming",
-      "US-Schedule-IV"
+      "habit-forming"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 9300,
+    "name" : "Linagliptin",
+    "routes" : [
+
     ]
   },
   {
@@ -45783,6 +47074,19 @@
       "nootropic",
       "OTC",
       "supplement"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 3600,
+    "name" : "Liothyronine",
+    "routes" : [
+
     ]
   },
   {
@@ -46354,11 +47658,10 @@
     "aliases" : [
       "noctamid"
     ],
-    "category" : "Benzodiazepine",
-    "defaultRoute" : "oral",
     "effects" : [
       "The drug is a less commonly prescribed benzodiazepine. The drug is short-acting with a short half-life. The drug is typically seen in the Netherlands. The drug is reported to have sedative, hypnotic, and anxiolytic effects."
     ],
+    "halfLifeMinutes" : 600,
     "name" : "Lormetazepam",
     "routes" : [
       {
@@ -46932,6 +48235,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 6480,
+    "name" : "Lumefantrine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Latuda"
     ],
     "category" : "Antipsychotic",
@@ -47419,6 +48735,50 @@
       "nootropic",
       "OTC",
       "supplement"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "category" : "Gastrointestinal",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "Magnesium\/Magaldrate",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Magaldrate"
+    ],
+    "tags" : [
+      "antacid",
+      "combination-product",
+      "OTC"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "category" : "Gastrointestinal",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "Magnesium\/Sodium",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/en.wikipedia.org\/wiki\/Magnesium_hydroxide"
+    ],
+    "tags" : [
+      "antacid",
+      "combination-product",
+      "OTC"
     ]
   },
   {
@@ -48648,6 +50008,30 @@
   },
   {
     "aliases" : [
+      "MD-PV8",
+      "MDPHPP"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "MDPEP",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 746541-09-3",
+      "PubChem CID 132520294: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/132520294",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q122286206"
+    ],
+    "tags" : [
+      "no-human-data",
+      "phenethylamine"
+    ]
+  },
+  {
+    "aliases" : [
 
     ],
     "category" : "Psychedelic",
@@ -49403,6 +50787,7 @@
     ],
     "sources" : [
       "CAS 73-31-4",
+      "doi:10.5664\/jcsm.6462",
       "https:\/\/erowid.org\/library\/books_online\/tihkal\/tihkal35.shtml",
       "PubChem CID 896: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/896",
       "TIHKAL by Alexander & Ann Shulgin (Transform Press, 1997). Text used with permission per https:\/\/erowid.org\/library\/books_online\/tihkal\/tihkal.shtml",
@@ -49800,6 +51185,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 600,
+    "name" : "Meprobamate",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Epirocaine",
       "Oracaine"
     ],
@@ -49846,7 +51244,7 @@
         "https:\/\/en.wikipedia.org\/wiki\/Meprylcaine",
         "https:\/\/pubmed.ncbi.nlm.nih.gov\/13572116\/"
       ],
-      "summary" : "Sodium channel blocker (local anesthetic) + relatively potent monoamine transporter inhibition (DA\/NE\/5-HT reuptake) — stimulant properties distinguish it from purely local-anesthetic benzoates."
+      "summary" : "Sodium channel blocker (local anesthetic) + relatively potent monoamine transporter inhibition (DA\/NE\/5-HT reuptake). Its stimulant properties distinguish it from purely local-anesthetic benzoates."
     },
     "molarMass" : 235.33,
     "name" : "Meprylcaine",
@@ -51475,6 +52873,7 @@
       "FDA-approved for methemoglobinemia at higher doses",
       "Turns urine and tears blue-green"
     ],
+    "halfLifeMinutes" : 1440,
     "name" : "Methylene blue",
     "routes" : [
       {
@@ -51510,11 +52909,11 @@
   },
   {
     "aliases" : [
-      "3,4-Methylenedioxy-N-tert-butylcathinone",
-      "D-Tertylone",
+      "3′,4′-methylenedioxy-N-tert-butylcathinone",
       "MDPT",
-      "N-Tert-butyl-methylone",
-      "tBuONE"
+      "N-tert-butyl-methylone",
+      "tBuONE",
+      "tertylone"
     ],
     "displayName" : "MDPT",
     "effects" : [
@@ -51739,7 +53138,7 @@
       "Vibrating vision",
       "Wakefulness"
     ],
-    "halfLifeMinutes" : 90,
+    "halfLifeMinutes" : 384,
     "name" : "Methylone",
     "routes" : [
       {
@@ -51818,10 +53217,23 @@
   },
   {
     "aliases" : [
-      "biphentin",
-      "concerta",
+      "Adhansia XR",
+      "Aptensio XR",
+      "Biphentin",
+      "Concerta",
+      "Equasym",
+      "Equasym XL",
+      "Foquest",
+      "Jornay PM",
+      "Medikinet",
+      "Medikinet Retard",
+      "Medikinet XL",
+      "Metadate CD",
       "mph",
-      "ritalin",
+      "Relexxii",
+      "Ritalin",
+      "Ritalin LA",
+      "Ritalin SR",
       "利他林",
       "哌甲酯"
     ],
@@ -51941,13 +53353,25 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 143,
+    "name" : "Methylprednisolone",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "noludar"
     ],
-    "category" : "Depressant",
-    "defaultRoute" : "oral",
     "effects" : [
       "Sedative of the pipeidinedone family. The drug was used for treating insomnia, but is rarely used today due to alternatives with fewer side effects, such as benzodiazepines."
     ],
+    "halfLifeMinutes" : 552,
     "name" : "Methyprylon",
     "routes" : [
       {
@@ -52150,6 +53574,19 @@
       "fatalities-reported",
       "fentanyl-stronger",
       "nitazene"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 438,
+    "name" : "Metolazone",
+    "routes" : [
+
     ]
   },
   {
@@ -52422,6 +53859,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1440,
+    "name" : "Miconazole",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Benzodiazepine",
     "defaultRoute" : "insufflation",
     "effects" : [
@@ -52574,6 +54024,90 @@
       "GABAA-PAM",
       "habit-forming",
       "US-Schedule-IV"
+    ]
+  },
+  {
+    "aliases" : [
+      "Amatine",
+      "Desglymidodrine",
+      "Gutron",
+      "Orvaten",
+      "ProAmatine",
+      "ST-1059",
+      "米多君"
+    ],
+    "cas" : "42794-76-3",
+    "category" : "Cardiovascular",
+    "defaultRoute" : "oral",
+    "effects" : [
+      "Prodrug — the drug that acts is desglymidodrine, formed by deglycination in many tissues",
+      "Raises standing blood pressure by constricting arterioles and veins; no direct cardiac effect",
+      "Prescribed for symptomatic orthostatic hypotension, and off-label for vasovagal syncope and hepatorenal syndrome",
+      "Desglymidodrine crosses the blood-brain barrier poorly, so it is not centrally stimulating",
+      "Supine hypertension is the dose-limiting adverse effect and carries an FDA boxed warning",
+      "Midodrine's own half-life is ~25 min; desglymidodrine's is ~3–4 h, and that is what the duration follows"
+    ],
+    "formula" : "C12H18N2O4",
+    "halfLifeMinutes" : 25,
+    "inchikey" : "PTKSEFOSCHHMPD-UHFFFAOYSA-N",
+    "mechanismOfAction" : {
+      "bindings" : [
+        {
+          "action" : "agonist",
+          "affinity" : 3,
+          "target" : "α1-adrenergic receptor"
+        }
+      ],
+      "description" : "Oral midodrine is rapidly absorbed and deglycinated to desglymidodrine, which activates α1-adrenoceptors on arteriolar and venous smooth muscle, raising vascular tone and blood pressure. It does not stimulate cardiac β-adrenoceptors, so pulse rate is essentially unchanged, and it penetrates the CNS poorly. Absolute bioavailability measured as desglymidodrine is 93%, unaffected by food; clearance is ~80% active renal secretion. Neither compound is a monoamine-oxidase substrate.",
+      "primaryTargets" : [
+        "α1-adrenergic receptor"
+      ],
+      "references" : [
+        "https:\/\/dailymed.nlm.nih.gov\/dailymed\/drugInfo.cfm?setid=03b54024-2a26-4abe-bd8b-b66bb6781fa7"
+      ],
+      "summary" : "Prodrug of desglymidodrine, a selective peripheral α1-adrenergic agonist: vasoconstriction without central or β-adrenergic action."
+    },
+    "molarMass" : 254.28,
+    "name" : "Midodrine",
+    "pubchemCID" : 4195,
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/dailymed.nlm.nih.gov\/dailymed\/drugInfo.cfm?setid=03b54024-2a26-4abe-bd8b-b66bb6781fa7",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/4195"
+    ],
+    "tags" : [
+      "alpha-agonist",
+      "orthostatic-hypotension",
+      "prescription",
+      "vasopressor"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 120,
+    "name" : "Miglitol",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 390,
+    "name" : "Miglustat",
+    "routes" : [
+
     ]
   },
   {
@@ -52765,7 +54299,7 @@
           "target" : "β3-adrenergic receptor"
         }
       ],
-      "description" : "Selective β3-AR agonist (β1\/β2 sparing at approved doses); FDA-approved for overactive bladder via bladder detrusor relaxation. Activates brown adipose tissue thermogenesis and increases energy expenditure at supratherapeutic doses (200 mg). Tmax ~3.5 h; oral bioavailability 29–35% (food-dependent). Moderate CYP2D6 inhibitor — raises plasma levels of metoprolol, digoxin, and other CYP2D6 substrates.",
+      "description" : "Selective β3-AR agonist (β1\/β2 sparing at approved doses); FDA-approved for overactive bladder via bladder detrusor relaxation. Activates brown adipose tissue thermogenesis and increases energy expenditure at supratherapeutic doses (200 mg). Tmax ~3.5 h; oral bioavailability 29–35% (food-dependent). Moderate CYP2D6 inhibitor: raises plasma levels of metoprolol, digoxin, and other CYP2D6 substrates.",
       "primaryTargets" : [
         "β3-adrenergic receptor"
       ],
@@ -52774,7 +54308,7 @@
         "FDA Myrbetriq prescribing information",
         "https:\/\/doi.org\/10.1172\/JCI134892"
       ],
-      "summary" : "Selective β3-adrenergic receptor agonist; bladder relaxation at approved doses; BAT thermogenesis at supratherapeutic doses."
+      "summary" : "Selective β3-adrenergic receptor agonist; bladder detrusor relaxation at clinical exposures, brown adipose tissue thermogenesis at higher exposures."
     },
     "molarMass" : 396.5,
     "name" : "Mirabegron",
@@ -52788,7 +54322,7 @@
           "frequency" : "once daily",
           "highAmount" : 50,
           "lowAmount" : 25,
-          "notes" : "FDA-approved 25–50 mg for overactive bladder; metabolic\/BAT research uses 200 mg (4× approved max) — substantial CV risk (≥20 bpm HR increase); CYP2D6 inhibitor at all doses (raises metoprolol, digoxin)"
+          "notes" : "FDA-approved 25–50 mg for overactive bladder; metabolic\/BAT research uses 200 mg (4× approved max), with substantial CV risk (≥20 bpm HR increase); CYP2D6 inhibitor at all doses (raises metoprolol, digoxin)"
         },
         "route" : "oral",
         "unit" : "mg"
@@ -53329,6 +54863,32 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 300,
+    "name" : "Mometasone",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 246,
+    "name" : "Montelukast",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Opioid",
     "defaultRoute" : "oral",
     "effects" : [
@@ -53371,6 +54931,7 @@
   },
   {
     "aliases" : [
+      "Morphine Sulfate Extended-release",
       "吗啡",
       "嗎啡"
     ],
@@ -53681,7 +55242,7 @@
           "target" : "5-HT2A"
         }
       ],
-      "description" : "Substituted tryptamine; N-methyl, N-propyl disubstitution. Crystal structure solved (Chadeayne et al. 2019). Shulgin (TiHKAL #34) experienced no effect at oral doses up to 20 mg in self-trials; threshold listed as '>50 mg oral' with full dose ranges undocumented. Human psychedelic activity unconfirmed. Cross-tolerance with 5-HT2A psychedelics would be expected if psychedelic effects are confirmed.",
+      "description" : "Substituted tryptamine; N-methyl, N-propyl disubstitution. Crystal structure solved (Chadeayne et al. 2019). Shulgin (TiHKAL #34) reported no effect at oral doses tested; threshold and dose ranges undocumented. Human psychedelic activity unconfirmed. Cross-tolerance with 5-HT2A psychedelics would be expected if psychedelic effects are confirmed.",
       "primaryTargets" : [
         "5-HT2A"
       ],
@@ -53889,6 +55450,56 @@
     "sources" : [
       "https:\/\/psychonautwiki.org\/wiki\/Psilocybin_mushrooms",
       "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
+    ],
+    "subjectiveEffects" : [
+      {
+        "description" : "Common on the rising limb, and usually attributed to the fungal material rather than to psilocybin: chitin is indigestible, and the same amount taken as a tea or an extract tends to produce less of it. Generally fades once the effects establish.",
+        "name" : "nausea"
+      },
+      {
+        "description" : "A physical heaviness, restlessness or shivering through the comeup, distinct from nausea and typically easing at the peak.",
+        "name" : "body load"
+      },
+      {
+        "description" : "Frequent and persistent during the comeup, without any matching sleepiness. Reported across the serotonergic psychedelics.",
+        "name" : "yawning"
+      },
+      {
+        "description" : "Pronounced, and among the most reliable outward signs. Persists through most of the experience and outlasts the subjective peak.",
+        "name" : "pupil dilation"
+      },
+      {
+        "description" : "Surfaces breathe, drift and reorganize; edges pick up color; patterns surface in textures like bark, carpet or a stippled ceiling. Distinct from hallucination in that the object is still there and still recognized as itself.",
+        "name" : "visual distortion"
+      },
+      {
+        "description" : "Geometry and imagery behind closed lids, generally more elaborate than the open-eye distortions and markedly more responsive to music.",
+        "name" : "closed-eye visuals"
+      },
+      {
+        "description" : "Duration stops tracking the clock. Minutes read as far longer, and any sense of how long the experience has been running is unreliable throughout.",
+        "name" : "time distortion"
+      },
+      {
+        "description" : "Whatever is already present gets louder rather than replaced. Surroundings and prior state shape this more than amount does, which is why the same amount produces very different experiences for the same person on different days.",
+        "name" : "emotional amplification"
+      },
+      {
+        "description" : "Often prolonged and self-sustaining, sometimes with no identifiable object.",
+        "name" : "laughter"
+      },
+      {
+        "description" : "A thought, phrase or motion repeating on a short cycle. More common at higher amounts, and usually resolving as the peak passes.",
+        "name" : "thought loops"
+      },
+      {
+        "description" : "The boundary between self and surroundings thinning, or dropping out entirely. Strongly dose-dependent and not reliably present; it is the effect people most often single out as significant afterwards.",
+        "name" : "ego dissolution"
+      },
+      {
+        "description" : "A settled, open mood in the day or days following, separate from the acute effects and reported more often than not.",
+        "name" : "afterglow"
+      }
     ],
     "tags" : [
       "common",
@@ -54267,6 +55878,7 @@
       "Acetylcysteine",
       "Fluimucil",
       "Mucomyst",
+      "N-acetyl cysteine",
       "N-acetyl-L-cysteine",
       "NAC"
     ],
@@ -54525,42 +56137,25 @@
   },
   {
     "aliases" : [
-      "n-ethylpentedrone",
-      "nep"
+      "N-ethylnorpentedrone",
+      "N-ethylpentedrone"
     ],
     "category" : "Stimulant",
     "effects" : [
-      "The drug is cathinone and related to Pentedrone. It became known around the same time as Ethyl-Hexedrone. There is limited information on the drug and caution, as always, is recommended."
+
     ],
     "name" : "N-Ethylpentedrone",
     "routes" : [
-      {
-        "doses" : {
-          "light" : {
-            "lower" : 10,
-            "upper" : 20
-          },
-          "strong" : {
-            "lower" : 40,
-            "upper" : 60
-          }
-        },
-        "duration" : {
-          "afterglow" : {
-            "max" : 1440,
-            "min" : 60
-          }
-        },
-        "route" : "insufflation",
-        "unit" : "mg"
-      }
+
     ],
     "sources" : [
-      "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
+      "CAS 779974-89-9",
+      "PubChem CID 205593: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/205593",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27274342"
     ],
     "tags" : [
-      "research-chemical",
-      "tentative"
+      "no-human-data",
+      "phenethylamine"
     ]
   },
   {
@@ -55455,7 +57050,6 @@
       "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/5284596"
     ],
     "tags" : [
-      "harm-reduction",
       "opioid-precipitated-withdrawal",
       "opioid-receptor-antagonist",
       "OTC-available",
@@ -55603,11 +57197,10 @@
     "aliases" : [
 
     ],
-    "category" : "Other",
-    "defaultRoute" : "oral",
     "effects" : [
       "A very common pain and fever reducer. It is also known as Aleve. Naproxen is in the same drug category as ibuprofen, which is also a nonsteroidal anti-inflammatory. This drug is available in most places over the counter. Is sometimes used to reduce the body-load of certain drugs."
     ],
+    "halfLifeMinutes" : 870,
     "name" : "Naproxen",
     "routes" : [
       {
@@ -55640,6 +57233,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 360,
+    "name" : "Naratriptan",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 90,
+    "name" : "Nateglinide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "5-MeO-DALT-Boc",
       "N1-Boc-5-MeO-DALT"
     ],
@@ -55666,7 +57285,7 @@
           "target" : "5-HT1A"
         }
       ],
-      "description" : "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl as sometimes assumed). Boc group cleaves at ~150–200°C (pyrolysis\/smoking route) or under acid conditions. Parent 5-MeO-DALT: 5-HT1A and 5-HT2A agonist. Delivered parent dose from the Boc compound is unpredictable. No validated dosing for the Boc form itself. Parent 5-MeO-DALT oral: onset 10–15 min, total 2–4 h.",
+      "description" : "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl as sometimes assumed). Boc group cleaves at high temperature (pyrolysis\/smoking route) or under acid conditions. Parent 5-MeO-DALT: 5-HT1A and 5-HT2A agonist with rapid onset and short duration. Delivered parent dose from the Boc compound is unpredictable. No validated dosing for the Boc form itself.",
       "primaryTargets" : [
         "5-HT2A",
         "5-HT1A"
@@ -55729,7 +57348,7 @@
           "target" : "5-HT2A"
         }
       ],
-      "description" : "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl). Parent 5-MeO-MiPT: 5-HT1A Ki ~12–143 nM, 5-HT2A Ki ~113–449 nM (assay-dependent). Parent oral: onset 20–40 min, total 5–8 h, t½ ~2–3 h, CYP2D6 metabolism. Delivered parent dose from the Boc form is unpredictable. No validated dosing exists for the Boc compound.",
+      "description" : "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl). Parent 5-MeO-MiPT is a 5-HT1A and 5-HT2A agonist with moderate duration, metabolized by CYP2D6. Delivered parent dose from the Boc form is unpredictable. No validated dosing exists for the Boc compound.",
       "primaryTargets" : [
         "5-HT1A",
         "5-HT2A"
@@ -55786,7 +57405,7 @@
           "target" : "5-HT2A"
         }
       ],
-      "description" : "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl). The intact molecule is not itself active; the Boc group must be cleaved (pyrolysis\/smoking or acid) to release DMT. Oral administration is inactive with or without an MAOI, because any absorbed intact compound must still be cleaved to DMT — claimed oral activity is unvalidated. Because the Boc-protected form is unscheduled, it is a common legal precursor form of DMT. No pharmacokinetic study or validated human dosing for the Boc compound.",
+      "description" : "'NB-' prefix denotes N1-tert-butoxycarbonyl (NOT N-benzyl). The intact molecule is not itself active; the Boc group must be cleaved (pyrolysis\/smoking or acid) to release DMT. Oral administration is inactive with or without an MAOI, because any absorbed intact compound must still be cleaved to DMT. Claimed oral activity is unvalidated. Because the Boc-protected form is unscheduled, it is a common legal precursor form of DMT. No pharmacokinetic study or validated human dosing for the Boc compound.",
       "primaryTargets" : [
         "5-HT2A"
       ],
@@ -56193,6 +57812,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 120,
+    "name" : "Nifedipine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "3-Hydroxydesmethylflunitrazepam"
     ],
     "category" : "Benzodiazepine",
@@ -56318,17 +57950,14 @@
   },
   {
     "aliases" : [
-      "1-[2-(Diethylamino)ethyl]-2-benzyl-5-nitro-1H-benzimidazole",
-      "14030-71-8",
-      "DTXSID601356250",
-      "Nitazene"
+
     ],
     "category" : "Opioid",
     "defaultRoute" : "oral",
     "effects" : [
       "Extreme potency, 10-100x fentanyl. Naloxone may require multiple doses"
     ],
-    "name" : "Nitazene",
+    "name" : "nitazene",
     "routes" : [
 
     ],
@@ -56572,6 +58201,19 @@
       "GABAA-PAM",
       "habit-forming",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 60,
+    "name" : "Nitrofurantoin",
+    "routes" : [
+
     ]
   },
   {
@@ -57073,6 +58715,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 450,
+    "name" : "Norethisterone",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "3-Octopamine",
       "m-Octopamine",
       "meta-Octopamine"
@@ -57217,7 +58872,7 @@
     "effects" : [
 
     ],
-    "name" : "norpsilocin",
+    "name" : "Norpsilocin",
     "routes" : [
 
     ],
@@ -57351,6 +59006,30 @@
       "no-human-data",
       "radioligand-origin",
       "research-chemical"
+    ]
+  },
+  {
+    "aliases" : [
+      "acetylpsilocin",
+      "psilacetin"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "O-acetylpsilocin",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 92292-84-7",
+      "PubChem CID 15429212: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/15429212",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q3491364"
+    ],
+    "tags" : [
+      "no-human-data",
+      "tryptamine"
     ]
   },
   {
@@ -57565,6 +59244,19 @@
       "muscarinic-antagonist",
       "prescription-only",
       "thienobenzodiazepine"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 750,
+    "name" : "Olmesartan",
+    "routes" : [
+
     ]
   },
   {
@@ -58735,6 +60427,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 60,
+    "name" : "Pantoprazole",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "(alphaZ)-alpha-(3-Pyridinylmethylene)-1H-indole-3-acetonitrile"
     ],
     "category" : "Other",
@@ -58854,6 +60559,19 @@
       "habit-forming",
       "mu-opioid-agonist",
       "tentative"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 300,
+    "name" : "Paricalcitol",
+    "routes" : [
+
     ]
   },
   {
@@ -59684,11 +61402,10 @@
       "nembutal",
       "novopentobarb"
     ],
-    "category" : "Depressant",
-    "defaultRoute" : "intramuscular",
     "effects" : [
       "A CNS depressant drug that is of the barbituate class. The drug is not used often used medically due to it's high overdose potential in contrast to a lesser overdose risk with benzodiazepine. The drug is used for the treatment of insomnia"
     ],
+    "halfLifeMinutes" : 1014,
     "name" : "Pentobarbital",
     "routes" : [
       {
@@ -60098,7 +61815,7 @@
         },
         "protocolDosing" : {
           "frequency" : "research only",
-          "notes" : "no validated human dosing — research\/community protocol"
+          "notes" : "no validated human dosing; research\/community protocol"
         },
         "route" : "subcutaneous",
         "unit" : "mcg"
@@ -60214,7 +61931,7 @@
       "Requires 14-day washout before\/after serotonergic drugs",
       "Hepatotoxic (rare but serious)"
     ],
-    "halfLifeMinutes" : 90,
+    "halfLifeMinutes" : 696,
     "name" : "Phenelzine",
     "routes" : [
       {
@@ -61393,6 +63110,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 3000,
+    "name" : "Piroxicam",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "N-(4-methoxyphenethyl)cinnamamide",
       "N-[2-(4-methoxyphenyl)ethyl]-3-phenylacrylamide"
     ],
@@ -61688,6 +63418,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 480,
+    "name" : "Pramipexole",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "CI-879",
       "Neupramir",
       "Pramistar"
@@ -61756,6 +63499,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 108,
+    "name" : "Pravastatin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "centrac",
       "centrax",
       "demetrin",
@@ -61766,11 +63522,10 @@
       "reapam",
       "trepidan"
     ],
-    "category" : "Benzodiazepine",
-    "defaultRoute" : "oral",
     "effects" : [
       "Benzodiazepine dervative. It is suggested to have effects typical to common benzodiazepines such as anxiolytic, anticonvulsant, sedation, and skeletal muscle relaxant. It is a prodrug for desmethyldiazepam which is suggested to be the causer of the majority, if not all of the effects to prazepam."
     ],
+    "halfLifeMinutes" : 4200,
     "name" : "Prazepam",
     "routes" : [
       {
@@ -62082,7 +63837,7 @@
       "QT prolongation; orthostatic hypotension",
       "Anticholinergic side effects at higher doses"
     ],
-    "halfLifeMinutes" : 1080,
+    "halfLifeMinutes" : 510,
     "name" : "Prochlorperazine",
     "routes" : [
 
@@ -62577,7 +64332,7 @@
     "effects" : [
 
     ],
-    "name" : "propylisopropyltryptamine",
+    "name" : "Propylisopropyltryptamine",
     "routes" : [
 
     ],
@@ -63843,6 +65598,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 666,
+    "name" : "Quinine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "(R)-1-(Benzo[d] [1,3]dioxol-5-yl)-N-methylpropan-2-amine",
       "(R)-methylenedioxymethamphetamine"
     ],
@@ -63913,7 +65681,7 @@
           "target" : "Androgen receptor"
         }
       ],
-      "description" : "Nonsteroidal SARM; binds AR with Ki ~7 nM; tissue-selective for muscle and bone over prostate; does not bind ERα\/ERβ\/PR\/GR significantly; no aromatization. Long t½ (~44.7 h) leads to accumulation on daily dosing.",
+      "description" : "Nonsteroidal SARM; high AR binding affinity, tissue-selective for muscle and bone over prostate; does not bind ERα\/ERβ\/PR\/GR significantly; no aromatization. Long half-life leads to accumulation on daily dosing.",
       "primaryTargets" : [
         "Androgen receptor"
       ],
@@ -63985,7 +65753,7 @@
       "references" : [
         "PubChem CID 68547459"
       ],
-      "summary" : "Presumed AR agonist prodrug — benzoate ester hydrolysis releases RAD-140-like moiety."
+      "summary" : "Presumed AR agonist prodrug: benzoate ester hydrolysis releases RAD-140-like moiety."
     },
     "molarMass" : 497.9,
     "name" : "RAD-150",
@@ -64151,6 +65919,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1146,
+    "name" : "Rasburicase",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "RB 400"
     ],
     "category" : "Other",
@@ -64264,6 +66045,19 @@
     ],
     "tags" : [
       "US-Schedule-II"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 60,
+    "name" : "Repaglinide",
+    "routes" : [
+
     ]
   },
   {
@@ -64611,6 +66405,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 660,
+    "name" : "Rimegepant",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "N-benzoyl-2-phenylethylamine",
       "N-phenethylbenzamide"
     ],
@@ -64840,6 +66647,31 @@
   },
   {
     "aliases" : [
+      "(2S)-1-(1H-INDOL-3-YL)-3-{[5-(3-METHYL-1H-INDAZOL-5-YL)PYRIDIN-3-YL]OXY}PROPAN-2-AMINE",
+      "(alphaS)-alpha-[[[5-(3-Methyl-1H-indazol-5-yl)-3-pyridinyl]oxy]methyl]-(S)-1H-indole-3-ethanamine",
+      "A443654"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "rizavasertib",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 552325-16-3",
+      "PubChem CID 10172943: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/10172943",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q27074073"
+    ],
+    "tags" : [
+      "no-human-data",
+      "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
 
     ],
     "category" : "Other",
@@ -64958,6 +66790,45 @@
     ],
     "tags" : [
       "habit-forming"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 360,
+    "name" : "Ropinirole",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 294,
+    "name" : "Rosiglitazone",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1140,
+    "name" : "Rosuvastatin",
+    "routes" : [
+
     ]
   },
   {
@@ -65105,7 +66976,7 @@
           "target" : "Androgen receptor"
         }
       ],
-      "description" : "Competitive androgen receptor antagonist targeting scalp follicle ARs to block DHT-mediated miniaturization in androgenetic alopecia. Designed for minimal systemic absorption — rapid systemic clearance (t½ ~1 h parenteral) when absorbed, intentional design to reduce systemic antiandrogen effects. Development abandoned; no completed randomized controlled trials.",
+      "description" : "Competitive androgen receptor antagonist targeting scalp follicle ARs to block DHT-mediated miniaturization in androgenetic alopecia. Designed for minimal systemic absorption and rapid systemic clearance when absorbed, to reduce systemic antiandrogen effects. Development abandoned; no completed randomized controlled trials.",
       "primaryTargets" : [
         "Androgen receptor"
       ],
@@ -65259,7 +67130,7 @@
           "target" : "Androgen receptor"
         }
       ],
-      "description" : "Nonsteroidal SARM with among the highest AR affinity of characterized SARMs (Ki ~1.7 nM). Tissue-selective for muscle and bone. Investigated as male hormonal contraceptive in rodents due to spermatogenesis suppression. No human efficacy or safety data. t½ ~11.9 h is from male rat studies only.",
+      "description" : "Nonsteroidal SARM with among the highest AR affinity of characterized SARMs. Tissue-selective for muscle and bone. Investigated as male hormonal contraceptive in rodents due to spermatogenesis suppression. No human efficacy or safety data. Half-life measured in rats only.",
       "primaryTargets" : [
         "Androgen receptor"
       ],
@@ -65283,7 +67154,7 @@
           "frequency" : "1–2×\/day",
           "highAmount" : 30,
           "lowAmount" : 10,
-          "notes" : "community\/anecdotal; no human studies; t½ ~11.9 h from male rat data only — NOT validated in humans"
+          "notes" : "community\/anecdotal; no human studies; t½ ~11.9 h from male rat data only, NOT validated in humans"
         },
         "route" : "oral",
         "unit" : "mg"
@@ -65348,7 +67219,7 @@
           "target" : "Androgen receptor"
         }
       ],
-      "description" : "Nonsteroidal SARM; AR partial agonist with Ki ~4 nM; weaker androgenic activity at prostate vs full agonists. Critically binds ocular ARs causing reversible yellow-tint vision and night-vision impairment, especially at doses ≥50 mg\/day. Short t½ (~4–6 h) requires split dosing.",
+      "description" : "Nonsteroidal SARM; AR partial agonist, weaker androgenic activity at prostate vs full agonists. Also binds ocular ARs, causing reversible yellow-tint vision and night-vision impairment at higher doses. Short half-life requires split dosing.",
       "primaryTargets" : [
         "Androgen receptor"
       ],
@@ -65429,6 +67300,32 @@
       "flavonoid",
       "GABA-A-NAM",
       "nootropic"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 360,
+    "name" : "Salbutamol",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 330,
+    "name" : "Salmeterol",
+    "routes" : [
+
     ]
   },
   {
@@ -65668,9 +67565,6 @@
     "name" : "Salvinorin B ethoxymethyl ether",
     "routes" : [
 
-    ],
-    "sources" : [
-      "https:\/\/pubmed.ncbi.nlm.nih.gov\/16108680\/"
     ],
     "tags" : [
       "kappa-opioid-agonist",
@@ -66195,6 +68089,7 @@
       "SV2A ligand antiseizure candidate",
       "UCB development discontinued in favour of brivaracetam"
     ],
+    "halfLifeMinutes" : 480,
     "name" : "Seletracetam",
     "routes" : [
 
@@ -66677,6 +68572,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 240,
+    "name" : "Sildenafil",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 291,
+    "name" : "Simvastatin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "heimia-salicifolia",
       "shrubby-yellowcrest",
       "sini",
@@ -66754,7 +68675,7 @@
           "target" : "ERRγ"
         }
       ],
-      "description" : "Small molecule pan-estrogen-related receptor agonist (ERRα EC50 ~98 nM, ERRβ ~230 nM, ERRγ ~430 nM); recruits PGC-1α coactivator to increase mitochondrial biogenesis, fatty acid oxidation, and OXPHOS gene expression. Increases Type IIa muscle fibers and exercise endurance in mice. ERRα-dependent mechanism confirmed by knockout. No human studies; poor drug-like properties (no published oral bioavailability in humans).",
+      "description" : "Small molecule pan-estrogen-related receptor agonist with highest potency at ERRα; recruits PGC-1α coactivator to increase mitochondrial biogenesis, fatty acid oxidation, and OXPHOS gene expression. Increases Type IIa muscle fibers and exercise endurance in mice. ERRα-dependent mechanism confirmed by knockout. No human studies; poor drug-like properties (no published oral bioavailability in humans).",
       "primaryTargets" : [
         "ERRα",
         "ERRβ",
@@ -66909,7 +68830,7 @@
           "target" : "REV-ERBβ"
         }
       ],
-      "description" : "Nuclear receptor REV-ERB (NR1D1\/NR1D2) agonist with EC50 ~790 nM REV-ERBα and ~560 nM REV-ERBβ. Represses clock gene Bmal1 expression; upregulates fatty acid oxidation genes; reduces inflammatory gene expression. Better oral bioavailability than SR9009. Human PK not established; t½ ~4 h is preclinical only.",
+      "description" : "Nuclear receptor REV-ERB (NR1D1\/NR1D2) dual agonist. Represses clock gene Bmal1 expression; upregulates fatty acid oxidation genes; reduces inflammatory gene expression. Better oral bioavailability than SR9009. Human PK not established; half-life is preclinical only.",
       "primaryTargets" : [
         "REV-ERBα",
         "REV-ERBβ"
@@ -67077,6 +68998,19 @@
       "habit-forming",
       "mu-opioid-agonist",
       "US-Schedule-II"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 120,
+    "name" : "Sugammadex",
+    "routes" : [
+
     ]
   },
   {
@@ -67462,6 +69396,27 @@
   },
   {
     "aliases" : [
+      "Adcirca",
+      "Cialis"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1050,
+    "name" : "Tadalafil",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/doi.org\/10.1111\/j.1365-2125.2005.02553.x",
+      "https:\/\/en.wikipedia.org\/wiki\/Tadalafil",
+      "https:\/\/www.accessdata.fda.gov\/drugsatfda_docs\/label\/2011\/021368s20s21lbl.pdf"
+    ]
+  },
+  {
+    "aliases" : [
       "MVT-602",
       "RVT-602"
     ],
@@ -67802,6 +69757,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 1920,
+    "name" : "Tenofovir",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Egrifta",
       "Egrifta SV",
       "TH9507"
@@ -67930,7 +69898,7 @@
           "target" : "SERT"
         }
       ],
-      "description" : "SNDRI; inhibits DAT, NET, and SERT → appetite suppression via hypothalamic circuits. Possible GLP-1 pathway potentiation. Active metabolite M1 via CYP3A4. t½ ~9 days (220 h) — extremely long, requires weeks to reach steady state; dose titration essential. Approved in Mexico as Tesomet (tesofensine + metoprolol 25 mg to offset HR increase). WADA S6 in-competition.",
+      "description" : "SNDRI; inhibits DAT, NET, and SERT → appetite suppression via hypothalamic circuits. Possible GLP-1 pathway potentiation. Active metabolite M1 via CYP3A4. t½ ~9 days (220 h): extremely long, requires weeks to reach steady state; dose titration essential. Approved in Mexico as Tesomet (tesofensine + metoprolol 25 mg to offset HR increase). WADA S6 in-competition.",
       "primaryTargets" : [
         "DAT",
         "NET",
@@ -67954,7 +69922,7 @@
           "frequency" : "once daily",
           "highAmount" : 0.5,
           "lowAmount" : 0.25,
-          "notes" : "t½ ~9 days (220 h) — significant accumulation; 2–3 weeks to steady state; 0.5 mg\/day = ~10.6% placebo-corrected weight loss at 24 weeks; 1.0 mg dose abandoned (excess CV effects); approved in Mexico as Tesomet (with metoprolol)"
+          "notes" : "t½ ~9 days (220 h): significant accumulation; 2–3 weeks to steady state; 0.5 mg\/day = ~10.6% placebo-corrected weight loss at 24 weeks; 1.0 mg dose abandoned (excess CV effects); approved in Mexico as Tesomet (with metoprolol)"
         },
         "route" : "oral",
         "unit" : "mg"
@@ -68622,6 +70590,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 483,
+    "name" : "Thioridazine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 141,
+    "name" : "Thiotepa",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "Navane"
     ],
     "category" : "Antipsychotic",
@@ -68716,7 +70710,7 @@
           "target" : "DAT"
         }
       ],
-      "description" : "Oxazolinone CNS stimulant\/antidepressant developed by Lederle Laboratories in the 1960s. Mechanism: norepinephrine and dopamine release (amphetamine-like), minimal serotonergic activity. Clinical antidepressant effect demonstrated at ~40 mg\/day in historical trials. Discontinued. DEA controlled substance status indicated by multiple secondary sources (exact schedule unconfirmed in primary DEA sources).",
+      "description" : "Oxazolinone CNS stimulant\/antidepressant developed by Lederle Laboratories in the 1960s. Mechanism: norepinephrine and dopamine release (amphetamine-like), minimal serotonergic activity. Clinical antidepressant effect demonstrated in historical trials. Discontinued. DEA controlled substance status indicated by multiple secondary sources (exact schedule unconfirmed in primary DEA sources).",
       "primaryTargets" : [
         "NET",
         "DAT"
@@ -69602,6 +71596,19 @@
     "aliases" : [
 
     ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 150,
+    "name" : "Tolcapone",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
     "category" : "Depressant",
     "defaultRoute" : "oral",
     "effects" : [
@@ -69727,6 +71734,32 @@
       "mood-stabilizer",
       "prescription-only",
       "teratogenic"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 150,
+    "name" : "Topotecan",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 210,
+    "name" : "Torsemide",
+    "routes" : [
+
     ]
   },
   {
@@ -69983,6 +72016,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 48,
+    "name" : "Tretinoin",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "H-Trp-Trp-Trp-OH",
       "L-tryptophyl-L-tryptophyl-L-tryptophan",
       "Trp-Trp-Trp",
@@ -70147,6 +72193,58 @@
       "phenothiazine",
       "prescription-only",
       "typical-antipsychotic"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 222,
+    "name" : "Trihexyphenidyl",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 480,
+    "name" : "Trimethobenzamide",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 600,
+    "name" : "Trimipramine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 240,
+    "name" : "Triprolidine",
+    "routes" : [
+
     ]
   },
   {
@@ -70911,6 +73009,32 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 360,
+    "name" : "Ubrogepant",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 660,
+    "name" : "Umeclidinium",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "DM-232"
     ],
     "category" : "AMPAkine",
@@ -71040,6 +73164,19 @@
       "narrow-therapeutic-index",
       "prescription-only",
       "teratogenic"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 360,
+    "name" : "Valsartan",
+    "routes" : [
+
     ]
   },
   {
@@ -71439,9 +73576,9 @@
       "Beta-carotene (provitamin A) non-toxic in excess — conversion is regulated",
       "Carotenodermia (yellow-orange skin) with excess beta-carotene — harmless",
       "Hypervitaminosis A: headache, nausea, bone pain, liver damage at chronic high doses",
-      "Beta-carotene supplementation linked to lung cancer risk increase in smokers"
+      "Beta-carotene supplementation linked to lung cancer risk increase in smokers",
+      "Half-life deliberately not modeled: plasma retinol clears in 7–10 h while liver stores turn over across 50–100 days, and a single number cannot say which it means"
     ],
-    "halfLifeMinutes" : 34560,
     "name" : "Vitamin A",
     "routes" : [
       {
@@ -71726,7 +73863,7 @@
       "Irreversible neuropathy reported above 500mg\/day long-term",
       "Used for morning sickness (B6 + doxylamine = Diclegis)"
     ],
-    "halfLifeMinutes" : 1440,
+    "halfLifeMinutes" : 36000,
     "name" : "Vitamin B6",
     "routes" : [
       {
@@ -72022,6 +74159,83 @@
   },
   {
     "aliases" : [
+      "ORN0829",
+      "TS-142",
+      "Vorzzz"
+    ],
+    "category" : "OrexinAntagonist",
+    "defaultRoute" : "oral",
+    "effects" : [
+      "Dual orexin receptor antagonist — about a 2-hour half-life, the shortest of the approved DORAs",
+      "Sleep onset and maintenance; persistent sleep began 8–12 min after lights-out in the phase 2 sleep-lab study",
+      "No next-morning impairment at 8–9 h in the driving study (10–20 mg) or in adults over 65 (5–10 mg)",
+      "Somnolence, nasopharyngitis, headache; sleep paralysis and hypnagogic hallucinations in about 1% over 52 weeks",
+      "Cleared mostly by CYP3A4: itraconazole raised exposure 12-fold, so strong CYP3A inhibitors are contraindicated",
+      "Approved in Japan (Vorzzz) in August 2025"
+    ],
+    "formula" : "C23H22FN7O2",
+    "halfLifeMinutes" : 120,
+    "inchikey" : "AEZZJXJIJFSUEM-QFIPXVFZSA-N",
+    "name" : "Vornorexant",
+    "pubchemCID" : 137419776,
+    "routes" : [
+      {
+        "doses" : {
+          "common" : {
+            "lower" : 5,
+            "upper" : 10
+          },
+          "heavy" : 10,
+          "light" : {
+            "lower" : 5,
+            "upper" : 5
+          },
+          "strong" : {
+            "lower" : 10,
+            "upper" : 10
+          },
+          "threshold" : 2.5
+        },
+        "duration" : {
+          "offset" : {
+            "max" : 330,
+            "min" : 240
+          },
+          "onset" : {
+            "max" : 30,
+            "min" : 10
+          },
+          "peak" : {
+            "max" : 180,
+            "min" : 60
+          },
+          "total" : {
+            "max" : 480,
+            "min" : 360
+          }
+        },
+        "route" : "oral",
+        "unit" : "mg"
+      }
+    ],
+    "sources" : [
+      "https:\/\/doi.org\/10.1007\/s00213-022-06089-6",
+      "https:\/\/doi.org\/10.1007\/s00213-026-07095-8",
+      "https:\/\/doi.org\/10.1093\/ijnp\/pyaf077",
+      "https:\/\/doi.org\/10.1093\/sleep\/zsaf291",
+      "https:\/\/doi.org\/10.1111\/pcn.13888",
+      "https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/137419776",
+      "https:\/\/www.pmda.go.jp\/drugs\/2025\/P20250902004\/400059000_30700AMX00199_A100_1.pdf"
+    ],
+    "tags" : [
+      "DORA",
+      "orexin-antagonist",
+      "prescription-only",
+      "sedative-hypnotic"
+    ]
+  },
+  {
+    "aliases" : [
       "Brintellix",
       "Trintellix"
     ],
@@ -72195,6 +74409,54 @@
   },
   {
     "aliases" : [
+      "Cobenfy",
+      "KarXT",
+      "Xanomeline and trospium chloride",
+      "Xanomeline\/trospium"
+    ],
+    "category" : "Antipsychotic",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "formula" : "C14H23N3OS",
+    "halfLifeMinutes" : 300,
+    "mechanismOfAction" : {
+      "bindings" : [
+        {
+          "action" : "agonist",
+          "affinity" : 3,
+          "target" : "M1 muscarinic receptor"
+        },
+        {
+          "action" : "agonist",
+          "affinity" : 3,
+          "target" : "M4 muscarinic receptor"
+        }
+      ],
+      "description" : "Xanomeline binds M1–M5 with comparable affinity (Kᵢ ≈ 10, 12, 17, 7, 22 nM at M1–M5) but drives agonist signaling preferentially at M1 and M4, which is the basis of its antipsychotic effect. It is marketed only as the fixed-dose combination Cobenfy (xanomeline + trospium chloride), approved for schizophrenia in adults; trospium is a quaternary antimuscarinic confined to the periphery, added to curb the nausea and other cholinergic effects xanomeline causes alone. Oral, twice daily: xanomeline Tₘₐₓ ≈ 2 h, t½ ≈ 5 h, cleared mainly by CYP2D6.",
+      "primaryTargets" : [
+        "M1 muscarinic receptor",
+        "M4 muscarinic receptor"
+      ],
+      "references" : [
+        "https:\/\/dailymed.nlm.nih.gov\/dailymed\/drugInfo.cfm?setid=8f0e73bf-6025-44f6-ab64-0983322de0df",
+        "https:\/\/doi.org\/10.1056\/NEJMoa2017015"
+      ],
+      "summary" : "Muscarinic acetylcholine receptor agonist functionally selective for the M1 and M4 subtypes. It is the CNS-active component of Cobenfy, paired with trospium, a peripheral antimuscarinic that blunts cholinergic side effects without entering the brain. The first antipsychotic that works without blocking dopamine D2 receptors."
+    },
+    "name" : "Xanomeline",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "https:\/\/dailymed.nlm.nih.gov\/dailymed\/drugInfo.cfm?setid=8f0e73bf-6025-44f6-ab64-0983322de0df",
+      "https:\/\/doi.org\/10.1056\/NEJMoa2017015",
+      "https:\/\/en.wikipedia.org\/wiki\/Xanomeline\/trospium_chloride"
+    ]
+  },
+  {
+    "aliases" : [
       "5-Oxo-L-prolylglycyl-L-lysyl-L-arginyl-L-prolyl-L-tryptophyl-L-isoleucyl-L-leucine"
     ],
     "category" : "Other",
@@ -72310,7 +74572,7 @@
           "target" : "Myostatin"
         }
       ],
-      "description" : "5α-DHT C17-methyl ester derivative; partial AR agonist (does not induce full N\/C-terminal AR interaction unlike DHT) plus functional myostatin inhibitor via follistatin (FST) upregulation — the only characterized SARM with this dual mechanism. FST induction more potent than DHT in C2C12 myoblasts. CAS discrepancy: 1370003-76-1 confirmed by PubChem CID 119058028; 431579-34-9 is an unverified alternate.",
+      "description" : "5α-DHT C17-methyl ester derivative; partial AR agonist (does not induce full N\/C-terminal AR interaction unlike DHT) plus functional myostatin inhibitor via follistatin (FST) upregulation, the only characterized SARM with this dual mechanism. FST induction more potent than DHT in C2C12 myoblasts. CAS discrepancy: 1370003-76-1 confirmed by PubChem CID 119058028; 431579-34-9 is an unverified alternate.",
       "primaryTargets" : [
         "Androgen receptor",
         "Myostatin\/follistatin pathway"
@@ -72375,6 +74637,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 36,
+    "name" : "Yohimbine",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "anadenanthera"
     ],
     "category" : "Empathogen",
@@ -72388,6 +74663,19 @@
     ],
     "sources" : [
       "TripSit drugs.json: https:\/\/github.com\/TripSit\/drugs"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 600,
+    "name" : "Zafirlukast",
+    "routes" : [
+
     ]
   },
   {
@@ -72460,6 +74748,19 @@
       "sedative-hypnotic",
       "US-Schedule-IV",
       "Z-drug"
+    ]
+  },
+  {
+    "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 228,
+    "name" : "Zanamivir",
+    "routes" : [
+
     ]
   },
   {
@@ -72726,6 +75027,19 @@
   },
   {
     "aliases" : [
+
+    ],
+    "effects" : [
+
+    ],
+    "halfLifeMinutes" : 8760,
+    "name" : "Zoledronic acid",
+    "routes" : [
+
+    ]
+  },
+  {
+    "aliases" : [
       "(S)-4-({3-[2-(dimethylamino)ethyl]-1H-indol-5-yl}methyl)-1,3-oxazolidin-2-one",
       "4-{[3-(2-Dimethylaminoethyl)-1H-indol-5-yl]methyl}oxazolidin-2-one"
     ],
@@ -72960,6 +75274,29 @@
       "DOx",
       "no-human-data",
       "phenethylamine",
+      "tryptamine"
+    ]
+  },
+  {
+    "aliases" : [
+      "Tryptophanal"
+    ],
+    "category" : "Other",
+    "defaultRoute" : "oral",
+    "effects" : [
+
+    ],
+    "name" : "α-Amino-1H-indole-3-propanal",
+    "routes" : [
+
+    ],
+    "sources" : [
+      "CAS 5814-92-6",
+      "PubChem CID 17962040: https:\/\/pubchem.ncbi.nlm.nih.gov\/compound\/17962040",
+      "Wikidata: https:\/\/www.wikidata.org\/wiki\/Q133796206"
+    ],
+    "tags" : [
+      "no-human-data",
       "tryptamine"
     ]
   },

@@ -25,7 +25,10 @@ Comparison is on the InChIKey skeleton (first 14 chars — the connectivity bloc
 stereo-layer-only differences are left alone (often a flat-source vs stereo
 representation choice, not corruption). Applied fields use PubChem's full values.
 
-Run after a build, then rebuild so the corrections land:
+Each run adds to the corrections already in the snapshot and drops only those
+whose substance has left the catalog, because the DB it reads already has them
+applied. Run after a build, then
+rebuild so the corrections land:
     python3 pipeline/fetch/brushers/reconcile_identifiers_pubchem.py
     python3 pipeline/build/sqlite.py
 
@@ -147,6 +150,7 @@ def main() -> int:
         "SELECT canonical_name, inchikey, smiles, cas FROM substances "
         "WHERE inchikey IS NOT NULL OR smiles IS NOT NULL ORDER BY canonical_name"
     ).fetchall()
+    catalog = {name for (name,) in con.execute("SELECT canonical_name FROM substances")}
     con.close()
 
     # Names handled by the curated manual layer — skip so they don't reappear as
@@ -254,7 +258,16 @@ def main() -> int:
                 },
             )
 
-    ordered = {k: corrections[k] for k in sorted(corrections)}
+    # The DB read above already carries every earlier correction, so a corrected
+    # substance reads as consistent here. Overwriting the file would drop those
+    # corrections and the next build would restore the wrong identifiers. Keep
+    # every earlier entry whose substance is still in the catalog; a new finding
+    # replaces it.
+    earlier = json.loads(OUT.read_text()) if OUT.exists() else {}
+    merged = {k: v for k, v in earlier.items() if k in catalog}
+    merged.update(corrections)
+    counts["carried_over"] = len(merged) - len(corrections)
+    ordered = {k: merged[k] for k in sorted(merged)}
     OUT.write_text(json.dumps(ordered, indent=2, ensure_ascii=False) + "\n")
     META.write_text(
         json.dumps(
