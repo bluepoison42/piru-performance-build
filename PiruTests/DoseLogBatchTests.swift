@@ -123,4 +123,24 @@ struct DoseLogBatchTests {
         #expect(try context.fetch(FetchDescriptor<DoseEntry>()).isEmpty)
         #expect(!context.hasChanges)
     }
+
+    /// The tray commits a combination as one entry per component, each
+    /// carrying the product's name — the batch persists that label as it is.
+    @Test
+    func `Combination components persist with their combination name`() throws {
+        let context = try makeContext()
+        let stamp = Date(timeIntervalSince1970: 1_700_000_000)
+        let doses: [(entry: DoseEntry, substance: Substance?)] = [
+            (DoseEntry(substance: unknown, amount: 500, timestamp: stamp, combinationName: "Co-codamol"), nil),
+            (DoseEntry(substance: unknown + "2", amount: 30, timestamp: stamp, combinationName: "Co-codamol"), nil),
+            (DoseEntry(substance: unknown, amount: 100, timestamp: stamp), nil),
+        ]
+
+        DoseLogService.shared.logBatch(doses, colors: [], in: context)
+
+        let saved = try context.fetch(FetchDescriptor<DoseEntry>(sortBy: [SortDescriptor(\.amount)]))
+        #expect(saved.map(\.amount) == [30, 100, 500])
+        #expect(saved.map(\.combinationName) == ["Co-codamol", nil, "Co-codamol"])
+        #expect(Set(saved.compactMap(\.session?.id)).count == 1)
+    }
 }

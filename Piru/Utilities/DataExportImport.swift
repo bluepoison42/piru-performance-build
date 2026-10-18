@@ -299,6 +299,7 @@ enum DataExportImport {
                     doses: incoming.doses,
                     duration: incoming.duration,
                     halfLifeMinutes: incoming.halfLifeMinutes,
+                    components: incoming.components,
                     createdAt: incoming.createdAt,
                 )
                 customStore.update(merged)

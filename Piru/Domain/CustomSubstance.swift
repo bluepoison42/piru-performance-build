@@ -3,11 +3,10 @@ import Observation
 import OSLog
 import SwiftData
 
-/// A user-defined substance, persisted as JSON in App Group UserDefaults.
-/// We intentionally avoid SwiftData here: custom substances were added to the
-/// schema after the initial app release, and SwiftData's auto-migration for
-/// newly-added @Model types has proved unreliable — silently dropping inserts
-/// on stores created before the schema change.
+/// A user-defined substance — a net-new compound, a personal override of a
+/// library substance, or a combination product — as the value type every read
+/// site and the overlay engine work with. Persisted as a ``CustomSubstanceRecord``
+/// row in the SwiftData store by ``CustomSubstanceStore``.
 struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
     let id: UUID
     var name: String
@@ -32,6 +31,12 @@ struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
     var duration: DurationProfile?
     /// Optional personal half-life (minutes). Overrides the library value when set. Added v1.4.
     var halfLifeMinutes: Double?
+    /// The compounds of a combination product, each with its amount per unit —
+    /// co-codamol is 500 mg paracetamol + 30 mg codeine per tablet. Non-empty
+    /// makes this entry a combination (``isCombination``): `unit` is then the
+    /// unit word ("tablet"), and picking it in the quick log stages one dose per
+    /// component. `nil` for a single compound; decoders treat missing as `nil`.
+    var components: [CombinationComponent]?
     var createdAt: Date
 
     init(
@@ -45,6 +50,7 @@ struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
         doses: DoseRange? = nil,
         duration: DurationProfile? = nil,
         halfLifeMinutes: Double? = nil,
+        components: [CombinationComponent]? = nil,
         createdAt: Date = .now,
     ) {
         self.id = id
@@ -57,6 +63,7 @@ struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
         self.doses = doses
         self.duration = duration
         self.halfLifeMinutes = halfLifeMinutes
+        self.components = components
         self.createdAt = createdAt
     }
 
@@ -71,6 +78,7 @@ struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
         case doses
         case duration
         case halfLifeMinutes
+        case components
         case createdAt
     }
 
@@ -86,7 +94,24 @@ struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
         doses = try c.decodeIfPresent(DoseRange.self, forKey: .doses)
         duration = try c.decodeIfPresent(DurationProfile.self, forKey: .duration)
         halfLifeMinutes = try c.decodeIfPresent(Double.self, forKey: .halfLifeMinutes)
+        components = try c.decodeIfPresent([CombinationComponent].self, forKey: .components)
         createdAt = try c.decode(Date.self, forKey: .createdAt)
+    }
+
+    /// Whether this entry is a combination product — it has components, so it
+    /// is logged as one dose per component and has no pharmacology page of its own.
+    var isCombination: Bool {
+        !(components ?? []).isEmpty
+    }
+
+    /// "500 mg Paracetamol · 30 mg Codeine" — the components in the user's
+    /// names for them, for the rows that list a combination. `nil` for a
+    /// single compound.
+    @MainActor var componentsSummary: String? {
+        guard let components, !components.isEmpty else { return nil }
+        return components
+            .map { "\($0.amountPerUnit.doseFormatted) \($0.unit) \(CustomSubstanceStore.shared.displayName(for: $0.substance))" }
+            .joined(separator: " · ")
     }
 
     /// The label to show the user — the personal override when set, else the name.
@@ -598,6 +623,7 @@ extension CustomSubstanceRecord {
             dosesData: entry.doses.flatMap { try? JSONEncoder().encode($0) },
             durationData: entry.duration.flatMap { try? JSONEncoder().encode($0) },
             halfLifeMinutes: entry.halfLifeMinutes,
+            componentsData: Self.encodeComponents(entry.components),
             createdAt: entry.createdAt,
         )
     }
@@ -614,6 +640,14 @@ extension CustomSubstanceRecord {
         dosesData = entry.doses.flatMap { try? JSONEncoder().encode($0) }
         durationData = entry.duration.flatMap { try? JSONEncoder().encode($0) }
         halfLifeMinutes = entry.halfLifeMinutes
+        componentsData = Self.encodeComponents(entry.components)
+    }
+
+    /// An empty list encodes as `nil`: no components is a single compound, and
+    /// a row must not read as a combination because an editor saved `[]`.
+    private static func encodeComponents(_ components: [CombinationComponent]?) -> Data? {
+        guard let components, !components.isEmpty else { return nil }
+        return try? JSONEncoder().encode(components)
     }
 
     /// The value-type projection consumed by the UI and the overlay engine.
@@ -629,6 +663,7 @@ extension CustomSubstanceRecord {
             doses: dosesData.flatMap { try? JSONDecoder().decode(DoseRange.self, from: $0) },
             duration: durationData.flatMap { try? JSONDecoder().decode(DurationProfile.self, from: $0) },
             halfLifeMinutes: halfLifeMinutes,
+            components: componentsData.flatMap { try? JSONDecoder().decode([CombinationComponent].self, from: $0) },
             createdAt: createdAt,
         )
     }

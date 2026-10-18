@@ -36,6 +36,7 @@ private enum Fields {
         field("latitude", \.latitude), field("longitude", \.longitude), field("hadGrapefruit", \.hadGrapefruit), field("mealRaw", \.mealRaw),
         field("isApproximate", \.isApproximate), field("isUnknownDose", \.isUnknownDose),
         field("volumeML", \.volumeML), field("abv", \.abv), field("drinkName", \.drinkName),
+        field("combinationName", \.combinationName),
     ]
 
     static let session: [FieldCheck<Session>] = [
@@ -102,7 +103,9 @@ private enum Fields {
         field("categoryRaw", \.categoryRaw), field("defaultRouteRaw", \.defaultRouteRaw), field("unit", \.unit),
         field("notes", \.notes), field("dosesData") { $0.asEntry.doses == $1.asEntry.doses },
         field("durationData") { $0.asEntry.duration == $1.asEntry.duration },
-        field("halfLifeMinutes", \.halfLifeMinutes), field("createdAt", \.createdAt),
+        field("halfLifeMinutes", \.halfLifeMinutes),
+        field("componentsData") { $0.asEntry.components == $1.asEntry.components },
+        field("createdAt", \.createdAt),
     ]
 
     static let drinkPreset: [FieldCheck<CustomDrinkPreset>] = [
@@ -412,7 +415,7 @@ struct ExportRoundTripTests {
             releaseForm: "XR", productName: "Brand", substanceUID: "uid-alcohol", displayNameSnapshot: "Snapshot",
             timestamp: t0, notes: "dose notes", tags: ["a", "b"], isBackgroundMed: true,
             locationName: "Park", latitude: 51.5, longitude: -0.12, hadGrapefruit: true, meal: .light, isApproximate: true,
-            volumeML: 330, abv: 5, drinkName: "IPA",
+            volumeML: 330, abv: 5, drinkName: "IPA", combinationName: "Shandy",
         )
         drink.session = session
         context.insert(drink)
@@ -471,6 +474,14 @@ struct ExportRoundTripTests {
                 offset: nil, afterglow: nil, total: DurationRange(min: 120, max: 240),
             ),
             halfLifeMinutes: 180, createdAt: t0,
+        ))
+        side.customs.add(CustomSubstanceEntry(
+            name: "Co-codamol", category: .opioid, defaultRoute: .oral, unit: "tablet",
+            components: [
+                CombinationComponent(substance: "Paracetamol", amountPerUnit: 500, unit: "mg", route: .oral),
+                CombinationComponent(substance: "Codeine", amountPerUnit: 30, unit: "mg", route: .oral),
+            ],
+            createdAt: t0,
         ))
 
         context.insert(CustomDrinkPreset(

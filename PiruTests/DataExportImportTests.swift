@@ -515,6 +515,61 @@ struct DataExportImportRoundTripTests {
         #expect(merged.duration?.peak?.midpoint == 45)
     }
 
+    // MARK: Combinations
+
+    @Test
+    func `A combination's components survive export → import`() throws {
+        let context = try ModelContext(makeTestContainer())
+        let store = try makeIsolatedCustomStore()
+        let components = [
+            CombinationComponent(substance: "Paracetamol", amountPerUnit: 500, unit: "mg", route: .oral),
+            CombinationComponent(substance: "Codeine", amountPerUnit: 30, unit: "mg", route: .oral),
+        ]
+        store.add(CustomSubstanceEntry(name: "Co-codamol", category: .opioid, unit: "tablet", components: components))
+        context.insert(DoseEntry(
+            substance: "Paracetamol", amount: 500, unit: "mg", route: .oral,
+            timestamp: Date(timeIntervalSince1970: 1_700_000_000), combinationName: "Co-codamol",
+        ))
+
+        let data = try DataExportImport.exportJSON(context: context, customStore: store)
+
+        let freshStore = try makeIsolatedCustomStore()
+        let freshContext = try ModelContext(makeTestContainer())
+        try DataExportImport.importJSON(data: data, context: freshContext, customStore: freshStore)
+
+        let imported = try #require(freshStore.all.first)
+        #expect(imported.isCombination)
+        #expect(imported.unit == "tablet")
+        #expect(imported.components == components)
+        let dose = try #require(try freshContext.fetch(FetchDescriptor<DoseEntry>()).first)
+        #expect(dose.combinationName == "Co-codamol")
+    }
+
+    /// A same-name import replaces the components too — the merge keeps the
+    /// row's UUID and takes every field from the file, components included.
+    @Test
+    func `Imported combination replaces an existing entry's components`() throws {
+        let context = try ModelContext(makeTestContainer())
+        let store = try makeIsolatedCustomStore()
+        let one = CombinationComponent(substance: "Paracetamol", amountPerUnit: 500, unit: "mg", route: .oral)
+        let two = CombinationComponent(substance: "Codeine", amountPerUnit: 30, unit: "mg", route: .oral)
+        store.add(CustomSubstanceEntry(name: "Co-codamol", unit: "tablet", components: [one]))
+        let originalID = try #require(store.all.first?.id)
+
+        let sourceStore = try makeIsolatedCustomStore()
+        sourceStore.add(CustomSubstanceEntry(name: "Co-codamol", unit: "tablet", components: [one, two]))
+        let sourceContext = try ModelContext(makeTestContainer())
+        sourceContext.insert(DoseEntry(substance: "Caffeine", amount: 100, timestamp: Date(timeIntervalSince1970: 1_700_000_000)))
+        let data = try DataExportImport.exportJSON(context: sourceContext, customStore: sourceStore)
+
+        try DataExportImport.importJSON(data: data, context: context, customStore: store)
+
+        #expect(store.all.count == 1)
+        let merged = try #require(store.all.first)
+        #expect(merged.id == originalID)
+        #expect(merged.components == [one, two])
+    }
+
     // MARK: exportFilename format
 
     @Test
