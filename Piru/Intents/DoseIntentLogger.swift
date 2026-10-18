@@ -8,10 +8,10 @@ import SwiftData
 /// same chip curation and notification bookkeeping as the tray's Log button.
 @MainActor
 enum DoseIntentLogger {
-    /// The app's container, set once at launch (`AppLaunch.openStore`). An
-    /// intent runs in the app process with no view hierarchy to pull a
-    /// context from; App Intents launch the app in the background first, so
-    /// `PiruApp.init` has opened the store before `perform()` runs.
+    /// The app's container, set by `PiruApp.init` right after it opens the
+    /// store. An intent runs in the app process with no view hierarchy to pull
+    /// a context from; App Intents launch the app in the background first, so
+    /// the store is open before `perform()` runs.
     static var modelContainer: ModelContainer?
 
     /// One dose as an automation describes it. Everything but the name is
@@ -46,21 +46,72 @@ enum DoseIntentLogger {
         }
     }
 
-    /// Save one dose to the app's journal.
-    static func log(_ request: Request) async throws -> DoseEntry {
+    /// Save what the request names to the app's journal: one entry for a
+    /// compound, one per component for a combination product.
+    static func log(_ request: Request) async throws -> [DoseEntry] {
         guard let container = modelContainer else { throw Failure.storeUnavailable }
         await SubstanceStore.shared.ensureAllLoaded()
-        return try await log(request, in: container.mainContext)
+        return try await logAll(request, in: container.mainContext)
     }
 
-    /// Save one dose into `context`. The catalog must be loaded.
-    static func log(_ request: Request, in context: ModelContext) async throws -> DoseEntry {
-        guard let named = await SubstanceLibrary.resolveNamed(request.name) else {
+    /// Save one dose into `context` and return it; for a combination product,
+    /// its first component. The catalog must be loaded.
+    static func log(_ request: Request, in context: ModelContext, customs: [CustomSubstanceEntry]? = nil) async throws -> DoseEntry {
+        guard let first = try await logAll(request, in: context, customs: customs).first else {
             throw Failure.unknownSubstance(request.name)
         }
-        let staged = stage(request, as: named)
+        return first
+    }
+
+    /// Save every entry the request produces into `context`. `customs` stands
+    /// in for the custom-substance store (tests); the catalog must be loaded.
+    static func logAll(_ request: Request, in context: ModelContext, customs: [CustomSubstanceEntry]? = nil) async throws -> [DoseEntry] {
+        let staged: [StagedDose]
+        if let combination = CustomSubstanceStore.combination(named: request.name, in: customs ?? CustomSubstanceStore.shared.all) {
+            staged = stage(request, as: combination)
+        } else if let named = await SubstanceLibrary.resolveNamed(request.name) {
+            staged = [stage(request, as: named)]
+        } else {
+            throw Failure.unknownSubstance(request.name)
+        }
+        guard !staged.isEmpty else { throw Failure.unknownSubstance(request.name) }
+
         let tags = request.tags.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
-        let entry = DoseEntry(
+        let timestamp = request.time ?? .now
+        let entries = staged.map { entry(from: $0, request: request, timestamp: timestamp, tags: tags) }
+
+        // Prior entries feed the redose and cumulative-dose checks, as the tray
+        // passes them; fetched before the insert so the new doses are not in them.
+        let recents = recentEntries(in: context)
+        let colors = (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? []
+        let fixedOrder = UserDefaults.standard.bool(forKey: QuickLogManager.fixedOrderDefaultsKey)
+        // An unknown amount tapped no chip and mints none.
+        let curation: [QuickLogManager.LoggedDose] = staged.filter { !$0.isUnknownAmount }.map { row in
+            QuickLogManager.LoggedDose(
+                substance: row.substanceName, route: row.route, amount: row.totalAmount, unit: row.unit,
+                substanceUID: row.substanceUID, isomer: row.isomer,
+                releaseForm: row.releaseForm, saltForm: row.saltForm, productName: row.productName,
+            )
+        }
+        DoseLogService.shared.logBatch(
+            zip(entries, staged).map { ($0, $1.librarySubstance) },
+            colors: colors,
+            in: context,
+            beforeSave: {
+                QuickLogManager.record(curation, fixedOrder: fixedOrder, context: context, save: false)
+            },
+            deferredBookkeeping: {
+                for entry in entries {
+                    DoseNotificationManager.doseLogged(entry: entry, recentEntries: recents)
+                }
+            },
+        )
+        return entries
+    }
+
+    /// The entry the tray's Log button would write for `staged`.
+    private static func entry(from staged: StagedDose, request: Request, timestamp: Date, tags: [String]) -> DoseEntry {
+        DoseEntry(
             substance: staged.substanceName,
             amount: staged.isUnknownAmount ? 0 : staged.totalAmount,
             unit: staged.unit,
@@ -71,38 +122,29 @@ enum DoseIntentLogger {
             productName: staged.productName,
             substanceUID: staged.substanceUID,
             displayNameSnapshot: staged.displayNameSnapshot,
-            timestamp: request.time ?? .now,
+            timestamp: timestamp,
             notes: staged.note.isEmpty ? nil : staged.note,
             tags: tags,
             meal: staged.route == .oral ? request.meal : nil,
             isUnknownDose: staged.isUnknownAmount,
+            combinationName: staged.combinationName,
         )
+    }
 
-        // Prior entries feed the redose and cumulative-dose checks, as the tray
-        // passes them; fetched before the insert so the new dose is not in them.
-        let recents = recentEntries(in: context)
-        let colors = (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? []
-        let fixedOrder = UserDefaults.standard.bool(forKey: QuickLogManager.fixedOrderDefaultsKey)
-        // An unknown amount tapped no chip and mints none.
-        let curation: [QuickLogManager.LoggedDose] = staged.isUnknownAmount ? [] : [
-            QuickLogManager.LoggedDose(
-                substance: staged.substanceName, route: staged.route, amount: staged.totalAmount, unit: staged.unit,
-                substanceUID: staged.substanceUID, isomer: staged.isomer,
-                releaseForm: staged.releaseForm, saltForm: staged.saltForm, productName: staged.productName,
-            ),
-        ]
-        DoseLogService.shared.logBatch(
-            [(entry, staged.librarySubstance)],
-            colors: colors,
-            in: context,
-            beforeSave: {
-                QuickLogManager.record(curation, fixedOrder: fixedOrder, context: context, save: false)
-            },
-            deferredBookkeeping: {
-                DoseNotificationManager.doseLogged(entry: entry, recentEntries: recents)
-            },
-        )
-        return entry
+    /// A combination product as the tray stages it: one row per component,
+    /// the request's amount counting units of the product (two co-codamol),
+    /// each component on its own route and unit. A request's route and unit
+    /// name a single dose and do not apply here.
+    private static func stage(_ request: Request, as combination: CustomSubstanceEntry) -> [StagedDose] {
+        let quantity = max(1, Int((request.amount ?? 1).rounded()))
+        let tray = DoseTrayModel()
+        tray.stage(combination: combination, quantity: quantity)
+        let note = request.notes?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return tray.staged.map { row in
+            var row = row
+            row.note = note
+            return row
+        }
     }
 
     /// The dose as the tray would stage it from a search hit: the request's
@@ -138,21 +180,46 @@ enum DoseIntentLogger {
 
     // MARK: - Dialog
 
+    /// What the action says back for everything it saved: the one dose's
+    /// summary, or for a combination "Co-codamol: 1000 mg Acetaminophen,
+    /// 60 mg Codeine, oral, 9:30".
+    static func summary(for entries: [DoseEntry]) -> String {
+        guard entries.count > 1, let first = entries.first else {
+            return entries.first.map(summary(for:)) ?? ""
+        }
+        let doses = entries.map { entry in
+            entry.isUnknownDose
+                ? DoseTitle.resolve(for: entry)
+                : "\(entry.amount.doseFormatted) \(entry.unit) \(DoseTitle.resolve(for: entry))"
+        }.joined(separator: ", ")
+        let routes = Set(entries.map(\.route))
+        var parts = [first.combinationName.map { "\($0): \(doses)" } ?? doses]
+        if routes.count == 1 {
+            parts.append(String(localized: first.route.localizedName))
+        }
+        parts.append(clock(for: first.timestamp))
+        return parts.joined(separator: ", ")
+    }
+
     /// "27 mg Concerta, oral, 9:30" — what the action says back. The title is
     /// the journal row's, the time is today's clock or a dated one.
     static func summary(for entry: DoseEntry) -> String {
         let amount = entry.isUnknownDose
             ? String(localized: "unknown amount")
             : "\(entry.amount.doseFormatted) \(entry.unit)"
-        let time = Calendar.current.isDateInToday(entry.timestamp)
-            ? entry.timestamp.formatted(date: .omitted, time: .shortened)
-            : entry.timestamp.formatted(date: .abbreviated, time: .shortened)
         let route = String(localized: entry.route.localizedName)
         return [
             entry.isUnknownDose ? "\(DoseTitle.resolve(for: entry)) (\(amount))" : "\(amount) \(DoseTitle.resolve(for: entry))",
             route,
-            time,
+            clock(for: entry.timestamp),
         ].joined(separator: ", ")
+    }
+
+    /// Today's clock time, or a dated one.
+    private static func clock(for timestamp: Date) -> String {
+        Calendar.current.isDateInToday(timestamp)
+            ? timestamp.formatted(date: .omitted, time: .shortened)
+            : timestamp.formatted(date: .abbreviated, time: .shortened)
     }
 }
 

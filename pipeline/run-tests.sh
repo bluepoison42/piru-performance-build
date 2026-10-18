@@ -17,6 +17,8 @@
 #   pipeline/run-tests.sh -only SomeSuite # one suite (repeatable)
 #   RUN_TIMEOUT=600 pipeline/run-tests.sh # raise the whole-run cap (default 300s)
 set -uo pipefail
+# Swift Testing prints its verdict with ✔/✘; under a C locale grep cannot match them and the line goes silent.
+export LC_ALL=en_US.UTF-8
 
 RUN_TIMEOUT="${RUN_TIMEOUT:-180}"     # whole-run wall clock, seconds (healthy ≈ 17s)
 STARTUP_TIMEOUT="${STARTUP_TIMEOUT:-45}"  # seconds of silence before calling it wedged

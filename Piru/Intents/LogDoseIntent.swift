@@ -18,7 +18,7 @@ struct LogDoseIntent: AppIntent {
     @Parameter(title: "Substance")
     var substance: SubstanceEntity
 
-    @Parameter(title: "Amount", description: "Leave empty to log the dose with its amount unknown.")
+    @Parameter(title: "Amount", description: "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken.")
     var amount: Double?
 
     @Parameter(title: "Unit", description: "The substance's usual unit for the route when empty.")
@@ -53,7 +53,7 @@ struct LogDoseIntent: AppIntent {
     // main-actor state; the framework hops here for an async witness.
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
-        let entry = try await DoseIntentLogger.log(DoseIntentLogger.Request(
+        let entries = try await DoseIntentLogger.log(DoseIntentLogger.Request(
             name: substance.typedName,
             amount: amount,
             unit: unit,
@@ -63,7 +63,8 @@ struct LogDoseIntent: AppIntent {
             notes: notes,
             tags: tags ?? [],
         ))
-        let summary = DoseIntentLogger.summary(for: entry)
-        return .result(value: entry.id.uuidString, dialog: IntentDialog("Logged \(summary)."))
+        guard let first = entries.first else { throw DoseIntentLogger.Failure.unknownSubstance(substance.typedName) }
+        let summary = DoseIntentLogger.summary(for: entries)
+        return .result(value: first.id.uuidString, dialog: IntentDialog("Logged \(summary)."))
     }
 }

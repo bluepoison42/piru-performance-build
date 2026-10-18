@@ -441,7 +441,22 @@ struct QuickLogView: View {
         if let tags = prefillDose?.tags {
             tray.tags.formUnion(tags)
         }
-        guard let name, let named = await SubstanceLibrary.resolveNamed(name) else { return }
+        guard let name else { return }
+        if let combination = CustomSubstanceStore.shared.combination(named: name) {
+            // A combination stages one row per component; the amount counts
+            // units of the product (two co-codamol), never milligrams.
+            let quantity = max(1, Int((prefillDose?.amount ?? 1).rounded()))
+            withAnimation(.snappy) {
+                tray.stage(combination: combination, quantity: quantity, colorLookup: content.cachedColorLookup)
+                if let note = prefillDose?.note {
+                    for index in tray.staged.indices where tray.staged[index].combinationName == combination.name {
+                        tray.staged[index].note = note
+                    }
+                }
+            }
+            return
+        }
+        guard let named = await SubstanceLibrary.resolveNamed(name) else { return }
         let substance = named.substance
         let route = prefillRoute ?? named.esterRoute ?? substance.defaultRoute
         let unit = prefillDose?.unit ?? substance.unit(for: route, saltForm: named.saltForm)

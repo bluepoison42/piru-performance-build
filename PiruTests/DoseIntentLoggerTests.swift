@@ -66,6 +66,31 @@ struct DoseIntentLoggerTests {
     }
 
     @Test
+    func `A combination logs one entry per component, the amount counting units`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let context = container.mainContext
+        let coCodamol = CustomSubstanceEntry(name: "Co-codamol", category: .opioid, unit: "tablet", components: [
+            CombinationComponent(substance: "Paracetamol", amountPerUnit: 500, unit: "mg", route: .oral),
+            CombinationComponent(substance: "Codeine", amountPerUnit: 30, unit: "mg", route: .oral),
+        ])
+
+        let entries = try await DoseIntentLogger.logAll(
+            DoseIntentLogger.Request(name: "co-codamol", amount: 2, meal: .light, notes: "headache"),
+            in: context,
+            customs: [coCodamol],
+        )
+
+        #expect(entries.count == 2)
+        #expect(entries.map(\.combinationName) == ["Co-codamol", "Co-codamol"])
+        #expect(Set(entries.map(\.amount)) == [1000, 60])
+        #expect(entries.allSatisfy { $0.route == .oral && $0.meal == .light && $0.notes == "headache" })
+        #expect(entries.allSatisfy { $0.session != nil })
+        let summary = DoseIntentLogger.summary(for: entries)
+        #expect(summary.hasPrefix("Co-codamol: "))
+        #expect(summary.contains("60 mg"))
+    }
+
+    @Test
     func `Route and unit default from the catalog`() async throws {
         await SubstanceStore.shared.ensureAllLoaded()
         let caffeine = try #require(SubstanceLibrary.lookup("Caffeine"))

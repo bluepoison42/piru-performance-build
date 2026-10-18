@@ -185,7 +185,12 @@ final class DoseLogService {
         pendingSubstances.formUnion(substances)
         pendingBookkeeping.append(bookkeeping)
         deferralTask?.cancel()
+        // A context does not retain its container; hold it until the pass
+        // runs, or a container released in the meantime (a test's in-memory
+        // store) leaves `context` fetching from nothing and SwiftData traps.
+        let container = context.container
         deferralTask = Task(priority: .utility) { [weak self] in
+            defer { withExtendedLifetime(container) {} }
             try? await Task.sleep(for: Self.deferralDelay)
             guard !Task.isCancelled, let self else { return }
             let substances = self.pendingSubstances

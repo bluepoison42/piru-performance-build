@@ -447,6 +447,27 @@ final class CustomSubstanceStore {
         return byCanonicalKey[Self.canonicalKey(name)]
     }
 
+    /// The combination product `name` names, by its name or its label; `nil`
+    /// for a single compound or an unknown name. The quick-log prefill and the
+    /// Shortcuts logger ask this before the library, since a combination
+    /// stages one row per component rather than one dose.
+    func combination(named name: String) -> CustomSubstanceEntry? {
+        Self.combination(named: name, in: all)
+    }
+
+    static func combination(named name: String, in entries: [CustomSubstanceEntry]) -> CustomSubstanceEntry? {
+        let needle = name.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !needle.isEmpty else { return nil }
+        let key = canonicalKey(name)
+        return entries.first { entry in
+            entry.isCombination && (
+                entry.name.lowercased() == needle
+                    || canonicalKey(entry.name) == key
+                    || entry.displayName?.trimmingCharacters(in: .whitespaces).lowercased() == needle
+            )
+        }
+    }
+
     /// Find an entry by its personal display name (case-insensitive). Lets a
     /// relabelled substance be located by the name the user gave it — e.g.
     /// "joint" resolving to the entry whose canonical name is "THC".
