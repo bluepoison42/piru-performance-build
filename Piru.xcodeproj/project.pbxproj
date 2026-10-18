@@ -564,7 +564,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Piru;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				DEVELOPMENT_TEAM = 52K336H235;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -580,7 +580,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -606,7 +606,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Piru;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				DEVELOPMENT_TEAM = 52K336H235;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -622,7 +622,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -647,7 +647,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				DEVELOPMENT_TEAM = 52K336H235;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PiruComplication/Info.plist;
@@ -659,7 +659,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -683,7 +683,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				DEVELOPMENT_TEAM = 52K336H235;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PiruComplication/Info.plist;
@@ -695,7 +695,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -860,7 +860,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Piru/Piru-iOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Piru/Piru-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -901,7 +901,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -932,7 +932,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Piru/Piru-iOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Piru/Piru-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -973,7 +973,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -1001,7 +1001,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PiruLiveActivityExtension/PiruLiveActivityExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PiruLiveActivityExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PiruLiveActivityExtension;
@@ -1012,7 +1012,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -1035,7 +1035,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PiruLiveActivityExtension/PiruLiveActivityExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PiruLiveActivityExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PiruLiveActivityExtension;
@@ -1046,7 +1046,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -1068,10 +1068,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -1095,10 +1095,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -1123,7 +1123,7 @@
 				ASSTCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PiruWidget/PiruWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PiruWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PiruWidget;
@@ -1134,7 +1134,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
@@ -1156,7 +1156,7 @@
 				ASSTCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PiruWidget/PiruWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 69;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PiruWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PiruWidget;
@@ -1167,7 +1167,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.0;
 				"MARKETING_VERSION[sdk=iphonesimulator*]" = 1.0;
 				"MARKETING_VERSION[sdk=watchos*]" = 1.0;
