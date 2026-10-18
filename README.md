@@ -34,6 +34,18 @@ Piru puts doses, timestamped notes and estimated drug-level curves on one timeli
 
 </details>
 
+## Automation
+
+Two actions in the Shortcuts app and Siri, for any automation that already knows what was taken. **Log Dose** saves straight to the journal and answers with the entry's id. **Start Dose Log** opens the quick log with the dose staged, and nothing is saved until you tap Log. Both take a substance (a brand like *Concerta* stays on the dose as its product), and optionally an amount, unit, route, time, meal, notes and tags.
+
+The same prefill works as a URL from any app, always for review:
+
+```
+piru://quicklog?substance=Concerta&amount=27&unit=mg&route=oral&time=2026-10-18T09:30:00Z&meal=empty&notes=late&tags=work
+```
+
+`time` is ISO 8601 or epoch seconds; `meal` is `empty`, `light` or `full`.
+
 ## Notes
 
 - iOS/watchOS/macOS 26+; Android 9+ on 64-bit ARM. Mac supports Apple silicon and Intel. Apple Watch comes with the iPhone app.

@@ -3364,6 +3364,23 @@ ES = {
     "Download": "Descargar",
     "Check for Updates": "Buscar actualizaciones",
     "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.": "Una vez al día, Piru le pregunta a GitHub cuál es la versión más reciente. No se envía nada sobre ti ni sobre tu diario.",
+    # Shortcuts actions (Piru/Intents)
+    "Log Dose": "Registrar dosis",
+    "Start Dose Log": "Iniciar registro de dosis",
+    "Saves a dose to the journal without opening Piru.": "Guarda una dosis en el diario sin abrir Piru.",
+    "Opens Piru with a dose staged in the quick log, ready to review and save.": "Abre Piru con una dosis preparada en el registro rápido, lista para revisar y guardar.",
+    "Leave empty to log the dose with its amount unknown.": "Déjalo vacío para registrar la dosis con cantidad desconocida.",
+    "Leave empty to open the dose editor on the usual dose.": "Déjalo vacío para abrir el editor de dosis en la dosis habitual.",
+    "The substance's usual unit for the route when empty.": "Si está vacío, la unidad habitual de la sustancia para esa vía.",
+    "The substance's usual route when empty.": "Si está vacío, la vía habitual de la sustancia.",
+    "Now when empty.": "Si está vacío, ahora.",
+    "What was eaten before an oral dose.": "Qué se comió antes de una dosis oral.",
+    "Log ${amount} ${unit} of ${substance}": "Registrar ${amount} ${unit} de ${substance}",
+    "Start a dose log for ${substance}": "Iniciar un registro de dosis para ${substance}",
+    "Logged %@.": "Se registró %@.",
+    "Piru does not know a substance named “%@”.": "Piru no conoce ninguna sustancia llamada “%@”.",
+    "The journal could not be opened.": "No se pudo abrir el diario.",
+    "Custom substance": "Sustancia personalizada",
 }
 
 # Spain only: the few strings Spain must see differently — today the iOS Settings

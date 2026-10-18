@@ -27097,6 +27097,34 @@
         }
       }
     },
+    "Custom substance" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sustancia personalizada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sustancia personalizada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义物质"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自訂物質"
+          }
+        }
+      }
+    },
     "Custom substance (no dose data)" : {
       "localizations" : {
         "es" : {
@@ -47109,6 +47137,62 @@
         }
       }
     },
+    "Leave empty to log the dose with its amount unknown." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío para registrar la dosis con cantidad desconocida."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío para registrar la dosis con cantidad desconocida."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空则以用量未知记录这份剂量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空則以用量未知記錄這份劑量。"
+          }
+        }
+      }
+    },
+    "Leave empty to open the dose editor on the usual dose." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío para abrir el editor de dosis en la dosis habitual."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío para abrir el editor de dosis en la dosis habitual."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空则在常用剂量上打开剂量编辑器。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空則在常用劑量上開啟劑量編輯器。"
+          }
+        }
+      }
+    },
     "Leave it empty to use the original name." : {
       "localizations" : {
         "es" : {
@@ -48772,6 +48856,34 @@
         }
       }
     },
+    "Log ${amount} ${unit} of ${substance}" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar ${amount} ${unit} de ${substance}"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar ${amount} ${unit} de ${substance}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "记录 ${amount} ${unit} ${substance}"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記錄 ${amount} ${unit} ${substance}"
+          }
+        }
+      }
+    },
     "Log a dose" : {
       "localizations" : {
         "es" : {
@@ -48908,6 +49020,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "仍要記錄"
+          }
+        }
+      }
+    },
+    "Log Dose" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar dosis"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar dosis"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "记录剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記錄劑量"
           }
         }
       }
@@ -49049,6 +49189,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記錄此項"
+          }
+        }
+      }
+    },
+    "Logged %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se registró %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se registró %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已记录 %@。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已記錄 %@。"
           }
         }
       }
@@ -59164,6 +59332,34 @@
         }
       }
     },
+    "Now when empty." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está vacío, ahora."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está vacío, ahora."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空即为现在。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空即為現在。"
+          }
+        }
+      }
+    },
     "Nowhere to Move" : {
       "localizations" : {
         "es" : {
@@ -60343,6 +60539,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開啟月份選擇器"
+          }
+        }
+      }
+    },
+    "Opens Piru with a dose staged in the quick log, ready to review and save." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Piru con una dosis preparada en el registro rápido, lista para revisar y guardar."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Piru con una dosis preparada en el registro rápido, lista para revisar y guardar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开 Piru，在快速记录中放好一份剂量，供你检查并保存。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 Piru，在快速記錄中放好一份劑量，供你檢查並儲存。"
           }
         }
       }
@@ -63602,6 +63826,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Piru 這次未能開啟你的日記，目前正以暫時儲存空間執行。**沒有任何資料被刪除。**你的劑量和場次仍安全保存在這部裝置上，未來的更新會自動還原它們。\n\n傳送記錄檔能幫助我們更快推出修正。記錄檔只描述儲存問題本身，絕不包含你的劑量資料。"
+          }
+        }
+      }
+    },
+    "Piru does not know a substance named “%@”." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru no conoce ninguna sustancia llamada “%@”."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru no conoce ninguna sustancia llamada “%@”."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 不认识名为“%@”的物质。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 不認識名為「%@」的物質。"
           }
         }
       }
@@ -72019,6 +72271,34 @@
         }
       }
     },
+    "Saves a dose to the journal without opening Piru." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda una dosis en el diario sin abrir Piru."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda una dosis en el diario sin abrir Piru."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不打开 Piru，直接把一份剂量保存到日记。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不開啟 Piru，直接把一份劑量儲存到日記。"
+          }
+        }
+      }
+    },
     "Scan a box" : {
       "localizations" : {
         "es" : {
@@ -78846,6 +79126,62 @@
         }
       }
     },
+    "Start a dose log for ${substance}" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar un registro de dosis para ${substance}"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar un registro de dosis para ${substance}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为 ${substance} 开始记录剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "為 ${substance} 開始記錄劑量"
+          }
+        }
+      }
+    },
+    "Start Dose Log" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar registro de dosis"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar registro de dosis"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始记录剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始記錄劑量"
+          }
+        }
+      }
+    },
     "Start Fresh" : {
       "localizations" : {
         "es" : {
@@ -83732,6 +84068,34 @@
         }
       }
     },
+    "The journal could not be opened." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法打开日记。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法開啟日記。"
+          }
+        }
+      }
+    },
     "The learned part of tolerance" : {
       "localizations" : {
         "es" : {
@@ -84240,6 +84604,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SubFxOnEx 效應詞表。版權所有 © Di-lemma。"
+          }
+        }
+      }
+    },
+    "The substance's usual route when empty." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está vacío, la vía habitual de la sustancia."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está vacío, la vía habitual de la sustancia."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空时使用该物质的常用途径。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空時使用該物質的常用途徑。"
+          }
+        }
+      }
+    },
+    "The substance's usual unit for the route when empty." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está vacío, la unidad habitual de la sustancia para esa vía."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está vacío, la unidad habitual de la sustancia para esa vía."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空时使用该物质在此途径的常用单位。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空時使用該物質在此途徑的常用單位。"
           }
         }
       }
@@ -90781,6 +91201,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "應避免的事"
+          }
+        }
+      }
+    },
+    "What was eaten before an oral dose." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué se comió antes de una dosis oral."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué se comió antes de una dosis oral."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "口服剂量之前吃了什么。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "口服劑量之前吃了什麼。"
           }
         }
       }
