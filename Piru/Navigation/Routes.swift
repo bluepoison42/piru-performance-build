@@ -455,12 +455,29 @@ nonisolated struct EntryPrefillPayload: Hashable, Codable {
     var unit: String
 }
 
-/// A dose a scanned box stated, staged into the quick-log tray as-is: the
-/// per-unit strength in `unit`, under the brand printed on the box.
+/// What a quick-log opener already knows about the dose, staged into the tray
+/// for review: the box scanner's strength and brand, or the full set a
+/// `piru://quicklog` link or the Start Dose Log action carries. Every field is
+/// optional — with no `amount` the substance stages as a draft on its
+/// reference dose, and the tray-wide fields (`time`, `meal`, `tags`) apply
+/// either way.
 nonisolated struct DosePrefill: Hashable, Codable {
-    var amount: Double
-    var unit: String
+    /// The dose, in `unit` (a scanned box's per-unit strength).
+    var amount: Double?
+    /// Defaults to the substance's unit on the staged route.
+    var unit: String?
+    /// The brand the dose was named by ("Concerta"), kept as the staged row's
+    /// `productName`. A link that names the substance by a brand gets it
+    /// filled from the alias the catalog matched.
     var productName: String?
+    /// The tray's "When"; defaults to now.
+    var time: Date?
+    /// The tray's stomach state, committed onto oral doses only, like the chip.
+    var meal: MealState?
+    /// The staged row's note.
+    var note: String?
+    /// Tray-wide tags, added to whatever the tray already carries.
+    var tags: [String]?
 }
 
 /// What a scanned box stated about its contents, for the inventory add form.

@@ -7329,6 +7329,50 @@ T = {
         "Piru 每天向 GitHub 查询一次最新版本。不会发送任何关于你或你日记的信息。",
         "Piru 每天向 GitHub 查詢一次最新版本。不會傳送任何關於你或你日記的資訊。",
     ),
+    # Shortcuts actions (Piru/Intents): titles, parameter help, the summary line, the result dialog.
+    "Log Dose": ("记录剂量", "記錄劑量"),
+    "Start Dose Log": ("开始记录剂量", "開始記錄劑量"),
+    "Saves a dose to the journal without opening Piru.": (
+        "不打开 Piru，直接把一份剂量保存到日记。",
+        "不開啟 Piru，直接把一份劑量儲存到日記。",
+    ),
+    "Opens Piru with a dose staged in the quick log, ready to review and save.": (
+        "打开 Piru，在快速记录中放好一份剂量，供你检查并保存。",
+        "開啟 Piru，在快速記錄中放好一份劑量，供你檢查並儲存。",
+    ),
+    "Leave empty to log the dose with its amount unknown.": (
+        "留空则以用量未知记录这份剂量。",
+        "留空則以用量未知記錄這份劑量。",
+    ),
+    "Leave empty to open the dose editor on the usual dose.": (
+        "留空则在常用剂量上打开剂量编辑器。",
+        "留空則在常用劑量上開啟劑量編輯器。",
+    ),
+    "The substance's usual unit for the route when empty.": (
+        "留空时使用该物质在此途径的常用单位。",
+        "留空時使用該物質在此途徑的常用單位。",
+    ),
+    "The substance's usual route when empty.": (
+        "留空时使用该物质的常用途径。",
+        "留空時使用該物質的常用途徑。",
+    ),
+    "Now when empty.": ("留空即为现在。", "留空即為現在。"),
+    "What was eaten before an oral dose.": ("口服剂量之前吃了什么。", "口服劑量之前吃了什麼。"),
+    "Log ${amount} ${unit} of ${substance}": (
+        "记录 ${amount} ${unit} ${substance}",
+        "記錄 ${amount} ${unit} ${substance}",
+    ),
+    "Start a dose log for ${substance}": (
+        "为 ${substance} 开始记录剂量",
+        "為 ${substance} 開始記錄劑量",
+    ),
+    "Logged %@.": ("已记录 %@。", "已記錄 %@。"),
+    "Piru does not know a substance named “%@”.": (
+        "Piru 不认识名为“%@”的物质。",
+        "Piru 不認識名為「%@」的物質。",
+    ),
+    "The journal could not be opened.": ("无法打开日记。", "無法開啟日記。"),
+    "Custom substance": ("自定义物质", "自訂物質"),
 }
 
 # Widget translations
@@ -8500,6 +8544,26 @@ if __name__ == "__main__":
 
     NEW_KEYS.add("^[%lld result](inflect: true)")
     NEW_KEYS.add("Bar: participant range; dot: mean.")
+    NEW_KEYS.update(
+        {
+            "Log Dose",
+            "Start Dose Log",
+            "Saves a dose to the journal without opening Piru.",
+            "Opens Piru with a dose staged in the quick log, ready to review and save.",
+            "Leave empty to log the dose with its amount unknown.",
+            "Leave empty to open the dose editor on the usual dose.",
+            "The substance's usual unit for the route when empty.",
+            "The substance's usual route when empty.",
+            "Now when empty.",
+            "What was eaten before an oral dose.",
+            "Log ${amount} ${unit} of ${substance}",
+            "Start a dose log for ${substance}",
+            "Logged %@.",
+            "Piru does not know a substance named “%@”.",
+            "The journal could not be opened.",
+            "Custom substance",
+        }
+    )
     NEW_KEYS.update({"Nothing Staged", "Choose a dose on the left, or search for a substance."})
     NEW_KEYS.update(
         {

@@ -41,3 +41,7 @@ Shared/ContrastAwareStyles.swift
 Piru/Views/Components/FlowLayout.swift
 # UIKit/AppKit share sheet; Android/Platform/Frameworks+Android.swift.
 Piru/Views/Components/ShareSheetPresenter.swift
+
+# App Intents (the Shortcuts actions); only PiruApp.swift names them. The `piru://quicklog`
+# prefill they share stays in the navigation and quick-log code, which Android compiles.
+Piru/Intents/*

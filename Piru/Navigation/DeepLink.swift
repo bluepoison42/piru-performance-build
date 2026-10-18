@@ -20,6 +20,14 @@ import Foundation
 ///   open (the "Log" button on a substance's detail screen), on `route` when
 ///   given (`oral`, `insufflated`, `smoked`, … as ``RouteOfAdministration``
 ///   parses them)
+/// - `piru://quicklog?substance=<name>&amount=<n>&unit=<unit>&route=<route>`
+///   `&time=<when>&meal=<empty|light|full>&notes=<text>&tags=<a,b>&product=<brand>`
+///   → the same sheet with that dose staged for review (a ``DosePrefill``):
+///   the automation form, and what the Start Dose Log action opens. `substance`
+///   may be a brand ("Concerta"), which is kept as the dose's product. `time`
+///   is ISO 8601 (`2026-10-18T09:30:00Z`, offsets allowed) or epoch seconds.
+///   Every parameter but `substance` is optional; without `amount` the editor
+///   opens on the reference dose. A link never saves on its own.
 /// - `piru://settings` → present `.settings`
 /// - `piru://skins` → present `.skins`
 /// - `piru://help` → present `.help`
@@ -129,6 +137,7 @@ nonisolated enum DeepLink {
                 sheet: .quickLog(
                     routine: query["routine"],
                     prefillSubstance: query["substance"],
+                    prefillDose: dosePrefill(from: query),
                     prefillRoute: query["route"].flatMap(route(named:)),
                 ),
             )
@@ -262,6 +271,54 @@ nonisolated enum DeepLink {
         return route == .other ? nil : route
     }
 
+    /// The dose a `piru://quicklog` link describes beyond its substance and
+    /// route, or `nil` when it names none of those fields. A value the link
+    /// gets wrong (a non-numeric amount, an unknown meal word) is dropped, not
+    /// the whole link: the sheet still opens, on what the link did say.
+    private static func dosePrefill(from query: [String: String]) -> DosePrefill? {
+        let tags = query["tags"]?
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+        let prefill = DosePrefill(
+            amount: query["amount"].flatMap(Double.init).flatMap { $0.isFinite && $0 >= 0 ? $0 : nil },
+            unit: query["unit"].nonBlank,
+            productName: query["product"].nonBlank,
+            time: query["time"].flatMap(date(named:)),
+            meal: query["meal"].flatMap { MealState(rawValue: $0.lowercased()) },
+            note: query["notes"].nonBlank,
+            tags: tags.flatMap { $0.isEmpty ? nil : $0 },
+        )
+        return prefill == DosePrefill() ? nil : prefill
+    }
+
+    /// `time=` as a link may write it: ISO 8601 with or without fractional
+    /// seconds (`2026-10-18T09:30:00Z`, `…09:30:00+02:00`), or Unix epoch seconds.
+    private static func date(named value: String) -> Date? {
+        if let date = try? Date(value, strategy: .iso8601)
+            ?? (try? Date(value, strategy: .iso8601.time(includingFractionalSeconds: true))) {
+            return date
+        }
+        if let seconds = Double(value), seconds.isFinite, seconds > 0 {
+            return Date(timeIntervalSince1970: seconds)
+        }
+        return nil
+    }
+
+    /// The `time=` form the encoder writes: UTC ISO 8601 to the second. A date
+    /// with fractional seconds loses them on the way through a URL.
+    static func timeParameter(for date: Date) -> String {
+        date.formatted(.iso8601)
+    }
+
+    /// `amount=` without a trailing `.0` for whole numbers, so the URL reads the
+    /// way a person would write it.
+    static func amountParameter(for amount: Double) -> String {
+        amount == amount.rounded() && abs(amount) < 1e15
+            ? String(Int(amount))
+            : String(amount)
+    }
+
     // MARK: - Web links
 
     /// The host of dose.wiki's links into the app (`AndroidManifest.xml`'s
@@ -393,9 +450,6 @@ nonisolated enum DeepLink {
 
         switch sheet {
         case let .quickLog(routine, prefillSubstance, prefillDose, prefillRoute):
-            if prefillDose != nil {
-                return nil
-            }
             components.host = "quicklog"
             var items: [URLQueryItem] = []
             if let routine {
@@ -404,8 +458,29 @@ nonisolated enum DeepLink {
             if let prefillSubstance {
                 items.append(URLQueryItem(name: "substance", value: prefillSubstance))
             }
+            if let amount = prefillDose?.amount {
+                items.append(URLQueryItem(name: "amount", value: amountParameter(for: amount)))
+            }
+            if let unit = prefillDose?.unit {
+                items.append(URLQueryItem(name: "unit", value: unit))
+            }
             if let prefillRoute {
                 items.append(URLQueryItem(name: "route", value: prefillRoute.rawValue))
+            }
+            if let time = prefillDose?.time {
+                items.append(URLQueryItem(name: "time", value: timeParameter(for: time)))
+            }
+            if let meal = prefillDose?.meal {
+                items.append(URLQueryItem(name: "meal", value: meal.rawValue))
+            }
+            if let note = prefillDose?.note {
+                items.append(URLQueryItem(name: "notes", value: note))
+            }
+            if let tags = prefillDose?.tags, !tags.isEmpty {
+                items.append(URLQueryItem(name: "tags", value: tags.joined(separator: ",")))
+            }
+            if let product = prefillDose?.productName {
+                items.append(URLQueryItem(name: "product", value: product))
             }
             if !items.isEmpty {
                 components.queryItems = items
@@ -505,5 +580,14 @@ nonisolated struct DosewikiLink: Hashable {
         case .open:
             substanceName.map { DeepLinkOutcome(tab: .library, path: [.substance(name: $0)]) }
         }
+    }
+}
+
+private nonisolated extension String? {
+    /// The value with surrounding whitespace removed, or `nil` when nothing is
+    /// left: a link's `notes=` or `unit=` with no text names no field.
+    var nonBlank: String? {
+        guard let trimmed = self?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmed.isEmpty else { return nil }
+        return trimmed
     }
 }
