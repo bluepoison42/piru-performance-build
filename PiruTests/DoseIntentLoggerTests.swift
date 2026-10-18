@@ -1,3 +1,4 @@
+import AppIntents
 import Foundation
 import SwiftData
 import Testing
@@ -109,6 +110,13 @@ struct DoseIntentLoggerTests {
         await #expect(throws: DoseIntentLogger.Failure.self) {
             _ = try await DoseIntentLogger.log(DoseIntentLogger.Request(name: "ZZNoSuchSubstance", amount: 1), in: container.mainContext)
         }
+    }
+
+    @Test
+    func `Both actions need an unlocked device`() {
+        // A dose is health data: neither action may run from Siri on a locked phone.
+        #expect(LogDoseIntent.authenticationPolicy == .requiresAuthentication)
+        #expect(StartDoseLogIntent.authenticationPolicy == .requiresAuthentication)
     }
 
     @Test

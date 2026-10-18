@@ -12,6 +12,9 @@ struct StartDoseLogIntent: AppIntent {
         categoryName: "Journal",
     )
     static let openAppWhenRun = true
+    // Never `.alwaysAllowed`: the staged dose is health data, and this must
+    // not run from Siri on a locked phone.
+    static let authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
     @Parameter(title: "Substance")
     var substance: SubstanceEntity?

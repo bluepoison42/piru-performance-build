@@ -11,6 +11,9 @@ struct LogDoseIntent: AppIntent {
         "Saves a dose to the journal without opening Piru.",
         categoryName: "Journal",
     )
+    // Never `.alwaysAllowed`: a dose is health data, and this must not run
+    // from Siri on a locked phone.
+    static let authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
     @Parameter(title: "Substance")
     var substance: SubstanceEntity
