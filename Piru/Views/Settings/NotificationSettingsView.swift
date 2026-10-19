@@ -9,6 +9,8 @@ struct NotificationSettingsView: View {
     @State private var authStatus: UNAuthorizationStatus?
     @State private var nextFireDates: [NotificationType: Date] = [:]
     @AppStorage("liveActivityEnabled") private var autoLiveActivity = false
+    @AppStorage(CheckInScheduler.everySessionKey, store: UserDefaults(suiteName: AppIdentity.appGroup))
+    private var checkInEverySession = false
     @Environment(\.scenePhase) private var scenePhase
 
     private var rowsDisabled: Bool {
@@ -23,6 +25,8 @@ struct NotificationSettingsView: View {
                 }
 
                 globalSection
+
+                checkInSection
 
                 alertsSection
 
@@ -64,6 +68,20 @@ struct NotificationSettingsView: View {
                 )
             }
             .tint(Theme.accent)
+        }
+    }
+
+    private var checkInSection: some View {
+        Section {
+            Toggle(isOn: $checkInEverySession) {
+                Label("Check In on Every Session", systemImage: "quote.bubble")
+            }
+            .tint(Theme.accent)
+            .onChange(of: checkInEverySession) { _, isOn in
+                if isOn { Task { await requestPermission() } }
+            }
+        } footer: {
+            Text("A session starts its check-ins as soon as you log a dose with a course to report on. The times follow what you took and move when you take more. Change or stop them from the session's menu.")
         }
     }
 
@@ -568,7 +586,7 @@ extension NotificationType {
         case .inventory:
             "A heads-up when something you track runs low or out, before the empty bottle surprises you."
         case .checkIn:
-            "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on for that session."
+            "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on, for one session or for every session."
         }
     }
 }
