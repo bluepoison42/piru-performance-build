@@ -185,13 +185,15 @@ final class DoseLogService {
         in context: ModelContext,
         bookkeeping: @escaping @MainActor () -> Void = {},
     ) {
-        pendingSubstances.formUnion(substances)
-        pendingBookkeeping.append(bookkeeping)
-        deferralTask?.cancel()
         // A context does not retain its container; hold it until the pass
         // runs, or a container released in the meantime (a test's in-memory
         // store) leaves `context` fetching from nothing and SwiftData traps.
+        // Each piece of bookkeeping holds its own: a later call replaces the
+        // task, and the work queued before it still reads the earlier store.
         let container = context.container
+        pendingSubstances.formUnion(substances)
+        pendingBookkeeping.append { withExtendedLifetime(container) { bookkeeping() } }
+        deferralTask?.cancel()
         deferralTask = Task(priority: .utility) { [weak self] in
             defer { withExtendedLifetime(container) {} }
             try? await Task.sleep(for: Self.deferralDelay)
