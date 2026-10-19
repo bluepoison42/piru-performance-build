@@ -313,25 +313,36 @@ enum CheckInScheduler {
     /// follow the doses in each session that just gained one, then reschedule
     /// it. Runs for every session with check-ins, whether the setting or the
     /// banner started them.
+    ///
+    /// A session with no check-ins is left untouched unless the setting could
+    /// start them. The rest are held by identifier across the awaits and looked
+    /// up again in the logging context after each one: that context may have
+    /// been reset in the meantime, and a model it destroyed traps on any read.
     static func dosesLogged(in sessions: [Session]) {
-        var seen = Set<UUID>()
-        let sessions = sessions.filter { seen.insert($0.id).inserted }
-        guard !sessions.isEmpty else { return }
         let everySession = checksInEverySession
+        var seen = Set<UUID>()
+        let candidates = sessions.filter {
+            seen.insert($0.id).inserted && (everySession || $0.checkInIntervalMinutes != nil)
+        }
+        guard let context = candidates.first?.modelContext else { return }
+        let ids = candidates.map(\.persistentModelID)
+        func live(_ ids: [PersistentIdentifier]) -> [Session] {
+            ids.compactMap { context.registeredModel(for: $0) as Session? }.filter { !$0.isDeleted }
+        }
         Task {
             await SubstanceStore.shared.ensureAllLoaded()
-            var running: [Session] = []
+            var running: [PersistentIdentifier] = []
             var started = false
-            for session in sessions where !session.isDeleted {
+            for session in live(ids) {
                 let wasOff = session.checkInIntervalMinutes == nil
                 guard follow(newDoseIn: session, everySession: everySession) else { continue }
                 started = started || wasOff
-                running.append(session)
+                running.append(session.persistentModelID)
             }
             guard !running.isEmpty else { return }
-            try? running.first?.modelContext?.save()
+            try? context.save()
             if started { _ = await DoseNotificationManager.requestAuthorization() }
-            for session in running where !session.isDeleted {
+            for session in live(running) {
                 sync(session: session)
             }
         }
