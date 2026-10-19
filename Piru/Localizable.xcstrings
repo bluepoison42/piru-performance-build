@@ -354,6 +354,7 @@
       }
     },
     "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on for that session." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -377,6 +378,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在場次中的幾個時點提示「現在感覺如何？」，每次開啟一則帶時間戳的筆記。預設關閉，需為該場次開啟。"
+          }
+        }
+      }
+    },
+    "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on, for one session or for every session." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«¿Cómo va?» en puntos fijos de una sesión, cada uno abriendo una nota con marca de tiempo. Desactivado a menos que lo actives, para una sesión o para todas."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«¿Cómo va?» en puntos fijos de una sesión, cada uno abriendo una nota con marca de tiempo. Desactivado a menos que lo actives, para una sesión o para todas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在场次中的几个时点提示“现在感觉如何？”，每次打开一条带时间戳的笔记。默认关闭，可为单个场次或所有场次开启。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在場次中的幾個時點提示「現在感覺如何？」，每次開啟一則帶時間戳的筆記。預設關閉，可為單一場次或所有場次開啟。"
           }
         }
       }
@@ -10017,6 +10046,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "第一劑後不久補服，效果會更弱，因為快速釋放的儲備已減少（快速耐受）。這部分儲備會在一夜間補充，因此與下方變化較慢的耐受不同。"
+          }
+        }
+      }
+    },
+    "A session starts its check-ins as soon as you log a dose with a course to report on. The times follow what you took and move when you take more. Change or stop them from the session's menu." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una sesión empieza su seguimiento en cuanto registras una dosis con un curso que contar. Las horas siguen lo que tomaste y se mueven cuando tomas más. Cámbialas o detenlas desde el menú de la sesión."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una sesión empieza su seguimiento en cuanto registras una dosis con un curso que contar. Las horas siguen lo que tomaste y se mueven cuando tomas más. Cámbialas o detenlas desde el menú de la sesión."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只要记录了一个有过程可记录的剂量，场次就会自动开始状态确认。时间点依据你服用的内容，再次服用时会往后移。可在场次菜单中更改或停止。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只要記錄了一個有過程可記錄的劑量，場次就會自動開始狀態確認。時間點依據你服用的內容，再次服用時會往後移。可在場次選單中更改或停止。"
           }
         }
       }
@@ -22068,6 +22125,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "要在過程中確認一下自己的狀態嗎？"
+          }
+        }
+      }
+    },
+    "Check In on Every Session" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguimiento en cada sesión"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguimiento en cada sesión"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每个场次都确认状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每個場次都確認狀態"
           }
         }
       }
