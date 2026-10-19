@@ -150,6 +150,9 @@ nonisolated struct PiruSessionData: Codable {
     /// check-in offer was already shown; optional for the same reason.
     var checkInOffsetMinutes: [Int]?
     var checkInOffered: Bool?
+    /// Whether the times follow the doses (``Session/checkInFollowsDoses``);
+    /// optional for the same reason.
+    var checkInFollowsDoses: Bool?
 }
 
 /// Wire shape of one ``SessionNote``. `kind` is the raw `SessionNote.Kind`;
@@ -362,6 +365,7 @@ extension DataExportImport {
                 checkInIntervalMinutes: session.checkInIntervalMinutes,
                 checkInOffsetMinutes: session.checkInOffsetMinutes,
                 checkInOffered: session.checkInOffered,
+                checkInFollowsDoses: session.checkInFollowsDoses,
             )
         }
         let orphans = allEntries
@@ -543,6 +547,7 @@ extension DataExportImport {
             importNotes(sessionData.notes ?? [], into: session, context: context)
             if session.checkInIntervalMinutes == nil {
                 session.checkInIntervalMinutes = sessionData.checkInIntervalMinutes
+                session.checkInFollowsDoses = sessionData.checkInFollowsDoses ?? false
             }
             if session.checkInOffsetMinutes.isEmpty, let offsets = sessionData.checkInOffsetMinutes, !offsets.isEmpty {
                 session.checkInOffsetMinutes = offsets
