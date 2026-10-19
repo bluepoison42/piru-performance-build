@@ -17,11 +17,12 @@ import WidgetKit
 ///
 /// ## Canonical vs. batch
 /// ``log(_:in:recentEntries:)`` is the canonical single-dose pipeline (insert → session assignment →
-/// save → harm-reduction notifications → signal) for callers that log exactly one dose (the entry
-/// form path, the Watch receiver). ``logBatch(_:colors:in:beforeSave:deferredBookkeeping:)`` is the
-/// batch entry point: many inserts behind one `save()` for frame-budget reasons (the quick-log tray,
-/// both daily-med surfaces), with site-specific mutations riding the same commit via `beforeSave` and
-/// per-entry notification work deferred past the dismissal via `deferredBookkeeping`. Import keeps its
+/// save → harm-reduction notifications → check-ins → signal) for callers that log exactly one dose
+/// (the entry form path, the Watch receiver). ``logBatch(_:colors:in:beforeSave:deferredBookkeeping:)``
+/// is the batch entry point: many inserts behind one `save()` for frame-budget reasons (the quick-log
+/// tray, both daily-med surfaces, the intents), with site-specific mutations riding the same commit via
+/// `beforeSave` and per-entry notification work deferred past the dismissal via `deferredBookkeeping`.
+/// Both hand the sessions they touched to ``CheckInScheduler/dosesLogged(in:)``. Import keeps its
 /// own commit shape and just calls ``changed()`` afterward.
 @Observable @MainActor
 final class DoseLogService {
@@ -76,6 +77,7 @@ final class DoseLogService {
         SubstanceColorStore.ensureRow(for: entry.substance, existing: colors, in: context)
         try? context.save()
         DoseNotificationManager.doseLogged(entry: entry, recentEntries: recentEntries)
+        CheckInScheduler.dosesLogged(in: [entry.session].compactMap(\.self))
         // A logged dose may satisfy a routine — reconcile so its remaining
         // follow-up re-asks for today are cancelled.
         DoseNotificationManager.syncMedReminders(in: context)
@@ -123,6 +125,7 @@ final class DoseLogService {
             Logger.doseLog.fault("Batch dose commit save failed for \(doses.count) dose(s): \(error)")
         }
         ActiveSessionManager.shared.addDoses(entries: doses, allColors: colors)
+        CheckInScheduler.dosesLogged(in: doses.compactMap(\.entry.session))
         changed()
         scheduleDeferredBookkeeping(
             forSubstances: Set(doses.map(\.entry.substance)),

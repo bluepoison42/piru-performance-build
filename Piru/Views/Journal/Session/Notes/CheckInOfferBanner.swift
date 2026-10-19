@@ -83,6 +83,7 @@ struct CheckInOfferBanner: View {
             session.checkInOffered = true
             session.checkInOffsetMinutes = suggested
             session.checkInIntervalMinutes = CheckInScheduler.Cadence.custom.storedMinutes
+            session.checkInFollowsDoses = true
         }
         schedule()
     }
@@ -99,10 +100,14 @@ struct CheckInOfferBanner: View {
         navigator.present(.checkInSchedule(sessionID: session.id))
     }
 
+    /// Only ever the fallback when nothing models a curve, so the session
+    /// still follows its doses: one that does model a curve brings the
+    /// derived times in.
     private func enable(_ cadence: CheckInScheduler.Cadence) {
         withAnimation(.smooth(duration: 0.25)) {
             session.checkInOffered = true
             session.checkInIntervalMinutes = cadence.storedMinutes
+            session.checkInFollowsDoses = true
         }
         schedule()
     }

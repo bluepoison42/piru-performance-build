@@ -1,11 +1,13 @@
 import Foundation
 import os
+import SwiftData
 import UserNotifications
 
 /// Opt-in per-session "How is it going?" prompts. Each fires a local
 /// notification whose tap (or its **Add Note** action) opens the note sheet on
 /// the session, pre-tagged `.checkIn`. Off unless the session asks
-/// (``Session/checkInIntervalMinutes``).
+/// (``Session/checkInIntervalMinutes``), or Settings turns them on for every
+/// session (``everySessionKey``).
 ///
 /// Requests use the `piru.notif.checkIn.<sessionID>.<n>` grammar and the same
 /// 6-hour session thread as the ramp-down notifications, so they collapse into
@@ -142,8 +144,8 @@ enum CheckInScheduler {
     }
 
     /// Apply the session's stored cadence: cancel what is pending and schedule
-    /// afresh from the latest dose. Call after the cadence changes and after a
-    /// dose is added to the session (the anchor moved).
+    /// afresh from the latest dose. Call after the cadence changes; a dose added
+    /// to the session reaches it through ``dosesLogged(in:)`` (the anchor moved).
     static func sync(session: Session) {
         cancel(sessionID: session.id)
         guard let cadence = Cadence(storedMinutes: session.checkInIntervalMinutes) else { return }
@@ -232,12 +234,106 @@ enum CheckInScheduler {
     /// Whether a session should be *offered* check-ins: once per session, while
     /// a dose of an ``offerableCategories`` class is still in its effect window,
     /// and only until the offer has been turned down ``maximumDeclines`` times.
+    /// With check-ins on for every session there is nothing to offer: the
+    /// session starts them itself when the dose lands (``follow(newDoseIn:everySession:now:)``).
     static func shouldOffer(session: Session, hasOngoingDose: Bool) -> Bool {
         guard hasOngoingDose, !session.checkInOffered, session.checkInIntervalMinutes == nil else { return false }
-        guard !isOfferMuted else { return false }
-        return (session.doses ?? []).contains { dose in
+        guard !isOfferMuted, !checksInEverySession else { return false }
+        return hasOfferableDose(session)
+    }
+
+    /// Whether any dose in the session is of an ``offerableCategories`` class.
+    static func hasOfferableDose(_ session: Session) -> Bool {
+        (session.doses ?? []).contains { dose in
             guard let category = SubstanceLibrary.lookup(dose.substance)?.category else { return false }
             return offerableCategories.contains(category)
+        }
+    }
+
+    // MARK: - Following the doses
+
+    /// Settings › Notifications › Check In on Every Session, in the app-group
+    /// defaults. Off by default: check-ins stay something a session asks for.
+    nonisolated static let everySessionKey = "checkInEverySession"
+
+    nonisolated static var checksInEverySession: Bool {
+        defaults.bool(forKey: everySessionKey)
+    }
+
+    /// Bring a session's check-ins up to date with a dose that just landed in
+    /// it. Returns whether the session runs check-ins afterwards, so the caller
+    /// knows to ``sync(session:)``: the anchor moved even when the times did not.
+    ///
+    /// - A session with none starts them when `everySession` is on, it holds an
+    ///   offerable dose, nobody has turned them down for it, and at least one
+    ///   prompt is still ahead. A dose logged after the fact has nothing left
+    ///   to ask about, so it leaves the session as it was.
+    /// - A session whose times are the app's pick (``Session/checkInFollowsDoses``)
+    ///   gets the ladder recomputed from every dose it now holds: a new
+    ///   substance adds its moments and a redose moves them later.
+    /// - Times the person chose are left exactly as they are.
+    ///
+    /// The ladder is read in absolute time, so a moment that already fired
+    /// either stays in the past (where ``fireDates(cadence:custom:anchor:now:)``
+    /// drops it) or falls before the new anchor and out of the list; neither
+    /// is scheduled again. Needs the substance catalog loaded.
+    @discardableResult
+    static func follow(newDoseIn session: Session, everySession: Bool, now: Date = .now) -> Bool {
+        let cadence = Cadence(storedMinutes: session.checkInIntervalMinutes)
+        guard let cadence else {
+            guard everySession, !session.checkInOffered, hasOfferableDose(session) else { return false }
+            let suggested = CheckInLadder.suggestedOffsets(for: session)
+            // The banner's own fallback: nothing in the session models a curve
+            // to read times off, so the hourly run.
+            let start: Cadence = suggested.isEmpty ? .everyHour : .custom
+            let ahead = fireDates(cadence: start, custom: suggested, anchor: anchor(for: session), now: now)
+            guard !ahead.isEmpty else { return false }
+            session.checkInOffered = true
+            session.checkInOffsetMinutes = suggested
+            session.checkInIntervalMinutes = start.storedMinutes
+            session.checkInFollowsDoses = true
+            return true
+        }
+        if session.checkInFollowsDoses {
+            let suggested = CheckInLadder.suggestedOffsets(for: session)
+            if !suggested.isEmpty {
+                session.checkInOffsetMinutes = suggested
+                session.checkInIntervalMinutes = Cadence.custom.storedMinutes
+            } else if cadence == .custom {
+                // Nothing models a curve any more (the dose that did was moved
+                // or deleted): an empty custom list would claim check-ins are
+                // on while scheduling none.
+                session.checkInIntervalMinutes = Cadence.everyHour.storedMinutes
+            }
+        }
+        return true
+    }
+
+    /// The post-commit step every dose-logging path runs (``DoseLogService``):
+    /// follow the doses in each session that just gained one, then reschedule
+    /// it. Runs for every session with check-ins, whether the setting or the
+    /// banner started them.
+    static func dosesLogged(in sessions: [Session]) {
+        var seen = Set<UUID>()
+        let sessions = sessions.filter { seen.insert($0.id).inserted }
+        guard !sessions.isEmpty else { return }
+        let everySession = checksInEverySession
+        Task {
+            await SubstanceStore.shared.ensureAllLoaded()
+            var running: [Session] = []
+            var started = false
+            for session in sessions where !session.isDeleted {
+                let wasOff = session.checkInIntervalMinutes == nil
+                guard follow(newDoseIn: session, everySession: everySession) else { continue }
+                started = started || wasOff
+                running.append(session)
+            }
+            guard !running.isEmpty else { return }
+            try? running.first?.modelContext?.save()
+            if started { _ = await DoseNotificationManager.requestAuthorization() }
+            for session in running where !session.isDeleted {
+                sync(session: session)
+            }
         }
     }
 }
