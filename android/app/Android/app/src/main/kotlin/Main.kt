@@ -34,9 +34,22 @@ private typealias AppRootView = PiruRootView
 private typealias AppDelegate = PiruAppDelegate
 
 /// AndroidAppMain is the `android.app.Application` entry point, and must match `application android:name` in the AndroidMainfest.xml file.
-open class AndroidAppMain: Application {
+///
+/// It also configures WorkManager, which SkipUI schedules notifications with. The manifest removes
+/// WorkManager's startup initializer, so WorkManager reads this configuration when first used.
+open class AndroidAppMain: Application, androidx.work.Configuration.Provider {
     constructor() {
     }
+
+    /// WorkManager hands JobScheduler only this many delayed jobs, picked by when they were enqueued
+    /// rather than when they are due, and keeps the rest in its database until a slot frees. The
+    /// default is 20; 50 is the most WorkManager allows. A day of session, check-in and routine
+    /// reminders passes 20, and with the process dead the jobs beyond the limit wait behind
+    /// later-due ones that hold the slots.
+    override val workManagerConfiguration: androidx.work.Configuration
+        get() = androidx.work.Configuration.Builder()
+            .setMaxSchedulerLimit(50)
+            .build()
 
     override fun onCreate() {
         super.onCreate()

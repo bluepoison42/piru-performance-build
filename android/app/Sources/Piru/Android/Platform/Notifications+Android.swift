@@ -1,25 +1,13 @@
-// What UserNotifications gives the iOS build beyond SkipFuseUI's bridge: the interruption level
-// and relevance (Android sets these per notification channel rather than per notification);
-// actionable categories, which register nothing, since an Android notification action needs a
-// Kotlin broadcast receiver this build does not ship; and the completion-handler calls, which
-// SkipFuseUI has only in async form, applied in the order they were made.
+// What UserNotifications gives the iOS build beyond SkipFuseUI's bridge: relevance, which Android
+// has no counterpart for (SkipUI maps the interruption level to a notification channel); actionable
+// categories, which register nothing, since an Android notification action needs a Kotlin broadcast
+// receiver this build does not ship; and the completion-handler calls, which SkipFuseUI has only in
+// async form, applied in the order they were made.
 
 import SwiftUI
 import Synchronization
 
-nonisolated enum UNNotificationInterruptionLevel: Int {
-    case passive
-    case active
-    case timeSensitive
-    case critical
-}
-
 nonisolated extension UNMutableNotificationContent {
-    var interruptionLevel: UNNotificationInterruptionLevel {
-        get { .active }
-        set {}
-    }
-
     var relevanceScore: Double {
         get { 0 }
         set {}
@@ -192,10 +180,10 @@ final nonisolated class AndroidNotificationQueue: Sendable {
     }
 }
 
-/// A repeating calendar reminder on Android. Skip's calendar trigger carries its
-/// DateComponents as `Any`, which the bridge cannot hand to Kotlin (a fatal error on
-/// schedule), so the reminder is the next matching moment as a one-shot interval trigger.
-/// The routine reminders are rescheduled whenever the app runs, which carries it forward.
+/// A repeating calendar reminder on Android, as the next matching moment in a one-shot interval
+/// trigger. The routine reminders are rescheduled whenever the app runs, which carries it forward.
+/// It stands in for Skip's calendar trigger until a release build has delivered that trigger's
+/// repeats with the app closed (vendor patches skip-ui 0017, skip-fuse-ui 0008).
 enum AndroidCalendarTrigger {
     static func make(dateMatching components: DateComponents, repeats _: Bool) -> UNNotificationTrigger {
         let next = Calendar.current.nextDate(after: .now, matching: components, matchingPolicy: .nextTime)

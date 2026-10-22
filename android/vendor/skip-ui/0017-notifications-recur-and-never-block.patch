@@ -1,0 +1,1294 @@
+UNUserNotificationCenter needs a live Activity to schedule, list or remove a request, and records a permission request made without one as denied; it lists pending requests with no trigger or content; a repeating trigger fires once, because NotificationWorker never enqueues the next occurrence; a calendar trigger keeps the instant it was enqueued for when the zone or clock changes; every add looks up earlier versions' work; and every notification posts to one default-importance channel whatever its interruption level or sound. Requests now use the application context; each saves its work data, from which it is listed with its trigger and content, repeated by the worker (calendar triggers at their next wall-clock time) and re-armed by a manifest receiver on TIMEZONE_CHANGED and TIME_SET; replacement and removal end a repeating chain; add returns once WorkManager has queued the work; earlier versions' work is looked up once per process until none is left; and each interruption level and sound has its own channel. Proposed upstream.
+
+diff --git a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
+index f0551ff3..9fdecb33 100644
+--- a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
++++ b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
+@@ -7,8 +7,10 @@ import android.Manifest
+ import android.app.NotificationChannel
+ import android.app.NotificationManager
+ import android.app.PendingIntent
++import android.content.BroadcastReceiver
+ import android.content.Context
+ import android.content.Intent
++import android.content.SharedPreferences
+ import android.content.pm.PackageManager
+ import android.os.Build
+ import androidx.core.app.ActivityCompat
+@@ -52,8 +54,7 @@ public final class UNUserNotificationCenter {
+             return UNNotificationSettings(authorizationStatus: .authorized)
+         }
+         let status: UNAuthorizationStatus
+-        if let activity = UIApplication.shared.androidActivity,
+-           ContextCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED {
++        if ContextCompat.checkSelfPermission(ProcessInfo.processInfo.androidContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED {
+             status = .authorized
+         } else if UserDefaults.standard.bool(forKey: "UNNotificationPermissionDenied") {
+             status = .denied
+@@ -75,8 +76,16 @@ public final class UNUserNotificationCenter {
+         guard Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU else {
+             return true
+         }
+-        let granted = UIApplication.shared.requestPermission(Manifest.permission.POST_NOTIFICATIONS)
+         let defaults = UserDefaults.standard
++        if ContextCompat.checkSelfPermission(ProcessInfo.processInfo.androidContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED {
++            defaults.removeObject(forKey: "UNNotificationPermissionDenied")
++            return true
++        }
++        // Only an activity can show the permission prompt. Without one nothing was asked, so no answer is recorded.
++        guard UIApplication.shared.androidActivity != nil else {
++            return false
++        }
++        let granted = UIApplication.shared.requestPermission(Manifest.permission.POST_NOTIFICATIONS)
+         if granted {
+             defaults.removeObject(forKey: "UNNotificationPermissionDenied")
+         } else {
+@@ -116,8 +125,8 @@ public final class UNUserNotificationCenter {
+         guard options.contains(.banner) || options.contains(.alert) else { return }
+ 
+         #if SKIP
+-        guard let activity = UIApplication.shared.androidActivity else { return }
+-        
++        let context = ProcessInfo.processInfo.androidContext
++
+         // Build the data which should be displayed in the notification.
+         let dataBuilder = Data.Builder()
+             .putString("title", request.content.title)
+@@ -142,14 +151,16 @@ public final class UNUserNotificationCenter {
+                 dataBuilder.putString(key.toString(), value.toString())
+             }
+         }
+-        
++        UNUserNotificationCenter.putRequestFields(of: request, into: dataBuilder)
++
+         // Get the next trigger date (if any).
+         let nextDate = (request.trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate() ??
+                        (request.trigger as? UNTimeIntervalNotificationTrigger)?.nextTriggerDate()
+-        UNUserNotificationCenter.enqueueRequest(identifier: request.identifier, data: dataBuilder.build(), date: nextDate, context: activity)
++        let operation = UNUserNotificationCenter.enqueueRequest(identifier: request.identifier, data: dataBuilder.build(), date: nextDate, context: context)
++        // Returning once the work is queued lets a later pendingNotificationRequests() list the request.
++        await UNUserNotificationCenter.applied(operation)
+ 
+-        // SKIP NOWARN
+-        await UNUserNotificationCenter.cancelWorkOfEarlierVersions(identifiers: [request.identifier], workManager: WorkManager.getInstance(activity))
++        await UNUserNotificationCenter.cancelWorkOfEarlierVersions(identifiers: [request.identifier], context: context)
+         #endif
+     }
+ 
+@@ -157,11 +168,11 @@ public final class UNUserNotificationCenter {
+     public func pendingNotificationRequests() async -> [Any /* UNNotificationRequest */] {
+         #if SKIP
+         // The queued work is what will fire. A saved date can say otherwise: WorkManager can run a request after its date.
+-        guard let activity = UIApplication.shared.androidActivity else { return [] }
++        let context = ProcessInfo.processInfo.androidContext
+ 
+         // SKIP NOWARN
+-        return await UNUserNotificationCenter.queuedNotificationIdentifiers(WorkManager.getInstance(activity)).map {
+-            UNNotificationRequest(identifier: $0, content: UNMutableNotificationContent(), trigger: nil)
++        return await UNUserNotificationCenter.queuedNotificationIdentifiers(WorkManager.getInstance(context)).compactMap {
++            UNUserNotificationCenter.pendingRequest(identifier: $0, context: context)
+         }
+         #else
+         fatalError()
+@@ -171,8 +182,7 @@ public final class UNUserNotificationCenter {
+     // SKIP @bridge
+     public func removePendingNotificationRequests(withIdentifiers identifiers: [String]) {
+         #if SKIP
+-        guard let activity = UIApplication.shared.androidActivity else { return }
+-        UNUserNotificationCenter.removePendingRequests(identifiers: identifiers, context: activity)
++        UNUserNotificationCenter.removePendingRequests(identifiers: identifiers, context: ProcessInfo.processInfo.androidContext)
+         #else
+         fatalError()
+         #endif
+@@ -181,10 +191,7 @@ public final class UNUserNotificationCenter {
+     // SKIP @bridge
+     public func removeAllPendingNotificationRequests() {
+         #if SKIP
+-        guard let activity = UIApplication.shared.androidActivity else { return }
+-        // Every notification's work carries this tag, whichever SkipUI version enqueued it, and nothing else does.
+-        WorkManager.getInstance(activity).cancelAllWorkByTag(UNUserNotificationCenter.notificationWorkTag)
+-        UNUserNotificationCenter.forgetRequests(identifiers: getAllNotificationRequests().map { $0.id }, context: activity)
++        UNUserNotificationCenter.removeAllPendingRequests(identifiers: getAllNotificationRequests().map { $0.id }, context: ProcessInfo.processInfo.androidContext)
+         #else
+         fatalError()
+         #endif
+@@ -202,24 +209,25 @@ public final class UNUserNotificationCenter {
+     // SKIP @bridge
+     public func removeDeliveredNotifications(withIdentifiers identifiers: [String]) {
+         #if SKIP
+-        guard let activity = UIApplication.shared.androidActivity else { return }
+-        
++        let context = ProcessInfo.processInfo.androidContext
++
+         // Get all notification identifiers from the shared preferences.
+-        let preferences = activity.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
++        let preferences = context.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
+         let editor = preferences.edit()
+         let ids = HashSet<String>(preferences.getStringSet("ids", HashSet<String>()) ?? HashSet<String>())
+-        
++
+         // Get the notification manager.
+-        let notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as! NotificationManager
+-        
++        let notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as! NotificationManager
++
+         // Cancel all delivered notifications using the notification manager.
+         let now = System.currentTimeMillis()
+         for identifier in identifiers {
+             // A removed notification's tap is no longer a response.
+             editor.remove(UNUserNotificationCenter.responseTokenKey(identifier))
++            // A repeating request has posted its earlier occurrences while its date is already the next one.
++            notificationManager.cancel(identifier.hashValue)
+             let triggerTime = preferences.getLong("date_" + identifier, 0)
+             if triggerTime < now {
+-                notificationManager.cancel(identifier.hashValue)
+                 ids.remove(identifier)
+                 editor.remove("date_" + identifier)
+             }
+@@ -263,35 +271,193 @@ public final class UNUserNotificationCenter {
+         return workNamePrefix + identifier
+     }
+ 
++    /// The prefix of the work data keys that only SkipUI reads: none of them reach a tap's `userInfo`.
++    static let requestKeyPrefix = "skip.ui.request."
++    static let triggerKey = requestKeyPrefix + "trigger"
++    static let intervalTrigger = "interval"
++    static let calendarTrigger = "calendar"
++    static let repeatsKey = requestKeyPrefix + "repeats"
++    static let intervalKey = requestKeyPrefix + "interval"
++    static let calendarComponentKeyPrefix = requestKeyPrefix + "calendar."
++    static let timeZoneKey = requestKeyPrefix + "timeZone"
++    /// The time the work is due, in milliseconds.
++    static let fireDateKey = requestKeyPrefix + "fireDate"
++    /// Names the request each `add` makes, so an occurrence that runs after its request was removed or replaced
++    /// schedules no next one.
++    static let generationKey = requestKeyPrefix + "generation"
++    static let interruptionLevelKey = requestKeyPrefix + "interruptionLevel"
++    static let silentKey = requestKeyPrefix + "silent"
++
++    private static let preferencesName = "__skip_usernotifications"
++    /// The work data of each scheduled request by identifier, from which the request is listed, repeated and re-armed.
++    private static let requestsPreferencesName = "__skip_usernotifications_requests"
++    private static let earlierVersionsSweptKey = "earlier_versions_swept"
++
++    /// Held while a request's saved data and its work change together, so WorkManager applies the operations in
++    /// the order the saved data records them.
++    private static let requestLock = java.util.concurrent.locks.ReentrantLock()
++
++    /// Writes what NotificationWorker needs beyond the content: the trigger, which it repeats and from which the
++    /// request is listed and re-armed, and how the notification interrupts.
++    static func putRequestFields(of request: UNNotificationRequest, into builder: Data.Builder) {
++        builder.putInt(interruptionLevelKey, request.content.interruptionLevel.rawValue)
++        if request.content.sound == nil {
++            builder.putBoolean(silentKey, true)
++        }
++        if let trigger = request.trigger as? UNTimeIntervalNotificationTrigger {
++            builder.putString(triggerKey, intervalTrigger)
++            builder.putDouble(intervalKey, trigger.timeInterval)
++            builder.putBoolean(repeatsKey, trigger.repeats)
++        } else if let trigger = request.trigger as? UNCalendarNotificationTrigger, let components = trigger.dateComponents as? DateComponents {
++            builder.putString(triggerKey, calendarTrigger)
++            builder.putBoolean(repeatsKey, trigger.repeats)
++            for (name, value) in UNCalendarNotificationTrigger.componentValues(of: components) {
++                builder.putInt(calendarComponentKeyPrefix + name, value)
++            }
++            if let timeZone = components.timeZone {
++                builder.putString(timeZoneKey, timeZone.identifier)
++            }
++        }
++    }
++
+     /// Enqueues the notification work for `identifier`, replacing the identifier's earlier request as iOS
+-    /// does, and saves when it is due: `date`, or now for a request with no trigger. Returns as soon as the
+-    /// work is handed to WorkManager, which queues it on its own executor.
+-    static func enqueueRequest(identifier: String, data: Data, date: Date?, context: Context) {
+-        let delayMillis = date != nil ? max(0, date!.currentTimeMillis - System.currentTimeMillis()) : 0
++    /// does, and saves the request with when it is due: `date`, or now for a request with no trigger. Returns
++    /// as soon as the work is handed to WorkManager, with the operation that completes once it is queued.
++    @discardableResult static func enqueueRequest(identifier: String, data: Data, date: Date?, context: Context) -> androidx.work.Operation {
++        requestLock.lock()
++        defer { requestLock.unlock() }
++        return enqueue(identifier: identifier, data: data, generation: java.util.UUID.randomUUID().toString(), date: date, context: context)
++    }
++
++    /// Enqueues and saves a request; the caller holds `requestLock`.
++    @discardableResult private static func enqueue(identifier: String, data: Data, generation: String, date: Date?, context: Context) -> androidx.work.Operation {
++        let now = System.currentTimeMillis()
++        let fireMillis = date?.currentTimeMillis ?? now
++        let workData = Data.Builder()
++            .putAll(data)
++            .putString(generationKey, generation)
++            .putLong(fireDateKey, fireMillis)
++            .build()
+         let workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+-            .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
+-            .setInputData(data)
++            .setInitialDelay(max(0, fireMillis - now), TimeUnit.MILLISECONDS)
++            .setInputData(workData)
+             .addTag(workName(identifier))
+             .build()
++        saveRequest(identifier: identifier, data: workData, fireMillis: fireMillis, context: context)
+         // Unique work replaces the work enqueued under its name.
+-        WorkManager.getInstance(context).enqueueUniqueWork(workName(identifier), ExistingWorkPolicy.REPLACE, workRequest)
+-        saveRequest(identifier: identifier, date: date, context: context)
++        return WorkManager.getInstance(context).enqueueUniqueWork(workName(identifier), ExistingWorkPolicy.REPLACE, workRequest)
++    }
++
++    /// Suspends until WorkManager has applied `operation`; nothing waits on a thread.
++    static func applied(_ operation: androidx.work.Operation) async {
++        kotlin.coroutines.suspendCoroutine { continuation in
++            operation.result.addListener({ continuation.resumeWith(kotlin.Result.success(Unit)) }, { $0.run() })
++        }
++    }
++
++    /// Called by NotificationWorker once it has posted a request's notification: enqueues the request's next
++    /// occurrence when it repeats, and otherwise drops its saved data. A request removed or replaced while this
++    /// occurrence ran gets no next occurrence.
++    static func scheduleNextOccurrence(of data: Data, context: Context) {
++        guard let identifier = data.getString(NotificationWorker.identifierKey), let generation = data.getString(generationKey) else {
++            return
++        }
++        requestLock.lock()
++        defer { requestLock.unlock() }
++        guard savedRequestData(identifier: identifier, context: context)?.getString(generationKey) == generation else {
++            return
++        }
++        guard data.getBoolean(repeatsKey, false), let next = nextOccurrence(of: data, after: Date(), in: TimeZone.current) else {
++            requestRecords(context).edit().remove(identifier).apply()
++            return
++        }
++        enqueue(identifier: identifier, data: data, generation: generation, date: next, context: context)
++    }
++
++    /// The occurrence of a repeating request that follows both `date` and the occurrence its work was due at. A
++    /// calendar trigger's occurrence is its components' next wall-clock time in `timeZone`, unless the components
++    /// name their own zone.
++    static func nextOccurrence(of data: Data, after date: Date, in timeZone: TimeZone) -> Date? {
++        let due = Date(timeIntervalSince1970: Double(data.getLong(fireDateKey, Int64(0))) / 1000.0)
++        let start = due > date ? due : date
++        let trigger = data.getString(triggerKey)
++        if trigger == calendarTrigger {
++            return UNCalendarNotificationTrigger.nextDate(matching: calendarComponents(from: data), after: start, in: timeZone)
++        } else if trigger == intervalTrigger {
++            let interval = data.getDouble(intervalKey, 0.0)
++            guard interval > 0.0 else {
++                return nil
++            }
++            let periods = Int(start.timeIntervalSince(due) / interval) + 1
++            return due.addingTimeInterval(Double(periods) * interval)
++        }
++        return nil
++    }
++
++    /// The calendar trigger's components that `putRequestFields` saved in `data`.
++    static func calendarComponents(from data: Data) -> DateComponents {
++        let values = data.keyValueMap
++        var components: [String: Int] = [:]
++        for name in UNCalendarNotificationTrigger.componentNames {
++            if let value = values[calendarComponentKeyPrefix + name] as? Int {
++                components[name] = value
++            }
++        }
++        return UNCalendarNotificationTrigger.dateComponents(values: components, timeZoneIdentifier: data.getString(timeZoneKey))
++    }
++
++    /// Enqueues every queued calendar request again for its next occurrence in `timeZone`: on iOS a calendar
++    /// trigger stays at its components' wall-clock time when the device's zone or clock changes, while queued
++    /// work keeps the instant it was enqueued for.
++    static func rearmCalendarRequests(in timeZone: TimeZone, context: Context) async {
++        // SKIP NOWARN
++        let queued = await queuedNotificationIdentifiers(WorkManager.getInstance(context))
++        requestLock.lock()
++        defer { requestLock.unlock() }
++        let now = Date()
++        for identifier in queued {
++            guard let data = savedRequestData(identifier: identifier, context: context), data.getString(triggerKey) == calendarTrigger, let generation = data.getString(generationKey) else {
++                continue
++            }
++            guard let next = UNCalendarNotificationTrigger.nextDate(matching: calendarComponents(from: data), after: now, in: timeZone) else {
++                continue
++            }
++            enqueue(identifier: identifier, data: data, generation: generation, date: next, context: context)
++        }
+     }
+ 
+     /// Cancels the work of the requests with `identifiers`, whatever their saved dates: work can still be
+     /// queued after its date. Returns as soon as the cancellations are handed to WorkManager; the work of
+     /// earlier SkipUI versions is swept afterwards, off the caller's thread.
+     static func removePendingRequests(identifiers: [String], context: Context) {
++        cancelAndForget(identifiers: identifiers, context: context)
++        guard !earlierVersionsSwept(context) else {
++            return
++        }
++        // Only an earlier version's work lacks a work name, so a request added after this call is safe from the sweep.
++        Task {
++            await cancelWorkOfEarlierVersions(identifiers: identifiers, context: context)
++        }
++    }
++
++    private static func cancelAndForget(identifiers: [String], context: Context) {
+         let workManager = WorkManager.getInstance(context)
++        requestLock.lock()
++        defer { requestLock.unlock() }
+         for identifier in identifiers {
+             workManager.cancelUniqueWork(workName(identifier))
+         }
+         forgetRequests(identifiers: identifiers, context: context)
+-        // Only an earlier version's work carries a bare identifier tag, so a request added after this call
+-        // is safe from the sweep.
+-        Task {
+-            await cancelWorkOfEarlierVersions(identifiers: identifiers, workManager: workManager)
+-        }
++    }
++
++    /// Cancels every request's work, and forgets the requests with `identifiers`: all that are saved.
++    static func removeAllPendingRequests(identifiers: [String], context: Context) {
++        requestLock.lock()
++        defer { requestLock.unlock() }
++        // Every notification's work carries this tag, whichever SkipUI version enqueued it, and nothing else does.
++        WorkManager.getInstance(context).cancelAllWorkByTag(notificationWorkTag)
++        forgetRequests(identifiers: identifiers, context: context)
++        requestRecords(context).edit().clear().apply()
+     }
+ 
+     /// The identifiers of the notifications whose work has not run yet.
+@@ -305,24 +471,63 @@ public final class UNUserNotificationCenter {
+         return identifiers
+     }
+ 
+-    /// Cancels the work that earlier SkipUI versions enqueued for `identifiers`: one request per call, tagged
+-    /// with the bare identifier. Only NotificationWorker's work is cancelled, so the app's own work is never
+-    /// touched, even when it shares a tag with a notification identifier.
+-    static func cancelWorkOfEarlierVersions(identifiers: [String], workManager: WorkManager) async {
+-        for identifier in identifiers {
+-            for work in await notificationWork(taggedWith: identifier, workManager) {
+-                if !work.info.state.isFinished {
+-                    workManager.cancelWorkById(work.info.id)
++    /// The unfinished work that earlier SkipUI versions enqueued, by request identifier: one request per call,
++    /// tagged with the bare identifier. It is looked up the first time a process needs it; no work of that kind
++    /// is enqueued any more.
++    static var earlierVersionsWork: [String: [java.util.UUID]]? = nil
++
++    /// Whether no work of earlier SkipUI versions is left, so there is none to look up.
++    private static func earlierVersionsSwept(_ context: Context) -> Bool {
++        return context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE).getBoolean(earlierVersionsSweptKey, false)
++    }
++
++    /// Cancels the work that earlier SkipUI versions enqueued for `identifiers`. Only NotificationWorker's work is
++    /// cancelled, so the app's own work is never touched, even when it shares a tag with a notification identifier.
++    /// Once none is left, later calls look nothing up.
++    static func cancelWorkOfEarlierVersions(identifiers: [String], context: Context) async {
++        guard !earlierVersionsSwept(context) else {
++            return
++        }
++        let workManager = WorkManager.getInstance(context)
++        if earlierVersionsWork == nil {
++            var found: [String: [java.util.UUID]] = [:]
++            // SKIP NOWARN
++            let allWork = await notificationWork(taggedWith: notificationWorkTag, workManager)
++            for work in allWork {
++                if work.isEarlierVersion && !work.info.state.isFinished {
++                    var ids = found[work.identifier] ?? []
++                    ids.append(work.info.id)
++                    found[work.identifier] = ids
+                 }
+             }
++            requestLock.lock()
++            if earlierVersionsWork == nil {
++                earlierVersionsWork = found
++            }
++            requestLock.unlock()
++        }
++        requestLock.lock()
++        defer { requestLock.unlock() }
++        guard var work = earlierVersionsWork else {
++            return
++        }
++        for identifier in identifiers {
++            for id in work[identifier] ?? [] {
++                workManager.cancelWorkById(id)
++            }
++            work[identifier] = nil
++        }
++        earlierVersionsWork = work
++        if work.isEmpty {
++            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit().putBoolean(earlierVersionsSweptKey, true).apply()
+         }
+     }
+ 
+     /// The notification work carrying `tag`, each with its request identifier: the work name tag, or the bare
+     /// identifier that earlier SkipUI versions tagged it with. Only NotificationWorker's work counts. The read
+     /// suspends until WorkManager answers; nothing waits on a thread.
+-    private static func notificationWork(taggedWith tag: String, _ workManager: WorkManager) async -> [(identifier: String, info: WorkInfo)] {
+-        var work: [(identifier: String, info: WorkInfo)] = []
++    private static func notificationWork(taggedWith tag: String, _ workManager: WorkManager) async -> [(identifier: String, info: WorkInfo, isEarlierVersion: Bool)] {
++        var work: [(identifier: String, info: WorkInfo, isEarlierVersion: Bool)] = []
+         // SKIP NOWARN
+         let workInfos = await workManager.getWorkInfosByTagFlow(tag).first()
+         let iterator = workInfos.iterator()
+@@ -333,34 +538,143 @@ public final class UNUserNotificationCenter {
+             while tags.hasNext() {
+                 let tag = tags.next() as! String
+                 if tag.hasPrefix(workNamePrefix) {
+-                    work.append((identifier: String(tag.dropFirst(workNamePrefix.count)), info: info))
++                    work.append((identifier: String(tag.dropFirst(workNamePrefix.count)), info: info, isEarlierVersion: false))
+                 } else if tag != notificationWorkTag {
+-                    work.append((identifier: tag, info: info))
++                    work.append((identifier: tag, info: info, isEarlierVersion: true))
+                 }
+             }
+         }
+         return work
+     }
+ 
+-    /// Saves the identifier and its date, so the request can be found and removed later.
+-    private static func saveRequest(identifier: String, date: Date?, context: Context) {
+-        let preferences = context.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
++    private static func requestRecords(_ context: Context) -> SharedPreferences {
++        return context.getSharedPreferences(requestsPreferencesName, Context.MODE_PRIVATE)
++    }
++
++    /// The work data saved for the request with `identifier`, or nil when there is none.
++    static func savedRequestData(identifier: String, context: Context) -> Data? {
++        guard let record = requestRecords(context).getString(identifier, nil) else {
++            return nil
++        }
++        return decodeRecord(record)
++    }
++
++    /// The request with `identifier` as `pendingNotificationRequests` lists it, rebuilt from its saved work data,
++    /// or nil once it was removed. Work that earlier SkipUI versions enqueued saved only its date, and is listed
++    /// without content or trigger.
++    static func pendingRequest(identifier: String, context: Context) -> UNNotificationRequest? {
++        guard let data = savedRequestData(identifier: identifier, context: context) else {
++            let preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
++            guard preferences.contains("date_" + identifier) else {
++                return nil
++            }
++            return UNNotificationRequest(identifier: identifier, content: UNMutableNotificationContent(), trigger: nil)
++        }
++        let content = UNMutableNotificationContent()
++        content.title = data.getString("title") ?? ""
++        content.body = data.getString("body") ?? ""
++        content.interruptionLevel = UNNotificationInterruptionLevel(rawValue: data.getInt(interruptionLevelKey, UNNotificationInterruptionLevel.active.rawValue)) ?? UNNotificationInterruptionLevel.active
++        if data.getBoolean(silentKey, false) {
++            content.sound = nil
++        }
++        var userInfo: [AnyHashable: Any] = [:]
++        for (key, value) in data.keyValueMap {
++            if NotificationWorker.isUserInfoKey(key), let value {
++                userInfo[key] = value
++            }
++        }
++        content.userInfo = userInfo
++        return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger(from: data))
++    }
++
++    /// The trigger that `putRequestFields` saved in `data`, with the date its work is due.
++    static func trigger(from data: Data) -> UNNotificationTrigger? {
++        let repeats = data.getBoolean(repeatsKey, false)
++        let trigger = data.getString(triggerKey)
++        if trigger == intervalTrigger {
++            let result = UNTimeIntervalNotificationTrigger(timeInterval: data.getDouble(intervalKey, 0.0), repeats: repeats)
++            result.fireDate = Date(timeIntervalSince1970: Double(data.getLong(fireDateKey, Int64(0))) / 1000.0)
++            return result
++        } else if trigger == calendarTrigger {
++            return UNCalendarNotificationTrigger(dateMatching: calendarComponents(from: data), repeats: repeats)
++        }
++        return nil
++    }
++
++    /// Writes work data as JSON that keeps each value's type.
++    private static func encodeRecord(_ data: Data) -> String {
++        let json = org.json.JSONObject()
++        for (key, value) in data.keyValueMap {
++            let entry = org.json.JSONArray()
++            if let value = value as? Bool {
++                entry.put("b").put(value)
++            } else if let value = value as? Int {
++                entry.put("i").put(value)
++            } else if let value = value as? Int64 {
++                entry.put("l").put(value)
++            } else if let value = value as? Double {
++                entry.put("d").put(value)
++            } else if let value = value as? String {
++                entry.put("s").put(value)
++            } else {
++                continue
++            }
++            json.put(key, entry)
++        }
++        return json.toString()
++    }
++
++    private static func decodeRecord(_ record: String) -> Data? {
++        do {
++            let json = org.json.JSONObject(record)
++            let builder = Data.Builder()
++            let keys = json.keys()
++            while keys.hasNext() {
++                let key = keys.next() as! String
++                let entry = json.getJSONArray(key)
++                let type = entry.getString(0)
++                if type == "b" {
++                    builder.putBoolean(key, entry.getBoolean(1))
++                } else if type == "i" {
++                    builder.putInt(key, entry.getInt(1))
++                } else if type == "l" {
++                    builder.putLong(key, entry.getLong(1))
++                } else if type == "d" {
++                    builder.putDouble(key, entry.getDouble(1))
++                } else {
++                    builder.putString(key, entry.getString(1))
++                }
++            }
++            return builder.build()
++        } catch {
++            logger.warning("ignoring an unreadable notification request: \(error)")
++            return nil
++        }
++    }
++
++    /// Saves the identifier and its date, so the request can be found and removed later, and its work data, from
++    /// which it is listed, repeated and re-armed.
++    private static func saveRequest(identifier: String, data: Data, fireMillis: Int64, context: Context) {
++        let preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
+         let ids = HashSet<String>(preferences.getStringSet("ids", HashSet<String>()) ?? HashSet<String>())
+         ids.add(identifier)
+         preferences.edit()
+             .putStringSet("ids", ids)
+-            .putLong("date_" + identifier, date?.currentTimeMillis ?? System.currentTimeMillis())
++            .putLong("date_" + identifier, fireMillis)
+             .apply()
++        requestRecords(context).edit().putString(identifier, encodeRecord(data)).apply()
+     }
+ 
+-    /// Drops the requests with `identifiers` that have not reached their date from the saved list, which also
+-    /// lists delivered notifications.
++    /// Drops the requests with `identifiers` from the saved work data, and those that have not reached their date
++    /// from the saved list, which also lists delivered notifications.
+     static func forgetRequests(identifiers: [String], context: Context) {
+-        let preferences = context.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
++        let preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
+         let editor = preferences.edit()
++        let records = requestRecords(context).edit()
+         let ids = HashSet<String>(preferences.getStringSet("ids", HashSet<String>()) ?? HashSet<String>())
+         let now = System.currentTimeMillis()
+         for identifier in identifiers {
++            records.remove(identifier)
+             if preferences.getLong("date_" + identifier, 0) > now {
+                 ids.remove(identifier)
+                 editor.remove("date_" + identifier)
+@@ -368,11 +682,11 @@ public final class UNUserNotificationCenter {
+         }
+         editor.putStringSet("ids", ids)
+         editor.apply()
++        records.apply()
+     }
+ 
+     private func getAllNotificationRequests() -> [(id: String, timestamp: Long)] {
+-        guard let activity = UIApplication.shared.androidActivity else { return [] }
+-        let preferences = activity.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
++        let preferences = ProcessInfo.processInfo.androidContext.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE)
+         let ids = preferences.getStringSet("ids", nil) ?? java.util.HashSet<String>()
+         
+         var all: [(id: String, timestamp: Long)] = []
+@@ -558,7 +872,15 @@ public final class UNNotificationRequest : @unchecked Sendable {
+     // SKIP @bridge
+     public let content: UNNotificationContent
+     public let trigger: UNNotificationTrigger?
+-    
++    // SKIP @bridge
++    public var bridgedTimeIntervalTrigger: UNTimeIntervalNotificationTrigger? {
++        return trigger as? UNTimeIntervalNotificationTrigger
++    }
++    // SKIP @bridge
++    public var bridgedCalendarTrigger: UNCalendarNotificationTrigger? {
++        return trigger as? UNCalendarNotificationTrigger
++    }
++
+     // SKIP @bridge
+     public init(identifier: String, content: UNNotificationContent, trigger: UNNotificationTrigger?) {
+         self.identifier = identifier
+@@ -650,6 +972,17 @@ public class UNNotificationContent {
+     public var summaryArgumentCount: Int
+     // SKIP @bridge
+     public var filterCriteria: String?
++    /// Chooses the notification channel the notification posts to: each level has its own importance.
++    public var interruptionLevel: UNNotificationInterruptionLevel = UNNotificationInterruptionLevel.active
++    // SKIP @bridge
++    public var bridgedInterruptionLevel: Int {
++        get {
++            return interruptionLevel.rawValue
++        }
++        set {
++            interruptionLevel = UNNotificationInterruptionLevel(rawValue: newValue) ?? UNNotificationInterruptionLevel.active
++        }
++    }
+ 
+     public init(title: String = "", subtitle: String = "", body: String = "", badge: NSNumber? = nil, sound: UNNotificationSound? = UNNotificationSound.default, launchImageName: String = "", userInfo: [AnyHashable: Any] = [:], attachments: [UNNotificationAttachment] = [], categoryIdentifier: String = "", threadIdentifier: String = "", targetContentIdentifier: String? = nil, summaryArgument: String = "", summaryArgumentCount: Int = 0, filterCriteria: String? = nil) {
+         self.title = title
+@@ -731,6 +1064,17 @@ public final class UNMutableNotificationContent : UNNotificationContent {
+         get { super.filterCriteria }
+         set { super.filterCriteria = newValue }
+     }
++    public override var interruptionLevel: UNNotificationInterruptionLevel {
++        get { super.interruptionLevel }
++        set { super.interruptionLevel = newValue }
++    }
++}
++
++public enum UNNotificationInterruptionLevel : Int, @unchecked Sendable {
++    case passive = 0
++    case active = 1
++    case timeSensitive = 2
++    case critical = 3
+ }
+ 
+ // SKIP @bridge
+@@ -827,6 +1171,12 @@ public final class UNTimeIntervalNotificationTrigger: UNNotificationTrigger {
+     
+     // SKIP @bridge
+     public let timeInterval: TimeInterval
++    /// The date the request fires, once it is scheduled.
++    var fireDate: Date?
++    // SKIP @bridge
++    public var bridgedFireDate: Date? {
++        return fireDate
++    }
+ 
+     // SKIP @bridge
+     public init(timeInterval: TimeInterval, repeats: Bool) {
+@@ -837,7 +1187,14 @@ public final class UNTimeIntervalNotificationTrigger: UNNotificationTrigger {
+     // SKIP @bridge
+     public func nextTriggerDate() -> Date? {
+         let now = Date()
+-        return now.addingTimeInterval(self.timeInterval)
++        guard let fireDate else {
++            return now.addingTimeInterval(self.timeInterval)
++        }
++        guard repeats && timeInterval > 0.0 && fireDate <= now else {
++            return fireDate
++        }
++        let periods = Int(now.timeIntervalSince(fireDate) / timeInterval) + 1
++        return fireDate.addingTimeInterval(Double(periods) * timeInterval)
+     }
+ }
+ 
+@@ -853,27 +1210,94 @@ public final class UNCalendarNotificationTrigger: UNNotificationTrigger {
+         super.init(repeats: repeats)
+     }
+ 
++    /// A trigger from components that a bridge can carry: each set component's value by its name in
++    /// `componentNames`, and the identifier of the time zone the components name, if any.
++    // SKIP @bridge
++    public static func bridgedTrigger(components: [String: Int], timeZoneIdentifier: String?, repeats: Bool) -> UNCalendarNotificationTrigger {
++        return UNCalendarNotificationTrigger(dateMatching: dateComponents(values: components, timeZoneIdentifier: timeZoneIdentifier), repeats: repeats)
++    }
++
++    // SKIP @bridge
++    public var bridgedComponents: [String: Int] {
++        return UNCalendarNotificationTrigger.componentValues(of: dateComponents as! DateComponents)
++    }
++
++    // SKIP @bridge
++    public var bridgedTimeZoneIdentifier: String? {
++        return (dateComponents as! DateComponents).timeZone?.identifier
++    }
++
+     // SKIP @bridge
+     public func nextTriggerDate() -> Date? {
+-        let calendar = Calendar.current
+         let now = Date()
+-        
+-        guard let nextDate = calendar.nextDate(
+-            after: now,
+-            matching: self.dateComponents as! DateComponents,
+-            matchingPolicy: .nextTime,
+-            repeatedTimePolicy: .first,
+-            direction: .forward
+-        ) else {
++        guard let nextDate = UNCalendarNotificationTrigger.nextDate(matching: dateComponents as! DateComponents, after: now, in: TimeZone.current) else {
+             return nil
+         }
+-        
++
+         if !self.repeats && nextDate <= now {
+             return nil
+         }
+-        
++
+         return nextDate
+     }
++
++    /// The first time after `date` that matches `components`, in the current calendar: at the components'
++    /// wall-clock time in their own time zone, or in `timeZone` when they name none. A time that a
++    /// daylight-saving change skips falls on the next existing time; one it repeats, on its first instance.
++    public static func nextDate(matching components: DateComponents, after date: Date, in timeZone: TimeZone) -> Date? {
++        var calendar = components.calendar ?? Calendar.current
++        calendar.timeZone = components.timeZone ?? timeZone
++        var matching = components
++        matching.calendar = nil
++        matching.timeZone = nil
++        return calendar.nextDate(after: date, matching: matching, matchingPolicy: .nextTime, repeatedTimePolicy: .first, direction: .forward)
++    }
++
++    /// The names of the components a calendar trigger carries across a bridge and in its saved work data.
++    static let componentNames = ["era", "year", "month", "day", "hour", "minute", "second", "nanosecond", "weekday", "weekdayOrdinal", "quarter", "weekOfMonth", "weekOfYear", "yearForWeekOfYear"]
++
++    /// Each component set in `components`, by its name in `componentNames`.
++    static func componentValues(of components: DateComponents) -> [String: Int] {
++        var values: [String: Int] = [:]
++        if let era = components.era { values["era"] = era }
++        if let year = components.year { values["year"] = year }
++        if let month = components.month { values["month"] = month }
++        if let day = components.day { values["day"] = day }
++        if let hour = components.hour { values["hour"] = hour }
++        if let minute = components.minute { values["minute"] = minute }
++        if let second = components.second { values["second"] = second }
++        if let nanosecond = components.nanosecond { values["nanosecond"] = nanosecond }
++        if let weekday = components.weekday { values["weekday"] = weekday }
++        if let weekdayOrdinal = components.weekdayOrdinal { values["weekdayOrdinal"] = weekdayOrdinal }
++        if let quarter = components.quarter { values["quarter"] = quarter }
++        if let weekOfMonth = components.weekOfMonth { values["weekOfMonth"] = weekOfMonth }
++        if let weekOfYear = components.weekOfYear { values["weekOfYear"] = weekOfYear }
++        if let yearForWeekOfYear = components.yearForWeekOfYear { values["yearForWeekOfYear"] = yearForWeekOfYear }
++        return values
++    }
++
++    /// The components that `componentValues(of:)` named, in the time zone with `timeZoneIdentifier`.
++    static func dateComponents(values: [String: Int], timeZoneIdentifier: String?) -> DateComponents {
++        var components = DateComponents()
++        if let timeZoneIdentifier {
++            components.timeZone = TimeZone(identifier: timeZoneIdentifier)
++        }
++        components.era = values["era"]
++        components.year = values["year"]
++        components.month = values["month"]
++        components.day = values["day"]
++        components.hour = values["hour"]
++        components.minute = values["minute"]
++        components.second = values["second"]
++        components.nanosecond = values["nanosecond"]
++        components.weekday = values["weekday"]
++        components.weekdayOrdinal = values["weekdayOrdinal"]
++        components.quarter = values["quarter"]
++        components.weekOfMonth = values["weekOfMonth"]
++        components.weekOfYear = values["weekOfYear"]
++        components.yearForWeekOfYear = values["yearForWeekOfYear"]
++        return components
++    }
+ }
+ 
+ public final class UNLocationNotificationTrigger: UNNotificationTrigger {
+@@ -1041,7 +1465,7 @@ public class NotificationWorker : Worker {
+         
+         let bundle = android.os.Bundle()
+         let allData = inputData.keyValueMap
+-        for (key, value) in allData where key != "title" && key != "body" && key != "id" && key != "image_url" {
++        for (key, value) in allData where key == NotificationWorker.identifierKey || NotificationWorker.isUserInfoKey(key) {
+             if let s = value as? String {
+                 bundle.putString(key, s)
+             } else if let b = value as? Bool {
+@@ -1061,20 +1485,23 @@ public class NotificationWorker : Worker {
+         intent?.putExtras(bundle)
+         
+         // Create the notification channel.
+-        let channelID = "tools.skip.firebase.messaging" // Match AndroidManifest.xml
++        let level = UNNotificationInterruptionLevel(rawValue: inputData.getInt(UNUserNotificationCenter.interruptionLevelKey, UNNotificationInterruptionLevel.active.rawValue)) ?? UNNotificationInterruptionLevel.active
++        let silent = inputData.getBoolean(UNUserNotificationCenter.silentKey, false)
++        let channel = NotificationWorker.channel(level: level, silent: silent)
+         let notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as! NotificationManager
+         if Build.VERSION.SDK_INT >= Build.VERSION_CODES.O {
+-            let appName = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString()
+-            notificationManager.createNotificationChannel(NotificationChannel(channelID, appName, NotificationManager.IMPORTANCE_DEFAULT))
++            notificationManager.createNotificationChannel(NotificationWorker.notificationChannel(channel, context: context))
+         }
+-        
++
+         // Build the notification.
+         let pendingIntent = PendingIntent.getActivity(context, id, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT)
+-        let builder = NotificationCompat.Builder(context, channelID)
++        let builder = NotificationCompat.Builder(context, channel.id)
+             .setContentTitle(title)
+             .setContentText(body)
+             .setAutoCancel(true)
+             .setContentIntent(pendingIntent)
++            .setPriority(channel.priority)
++            .setSilent(channel.silent)
+         
+         // Update the notification icon.
+         if let url = imageAttachmentUrl {
+@@ -1094,8 +1521,94 @@ public class NotificationWorker : Worker {
+         
+         // Display the notification.
+         notificationManager.notify(id, builder.build())
++        UNUserNotificationCenter.scheduleNextOccurrence(of: inputData, context: context)
+         return ListenableWorker.Result.success()
+     }
++
++    /// Whether the work data `key` carries a value of the request's `userInfo`.
++    static func isUserInfoKey(_ key: String) -> Bool {
++        return key != "title" && key != "body" && key != "id" && key != "image_url" && key != identifierKey && !key.hasPrefix(UNUserNotificationCenter.requestKeyPrefix)
++    }
++
++    /// A notification channel: its importance and sound are fixed once it exists, so each combination of
++    /// interruption level and sound has its own.
++    struct Channel {
++        let id: String
++        /// The name the system's settings show, unless the app has a string resource named after `id`.
++        let name: String
++        let importance: Int
++        /// The importance before Android 8, which set it per notification.
++        let priority: Int
++        let silent: Bool
++    }
++
++    /// The channel for `level` and sound. An active notification with sound posts to the channel that every
++    /// notification posted to before each level had its own.
++    static func channel(level: UNNotificationInterruptionLevel, silent: Bool) -> Channel {
++        switch level {
++        case UNNotificationInterruptionLevel.passive:
++            // A low-importance channel makes no sound either way.
++            return Channel(id: "skip.ui.notifications.passive", name: "Passive", importance: NotificationManager.IMPORTANCE_LOW, priority: NotificationCompat.PRIORITY_LOW, silent: false)
++        case UNNotificationInterruptionLevel.active:
++            if silent {
++                return Channel(id: "skip.ui.notifications.active.silent", name: "Silent", importance: NotificationManager.IMPORTANCE_DEFAULT, priority: NotificationCompat.PRIORITY_DEFAULT, silent: true)
++            }
++            // Match AndroidManifest.xml; the name is the app's.
++            return Channel(id: "tools.skip.firebase.messaging", name: "", importance: NotificationManager.IMPORTANCE_DEFAULT, priority: NotificationCompat.PRIORITY_DEFAULT, silent: false)
++        case UNNotificationInterruptionLevel.timeSensitive:
++            if silent {
++                return Channel(id: "skip.ui.notifications.timeSensitive.silent", name: "Time Sensitive, Silent", importance: NotificationManager.IMPORTANCE_HIGH, priority: NotificationCompat.PRIORITY_HIGH, silent: true)
++            }
++            return Channel(id: "skip.ui.notifications.timeSensitive", name: "Time Sensitive", importance: NotificationManager.IMPORTANCE_HIGH, priority: NotificationCompat.PRIORITY_HIGH, silent: false)
++        case UNNotificationInterruptionLevel.critical:
++            if silent {
++                return Channel(id: "skip.ui.notifications.critical.silent", name: "Critical, Silent", importance: NotificationManager.IMPORTANCE_HIGH, priority: NotificationCompat.PRIORITY_MAX, silent: true)
++            }
++            return Channel(id: "skip.ui.notifications.critical", name: "Critical", importance: NotificationManager.IMPORTANCE_HIGH, priority: NotificationCompat.PRIORITY_MAX, silent: false)
++        }
++    }
++
++    /// The Android channel for `channel`, named by the app's string resource named after the channel's ID
++    /// (`skip_ui_notifications_timeSensitive` for `skip.ui.notifications.timeSensitive`) when it has one.
++    static func notificationChannel(_ channel: Channel, context: Context) -> NotificationChannel {
++        var name = channel.name
++        let resource = context.getResources().getIdentifier(channel.id.replacingOccurrences(of: ".", with: "_"), "string", context.getPackageName())
++        if resource != 0 {
++            name = context.getString(resource)
++        } else if name.isEmpty {
++            name = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString()
++        }
++        let notificationChannel = NotificationChannel(channel.id, name, channel.importance)
++        if channel.silent {
++            notificationChannel.setSound(nil, nil)
++        }
++        return notificationChannel
++    }
++}
++
++/// Re-arms the calendar requests when the device's time zone or clock changes, so each fires at its components'
++/// wall-clock time where the device is, as on iOS. SkipUI's manifest registers it.
++public class NotificationTimeChangeReceiver : BroadcastReceiver {
++    public init() {
++        super.init()
++    }
++
++    public override func onReceive(context: Context, intent: Intent) {
++        guard intent.action == Intent.ACTION_TIMEZONE_CHANGED || intent.action == Intent.ACTION_TIME_CHANGED else {
++            return
++        }
++        // The broadcast names the new zone, which the process's default zone may not have adopted yet.
++        var timeZone = TimeZone.current
++        if let identifier = intent.getStringExtra(Intent.EXTRA_TIMEZONE), let named = TimeZone(identifier: identifier) {
++            timeZone = named
++        }
++        let applicationContext = context.getApplicationContext()
++        let result = goAsync()
++        Task {
++            await UNUserNotificationCenter.rearmCalendarRequests(in: timeZone, context: applicationContext)
++            result.finish()
++        }
++    }
+ }
+ #endif
+ #endif
+diff --git a/Sources/SkipUI/Skip/AndroidManifest.xml b/Sources/SkipUI/Skip/AndroidManifest.xml
+new file mode 100644
+index 00000000..28a77593
+--- /dev/null
++++ b/Sources/SkipUI/Skip/AndroidManifest.xml
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android">
++    <application>
++        <!-- Re-arms calendar notification requests at their wall-clock time when the zone or clock changes
++             (UserNotifications.swift). Both broadcasts reach manifest receivers of apps that are not running. -->
++        <receiver
++            android:name="skip.ui.NotificationTimeChangeReceiver"
++            android:exported="false">
++            <intent-filter>
++                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
++                <action android:name="android.intent.action.TIME_SET" />
++            </intent-filter>
++        </receiver>
++    </application>
++</manifest>
+diff --git a/Tests/SkipUITests/NotificationRequestTests.swift b/Tests/SkipUITests/NotificationRequestTests.swift
+index 0c7fe841..f101a3e9 100644
+--- a/Tests/SkipUITests/NotificationRequestTests.swift
++++ b/Tests/SkipUITests/NotificationRequestTests.swift
+@@ -6,6 +6,7 @@ import XCTest
+ 
+ #if SKIP
+ import android.content.Context
++import android.os.Build
+ import androidx.work.Configuration
+ import androidx.work.Data
+ import androidx.work.ListenableWorker
+@@ -34,6 +35,8 @@ final class NotificationRequestTests: SkipUITestCase {
+         workManager.cancelAllWork().result.get()
+         workManager.pruneWork().result.get()
+         context.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE).edit().clear().commit()
++        context.getSharedPreferences("__skip_usernotifications_requests", Context.MODE_PRIVATE).edit().clear().commit()
++        UNUserNotificationCenter.earlierVersionsWork = nil
+         return workManager
+     }
+ 
+@@ -54,8 +57,313 @@ final class NotificationRequestTests: SkipUITestCase {
+     private func savedDate(_ identifier: String) -> Int64 {
+         return context.getSharedPreferences("__skip_usernotifications", Context.MODE_PRIVATE).getLong("date_" + identifier, 0)
+     }
++
++    /// Enqueues `request` with the work data `add` gives it, and waits until WorkManager has queued it.
++    private func schedule(_ request: UNNotificationRequest) {
++        let builder = Data.Builder()
++            .putString("title", request.content.title)
++            .putString(NotificationWorker.identifierKey, request.identifier)
++        for (key, value) in request.content.userInfo {
++            builder.putString(key.toString(), value.toString())
++        }
++        UNUserNotificationCenter.putRequestFields(of: request, into: builder)
++        let date = (request.trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate() ?? (request.trigger as? UNTimeIntervalNotificationTrigger)?.nextTriggerDate()
++        UNUserNotificationCenter.enqueueRequest(identifier: request.identifier, data: builder.build(), date: date, context: context).result.get()
++    }
++
++    private func dailyRequest(_ identifier: String, hour: Int) -> UNNotificationRequest {
++        var components = DateComponents()
++        components.hour = hour
++        components.minute = 0
++        let content = UNMutableNotificationContent()
++        content.title = identifier
++        return UNNotificationRequest(identifier: identifier, content: content, trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: true))
++    }
++
++    private func enqueuedWork(_ identifier: String, _ workManager: WorkManager) -> [WorkInfo] {
++        var work: [WorkInfo] = []
++        let iterator = workManager.getWorkInfosByTag(UNUserNotificationCenter.workName(identifier)).get().iterator()
++        while iterator.hasNext() {
++            let info = iterator.next() as! WorkInfo
++            if info.state == WorkInfo.State.ENQUEUED {
++                work.append(info)
++            }
++        }
++        return work
++    }
+     #endif
+ 
++    private let paris = TimeZone(identifier: "Europe/Paris")!
++    private let newYork = TimeZone(identifier: "America/New_York")!
++
++    private var eightOClock: DateComponents {
++        var components = DateComponents()
++        components.hour = 8
++        components.minute = 0
++        return components
++    }
++
++    func testCalendarTriggerKeepsItsWallClockTimeAcrossDaylightSaving() throws {
++        #if !SKIP
++        throw XCTSkip("SkipUI's calendar trigger is Android's")
++        #else
++        // 08:00 in Paris on the days before the clocks change, and on the days they change.
++        let springEve = Date(timeIntervalSince1970: 1774681200.0)
++        let springDay = Date(timeIntervalSince1970: 1774764000.0)
++        let autumnEve = Date(timeIntervalSince1970: 1792821600.0)
++        let autumnDay = Date(timeIntervalSince1970: 1792911600.0)
++        XCTAssertEqual(UNCalendarNotificationTrigger.nextDate(matching: eightOClock, after: springEve, in: paris), springDay)
++        XCTAssertEqual(UNCalendarNotificationTrigger.nextDate(matching: eightOClock, after: autumnEve, in: paris), autumnDay)
++        #endif
++    }
++
++    func testCalendarTriggerFiresAtItsWallClockTimeInTheCurrentZone() throws {
++        #if !SKIP
++        throw XCTSkip("SkipUI's calendar trigger is Android's")
++        #else
++        // 08:00 in Paris is 03:00 in New York, where the next 08:00 is five hours later.
++        let parisMorning = Date(timeIntervalSince1970: 1774681200.0)
++        XCTAssertEqual(UNCalendarNotificationTrigger.nextDate(matching: eightOClock, after: parisMorning, in: newYork), Date(timeIntervalSince1970: 1774699200.0))
++
++        // Components that name a zone keep it.
++        var parisEight = eightOClock
++        parisEight.timeZone = paris
++        XCTAssertEqual(UNCalendarNotificationTrigger.nextDate(matching: parisEight, after: parisMorning.addingTimeInterval(-60.0), in: newYork), parisMorning)
++        #endif
++    }
++
++    func testCalendarTriggerCrossesTheBridgeAsNamedComponents() throws {
++        #if !SKIP
++        throw XCTSkip("SkipUI's calendar trigger is Android's")
++        #else
++        var components = eightOClock
++        components.weekday = 2
++        components.timeZone = paris
++        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
++        XCTAssertEqual(trigger.bridgedComponents, ["hour": 8, "minute": 0, "weekday": 2])
++        XCTAssertEqual(trigger.bridgedTimeZoneIdentifier, "Europe/Paris")
++
++        let rebuilt = UNCalendarNotificationTrigger.bridgedTrigger(components: trigger.bridgedComponents, timeZoneIdentifier: trigger.bridgedTimeZoneIdentifier, repeats: true)
++        let rebuiltComponents = rebuilt.dateComponents as! DateComponents
++        XCTAssertEqual(rebuiltComponents.hour, 8)
++        XCTAssertEqual(rebuiltComponents.minute, 0)
++        XCTAssertEqual(rebuiltComponents.weekday, 2)
++        XCTAssertNil(rebuiltComponents.day)
++        XCTAssertEqual(rebuiltComponents.timeZone?.identifier, "Europe/Paris")
++        XCTAssertTrue(rebuilt.repeats)
++        #endif
++    }
++
++    func testRepeatingRequestRecursAtItsNextLocalOccurrence() throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let springEve = Date(timeIntervalSince1970: 1774681200.0)
++        let builder = Data.Builder().putLong(UNUserNotificationCenter.fireDateKey, Int64(1774681200000))
++        UNUserNotificationCenter.putRequestFields(of: dailyRequest("daily", hour: 8), into: builder)
++        let data = builder.build()
++
++        // Delivered on time, and delivered late: either way the next occurrence is the next 08:00 in Paris.
++        XCTAssertEqual(UNUserNotificationCenter.nextOccurrence(of: data, after: springEve, in: paris), Date(timeIntervalSince1970: 1774764000.0))
++        XCTAssertEqual(UNUserNotificationCenter.nextOccurrence(of: data, after: springEve.addingTimeInterval(3600.0), in: paris), Date(timeIntervalSince1970: 1774764000.0))
++        // After a move to New York, it is the next 08:00 there.
++        XCTAssertEqual(UNUserNotificationCenter.nextOccurrence(of: data, after: springEve, in: newYork), Date(timeIntervalSince1970: 1774699200.0))
++
++        // A repeating interval keeps its period from the occurrence it was due at.
++        let intervalBuilder = Data.Builder().putLong(UNUserNotificationCenter.fireDateKey, Int64(1774681200000))
++        UNUserNotificationCenter.putRequestFields(of: UNNotificationRequest(identifier: "hourly", content: UNMutableNotificationContent(), trigger: UNTimeIntervalNotificationTrigger(timeInterval: 3600.0, repeats: true)), into: intervalBuilder)
++        XCTAssertEqual(UNUserNotificationCenter.nextOccurrence(of: intervalBuilder.build(), after: springEve.addingTimeInterval(5400.0), in: paris), springEve.addingTimeInterval(7200.0))
++        #endif
++    }
++
++    func testDeliveredRepeatingRequestEnqueuesItsNextOccurrence() throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let workManager = workManager()
++        let request = dailyRequest("daily", hour: 8)
++        schedule(request)
++        let first = try XCTUnwrap(UNUserNotificationCenter.savedRequestData(identifier: "daily", context: context))
++        let firstDate = savedDate("daily")
++
++        // What NotificationWorker does once it has posted the notification.
++        UNUserNotificationCenter.scheduleNextOccurrence(of: first, context: context)
++
++        let firstOccurrence = Date(timeIntervalSince1970: Double(firstDate) / 1000.0)
++        let expected = UNCalendarNotificationTrigger.nextDate(matching: eightOClock, after: firstOccurrence, in: TimeZone.current)!
++        XCTAssertEqual(savedDate("daily"), expected.currentTimeMillis)
++        XCTAssertGreaterThan(savedDate("daily"), firstDate)
++        XCTAssertEqual(enqueuedWork("daily", workManager).count, 1)
++        // The same request carries on, so its next occurrence is scheduled the same way.
++        let second = try XCTUnwrap(UNUserNotificationCenter.savedRequestData(identifier: "daily", context: context))
++        XCTAssertEqual(second.getString(UNUserNotificationCenter.generationKey), first.getString(UNUserNotificationCenter.generationKey))
++        #endif
++    }
++
++    func testRemovedOrReplacedRequestEndsItsChain() throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let workManager = workManager()
++        schedule(dailyRequest("daily", hour: 8))
++        let removed = try XCTUnwrap(UNUserNotificationCenter.savedRequestData(identifier: "daily", context: context))
++        UNUserNotificationCenter.removePendingRequests(identifiers: ["daily"], context: context)
++        // An occurrence that was running when the request was removed schedules nothing.
++        UNUserNotificationCenter.scheduleNextOccurrence(of: removed, context: context)
++        XCTAssertTrue(enqueuedWork("daily", workManager).isEmpty)
++        XCTAssertNil(UNUserNotificationCenter.savedRequestData(identifier: "daily", context: context))
++
++        schedule(dailyRequest("daily", hour: 8))
++        let replaced = try XCTUnwrap(UNUserNotificationCenter.savedRequestData(identifier: "daily", context: context))
++        schedule(dailyRequest("daily", hour: 9))
++        let replacementDate = savedDate("daily")
++        // An occurrence of the replaced request leaves the replacement as it is.
++        UNUserNotificationCenter.scheduleNextOccurrence(of: replaced, context: context)
++        XCTAssertEqual(savedDate("daily"), replacementDate)
++        XCTAssertEqual(enqueuedWork("daily", workManager).count, 1)
++        let saved = try XCTUnwrap(UNUserNotificationCenter.savedRequestData(identifier: "daily", context: context))
++        XCTAssertEqual(UNUserNotificationCenter.calendarComponents(from: saved).hour, 9)
++        #endif
++    }
++
++    func testDeliveredOneShotRequestIsForgotten() throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let _ = workManager()
++        schedule(UNNotificationRequest(identifier: "once", content: UNMutableNotificationContent(), trigger: UNTimeIntervalNotificationTrigger(timeInterval: 60.0, repeats: false)))
++        let data = try XCTUnwrap(UNUserNotificationCenter.savedRequestData(identifier: "once", context: context))
++        UNUserNotificationCenter.scheduleNextOccurrence(of: data, context: context)
++        XCTAssertNil(UNUserNotificationCenter.savedRequestData(identifier: "once", context: context))
++        #endif
++    }
++
++    func testPendingRequestsCarryTheirTriggers() async throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let _ = workManager()
++        let content = UNMutableNotificationContent()
++        content.title = "Hydrate"
++        content.userInfo = ["link": "app://water"]
++        content.interruptionLevel = UNNotificationInterruptionLevel.timeSensitive
++        content.sound = nil
++        schedule(UNNotificationRequest(identifier: "hydrate", content: content, trigger: UNTimeIntervalNotificationTrigger(timeInterval: 3600.0, repeats: false)))
++        let hydrateDate = savedDate("hydrate")
++        schedule(dailyRequest("daily", hour: 8))
++
++        let pending = await UNUserNotificationCenter.current().pendingNotificationRequests().map { $0 as! UNNotificationRequest }
++        XCTAssertEqual(pending.map { $0.identifier }.sorted(), ["daily", "hydrate"])
++
++        let hydrate = try XCTUnwrap(pending.first { $0.identifier == "hydrate" })
++        let interval = try XCTUnwrap(hydrate.trigger as? UNTimeIntervalNotificationTrigger)
++        XCTAssertEqual(interval.timeInterval, 3600.0)
++        // The date it was scheduled for, however long after scheduling it is read.
++        XCTAssertEqual(interval.nextTriggerDate()?.currentTimeMillis, hydrateDate)
++        XCTAssertEqual(hydrate.content.title, "Hydrate")
++        XCTAssertEqual(hydrate.content.userInfo["link"] as? String, "app://water")
++        XCTAssertEqual(hydrate.content.interruptionLevel, UNNotificationInterruptionLevel.timeSensitive)
++        XCTAssertNil(hydrate.content.sound)
++
++        let daily = try XCTUnwrap(pending.first { $0.identifier == "daily" })
++        let calendar = try XCTUnwrap(daily.bridgedCalendarTrigger)
++        XCTAssertTrue(calendar.repeats)
++        XCTAssertEqual(calendar.bridgedComponents, ["hour": 8, "minute": 0])
++
++        // A removal shows at once, before WorkManager has applied it.
++        UNUserNotificationCenter.removePendingRequests(identifiers: ["hydrate"], context: context)
++        let remaining = await UNUserNotificationCenter.current().pendingNotificationRequests().map { ($0 as! UNNotificationRequest).identifier }
++        XCTAssertEqual(remaining, ["daily"])
++        #endif
++    }
++
++    func testTimeZoneChangeRearmsCalendarRequests() async throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let workManager = workManager()
++        schedule(dailyRequest("daily", hour: 8))
++        schedule(UNNotificationRequest(identifier: "once", content: UNMutableNotificationContent(), trigger: UNTimeIntervalNotificationTrigger(timeInterval: 3600.0, repeats: false)))
++        let intervalDate = savedDate("once")
++
++        await UNUserNotificationCenter.rearmCalendarRequests(in: newYork, context: context)
++
++        let expected = UNCalendarNotificationTrigger.nextDate(matching: eightOClock, after: Date(), in: newYork)!
++        XCTAssertEqual(Double(savedDate("daily")), Double(expected.currentTimeMillis), accuracy: 5000.0)
++        XCTAssertEqual(savedDate("once"), intervalDate)
++        XCTAssertEqual(enqueuedWork("daily", workManager).count, 1)
++        #endif
++    }
++
++    func testSchedulingNeedsNoActivity() async throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let _ = workManager()
++        // UIApplication is made on the main thread, as an app makes it before any of this runs.
++        let activity = await MainActor.run { UIApplication.shared.androidActivity }
++        XCTAssertNil(activity)
++        let center = UNUserNotificationCenter.current()
++        let delegate = PresentingDelegate()
++        center.delegate = delegate
++
++        try await center.add(UNNotificationRequest(identifier: "reminder", content: UNMutableNotificationContent(), trigger: UNTimeIntervalNotificationTrigger(timeInterval: 3600.0, repeats: false)))
++        let pending = await center.pendingNotificationRequests().map { ($0 as! UNNotificationRequest).identifier }
++        XCTAssertEqual(pending, ["reminder"])
++        center.removePendingNotificationRequests(withIdentifiers: ["reminder"])
++        let afterRemoval = await center.pendingNotificationRequests()
++        XCTAssertTrue(afterRemoval.isEmpty)
++        center.delegate = nil
++
++        // Without an activity no prompt can be shown, so nothing is recorded as denied.
++        UserDefaults.standard.removeObject(forKey: "UNNotificationPermissionDenied")
++        let granted = try await center.requestAuthorization(options: [.alert])
++        if Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !granted {
++            XCTAssertFalse(UserDefaults.standard.bool(forKey: "UNNotificationPermissionDenied"))
++            let status = await center.notificationSettings().authorizationStatus
++            XCTAssertNotEqual(status, UNAuthorizationStatus.denied)
++        }
++        #endif
++    }
++
++    func testEarlierVersionsWorkIsLookedUpUntilNoneIsLeft() async throws {
++        #if !SKIP
++        throw XCTSkip("Notification requests are WorkManager work on Android")
++        #else
++        let workManager = workManager()
++        workManager.enqueue(OneTimeWorkRequestBuilder<NotificationWorker>().setInitialDelay(1, TimeUnit.DAYS).addTag("reminder").build()).result.get()
++        await UNUserNotificationCenter.cancelWorkOfEarlierVersions(identifiers: ["reminder"], context: context)
++        XCTAssertEqual(states(tag: "reminder", workManager), ["CANCELLED"])
++
++        // None is left, so a later call looks nothing up, even in a new process.
++        UNUserNotificationCenter.earlierVersionsWork = nil
++        workManager.enqueue(OneTimeWorkRequestBuilder<NotificationWorker>().setInitialDelay(1, TimeUnit.DAYS).addTag("other").build()).result.get()
++        await UNUserNotificationCenter.cancelWorkOfEarlierVersions(identifiers: ["other"], context: context)
++        XCTAssertEqual(states(tag: "other", workManager), ["ENQUEUED"])
++        #endif
++    }
++
++    func testEachInterruptionLevelHasItsChannel() throws {
++        #if !SKIP
++        throw XCTSkip("Notification channels are Android's")
++        #else
++        let active = NotificationWorker.channel(level: UNNotificationInterruptionLevel.active, silent: false)
++        XCTAssertEqual(active.id, "tools.skip.firebase.messaging")
++        XCTAssertEqual(active.importance, android.app.NotificationManager.IMPORTANCE_DEFAULT)
++        let passive = NotificationWorker.channel(level: UNNotificationInterruptionLevel.passive, silent: false)
++        XCTAssertEqual(passive.importance, android.app.NotificationManager.IMPORTANCE_LOW)
++        let timeSensitive = NotificationWorker.channel(level: UNNotificationInterruptionLevel.timeSensitive, silent: false)
++        XCTAssertEqual(timeSensitive.importance, android.app.NotificationManager.IMPORTANCE_HIGH)
++        let silent = NotificationWorker.channel(level: UNNotificationInterruptionLevel.active, silent: true)
++        XCTAssertTrue(silent.silent)
++        XCTAssertNotEqual(silent.id, active.id)
++        XCTAssertNotEqual(timeSensitive.id, active.id)
++        XCTAssertFalse(NotificationWorker.isUserInfoKey(UNUserNotificationCenter.fireDateKey))
++        XCTAssertFalse(NotificationWorker.isUserInfoKey(NotificationWorker.identifierKey))
++        XCTAssertTrue(NotificationWorker.isUserInfoKey("link"))
++        #endif
++    }
++
+     func testRequestReplacesOnlyItsOwnWork() async throws {
+         #if !SKIP
+         throw XCTSkip("Notification requests are WorkManager work on Android")
+@@ -95,7 +403,7 @@ final class NotificationRequestTests: SkipUITestCase {
+ 
+         // What `add` does: enqueue the request, then sweep the earlier versions' work for its identifier.
+         enqueue("reminder", inDays: 1)
+-        await UNUserNotificationCenter.cancelWorkOfEarlierVersions(identifiers: ["reminder"], workManager: workManager)
++        await UNUserNotificationCenter.cancelWorkOfEarlierVersions(identifiers: ["reminder"], context: context)
+ 
+         XCTAssertEqual(states(tag: "reminder", workManager), ["CANCELLED", "CANCELLED"])
+         XCTAssertEqual(states(tag: UNUserNotificationCenter.workName("reminder"), workManager), ["ENQUEUED"])
+@@ -122,6 +430,12 @@ final class NotificationRequestTests: SkipUITestCase {
+ }
+ 
+ #if SKIP
++final class PresentingDelegate: UNUserNotificationCenterDelegate {
++    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
++        return [.banner]
++    }
++}
++
+ final class DirectExecutor: java.util.concurrent.Executor {
+     override func execute(command: java.lang.Runnable) {
+         command.run()

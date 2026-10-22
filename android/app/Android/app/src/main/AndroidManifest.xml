@@ -78,6 +78,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <!-- WorkManager reads AndroidAppMain's configuration (Main.kt) when first used, rather than
+             starting with its defaults at launch. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data android:name="androidx.work.WorkManagerInitializer" tools:node="remove" />
+        </provider>
         <!-- Compose tooling's preview host: exported by a library, never used by the app. -->
         <activity android:name="androidx.compose.ui.tooling.PreviewActivity" tools:node="remove" />
     </application>
