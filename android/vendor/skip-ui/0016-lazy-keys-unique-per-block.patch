@@ -1,0 +1,1433 @@
+Lazy keys unique per ForEach block and section: SkipUI keys a lazy ForEach row by its raw ID and section chrome by the enclosing ForEach tag, so an ID repeated across sections, an ID repeated within one ForEach, or one ForEach element yielding two Sections throws Compose's "Key ... was already used" once those rows near the visible range, where SwiftUI accepts all three; LazyItemCollector now builds each row key as <block>|<escaped id>#<occurrence> from a ForEach identity remembered where the ForEach is evaluated, counts occurrences in data order so a key is the same however Compose asks for it, keys sections by a remembered Section identity with #n for repeats, evaluates lazy ForEach elements in groups keyed by identity so nested identities follow a reorder, and leaves scrollTo on the original IDs (List, LazyVStack, LazyHStack, the lazy grids, Table).
+
+diff --git a/Sources/SkipUI/SkipUI/Containers/ForEach.swift b/Sources/SkipUI/SkipUI/Containers/ForEach.swift
+index 16c37ab..01db5bc 100644
+--- a/Sources/SkipUI/SkipUI/Containers/ForEach.swift
++++ b/Sources/SkipUI/SkipUI/Containers/ForEach.swift
+@@ -5,6 +5,7 @@ import Foundation
+ #if SKIP
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.remember
++import androidx.compose.runtime.saveable.rememberSaveable
+ #endif
+ 
+ // SKIP @bridge
+@@ -19,6 +20,8 @@ public final class ForEach : View, Renderable, LazyItemFactory {
+     let editActions: EditActions
+     var onDeleteAction: ((IndexSet) -> Void)?
+     var onMoveAction: ((IndexSet, Int) -> Void)?
++    /// The identity of this block of lazy items, remembered where the `ForEach` was last evaluated as lazy content.
++    var lazyBlockIdentity: String?
+ 
+     init(identifier: ((Any) -> AnyHashable?)? = nil, indexRange: (() -> Range<Int>)? = nil, indexedContent: ((Int) -> any View)? = nil, objects: (any RandomAccessCollection<Any>)? = nil, objectContent: ((Any) -> any View)? = nil, objectsBinding: Binding<any RandomAccessCollection<Any>>? = nil, objectsBindingContent: ((Binding<any RandomAccessCollection<Any>>, Int) -> any View)? = nil, editActions: EditActions = []) {
+         self.identifier = identifier
+@@ -84,37 +87,54 @@ public final class ForEach : View, Renderable, LazyItemFactory {
+         }
+         let identityNamespace = remember { ForEachIdentityNamespace() }
+         let isLazy = EvaluateOptions(options).lazyItemLevel != nil
++        if isLazy {
++            // Remembered by position in the view tree, which is how SwiftUI identifies a ForEach, and saved so the
++            // block keeps its lazy item keys across activity recreation
++            lazyBlockIdentity = rememberSaveable { UUID().uuidString }
++        }
+ 
+         // ForEach views might contain nested lazy item factories such as Sections or other ForEach instances. They also
+         // might contain more than one view per iteration, which isn't supported by Compose lazy processing. We execute
+         // our content closure for the first item in the ForEach and examine its content to see if it should be unrolled
+         // If it should, we perform the full ForEach to append all items. If not, we append ourselves instead so that we
+         // can take advantage of Compose's ability to specify ranges of items
++        //
++        // Each element is evaluated in a group keyed by its identity when lazy, so the identities that nested Sections
++        // and ForEach blocks remember follow the element when elements are inserted, removed or reordered; elsewhere the
++        // key is the element's position, which keeps evaluation positional. The `key` call must stay directly in the loop
++        // body: inside a helper function or a conditional, each key group would sit in its own positional parent group
++        // and could never move.
+         var isFirst = true
+         var collected: kotlin.collections.MutableList<Renderable> = mutableListOf()
+         if let indexRange {
+             for index in indexRange() {
+-                var renderables = indexedContent!(index).Evaluate(context: context, options: options)
+-                if isLazy, !isUnrollRequired(renderables: renderables, isFirst: isFirst, context: context) {
+-                    collected.add(self)
+-                    break
+-                } else {
+-                    isFirst = false
+-                }
+                 let defaultTag: Any?
+                 if let identifier {
+                     defaultTag = identifier(index)
+                 } else {
+                     defaultTag = index
+                 }
++                var renderables = androidx.compose.runtime.key(isLazy ? defaultTag : index) {
++                    indexedContent!(index).Evaluate(context: context, options: options)
++                }
++                if isLazy, !isUnrollRequired(renderables: renderables, isFirst: isFirst, context: context) {
++                    collected.add(self)
++                    break
++                } else {
++                    isFirst = false
++                }
+                 renderables = renderables.map {
+                     taggedRenderable(for: $0, defaultTag: defaultTag, identityNamespace: identityNamespace)
+                 }
+                 collected.addAll(renderables)
+             }
+         } else if let objects {
++            var position = 0
+             for object in objects {
+-                var renderables = objectContent!(object).Evaluate(context: context, options: options)
++                var renderables = androidx.compose.runtime.key(isLazy ? identifier?(object) : position) {
++                    objectContent!(object).Evaluate(context: context, options: options)
++                }
++                position += 1
+                 if isLazy, !isUnrollRequired(renderables: renderables, isFirst: isFirst, context: context) {
+                     collected.add(self)
+                     break
+@@ -131,7 +151,9 @@ public final class ForEach : View, Renderable, LazyItemFactory {
+         } else if let objectsBinding {
+             let objects = objectsBinding.wrappedValue
+             for i in 0..<objects.count {
+-                var renderables = objectsBindingContent!(objectsBinding, i).Evaluate(context: context, options: options)
++                var renderables = androidx.compose.runtime.key(isLazy ? identifier?(objects[i]) : i) {
++                    objectsBindingContent!(objectsBinding, i).Evaluate(context: context, options: options)
++                }
+                 if isLazy, !isUnrollRequired(renderables: renderables, isFirst: isFirst, context: context) {
+                     collected.add(self)
+                     break
+@@ -227,7 +249,7 @@ public final class ForEach : View, Renderable, LazyItemFactory {
+                 }
+                 return taggedRenderable(for: renderable, defaultTag: tag)
+             }
+-            collector.indexedItems(indexRange(), identifier, onDeleteAction, onMoveAction, level, factory)
++            collector.indexedItems(indexRange(), identifier, lazyBlockIdentity, onDeleteAction, onMoveAction, level, factory)
+         } else if let objects {
+             let factory: @Composable (Any, ComposeContext) -> Renderable = { object, context in
+                 let renderables = ModifiedContent.apply(modifiers: modifiers, to: objectContent!(object)).Evaluate(context: context, options: 0)
+@@ -237,7 +259,7 @@ public final class ForEach : View, Renderable, LazyItemFactory {
+                 }
+                 return taggedRenderable(for: renderable, defaultTag: tag)
+             }
+-            collector.objectItems(objects, identifier!, onDeleteAction, onMoveAction, level, factory)
++            collector.objectItems(objects, identifier!, lazyBlockIdentity, onDeleteAction, onMoveAction, level, factory)
+         } else if let objectsBinding {
+             let factory: @Composable (Binding<any RandomAccessCollection<Any>>, Int, ComposeContext) -> Renderable = { objects, index, context in
+                 let renderables = ModifiedContent.apply(modifiers: modifiers, to: objectsBindingContent!(objects, index)).Evaluate(context: context, options: 0)
+@@ -247,7 +269,7 @@ public final class ForEach : View, Renderable, LazyItemFactory {
+                 }
+                 return taggedRenderable(for: renderable, defaultTag: tag)
+             }
+-            collector.objectBindingItems(objectsBinding, identifier!, editActions, onDeleteAction, onMoveAction, level, factory)
++            collector.objectBindingItems(objectsBinding, identifier!, lazyBlockIdentity, editActions, onDeleteAction, onMoveAction, level, factory)
+         }
+     }
+ 
+diff --git a/Sources/SkipUI/SkipUI/Containers/LazyHGrid.swift b/Sources/SkipUI/SkipUI/Containers/LazyHGrid.swift
+index e83b497..d93bb82 100644
+--- a/Sources/SkipUI/SkipUI/Containers/LazyHGrid.swift
++++ b/Sources/SkipUI/SkipUI/Containers/LazyHGrid.swift
+@@ -124,9 +124,9 @@ public struct LazyHGrid: View, Renderable {
+                                 }
+                             }
+                         },
+-                        indexedItems: { range, identifier, _, _, _, _, factory in
++                        indexedItems: { range, keys, _, _, _, _, factory in
+                             let count = range.endExclusive - range.start
+-                            let key: ((Int) -> String)? = identifier == nil ? nil : { composeBundleString(for: identifier!($0 + range.start)) }
++                            let key: ((Int) -> String)? = keys == nil ? nil : { keys!.key(at: $0) }
+                             items(count: count, key: key) { index in
+                                 Box(contentAlignment: boxAlignment) {
+                                     let scopedContext = context.content(scope: self)
+@@ -134,8 +134,8 @@ public struct LazyHGrid: View, Renderable {
+                                 }
+                             }
+                         },
+-                        objectItems: { objects, identifier, _, _, _, _, factory in
+-                            let key: (Int) -> String = { composeBundleString(for: identifier(objects[$0])) }
++                        objectItems: { objects, keys, _, _, _, _, factory in
++                            let key: (Int) -> String = { keys.key(at: $0) }
+                             items(count: objects.count, key: key) { index in
+                                 let scopedContext = context.content(scope: self)
+                                 Box(contentAlignment: boxAlignment) {
+@@ -143,8 +143,8 @@ public struct LazyHGrid: View, Renderable {
+                                 }
+                             }
+                         },
+-                        objectBindingItems: { objectsBinding, identifier, _, _, _, _, _, factory in
+-                            let key: (Int) -> String = { composeBundleString(for: identifier(objectsBinding.wrappedValue[$0])) }
++                        objectBindingItems: { objectsBinding, keys, _, _, _, _, _, factory in
++                            let key: (Int) -> String = { keys.key(at: $0) }
+                             items(count: objectsBinding.wrappedValue.count, key: key) { index in
+                                 let scopedContext = context.content(scope: self)
+                                 Box(contentAlignment: boxAlignment) {
+diff --git a/Sources/SkipUI/SkipUI/Containers/LazyHStack.swift b/Sources/SkipUI/SkipUI/Containers/LazyHStack.swift
+index 7071b4d..8fac949 100644
+--- a/Sources/SkipUI/SkipUI/Containers/LazyHStack.swift
++++ b/Sources/SkipUI/SkipUI/Containers/LazyHStack.swift
+@@ -119,21 +119,21 @@ public struct LazyHStack : View, Renderable {
+                                 renderable.Render(context: context.content(scope: self))
+                             }
+                         },
+-                        indexedItems: { range, identifier, _, _, _, _, factory in
++                        indexedItems: { range, keys, _, _, _, _, factory in
+                             let count = range.endExclusive - range.start
+-                            let key: ((Int) -> String)? = identifier == nil ? nil : { composeBundleString(for: identifier!($0 + range.start)) }
++                            let key: ((Int) -> String)? = keys == nil ? nil : { keys!.key(at: $0) }
+                             items(count: count, key: key) { index in
+                                 factory(index + range.start, context.content(scope: self)).Render(context: context.content(scope: self))
+                             }
+                         },
+-                        objectItems: { objects, identifier, _, _, _, _, factory in
+-                            let key: (Int) -> String = { composeBundleString(for: identifier(objects[$0])) }
++                        objectItems: { objects, keys, _, _, _, _, factory in
++                            let key: (Int) -> String = { keys.key(at: $0) }
+                             items(count: objects.count, key: key) { index in
+                                 factory(objects[index], context.content(scope: self)).Render(context: context.content(scope: self))
+                             }
+                         },
+-                        objectBindingItems: { objectsBinding, identifier, _, _, _, _, _, factory in
+-                            let key: (Int) -> String = { composeBundleString(for: identifier(objectsBinding.wrappedValue[$0])) }
++                        objectBindingItems: { objectsBinding, keys, _, _, _, _, _, factory in
++                            let key: (Int) -> String = { keys.key(at: $0) }
+                             items(count: objectsBinding.wrappedValue.count, key: key) { index in
+                                 factory(objectsBinding, index, context.content(scope: self)).Render(context: context.content(scope: self))
+                             }
+diff --git a/Sources/SkipUI/SkipUI/Containers/LazySupport.swift b/Sources/SkipUI/SkipUI/Containers/LazySupport.swift
+index 5f95870..1742ff2 100644
+--- a/Sources/SkipUI/SkipUI/Containers/LazySupport.swift
++++ b/Sources/SkipUI/SkipUI/Containers/LazySupport.swift
+@@ -77,9 +77,12 @@ final class LazyLevelRenderable: Renderable, LazyItemFactory {
+ /// Add to lazy items to render a section header.
+ final class LazySectionHeader: Renderable, LazyItemFactory {
+     let content: kotlin.collections.List<Renderable>
++    /// The identity of the `Section` that produced this header, stable across recompositions.
++    let identity: String?
+ 
+-    init(content: kotlin.collections.List<Renderable>) {
++    init(content: kotlin.collections.List<Renderable>, identity: String? = nil) {
+         self.content = content
++        self.identity = identity
+     }
+ 
+     @Composable override func Render(context: ComposeContext) {
+@@ -88,7 +91,7 @@ final class LazySectionHeader: Renderable, LazyItemFactory {
+ 
+     override func produceLazyItems(collector: LazyItemCollector, modifiers: kotlin.collections.List<ModifierProtocol>, level: Int) {
+         let modified = content.map { ModifiedContent.apply(modifiers: modifiers, to: $0) }
+-        collector.sectionHeader(modified, LazyItemCollector.sectionIdentity(from: modifiers))
++        collector.sectionHeader(modified, identity ?? LazyItemCollector.sectionIdentity(from: modifiers))
+     }
+ }
+ 
+@@ -106,7 +109,7 @@ final class LazySectionFooter: Renderable, LazyItemFactory {
+ 
+     override func produceLazyItems(collector: LazyItemCollector, modifiers: kotlin.collections.List<ModifierProtocol>, level: Int) {
+         let modified = content.map { ModifiedContent.apply(modifiers: modifiers, to: $0) }
+-        collector.sectionFooter(modified, LazyItemCollector.sectionIdentity(from: modifiers))
++        collector.sectionFooter(modified)
+     }
+ }
+ 
+@@ -120,19 +123,116 @@ extension ModifiedContent: LazyItemFactory {
+     }
+ }
+ 
++/// The Compose keys of one `ForEach` block's items.
++///
++/// Compose requires the keys of a lazy layout to be unique, while SwiftUI accepts an ID that repeats within a `ForEach` or
++/// across `ForEach` blocks. A key is `<block>|<id>#<occurrence>`: the block's unique prefix, the escaped ID, and how many
++/// earlier items of the block have the same ID. Occurrences are counted in data order, so an item's key is the same however
++/// often and in whatever order Compose asks for keys.
++final class LazyItemKeys {
++    /// The block's prefix, unique within the lazy layout.
++    let prefix: String
++    private let identity: (Int) -> Any?
++    private let keys: kotlin.collections.MutableList<String> = mutableListOf()
++    private let occurrences: kotlin.collections.MutableMap<String, Int> = mutableMapOf()
++
++    /// - Parameters:
++    ///   - prefix: The block's prefix, unique within the lazy layout.
++    ///   - identity: Returns the ID of the item at a position in the block's data.
++    init(prefix: String, identity: (Int) -> Any?) {
++        self.prefix = prefix
++        self.identity = identity
++    }
++
++    /// The key of the item at the given position in the block's data.
++    func key(at position: Int) -> String {
++        while keys.size <= position {
++            let id = Self.escape(composeBundleString(for: identity(keys.size)))
++            let occurrence = occurrences[id] ?? 0
++            occurrences[id] = occurrence + 1
++            keys.add("\(prefix)|\(id)#\(occurrence)")
++        }
++        return keys[position]
++    }
++
++    /// Escape the characters that separate the parts of a key, so a literal ID never reads as a generated suffix.
++    static func escape(_ string: String) -> String {
++        guard string.contains("%") || string.contains("#") || string.contains("|") else {
++            return string
++        }
++        return string
++            .replacingOccurrences(of: "%", with: "%25")
++            .replacingOccurrences(of: "#", with: "%23")
++            .replacingOccurrences(of: "|", with: "%7C")
++    }
++}
++
+ /// Collect lazy content added by `LazyItemFactory` instances.
+ public final class LazyItemCollector {
+     private(set) var item: (Renderable, Int) -> Void = { _, _ in }
+-    private(set) var indexedItems: (Range<Int>, ((Any) -> AnyHashable?)?, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Int, ComposeContext) -> Renderable) -> Void = { _, _, _, _, _, _ in  }
+-    private(set) var objectItems: (RandomAccessCollection<Any>, (Any) -> AnyHashable?, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Any, ComposeContext) -> Renderable) -> Void = { _, _, _, _, _, _ in }
+-    private(set) var objectBindingItems: (Binding<RandomAccessCollection<Any>>, (Any) -> AnyHashable?, EditActions, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Binding<RandomAccessCollection<Any>>, Int, ComposeContext) -> Renderable) -> Void = { _, _, _, _, _, _, _ in }
++    private(set) var indexedItems: (Range<Int>, ((Any) -> AnyHashable?)?, String?, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Int, ComposeContext) -> Renderable) -> Void = { _, _, _, _, _, _, _ in  }
++    private(set) var objectItems: (RandomAccessCollection<Any>, (Any) -> AnyHashable?, String?, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Any, ComposeContext) -> Renderable) -> Void = { _, _, _, _, _, _, _ in }
++    private(set) var objectBindingItems: (Binding<RandomAccessCollection<Any>>, (Any) -> AnyHashable?, String?, EditActions, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Binding<RandomAccessCollection<Any>>, Int, ComposeContext) -> Renderable) -> Void = { _, _, _, _, _, _, _, _ in }
+     private(set) var sectionHeader: (kotlin.collections.List<Renderable>, Any?) -> Int = { _, _ in 0 }
+-    private(set) var sectionFooter: (kotlin.collections.List<Renderable>, Any?) -> Int = { _, _ in 0 }
++    private(set) var sectionFooter: (kotlin.collections.List<Renderable>) -> Int = { _ in 0 }
+     private var currentSectionItemCount: Int? = nil
+     private var startItemIndex = 0
+     private var collectedItemCount = 0
+     private var containsBindingItems = false
+ 
++    /// How often each key base has been used in this pass; the count becomes the `#n` suffix that makes the key unique.
++    private let keyOccurrences: kotlin.collections.MutableMap<String, Int> = mutableMapOf()
++    private var sectionIndex = -1
++    private var currentSectionKey: String? = nil
++    private var unidentifiedBlockCount = 0
++
++    /// Return `base` with a suffix that makes it unique within this pass.
++    private func uniqueKey(_ base: String) -> String {
++        let occurrence = keyOccurrences[base] ?? 0
++        keyOccurrences[base] = occurrence + 1
++        return "\(base)#\(occurrence)"
++    }
++
++    /// Return the keys for a block of items.
++    ///
++    /// A block with an identity (the `ForEach`'s, remembered where it was evaluated) keeps its keys when other blocks or
++    /// sections are inserted, removed or moved. A block without one is keyed by its position within the current section.
++    private func blockKeys(blockIdentity: String?, identity: (Int) -> Any?) -> LazyItemKeys {
++        let base: String
++        if let blockIdentity {
++            base = "foreach:\(LazyItemKeys.escape(blockIdentity))"
++        } else {
++            base = "foreach:\(LazyItemKeys.escape(currentSectionKey ?? ""))/\(unidentifiedBlockCount)"
++            unidentifiedBlockCount += 1
++        }
++        return LazyItemKeys(prefix: uniqueKey(base), identity: identity)
++    }
++
++    /// Return the key of a section starting here, and make it the current section.
++    private func beginSection(identity: Any?) -> String {
++        sectionIndex += 1
++        let base: String
++        if let identity {
++            base = "id-\(LazyItemKeys.escape(composeBundleString(for: identity)))"
++        } else {
++            // Sections without an identity can only be tracked by their rendered order.
++            base = "index-\(sectionIndex)"
++        }
++        let key = uniqueKey(base)
++        currentSectionKey = key
++        unidentifiedBlockCount = 0
++        return key
++    }
++
++    /// Return the key of the section a footer ends, and end it.
++    private func endSection() -> String {
++        // A footer before any header closes the items that precede the first section.
++        let key = currentSectionKey ?? uniqueKey("index-\(sectionIndex)")
++        currentSectionKey = nil
++        unidentifiedBlockCount = 0
++        return key
++    }
++
+     /// Track emitted body items for the current section, excluding section header/footer chrome.
+     private func incrementCurrentSectionItemCount(by count: Int) {
+         if let countInSection = currentSectionItemCount {
+@@ -142,16 +242,18 @@ public final class LazyItemCollector {
+ 
+     /// Initialize the content factories.
+     ///
+-    /// Section callbacks return the number of lazy items they actually emitted. `List` needs this because grouped
+-    /// section chrome can emit extra lazy items, such as the gap before non-top sections.
++    /// Item callbacks receive the keys of their items, `nil` for an indexed block without an identifier, and section
++    /// callbacks receive the section's key; both are unique within the pass. Section callbacks return the number of lazy
++    /// items they actually emitted. `List` needs this because grouped section chrome can emit extra lazy items, such as the
++    /// gap before non-top sections.
+     func initialize(
+         startItemIndex: Int,
+         item: (Renderable, Int) -> Void,
+-        indexedItems: (Range<Int>, ((Any) -> AnyHashable?)?, Int, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Int, ComposeContext) -> Renderable) -> Void,
+-        objectItems: (RandomAccessCollection<Any>, (Any) -> AnyHashable?, Int, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Any, ComposeContext) -> Renderable) -> Void,
+-        objectBindingItems: (Binding<RandomAccessCollection<Any>>, (Any) -> AnyHashable?, Int, EditActions, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Binding<RandomAccessCollection<Any>>, Int, ComposeContext) -> Renderable) -> Void,
+-        sectionHeader: (kotlin.collections.List<Renderable>, Any?) -> Int,
+-        sectionFooter: (kotlin.collections.List<Renderable>, Any?, Int?) -> Int
++        indexedItems: (Range<Int>, LazyItemKeys?, Int, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Int, ComposeContext) -> Renderable) -> Void,
++        objectItems: (RandomAccessCollection<Any>, LazyItemKeys, Int, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Any, ComposeContext) -> Renderable) -> Void,
++        objectBindingItems: (Binding<RandomAccessCollection<Any>>, LazyItemKeys, Int, EditActions, ((IndexSet) -> Void)?, ((IndexSet, Int) -> Void)?, Int, @Composable (Binding<RandomAccessCollection<Any>>, Int, ComposeContext) -> Renderable) -> Void,
++        sectionHeader: (kotlin.collections.List<Renderable>, String) -> Int,
++        sectionFooter: (kotlin.collections.List<Renderable>, String, Int?) -> Int
+     ) {
+         self.startItemIndex = startItemIndex
+ 
+@@ -159,6 +261,10 @@ public final class LazyItemCollector {
+         collectedItemCount = 0
+         containsBindingItems = false
+         currentSectionItemCount = nil
++        keyOccurrences.clear()
++        sectionIndex = -1
++        currentSectionKey = nil
++        unidentifiedBlockCount = 0
+ 
+         self.item = { renderable, level in
+             // If this is an item after a section, add a header before it
+@@ -171,30 +277,33 @@ public final class LazyItemCollector {
+             collectedItemCount += 1
+             incrementCurrentSectionItemCount(by: 1)
+         }
+-        self.indexedItems = { range, identifier, onDelete, onMove, level, factory in
++        self.indexedItems = { range, identifier, blockIdentity, onDelete, onMove, level, factory in
+             if case .sectionFooter = lastContent {
+                 _ = self.sectionHeader(listOf(), nil)
+             }
+-            indexedItems(range, identifier, count, onDelete, onMove, level, factory)
++            let keys = identifier == nil ? nil : blockKeys(blockIdentity: blockIdentity, identity: { identifier!(range.start + $0) })
++            indexedItems(range, keys, count, onDelete, onMove, level, factory)
+             let itemCount = range.endExclusive - range.start
+             content.add(Content.items(range.start, itemCount, identifier, onMove))
+             collectedItemCount += itemCount
+             incrementCurrentSectionItemCount(by: itemCount)
+         }
+-        self.objectItems = { objects, identifier, onDelete, onMove, level, factory in
++        self.objectItems = { objects, identifier, blockIdentity, onDelete, onMove, level, factory in
+             if case .sectionFooter = lastContent {
+                 _ = self.sectionHeader(listOf(), nil)
+             }
+-            objectItems(objects, identifier, count, onDelete, onMove, level, factory)
++            let keys = blockKeys(blockIdentity: blockIdentity, identity: { identifier(objects[$0]) })
++            objectItems(objects, keys, count, onDelete, onMove, level, factory)
+             content.add(Content.objectItems(objects, identifier, onMove))
+             collectedItemCount += objects.count
+             incrementCurrentSectionItemCount(by: objects.count)
+         }
+-        self.objectBindingItems = { binding, identifier, editActions, onDelete, onMove, level, factory in
++        self.objectBindingItems = { binding, identifier, blockIdentity, editActions, onDelete, onMove, level, factory in
+             if case .sectionFooter = lastContent {
+                 _ = self.sectionHeader(listOf(), nil)
+             }
+-            objectBindingItems(binding, identifier, count, editActions, onDelete, onMove, level, factory)
++            let keys = blockKeys(blockIdentity: blockIdentity, identity: { identifier(binding.wrappedValue[$0]) })
++            objectBindingItems(binding, keys, count, editActions, onDelete, onMove, level, factory)
+             content.add(Content.objectBindingItems(binding, identifier, onMove))
+             containsBindingItems = true
+             incrementCurrentSectionItemCount(by: binding.wrappedValue.count)
+@@ -205,16 +314,17 @@ public final class LazyItemCollector {
+             case .sectionFooter, nil:
+                 break
+             default:
+-                _ = self.sectionFooter(listOf(), nil)
++                _ = self.sectionFooter(listOf())
+             }
+-            let renderedCount = max(1, sectionHeader(renderables, sectionIdentity))
++            let sectionKey = beginSection(identity: sectionIdentity)
++            let renderedCount = max(1, sectionHeader(renderables, sectionKey))
+             content.add(Content.sectionHeader(renderedCount))
+             collectedItemCount += renderedCount
+             currentSectionItemCount = 0
+             return renderedCount
+         }
+-        self.sectionFooter = { renderables, sectionIdentity in
+-            let renderedCount = max(1, sectionFooter(renderables, sectionIdentity, currentSectionItemCount))
++        self.sectionFooter = { renderables in
++            let renderedCount = max(1, sectionFooter(renderables, endSection(), currentSectionItemCount))
+             content.add(Content.sectionFooter(renderedCount))
+             collectedItemCount += renderedCount
+             currentSectionItemCount = nil
+diff --git a/Sources/SkipUI/SkipUI/Containers/LazyVGrid.swift b/Sources/SkipUI/SkipUI/Containers/LazyVGrid.swift
+index 37179bb..a991611 100644
+--- a/Sources/SkipUI/SkipUI/Containers/LazyVGrid.swift
++++ b/Sources/SkipUI/SkipUI/Containers/LazyVGrid.swift
+@@ -141,9 +141,9 @@ public struct LazyVGrid: View, Renderable {
+                                     }
+                                 }
+                             },
+-                            indexedItems: { range, identifier, _, _, _, _, factory in
++                            indexedItems: { range, keys, _, _, _, _, factory in
+                                 let count = range.endExclusive - range.start
+-                                let key: ((Int) -> String)? = identifier == nil ? nil : { composeBundleString(for: identifier!($0 + range.start)) }
++                                let key: ((Int) -> String)? = keys == nil ? nil : { keys!.key(at: $0) }
+                                 items(count: count, key: key) { index in
+                                     Box(contentAlignment: boxAlignment) {
+                                         let scopedContext = context.content(scope: self)
+@@ -151,8 +151,8 @@ public struct LazyVGrid: View, Renderable {
+                                     }
+                                 }
+                             },
+-                            objectItems: { objects, identifier, _, _, _, _, factory in
+-                                let key: (Int) -> String = { composeBundleString(for: identifier(objects[$0])) }
++                            objectItems: { objects, keys, _, _, _, _, factory in
++                                let key: (Int) -> String = { keys.key(at: $0) }
+                                 items(count: objects.count, key: key) { index in
+                                     Box(contentAlignment: boxAlignment) {
+                                         let scopedContext = context.content(scope: self)
+@@ -160,8 +160,8 @@ public struct LazyVGrid: View, Renderable {
+                                     }
+                                 }
+                             },
+-                            objectBindingItems: { objectsBinding, identifier, _, _, _, _, _, factory in
+-                                let key: (Int) -> String = { composeBundleString(for: identifier(objectsBinding.wrappedValue[$0])) }
++                            objectBindingItems: { objectsBinding, keys, _, _, _, _, _, factory in
++                                let key: (Int) -> String = { keys.key(at: $0) }
+                                 items(count: objectsBinding.wrappedValue.count, key: key) { index in
+                                     Box(contentAlignment: boxAlignment) {
+                                         let scopedContext = context.content(scope: self)
+diff --git a/Sources/SkipUI/SkipUI/Containers/LazyVStack.swift b/Sources/SkipUI/SkipUI/Containers/LazyVStack.swift
+index 567a8e3..582faa4 100644
+--- a/Sources/SkipUI/SkipUI/Containers/LazyVStack.swift
++++ b/Sources/SkipUI/SkipUI/Containers/LazyVStack.swift
+@@ -132,23 +132,23 @@ public struct LazyVStack : View, Renderable {
+                                     renderable.Render(context: context.content(scope: self))
+                                 }
+                             },
+-                            indexedItems: { range, identifier, _, _, _, _, factory in
++                            indexedItems: { range, keys, _, _, _, _, factory in
+                                 let count = range.endExclusive - range.start
+-                                let key: ((Int) -> String)? = identifier == nil ? nil : { composeBundleString(for: identifier!($0 + range.start)) }
++                                let key: ((Int) -> String)? = keys == nil ? nil : { keys!.key(at: $0) }
+                                 items(count: count, key: key) { index in
+                                     let scopedContext = context.content(scope: self)
+                                     factory(index + range.start, scopedContext).Render(context: scopedContext)
+                                 }
+                             },
+-                            objectItems: { objects, identifier, _, _, _, _, factory in
+-                                let key: (Int) -> String = { composeBundleString(for: identifier(objects[$0])) }
++                            objectItems: { objects, keys, _, _, _, _, factory in
++                                let key: (Int) -> String = { keys.key(at: $0) }
+                                 items(count: objects.count, key: key) { index in
+                                     let scopedContext = context.content(scope: self)
+                                     factory(objects[index], scopedContext).Render(context: scopedContext)
+                                 }
+                             },
+-                            objectBindingItems: { objectsBinding, identifier, _, _, _, _, _, factory in
+-                                let key: (Int) -> String = { composeBundleString(for: identifier(objectsBinding.wrappedValue[$0])) }
++                            objectBindingItems: { objectsBinding, keys, _, _, _, _, _, factory in
++                                let key: (Int) -> String = { keys.key(at: $0) }
+                                 items(count: objectsBinding.wrappedValue.count, key: key) { index in
+                                     let scopedContext = context.content(scope: self)
+                                     factory(objectsBinding, index, scopedContext).Render(context: scopedContext)
+diff --git a/Sources/SkipUI/SkipUI/Containers/List.swift b/Sources/SkipUI/SkipUI/Containers/List.swift
+index df38971..63b6ce5 100644
+--- a/Sources/SkipUI/SkipUI/Containers/List.swift
++++ b/Sources/SkipUI/SkipUI/Containers/List.swift
+@@ -352,7 +352,6 @@ public final class List : View, Renderable {
+                 return "\(baseKey)#\(occurrence)"
+             }
+ 
+-            var sectionIndex = -1
+             var startItemIndex = hasHeader ? 1 : 0 // Header inset
+             if isSearchable {
+                 startItemIndex += 1 // Search field
+@@ -379,9 +378,9 @@ public final class List : View, Renderable {
+                         }
+                     }
+                 },
+-                indexedItems: { range, identifier, offset, onDelete, onMove, level, factory in
++                indexedItems: { range, keys, offset, onDelete, onMove, level, factory in
+                     let count = range.endExclusive - range.start
+-                    let key: ((Int) -> String)? = identifier == nil ? nil : { composeBundleString(for: identifier!(range.start + itemCollector.value.remapIndex($0, from: offset))) }
++                    let key: ((Int) -> String)? = keys == nil ? nil : { keys!.key(at: itemCollector.value.remapIndex($0, from: offset)) }
+                     items(count: count, key: key) { index in
+                         let keyValue = key?(index) // Key closure already remaps index
+                         let index = itemCollector.value.remapIndex(index, from: offset)
+@@ -403,8 +402,8 @@ public final class List : View, Renderable {
+                         }
+                     }
+                 },
+-                objectItems: { objects, identifier, offset, onDelete, onMove, level, factory in
+-                    let key: (Int) -> String = { composeBundleString(for: identifier(objects[itemCollector.value.remapIndex($0, from: offset)])) }
++                objectItems: { objects, keys, offset, onDelete, onMove, level, factory in
++                    let key: (Int) -> String = { keys.key(at: itemCollector.value.remapIndex($0, from: offset)) }
+                     items(count: objects.count, key: key) { index in
+                         let keyValue = key(index) // Key closure already remaps index
+                         let index = itemCollector.value.remapIndex(index, from: offset)
+@@ -426,8 +425,8 @@ public final class List : View, Renderable {
+                         }
+                     }
+                 },
+-                objectBindingItems: { objectsBinding, identifier, offset, editActions, onDelete, onMove, level, factory in
+-                    let key: (Int) -> String = { composeBundleString(for: identifier(objectsBinding.wrappedValue[itemCollector.value.remapIndex($0, from: offset)])) }
++                objectBindingItems: { objectsBinding, keys, offset, editActions, onDelete, onMove, level, factory in
++                    let key: (Int) -> String = { keys.key(at: itemCollector.value.remapIndex($0, from: offset)) }
+                     items(count: objectsBinding.wrappedValue.count, key: key) { index in
+                         let keyValue = key(index) // Key closure already remaps index
+                         let index = itemCollector.value.remapIndex(index, from: offset)
+@@ -449,10 +448,7 @@ public final class List : View, Renderable {
+                         }
+                     }
+                 },
+-                sectionHeader: { content, sectionIdentity in
+-                    sectionIndex += 1
+-                    let currentSectionIndex = sectionIndex
+-                    let sectionKey = Self.sectionKey(for: sectionIdentity, fallbackIndex: currentSectionIndex)
++                sectionHeader: { content, sectionKey in
+                     let headerRenderables = content.size == 0 ? listOf(EmptyView()) : content
+                     let firstRenderable = (renderables.firstOrNull() as? LazySectionHeader)?.content.firstOrNull()
+                     let isTop = firstRenderable === headerRenderables.firstOrNull()
+@@ -493,9 +489,7 @@ public final class List : View, Renderable {
+                     }
+                     return renderedCount
+                 },
+-                sectionFooter: { content, sectionIdentity, sectionItemCount in
+-                    let currentSectionIndex = sectionIndex
+-                    let sectionKey = Self.sectionKey(for: sectionIdentity, fallbackIndex: currentSectionIndex)
++                sectionFooter: { content, sectionKey, sectionItemCount in
+                     let footerRenderables = content.size == 0 ? listOf(EmptyView()) : content
+                     let currentSectionItemCount = sectionItemCount ?? 0
+                     currentSectionBodyItemCounts[sectionKey] = currentSectionItemCount
+@@ -603,18 +597,6 @@ public final class List : View, Renderable {
+         content(animate ? animatedModifier : Modifier)
+     }
+ 
+-    /// Build a stable key for section chrome animation state.
+-    private static func sectionKey(for sectionIdentity: Any?, fallbackIndex: Int) -> String {
+-        guard let sectionIdentity else {
+-            // Sections without an explicit identity can only be tracked by their rendered order.
+-            return "index-\(fallbackIndex)"
+-        }
+-
+-        // Prefer explicit Section/ForEach identity so chrome animation state follows the section
+-        // across insertions and deletions instead of sticking to a numeric position.
+-        return "id-\(composeBundleString(for: sectionIdentity))"
+-    }
+-
+     /// Tracks section chrome placement separately from row animation state.
+     final class SectionChromeAnimationState {
+         var sectionBodyItemCounts: kotlin.collections.Map<String, Int> = mapOf()
+diff --git a/Sources/SkipUI/SkipUI/Containers/Section.swift b/Sources/SkipUI/SkipUI/Containers/Section.swift
+index 143cc55..0da6455 100644
+--- a/Sources/SkipUI/SkipUI/Containers/Section.swift
++++ b/Sources/SkipUI/SkipUI/Containers/Section.swift
+@@ -4,6 +4,7 @@
+ import Foundation
+ #if SKIP
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.saveable.rememberSaveable
+ #endif
+ 
+ // SKIP @bridge
+@@ -87,7 +88,9 @@ public struct Section : View {
+         var renderables: kotlin.collections.MutableList<Renderable> = mutableListOf()
+         let headerRenderables = header?.Evaluate(context: context, options: 0)
+         if isLazy {
+-            renderables.add(LazySectionHeader(content: headerRenderables ?? listOf()))
++            // Remembered by position in the view tree, which is how SwiftUI identifies a Section
++            let identity = rememberSaveable { UUID().uuidString }
++            renderables.add(LazySectionHeader(content: headerRenderables ?? listOf(), identity: identity))
+         } else if let headerRenderables {
+             renderables.addAll(headerRenderables)
+         }
+diff --git a/Sources/SkipUI/SkipUI/Containers/Table.swift b/Sources/SkipUI/SkipUI/Containers/Table.swift
+index cbb877b..856eec3 100644
+--- a/Sources/SkipUI/SkipUI/Containers/Table.swift
++++ b/Sources/SkipUI/SkipUI/Containers/Table.swift
+@@ -114,7 +114,8 @@ public final class Table<ObjectType, ID> : View, Renderable where ObjectType: Id
+             }
+         }
+ 
+-        let key: (Int) -> String = { composeBundleString(for: data[$0].id) }
++        let keys = LazyItemKeys(prefix: "row", identity: { data[$0].id })
++        let key: (Int) -> String = { keys.key(at: $0) }
+         let isCompact = EnvironmentValues.shared.horizontalSizeClass == .compact
+         LazyColumn(state: listState, modifier: modifier) {
+             if headerSafeAreaHeight.value > 0 {
+diff --git a/Tests/SkipUITests/LazyItemCollectorTests.swift b/Tests/SkipUITests/LazyItemCollectorTests.swift
+index 5d75ea2..d9ff321 100644
+--- a/Tests/SkipUITests/LazyItemCollectorTests.swift
++++ b/Tests/SkipUITests/LazyItemCollectorTests.swift
+@@ -20,10 +20,11 @@ final class LazyItemCollectorTests: XCTestCase {
+                 { index in section * 10 + (index as! Int) },
+                 nil,
+                 nil,
++                nil,
+                 0,
+                 { _, _ in EmptyView() }
+             )
+-            _ = fixture.collector.sectionFooter(listOf(), section)
++            _ = fixture.collector.sectionFooter(listOf())
+         }
+ 
+         // Assert
+@@ -48,7 +49,7 @@ final class LazyItemCollectorTests: XCTestCase {
+         fixture.initialize()
+         let resetCount = fixture.collector.count
+ 
+-        fixture.collector.indexedItems(0..<4, nil, nil, nil, 0, { _, _ in EmptyView() })
++        fixture.collector.indexedItems(0..<4, nil, nil, nil, nil, 0, { _, _ in EmptyView() })
+ 
+         // Assert
+         XCTAssertEqual(initialCount, 1)
+@@ -71,6 +72,7 @@ final class LazyItemCollectorTests: XCTestCase {
+         fixture.collector.objectBindingItems(
+             binding,
+             { $0 as? Int },
++            nil,
+             EditActions(rawValue: 0),
+             nil,
+             nil,
+@@ -80,7 +82,7 @@ final class LazyItemCollectorTests: XCTestCase {
+ 
+         let initialCount = fixture.collector.count
+         values = [1, 2, 3, 4]
+-        fixture.collector.indexedItems(0..<1, nil, nil, nil, 0, { _, _ in EmptyView() })
++        fixture.collector.indexedItems(0..<1, nil, nil, nil, nil, 0, { _, _ in EmptyView() })
+ 
+         // Assert
+         XCTAssertEqual(initialCount, 2)
+@@ -101,6 +103,7 @@ final class LazyItemCollectorTests: XCTestCase {
+             10..<13,
+             { $0 as? Int },
+             nil,
++            nil,
+             { indexes, destination in
+                 movedFrom = indexes.first
+                 movedTo = destination
+@@ -108,8 +111,8 @@ final class LazyItemCollectorTests: XCTestCase {
+             0,
+             { _, _ in EmptyView() }
+         )
+-        _ = fixture.collector.sectionFooter(listOf(), "first")
+-        fixture.collector.objectItems(["a", "b"], { $0 as? String }, nil, nil, 0, { _, _ in EmptyView() })
++        _ = fixture.collector.sectionFooter(listOf())
++        fixture.collector.objectItems(["a", "b"], { $0 as? String }, nil, nil, nil, 0, { _, _ in EmptyView() })
+ 
+         let count = fixture.collector.count
+         let objectIndex = fixture.collector.index(for: "a")
+@@ -143,7 +146,7 @@ final class LazyItemCollectorTests: XCTestCase {
+         var values: any RandomAccessCollection<Any> = [1, 2, 3]
+         let binding = Binding<any RandomAccessCollection<Any>>(get: { values }, set: { values = $0 })
+         fixture.collector.objectBindingItems(
+-            binding, { $0 as? Int }, EditActions(rawValue: 0), nil, nil, 0,
++            binding, { $0 as? Int }, nil, EditActions(rawValue: 0), nil, nil, 0,
+             { _, _, _ in EmptyView() }
+         )
+ 
+@@ -156,7 +159,7 @@ final class LazyItemCollectorTests: XCTestCase {
+         let removedIndex = fixture.collector.index(for: 2)
+ 
+         fixture.initialize()
+-        fixture.collector.indexedItems(0..<2, nil, nil, nil, 0, { _, _ in EmptyView() })
++        fixture.collector.indexedItems(0..<2, nil, nil, nil, nil, 0, { _, _ in EmptyView() })
+         values = []
+ 
+         // Assert
+@@ -168,26 +171,358 @@ final class LazyItemCollectorTests: XCTestCase {
+     }
+ }
+ 
++// MARK: - Lazy Item Key Tests
++extension LazyItemCollectorTests {
++
++    func testRepeatedIDsWithinBlockGetDistinctKeys() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act
++        fixture.objects(["a", "b", "a", "a"], block: "block")
++        let keys = fixture.keys(ofBlock: 0)
++
++        // Assert
++        XCTAssertEqual(keys, ["foreach:block#0|a#0", "foreach:block#0|b#0", "foreach:block#0|a#1", "foreach:block#0|a#2"])
++    }
++
++    func testSameIDsInSeparateBlocksGetDistinctKeys() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act
++        _ = fixture.collector.sectionHeader(listOf(), "first-section")
++        fixture.objects(["routine", "as-needed"], block: "first-block")
++        fixture.objects(["routine"], block: "second-block")
++        _ = fixture.collector.sectionFooter(listOf())
++        _ = fixture.collector.sectionHeader(listOf(), "second-section")
++        fixture.objects(["routine", "as-needed"], block: "third-block")
++        _ = fixture.collector.sectionFooter(listOf())
++        let keys = fixture.allKeys()
++
++        // Assert
++        XCTAssertEqual(keys.count, 5)
++        XCTAssertEqual(Set(keys).count, 5)
++    }
++
++    func testBlockCollectedTwiceKeepsKeysUnique() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act
++        fixture.objects(["a", "b"], block: "shared")
++        fixture.objects(["a", "b"], block: "shared")
++        let first = fixture.keys(ofBlock: 0)
++        let second = fixture.keys(ofBlock: 1)
++
++        // Assert
++        XCTAssertEqual(first, ["foreach:shared#0|a#0", "foreach:shared#0|b#0"])
++        XCTAssertEqual(second, ["foreach:shared#1|a#0", "foreach:shared#1|b#0"])
++    }
++
++    func testLiteralIDsCannotForgeGeneratedSuffixes() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++        let ids: [Any] = ["a", "a#1", "a", "a|x#0", "a%23", "a#", "%"]
++
++        // Act
++        fixture.objects(ids, block: "block#0|x")
++        let keys = fixture.keys(ofBlock: 0)
++
++        // Assert
++        XCTAssertEqual(Set(keys).count, ids.count)
++        XCTAssertEqual(keys[1], "foreach:block%230%7Cx#0|a%231#0")
++        XCTAssertEqual(keys[2], "foreach:block%230%7Cx#0|a#1")
++        XCTAssertEqual(keys[4], "foreach:block%230%7Cx#0|a%2523#0")
++    }
++
++    func testKeysDoNotDependOnEvaluationOrder() {
++        // Arrange
++        let ids = ["x", "y", "x", "z", "x", "y"]
++        let inOrder = LazyItemKeys(prefix: "block", identity: { ids[$0] })
++        let outOfOrder = LazyItemKeys(prefix: "block", identity: { ids[$0] })
++
++        // Act
++        let expected = (0..<ids.count).map { inOrder.key(at: $0) }
++        let lastFirst = outOfOrder.key(at: 5)
++        let middle = outOfOrder.key(at: 2)
++        let repeated = (0..<3).map { _ in outOfOrder.key(at: 4) }
++        var actual: [String] = []
++        for position in stride(from: ids.count - 1, through: 0, by: -1) {
++            actual.insert(outOfOrder.key(at: position), at: 0)
++        }
++
++        // Assert
++        XCTAssertEqual(lastFirst, expected[5])
++        XCTAssertEqual(middle, expected[2])
++        XCTAssertEqual(repeated, [expected[4], expected[4], expected[4]])
++        XCTAssertEqual(actual, expected)
++        XCTAssertEqual(expected, ["block|x#0", "block|y#0", "block|x#1", "block|z#0", "block|x#2", "block|y#1"])
++    }
++
++    func testKeysSurviveConditionalSectionInsertionAndRemoval() {
++        // Arrange
++        let fixture = CollectorFixture()
++        let collectLaterSection = {
++            _ = fixture.collector.sectionHeader(listOf(), "later-section")
++            fixture.objects(["a", "b"], block: "later-block")
++            _ = fixture.collector.sectionFooter(listOf())
++        }
++
++        // Act
++        fixture.initialize()
++        collectLaterSection()
++        let before = fixture.allKeys()
++        let beforeSection = fixture.headerKeys
++
++        fixture.initialize()
++        _ = fixture.collector.sectionHeader(listOf(), "inserted-section")
++        fixture.objects(["a", "b"], block: "inserted-block")
++        _ = fixture.collector.sectionFooter(listOf())
++        collectLaterSection()
++        let inserted = fixture.keys(ofBlock: 1)
++        let insertedSections = fixture.headerKeys
++
++        fixture.initialize()
++        collectLaterSection()
++        let removed = fixture.allKeys()
++
++        // Assert
++        XCTAssertEqual(inserted, before)
++        XCTAssertEqual(removed, before)
++        XCTAssertEqual(insertedSections[1], beforeSection[0])
++        XCTAssertEqual(Set(fixture.allKeys() + fixture.headerKeys).count, 3)
++    }
++
++    func testKeysFollowBlocksWhenSectionsReorder() {
++        // Arrange
++        let fixture = CollectorFixture()
++        let collect: (String) -> Void = { name in
++            _ = fixture.collector.sectionHeader(listOf(), "\(name)-section")
++            fixture.objects(["shared"], block: "\(name)-block")
++            _ = fixture.collector.sectionFooter(listOf())
++        }
++
++        // Act
++        fixture.initialize()
++        collect("first")
++        collect("second")
++        let before = fixture.allKeys()
++        let beforeSections = fixture.headerKeys
++
++        fixture.initialize()
++        collect("second")
++        collect("first")
++        let after = fixture.allKeys()
++        let afterSections = fixture.headerKeys
++
++        // Assert
++        XCTAssertEqual(after, [before[1], before[0]])
++        XCTAssertEqual(afterSections, [beforeSections[1], beforeSections[0]])
++    }
++
++    func testRepeatedSectionIdentitiesGetDistinctKeys() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act: one ForEach element yields two sections that carry the element's tag
++        _ = fixture.collector.sectionHeader(listOf(), "gabapentin")
++        fixture.objects(["dose"], block: nil)
++        _ = fixture.collector.sectionFooter(listOf())
++        _ = fixture.collector.sectionHeader(listOf(), "gabapentin")
++        fixture.objects(["dose"], block: nil)
++        _ = fixture.collector.sectionFooter(listOf())
++
++        // Assert
++        XCTAssertEqual(fixture.headerKeys, ["id-gabapentin#0", "id-gabapentin#1"])
++        XCTAssertEqual(fixture.footerKeys, fixture.headerKeys)
++        XCTAssertEqual(Set(fixture.allKeys()).count, 2)
++    }
++
++    func testImplicitSectionsGetDistinctKeys() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act: loose rows before the first section and after a section get implicit section chrome
++        fixture.objects(["a"], block: "leading")
++        _ = fixture.collector.sectionHeader(listOf(), nil)
++        fixture.objects(["a"], block: "middle")
++        _ = fixture.collector.sectionFooter(listOf())
++        fixture.objects(["a"], block: "trailing")
++        _ = fixture.collector.sectionFooter(listOf())
++
++        // Assert
++        let sectionKeys = fixture.headerKeys + fixture.footerKeys
++        XCTAssertEqual(fixture.headerKeys.count, 2)
++        XCTAssertEqual(fixture.footerKeys.count, 3)
++        XCTAssertEqual(Set(sectionKeys).count, 3)
++        XCTAssertEqual(Array(fixture.footerKeys.suffix(2)), fixture.headerKeys)
++    }
++
++    func testUnidentifiedBlocksAreKeyedByPositionWithinTheirSection() {
++        // Arrange
++        let fixture = CollectorFixture()
++        let collectSecondSection = {
++            _ = fixture.collector.sectionHeader(listOf(), "second")
++            fixture.objects(["a"], block: nil)
++            _ = fixture.collector.sectionFooter(listOf())
++        }
++
++        // Act
++        fixture.initialize()
++        _ = fixture.collector.sectionHeader(listOf(), "first")
++        fixture.objects(["a"], block: nil)
++        _ = fixture.collector.sectionFooter(listOf())
++        collectSecondSection()
++        let before = fixture.allKeys()
++
++        fixture.initialize()
++        _ = fixture.collector.sectionHeader(listOf(), "first")
++        fixture.objects(["a"], block: nil)
++        fixture.objects(["a"], block: nil)
++        _ = fixture.collector.sectionFooter(listOf())
++        collectSecondSection()
++        let after = fixture.allKeys()
++
++        // Assert
++        XCTAssertEqual(before.count, 2)
++        XCTAssertEqual(Set(after).count, 3)
++        XCTAssertEqual(after[0], before[0])
++        XCTAssertEqual(after[2], before[1])
++    }
++
++    func testIndexedBlockWithoutIdentifierLeavesKeysToCompose() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act
++        fixture.collector.indexedItems(0..<3, nil, "block", nil, nil, 0, { _, _ in EmptyView() })
++        fixture.collector.indexedItems(0..<3, { $0 as? Int }, "block", nil, nil, 0, { _, _ in EmptyView() })
++
++        // Assert
++        XCTAssertNil(fixture.blocks[0].keys)
++        XCTAssertEqual(fixture.keys(ofBlock: 1), ["foreach:block#0|0#0", "foreach:block#0|1#0", "foreach:block#0|2#0"])
++    }
++
++    func testScrollTargetsResolveThroughOriginalIDs() {
++        // Arrange
++        let fixture = CollectorFixture()
++        fixture.initialize()
++
++        // Act
++        _ = fixture.collector.sectionHeader(listOf(), "first")
++        fixture.objects(["routine", "as-needed"], block: "first-block")
++        _ = fixture.collector.sectionFooter(listOf())
++        _ = fixture.collector.sectionHeader(listOf(), "second")
++        fixture.objects(["routine", "target"], block: "second-block")
++        _ = fixture.collector.sectionFooter(listOf())
++
++        // Assert
++        XCTAssertEqual(fixture.collector.index(for: "routine"), 3)
++        XCTAssertEqual(fixture.collector.index(for: "target"), 10)
++        XCTAssertEqual(fixture.collector.id(for: 9) as? String, "routine")
++        XCTAssertNil(fixture.collector.index(for: fixture.keys(ofBlock: 1)[1]))
++    }
++
++    func testBindingBlockKeysFollowRowsAcrossMoveAndDelete() {
++        // Arrange
++        let fixture = CollectorFixture()
++        var values: any RandomAccessCollection<Any> = ["a", "b", "a", "c"]
++        let binding = Binding<any RandomAccessCollection<Any>>(get: { values }, set: { values = $0 })
++        let collect = {
++            fixture.initialize()
++            fixture.collector.objectBindingItems(
++                binding, { $0 as? String }, "block", EditActions(rawValue: 0), nil, nil, 0,
++                { _, _, _ in EmptyView() }
++            )
++        }
++
++        // Act
++        collect()
++        let before = fixture.keys(ofBlock: 0)
++        values = ["c", "a", "b"]
++        collect()
++        let after = fixture.keys(ofBlock: 0)
++
++        // Assert
++        XCTAssertEqual(before, ["foreach:block#0|a#0", "foreach:block#0|b#0", "foreach:block#0|a#1", "foreach:block#0|c#0"])
++        XCTAssertEqual(after, [before[3], before[0], before[1]])
++    }
++}
++
+ // MARK: - Helpers
+ private extension LazyItemCollectorTests {
+ 
+     final class CollectorFixture {
+         let collector = LazyItemCollector()
+         var offsets: [Int] = []
++        /// The blocks collected since the last `initialize()`, in list order.
++        var blocks: [CollectedBlock] = []
++        var headerKeys: [String] = []
++        var footerKeys: [String] = []
+ 
+         /// Initializes callbacks with two lazy slots for each section header and footer.
+         func initialize() {
+             offsets = []
++            blocks = []
++            headerKeys = []
++            footerKeys = []
+             collector.initialize(
+                 startItemIndex: 1,
+                 item: { _, _ in },
+-                indexedItems: { _, _, offset, _, _, _, _ in self.offsets.append(offset) },
+-                objectItems: { _, _, offset, _, _, _, _ in self.offsets.append(offset) },
+-                objectBindingItems: { _, _, offset, _, _, _, _, _ in self.offsets.append(offset) },
+-                sectionHeader: { _, _ in 2 },
+-                sectionFooter: { _, _, _ in 2 }
++                indexedItems: { range, keys, offset, _, _, _, _ in
++                    self.offsets.append(offset)
++                    self.blocks.append(CollectedBlock(keys: keys, count: range.endExclusive - range.start))
++                },
++                objectItems: { objects, keys, offset, _, _, _, _ in
++                    self.offsets.append(offset)
++                    self.blocks.append(CollectedBlock(keys: keys, count: objects.count))
++                },
++                objectBindingItems: { binding, keys, offset, _, _, _, _, _ in
++                    self.offsets.append(offset)
++                    self.blocks.append(CollectedBlock(keys: keys, count: binding.wrappedValue.count))
++                },
++                sectionHeader: { _, key in
++                    self.headerKeys.append(key)
++                    return 2
++                },
++                sectionFooter: { _, key, _ in
++                    self.footerKeys.append(key)
++                    return 2
++                }
+             )
+         }
++
++        /// Collects one block of string-identified objects.
++        func objects(_ ids: [Any], block: String?) {
++            collector.objectItems(ids, { $0 as? String }, block, nil, nil, 0, { _, _ in EmptyView() })
++        }
++
++        /// The keys of one collected block, in data order.
++        func keys(ofBlock index: Int) -> [String] {
++            let block = blocks[index]
++            guard let keys = block.keys else {
++                return []
++            }
++            return (0..<block.count).map { keys.key(at: $0) }
++        }
++
++        /// Every key the collected blocks produce, in list order.
++        func allKeys() -> [String] {
++            return blocks.indices.flatMap { keys(ofBlock: $0) }
++        }
++    }
++
++    struct CollectedBlock {
++        let keys: LazyItemKeys?
++        let count: Int
+     }
+ }
+ #endif
+diff --git a/Tests/SkipUITests/LazyKeyTests.swift b/Tests/SkipUITests/LazyKeyTests.swift
+new file mode 100644
+index 0000000..0c6faf9
+--- /dev/null
++++ b/Tests/SkipUITests/LazyKeyTests.swift
+@@ -0,0 +1,336 @@
++// Copyright 2026 Skip
++// SPDX-License-Identifier: MPL-2.0
++import SwiftUI
++import XCTest
++
++#if SKIP
++import androidx.activity.ComponentActivity
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.saveable.Saver
++import androidx.compose.runtime.saveable.rememberSaveable
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.test.assertCountEquals
++import androidx.compose.ui.test.assertIsDisplayed
++import androidx.compose.ui.test.junit4.createAndroidComposeRule
++import androidx.compose.ui.test.onAllNodesWithText
++import androidx.compose.ui.test.onNodeWithTag
++import androidx.compose.ui.test.onNodeWithText
++import androidx.compose.ui.test.performClick
++import androidx.compose.ui.test.performTouchInput
++import androidx.compose.ui.test.swipeLeft
++#endif
++
++/// Verifies that lazy containers accept IDs that repeat within and across `ForEach` blocks and sections, as SwiftUI does,
++/// and that rows keep their state when sections are inserted, removed or reordered.
++final class LazyKeyTests: SkipUITestCase {
++    // SKIP INSERT: @get:org.junit.Rule val composeRule = createAndroidComposeRule<ComponentActivity>()
++
++    func testListAcceptsIDsRepeatedAcrossSections() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        composeRule.setContent {
++            LazyKeyRepeatedAcrossSectionsList().Compose()
++        }
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("routine").assertCountEquals(2)
++        composeRule.onAllNodesWithText("as-needed").assertCountEquals(2)
++        #endif
++    }
++
++    func testListAcceptsIDsRepeatedWithinForEach() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        composeRule.setContent {
++            LazyKeyRepeatedWithinForEachList().Compose()
++        }
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("repeated").assertCountEquals(3)
++        composeRule.onAllNodesWithText("single").assertCountEquals(1)
++        #endif
++    }
++
++    func testListAcceptsSectionsFromOneElement() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        composeRule.setContent {
++            LazyKeySectionsFromOneElementList().Compose()
++        }
++        composeRule.waitForIdle()
++
++        composeRule.onNodeWithText("gabapentin doses").assertIsDisplayed()
++        composeRule.onNodeWithText("gabapentin ceiling").assertIsDisplayed()
++        #endif
++    }
++
++    func testLazyVStackAcceptsIDsRepeatedAcrossForEachBlocks() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        composeRule.setContent {
++            LazyKeyRepeatedStack().Compose()
++        }
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("routine").assertCountEquals(3)
++        #endif
++    }
++
++    func testLazyVGridAcceptsIDsRepeatedAcrossForEachBlocks() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        composeRule.setContent {
++            LazyKeyRepeatedGrid().Compose()
++        }
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("routine").assertCountEquals(3)
++        #endif
++    }
++
++    func testRowStateSurvivesConditionalSectionInsertionAndRemoval() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        let showsFirst = State(initialValue: false)
++        composeRule.setContent {
++            LazyKeyConditionalSectionList(showsFirst: showsFirst).Compose()
++        }
++        composeRule.waitForIdle()
++        composeRule.onNodeWithText("second-row: 0").performClick()
++        composeRule.waitForIdle()
++        composeRule.onAllNodesWithText("second-row: 1").assertCountEquals(1)
++
++        showsFirst.wrappedValue = true
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("first-row: 0").assertCountEquals(1)
++        composeRule.onAllNodesWithText("second-row: 1").assertCountEquals(1)
++
++        showsFirst.wrappedValue = false
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("second-row: 1").assertCountEquals(1)
++        #endif
++    }
++
++    func testRowStateFollowsReorderedSections() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        let order = State(initialValue: ["a", "b"])
++        composeRule.setContent {
++            LazyKeyReorderedSectionsList(order: order).Compose()
++        }
++        composeRule.waitForIdle()
++        composeRule.onNodeWithText("a-row: 0").performClick()
++        composeRule.waitForIdle()
++        composeRule.onAllNodesWithText("a-row: 1").assertCountEquals(1)
++        composeRule.onAllNodesWithText("b-row: 0").assertCountEquals(1)
++
++        order.wrappedValue = ["b", "a"]
++        composeRule.waitForIdle()
++
++        composeRule.onAllNodesWithText("a-row: 1").assertCountEquals(1)
++        composeRule.onAllNodesWithText("b-row: 0").assertCountEquals(1)
++        #endif
++    }
++
++    func testSwipeDeleteRemovesOnlyTheSwipedRowOfARepeatedID() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        let first = State(initialValue: ["routine", "as-needed"])
++        let second = State(initialValue: ["routine", "as-needed"])
++        composeRule.setContent {
++            LazyKeyDeletableSectionsList(first: first, second: second).Compose()
++        }
++        composeRule.waitForIdle()
++
++        composeRule.onNodeWithText("second routine").performTouchInput { swipeLeft() }
++        composeRule.waitForIdle()
++
++        XCTAssertEqual(first.wrappedValue, ["routine", "as-needed"])
++        XCTAssertEqual(second.wrappedValue, ["as-needed"])
++        composeRule.onAllNodesWithText("first routine").assertCountEquals(1)
++        composeRule.onAllNodesWithText("second routine").assertCountEquals(0)
++        #endif
++    }
++
++    func testScrollToResolvesOriginalIDs() throws {
++        #if !SKIP
++        throw XCTSkip("Compose lazy keys are Android-only")
++        #else
++        composeRule.setContent {
++            LazyKeyScrollToList().Compose()
++        }
++        composeRule.waitForIdle()
++        composeRule.onAllNodesWithText("target").assertCountEquals(0)
++
++        composeRule.onNodeWithTag("scroll").performClick()
++        composeRule.waitForIdle()
++
++        composeRule.onNodeWithText("target").assertIsDisplayed()
++        #endif
++    }
++}
++
++#if SKIP
++private let lazyKeyKinds = ["routine", "as-needed"]
++
++private struct LazyKeyRepeatedAcrossSectionsList: View {
++    var body: some View {
++        List {
++            Section("Reminders") {
++                ForEach(lazyKeyKinds, id: \.self) { Text($0) }
++            }
++            Section("Snoozed") {
++                ForEach(lazyKeyKinds, id: \.self) { Text($0) }
++            }
++        }
++    }
++}
++
++private struct LazyKeyRepeatedWithinForEachList: View {
++    var body: some View {
++        List {
++            ForEach(["repeated", "single", "repeated", "repeated"], id: \.self) { Text($0) }
++        }
++    }
++}
++
++private struct LazyKeySectionsFromOneElementList: View {
++    var body: some View {
++        List {
++            ForEach(["gabapentin"], id: \.self) { name in
++                Section("Doses") {
++                    Text("\(name) doses")
++                }
++                Section("Ceiling") {
++                    Text("\(name) ceiling")
++                }
++            }
++        }
++    }
++}
++
++private struct LazyKeyRepeatedStack: View {
++    var body: some View {
++        ScrollView {
++            LazyVStack {
++                ForEach(lazyKeyKinds, id: \.self) { Text($0) }
++                ForEach(["routine", "routine"], id: \.self) { Text($0) }
++            }
++        }
++    }
++}
++
++private struct LazyKeyRepeatedGrid: View {
++    var body: some View {
++        ScrollView {
++            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
++                ForEach(lazyKeyKinds, id: \.self) { Text($0) }
++                ForEach(["routine", "routine"], id: \.self) { Text($0) }
++            }
++        }
++    }
++}
++
++/// A row whose tap count lives in its own state, so the count shows whether Compose kept the row's composition.
++private struct LazyKeyCounterRow: View {
++    let label: String
++    @State var count = 0
++
++    var body: some View {
++        Button("\(label): \(count)") {
++            count += 1
++        }
++    }
++}
++
++private struct LazyKeyConditionalSectionList: View {
++    let showsFirst: State<Bool>
++
++    var body: some View {
++        List {
++            if showsFirst.wrappedValue {
++                Section("First") {
++                    ForEach(["row"], id: \.self) { LazyKeyCounterRow(label: "first-\($0)") }
++                }
++            }
++            Section("Second") {
++                ForEach(["row"], id: \.self) { LazyKeyCounterRow(label: "second-\($0)") }
++            }
++        }
++    }
++}
++
++private struct LazyKeyReorderedSectionsList: View {
++    let order: State<[String]>
++
++    var body: some View {
++        List {
++            ForEach(order.wrappedValue, id: \.self) { group in
++                Section(group) {
++                    ForEach(["row"], id: \.self) { LazyKeyCounterRow(label: "\(group)-\($0)") }
++                }
++            }
++        }
++    }
++}
++
++private struct LazyKeyDeletableSectionsList: View {
++    let first: State<[String]>
++    let second: State<[String]>
++
++    var body: some View {
++        List {
++            Section("First") {
++                ForEach(first.wrappedValue, id: \.self) { Text("first \($0)") }
++                    .onDelete { first.wrappedValue = removing($0, from: first.wrappedValue) }
++            }
++            Section("Second") {
++                ForEach(second.wrappedValue, id: \.self) { Text("second \($0)") }
++                    .onDelete { second.wrappedValue = removing($0, from: second.wrappedValue) }
++            }
++        }
++    }
++
++    private func removing(_ offsets: IndexSet, from values: [String]) -> [String] {
++        var remaining = values
++        for offset in Array(offsets).sorted(by: >) {
++            remaining.remove(at: offset)
++        }
++        return remaining
++    }
++}
++
++private struct LazyKeyScrollToList: View {
++    var body: some View {
++        ScrollViewReader { proxy in
++            VStack {
++                Button("Scroll") {
++                    proxy.scrollTo("target")
++                }
++                .accessibilityIdentifier("scroll")
++                List {
++                    Section("First") {
++                        ForEach(0..<30, id: \.self) { Text("first \($0)") }
++                    }
++                    Section("Second") {
++                        ForEach(0..<30, id: \.self) { Text("second \($0)") }
++                        ForEach(["target"], id: \.self) { Text($0) }
++                    }
++                }
++            }
++        }
++    }
++}
++#endif
