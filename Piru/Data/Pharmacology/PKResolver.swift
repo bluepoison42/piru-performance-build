@@ -59,10 +59,21 @@ enum PKResolver {
     /// have no acute onset/peak/offset curve, and their terminal half-life is
     /// governed by slow release (flip-flop kinetics), not the molecule's elimination.
     static func isDepot(entry: DoseEntry) -> Bool {
-        if entry.releaseForm == "DEP" { return true }
-        guard entry.route == .intramuscular || entry.route == .subcutaneous else { return false }
-        let uid = entry.substanceUID ?? SubstanceLibrary.substanceUID(for: entry.substance)
-        return SubstanceStore.shared.isEster(entry.saltForm, forParentUID: uid)
+        isDepot(
+            releaseForm: entry.releaseForm, route: entry.route, saltForm: entry.saltForm,
+            substanceUID: entry.substanceUID, substance: entry.substance,
+        )
+    }
+
+    /// ``isDepot(entry:)`` over the dose fields it reads, for a caller holding a value
+    /// snapshot of the dose.
+    static func isDepot(
+        releaseForm: String?, route: RouteOfAdministration, saltForm: String?, substanceUID: String?, substance: String,
+    ) -> Bool {
+        if releaseForm == "DEP" { return true }
+        guard route == .intramuscular || route == .subcutaneous else { return false }
+        let uid = substanceUID ?? SubstanceLibrary.substanceUID(for: substance)
+        return SubstanceStore.shared.isEster(saltForm, forParentUID: uid)
     }
 
     /// The depot terminal half-life (minutes) for a depot dose, or `nil` when the
@@ -78,9 +89,15 @@ enum PKResolver {
     /// ``isDepot(entry:)`` — the check reads the entry's route, form and salt
     /// and resolves the parent substance, so a per-entry loop asks once.
     static func depotHalfLifeMinutes(entry: DoseEntry, isDepot: Bool) -> Double? {
+        depotHalfLifeMinutes(substanceUID: entry.substanceUID, substance: entry.substance, saltForm: entry.saltForm, isDepot: isDepot)
+    }
+
+    /// ``depotHalfLifeMinutes(entry:isDepot:)`` over the dose fields it reads, for a caller
+    /// holding a value snapshot of the dose.
+    static func depotHalfLifeMinutes(substanceUID: String?, substance: String, saltForm: String?, isDepot: Bool) -> Double? {
         guard isDepot else { return nil }
-        if let uid = entry.substanceUID ?? SubstanceLibrary.substanceUID(for: entry.substance),
-           let label = entry.saltForm,
+        if let uid = substanceUID ?? SubstanceLibrary.substanceUID(for: substance),
+           let label = saltForm,
            let k1 = SubstanceStore.shared.esters(forParentUID: uid).first(where: { $0.label == label })?.parameters?.k1,
            k1 > 0 {
             return log(2) / k1 * 24 * 60 // days → minutes

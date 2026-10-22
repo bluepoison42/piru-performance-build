@@ -42,8 +42,20 @@ extension DoseEntry {
     /// `duration` with its onset moved later by what was eaten before this dose.
     @MainActor
     func applyingMeal(to duration: DurationProfile?) -> DurationProfile? {
+        MealState.shifting(duration, by: meal, substance: substance, product: productName, route: route)
+    }
+}
+
+extension MealState {
+    /// `duration` with its onset moved later by `meal`, eaten before a dose of `substance`
+    /// (logged as `product`) taken by `route`: what ``DoseEntry/applyingMeal(to:)`` does,
+    /// for a caller holding a value snapshot of the dose.
+    @MainActor
+    static func shifting(
+        _ duration: DurationProfile?, by meal: MealState?, substance: String, product: String?, route: RouteOfAdministration,
+    ) -> DurationProfile? {
         guard let duration, let meal,
-              let delay = meal.onsetDelay(forSubstance: substance, product: productName, route: route),
+              let delay = meal.onsetDelay(forSubstance: substance, product: product, route: route),
               delay.minutes > 0
         else { return duration }
         return duration.delayingOnset(by: delay.minutes)

@@ -31,6 +31,12 @@ extension DoseEntry {
     /// `nonisolated` so the off-main timeline derive can ask without hopping; it
     /// reads only the entry's own stored string.
     nonisolated var namesUnmodeledForm: Bool {
+        Self.namesUnmodeledForm(releaseForm: releaseForm)
+    }
+
+    /// ``namesUnmodeledForm`` for a dose logged with `releaseForm`, for a caller holding a
+    /// value snapshot of the dose.
+    nonisolated static func namesUnmodeledForm(releaseForm: String?) -> Bool {
         !BaseReleaseForm.contains(releaseForm)
     }
 
@@ -41,6 +47,13 @@ extension DoseEntry {
     /// name, so it resolves the umbrella `XR` code to the specific formulation.
     /// Main-actor: it reads the ``SubstanceLibrary`` product index.
     @MainActor var productDuration: DurationProfile? {
+        Self.productDuration(named: productName)
+    }
+
+    /// ``productDuration`` for a dose logged under `productName`, for a caller holding a
+    /// value snapshot of the dose.
+    @MainActor
+    static func productDuration(named productName: String?) -> DurationProfile? {
         guard let productName, !productName.isEmpty else { return nil }
         return SubstanceLibrary.productDuration(for: productName)
     }

@@ -79,7 +79,7 @@ struct ContextTests {
         #expect(try main.fetch(FetchDescriptor<ToleranceState>()).first?.sAcute == 0.9)
     }
 
-    /// Probe P07: BodyLevelsManager's long-lived context must see doses logged after it loaded.
+    /// Probe P07: a long-lived context must see doses logged after it loaded.
     @Test
     func `A long-lived context sees another context's insert, edit and delete on its next fetch`() throws {
         try seedJournal(store)

@@ -4,6 +4,40 @@ import SwiftUI
 
 // MARK: - Snapshot inputs (Sendable — cross the actor boundary to the sampler)
 
+/// One logged dose reduced to the stored fields a body-load plan reads, so the
+/// background warm fetches the log on ``DatabaseActor`` and hands the main actor
+/// values. The view-driven path maps its `@Query` entries the same way, so both
+/// paths resolve through one ``BodyLevelsManager/Plan/build``.
+nonisolated struct BodyLoadEntry: Sendable {
+    let substance: String
+    let substanceUID: String?
+    let amount: Double
+    let unit: String
+    let isUnknownDose: Bool
+    let timestamp: Date
+    let route: RouteOfAdministration
+    let saltForm: String?
+    let isomer: String?
+    let releaseForm: String?
+    let productName: String?
+    let meal: MealState?
+
+    init(_ entry: DoseEntry) {
+        substance = entry.substance
+        substanceUID = entry.substanceUID
+        amount = entry.amount
+        unit = entry.unit
+        isUnknownDose = entry.isUnknownDose
+        timestamp = entry.timestamp
+        route = entry.route
+        saltForm = entry.saltForm
+        isomer = entry.isomer
+        releaseForm = entry.releaseForm
+        productName = entry.productName
+        meal = entry.meal
+    }
+}
+
 /// One dose reduced to its grouping identity + resolved PK params, so the per-day
 /// body-load replay runs off the main actor. The `SubstanceLibrary`/duration
 /// lookups behind `ke`/`ka` are all `@MainActor`, so they happen once while
@@ -125,7 +159,6 @@ final class BodyLevelsManager {
     /// The latest trail per range; a newer key for a range replaces the older one.
     @ObservationIgnored private var cache: [BodyLevelsTrailCache.Key: BodyLoadTrail] = [:]
     @ObservationIgnored private var container: ModelContainer?
-    @ObservationIgnored private var context: ModelContext?
     @ObservationIgnored private var warmTask: Task<Void, Never>?
 
     /// The range warmed in the background, so a cold navigation to the graph lands
@@ -138,7 +171,6 @@ final class BodyLevelsManager {
     /// (only for the singleton — a test instance must not race the change stream).
     func configure(container: ModelContainer) {
         self.container = container
-        context = ModelContext(container)
         guard self === Self.shared else { return }
         startBackgroundWarm()
     }
@@ -158,7 +190,9 @@ final class BodyLevelsManager {
             trail = cached
             return
         }
-        trail = await computeAndCache(entries: entries, colors: colors, range: range, key: key, now: now)
+        trail = await computeAndCache(
+            entries: entries.map(BodyLoadEntry.init), colorMap: colors.colorMap, range: range, key: key, now: now,
+        )
     }
 
     // MARK: Background warm
@@ -180,9 +214,10 @@ final class BodyLevelsManager {
     /// Pre-fill the cache for the default range without touching ``trail`` (the
     /// user may be viewing another range). The log's identity is read off the
     /// main actor first; only a key nobody has built yet — in memory or on disk —
-    /// fetches the log and resolves it here.
+    /// fetches the log, as value snapshots on ``DatabaseActor``, and resolves it
+    /// here. The colors are the ones the key was built from.
     private func warm() async {
-        guard let container, let context else { return }
+        guard let container else { return }
         let now = Date.now
         let identity = await DoseLogIdentity.fetch(container: container)
         let key = Self.key(
@@ -197,10 +232,20 @@ final class BodyLevelsManager {
             store(cached, for: key)
             return
         }
+        guard let entries = await Self.fetchEntries(container: container) else { return }
+        let colorMap = Dictionary(
+            identity.colors.map { ($0.substance.lowercased(), $0.tint.color) }, uniquingKeysWith: { _, last in last },
+        )
+        _ = await computeAndCache(entries: entries, colorMap: colorMap, range: Self.warmRange, key: key, now: now)
+    }
+
+    /// The whole dose log, newest first, as value snapshots read through a context of
+    /// its own; `nil` when the fetch fails.
+    @DatabaseActor
+    private static func fetchEntries(container: ModelContainer) -> [BodyLoadEntry]? {
+        let context = ModelContext(container)
         let descriptor = FetchDescriptor<DoseEntry>(sortBy: [SortDescriptor(\.timestamp, order: .reverse)])
-        guard let entries = try? context.fetch(descriptor) else { return }
-        let colors = (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? []
-        _ = await computeAndCache(entries: entries, colors: colors, range: Self.warmRange, key: key, now: now)
+        return (try? context.fetch(descriptor))?.map(BodyLoadEntry.init)
     }
 
     // MARK: Compute
@@ -211,10 +256,10 @@ final class BodyLevelsManager {
     }
 
     private func computeAndCache(
-        entries: [DoseEntry], colors: [SubstanceColor],
+        entries: [BodyLoadEntry], colorMap: [String: Color],
         range: UsageTimeRange, key: BodyLevelsTrailCache.Key, now: Date,
     ) async -> BodyLoadTrail {
-        guard let plan = Plan.build(entries: entries, colors: colors, range: range, now: now) else {
+        guard let plan = Plan.build(entries: entries, colorMap: colorMap, range: range, now: now) else {
             let empty = BodyLoadTrail.empty
             store(empty, for: key)
             return empty
