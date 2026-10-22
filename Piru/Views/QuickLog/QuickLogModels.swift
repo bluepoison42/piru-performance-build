@@ -647,10 +647,13 @@ final class QuickLogContentModel {
                 .prefix(Self.recentCardLimit),
         )
         // Favorites with no recents card of their own (never logged) — matched by
-        // identity, since `cachedHistoryNames` holds card identity keys.
+        // identity, since `cachedHistoryNames` holds card identity keys. Two
+        // starred forms of one drug look up the same substance, which the list
+        // shows once.
         cachedFavoriteLibrarySubstances = favorites
             .filter { !cachedHistoryNames.contains($0.identityKey) }
             .compactMap { SubstanceLibrary.lookup($0.substance.lowercased()) }
+            .uniqued(by: \.id)
     }
 
     /// Rebuild only the routine-pill groups (the settings sheet edited a routine

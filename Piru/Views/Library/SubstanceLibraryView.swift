@@ -358,7 +358,11 @@ struct SubstanceCategoryListView: View {
             // aliases (e.g. "magnesium" is also an alias of Salicylic acid). The
             // rows show name and category, so the batch shell serves them; the
             // full resolve covers custom-only favorites the batch cache lacks.
-            favorites.compactMap { SubstanceLibrary.shell($0.substance) ?? SubstanceLibrary.resolveFull($0.substance) }
+            // Two favorites can resolve to one substance (two starred forms of
+            // one drug), and the list keys rows by substance.
+            favorites
+                .compactMap { SubstanceLibrary.shell($0.substance) ?? SubstanceLibrary.resolveFull($0.substance) }
+                .uniqued(by: \.id)
         }
         let favNames = Set(favorites.map { $0.substance.lowercased() })
         let mode = sortMode

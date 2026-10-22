@@ -23,14 +23,20 @@ struct CeilingEffectToolView: View {
         List {
             Group {
                 aboutSection
-                ForEach(SaturablePharmacology.profiles) { profile in
+                let profiles = ProfileRun(SaturablePharmacology.profiles)
+                ForEach(profiles.throughGabapentin) { profile in
                     Section { card(for: profile) }
-                    // The gabapentinoid teaching pair sits right after gabapentin's absorption ceiling:
-                    // same α2δ target, opposite dose→exposure behavior (pregabalin is dose-linear, so
-                    // it isn't a ceiling profile of its own — it only makes sense as this contrast).
-                    if profile.substanceName == "Gabapentin" {
-                        Section { gabapentinoidComparisonCard }
-                    }
+                }
+                // The gabapentinoid teaching pair sits right after gabapentin's absorption ceiling:
+                // same α2δ target, opposite dose→exposure behavior (pregabalin is dose-linear, so
+                // it isn't a ceiling profile of its own — it only makes sense as this contrast).
+                // It stays outside the profiles' ForEach: two Sections from one element share
+                // that element's id, which a lazy list on Android rejects as a duplicate key.
+                if profiles.hasGabapentin {
+                    Section { gabapentinoidComparisonCard }
+                }
+                ForEach(profiles.afterGabapentin) { profile in
+                    Section { card(for: profile) }
                 }
                 sourcesSection
             }
@@ -316,5 +322,21 @@ struct CeilingEffectToolView: View {
     private func multipleText(_ value: Double) -> String {
         if abs(value - value.rounded()) < 0.05 { return "\(Int(value.rounded()))" }
         return value >= 10 ? "\(Int(value.rounded()))" : String(format: "%.1f", value)
+    }
+}
+
+/// The profiles split at gabapentin, so the gabapentinoid comparison can follow its card.
+private struct ProfileRun {
+    let throughGabapentin: [SaturablePharmacology.Profile]
+    let afterGabapentin: [SaturablePharmacology.Profile]
+
+    var hasGabapentin: Bool {
+        throughGabapentin.last?.substanceName == "Gabapentin"
+    }
+
+    init(_ profiles: [SaturablePharmacology.Profile]) {
+        let split = profiles.firstIndex { $0.substanceName == "Gabapentin" }.map { $0 + 1 } ?? profiles.count
+        throughGabapentin = Array(profiles[..<split])
+        afterGabapentin = Array(profiles[split...])
     }
 }
