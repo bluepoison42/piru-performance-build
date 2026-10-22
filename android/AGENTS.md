@@ -38,10 +38,15 @@
   (skip-android-bridge, skip-foundation) to newer releases. After a build, diff
   `$PIRU_ANDROID/stage/Package.resolved` against the committed one: only vendored revisions
   may differ.
-- **Gradle can keep Kotlin from an older transpile.** After a vendor patch moves a package,
-  `package-apk.sh` may fail in a module the patch never touched (unresolved references in
-  `SkipFoundation`). Trash that module's `build/` under
+- **Gradle can keep Kotlin from an older transpile.** After a vendor patch or a dependency moves
+  a package, `package-apk.sh` may fail in a module the patch never touched (unresolved
+  references in `SkipFoundation`), or in the moved module's one changed file with an error that
+  is not in the source: the incremental compiler recompiles that file alone against the old
+  state (skip-model 1.8.1: "Cannot access 'class SubjectHelper': it is internal in file").
+  Trash that module's `build/` under
   `$PIRU_ANDROID/stage/.build/plugins/outputs/<package>/…/skipstone/<Module>/` and package again.
+  The `stage/Piru/destination/skipstone/<Module>` entries are symlinks to those folders, so
+  trashing one removes only the link.
 - **Keep `/* SKIP @bridge */` a block comment.** skipstone drops a declaration whose marker
   became `/** */` or `//`; `android/.swiftformat` turns off the rules that would do that.
   Inside a worktree, format with `swiftformat --config .swiftformat` plus the options in
