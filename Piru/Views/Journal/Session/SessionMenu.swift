@@ -155,6 +155,8 @@ struct SessionMenu: View {
                     return
                 }
                 session.checkInIntervalMinutes = cadence?.storedMinutes
+                // A cadence picked here is the person's, not the ladder's.
+                session.checkInFollowsDoses = false
                 Task {
                     if cadence != nil { _ = await DoseNotificationManager.requestAuthorization() }
                     CheckInScheduler.sync(session: session)

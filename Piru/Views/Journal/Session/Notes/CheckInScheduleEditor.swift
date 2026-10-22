@@ -147,12 +147,15 @@ struct CheckInScheduleEditor: View {
     }
 
     /// Every edit rewrites the list and reschedules, so closing the sheet is
-    /// never the thing that commits — there is no draft to lose.
+    /// never the thing that commits — there is no draft to lose. A list that
+    /// differs from the suggestion is the person's own, and a later dose leaves
+    /// it alone; resetting to the suggestion hands it back to the doses.
     private func apply(_ minutes: [Int]) {
         withAnimation(.smooth(duration: 0.2)) {
             session.checkInOffsetMinutes = minutes
             session.checkInIntervalMinutes = CheckInScheduler.Cadence.custom.storedMinutes
             session.checkInOffered = true
+            session.checkInFollowsDoses = !suggested.isEmpty && CheckInOffsets.normalized(minutes) == suggested
         }
         Task {
             _ = await DoseNotificationManager.requestAuthorization()

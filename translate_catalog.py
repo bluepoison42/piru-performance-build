@@ -1011,9 +1011,14 @@ T = {
     "Star a substance to keep it here": ("给物质加星即可收藏在此", "為物質加星即可收藏於此"),
     "Substances you added or customized": ("你添加或自定义的物质", "你新增或自訂的物質"),
     # b46 feature batches (2026-09-02)
-    '"How is it going?" at set points in a session, each opening a timestamped note. Off unless you turn it on for that session.': (
-        "在场次中的几个时点提示“现在感觉如何？”，每次打开一条带时间戳的笔记。默认关闭，需为该场次开启。",
-        "在場次中的幾個時點提示「現在感覺如何？」，每次開啟一則帶時間戳的筆記。預設關閉，需為該場次開啟。",
+    '"How is it going?" at set points in a session, each opening a timestamped note. Off unless you turn it on, for one session or for every session.': (
+        "在场次中的几个时点提示“现在感觉如何？”，每次打开一条带时间戳的笔记。默认关闭，可为单个场次或所有场次开启。",
+        "在場次中的幾個時點提示「現在感覺如何？」，每次開啟一則帶時間戳的筆記。預設關閉，可為單一場次或所有場次開啟。",
+    ),
+    "Check In on Every Session": ("每个场次都确认状态", "每個場次都確認狀態"),
+    "A session starts its check-ins as soon as you log a dose with a course to report on. The times follow what you took and move when you take more. Change or stop them from the session's menu.": (
+        "只要记录了一个有过程可记录的剂量，场次就会自动开始状态确认。时间点依据你服用的内容，再次服用时会往后移。可在场次菜单中更改或停止。",
+        "只要記錄了一個有過程可記錄的劑量，場次就會自動開始狀態確認。時間點依據你服用的內容，再次服用時會往後移。可在場次選單中更改或停止。",
     ),
     "%lld notes": ("%lld 条笔记", "%lld 則筆記"),
     "1 note": ("1 条笔记", "1 則筆記"),
@@ -8582,6 +8587,14 @@ if __name__ == "__main__":
             "seconds",
             "Time since administration",
             "Endpoint: modeled “any drug effect” rating on a visual analog scale",
+        }
+    )
+    # Check-ins on every session (2026-10-19).
+    NEW_KEYS.update(
+        {
+            '"How is it going?" at set points in a session, each opening a timestamped note. Off unless you turn it on, for one session or for every session.',
+            "Check In on Every Session",
+            "A session starts its check-ins as soon as you log a dose with a course to report on. The times follow what you took and move when you take more. Change or stop them from the session's menu.",
         }
     )
     # Combination products (2026-10-18).

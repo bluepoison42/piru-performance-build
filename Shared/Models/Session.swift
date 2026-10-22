@@ -93,6 +93,15 @@ final class Session {
     /// dismissed), so it is offered exactly once.
     var checkInOffered: Bool = false
 
+    /// `true` while the check-in schedule is the app's own pick (the
+    /// ``CheckInLadder`` suggestion, or the hourly run it falls back to), so
+    /// every dose added to the session recomputes it. `false` once the person
+    /// chose or edited the times, which a new dose then never overwrites.
+    ///
+    /// Defaults to `false` so a row from before the field keeps whatever times
+    /// it holds: the store cannot tell a suggested list from a hand-built one.
+    var checkInFollowsDoses: Bool = false
+
     init(id: UUID = UUID(), startDate: Date, title: String? = nil, note: String? = nil) {
         self.id = id
         self.startDate = startDate

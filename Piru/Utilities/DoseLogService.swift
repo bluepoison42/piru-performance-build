@@ -17,11 +17,12 @@ import WidgetKit
 ///
 /// ## Canonical vs. batch
 /// ``log(_:in:recentEntries:)`` is the canonical single-dose pipeline (insert → session assignment →
-/// save → harm-reduction notifications → signal) for callers that log exactly one dose (the entry
-/// form path, the Watch receiver). ``logBatch(_:colors:in:beforeSave:deferredBookkeeping:)`` is the
-/// batch entry point: many inserts behind one `save()` for frame-budget reasons (the quick-log tray,
-/// both daily-med surfaces), with site-specific mutations riding the same commit via `beforeSave` and
-/// per-entry notification work deferred past the dismissal via `deferredBookkeeping`. Import keeps its
+/// save → harm-reduction notifications → check-ins → signal) for callers that log exactly one dose
+/// (the entry form path, the Watch receiver). ``logBatch(_:colors:in:beforeSave:deferredBookkeeping:)``
+/// is the batch entry point: many inserts behind one `save()` for frame-budget reasons (the quick-log
+/// tray, both daily-med surfaces, the intents), with site-specific mutations riding the same commit via
+/// `beforeSave` and per-entry notification work deferred past the dismissal via `deferredBookkeeping`.
+/// Both hand the sessions they touched to ``CheckInScheduler/dosesLogged(in:)``. Import keeps its
 /// own commit shape and just calls ``changed()`` afterward.
 @Observable @MainActor
 final class DoseLogService {
@@ -76,6 +77,7 @@ final class DoseLogService {
         SubstanceColorStore.ensureRow(for: entry.substance, existing: colors, in: context)
         try? context.save()
         DoseNotificationManager.doseLogged(entry: entry, recentEntries: recentEntries)
+        CheckInScheduler.dosesLogged(in: [entry.session].compactMap(\.self))
         // A logged dose may satisfy a routine — reconcile so its remaining
         // follow-up re-asks for today are cancelled.
         DoseNotificationManager.syncMedReminders(in: context)
@@ -123,6 +125,7 @@ final class DoseLogService {
             Logger.doseLog.fault("Batch dose commit save failed for \(doses.count) dose(s): \(error)")
         }
         ActiveSessionManager.shared.addDoses(entries: doses, allColors: colors)
+        CheckInScheduler.dosesLogged(in: doses.compactMap(\.entry.session))
         changed()
         scheduleDeferredBookkeeping(
             forSubstances: Set(doses.map(\.entry.substance)),
@@ -182,13 +185,15 @@ final class DoseLogService {
         in context: ModelContext,
         bookkeeping: @escaping @MainActor () -> Void = {},
     ) {
-        pendingSubstances.formUnion(substances)
-        pendingBookkeeping.append(bookkeeping)
-        deferralTask?.cancel()
         // A context does not retain its container; hold it until the pass
         // runs, or a container released in the meantime (a test's in-memory
         // store) leaves `context` fetching from nothing and SwiftData traps.
+        // Each piece of bookkeeping holds its own: a later call replaces the
+        // task, and the work queued before it still reads the earlier store.
         let container = context.container
+        pendingSubstances.formUnion(substances)
+        pendingBookkeeping.append { withExtendedLifetime(container) { bookkeeping() } }
+        deferralTask?.cancel()
         deferralTask = Task(priority: .utility) { [weak self] in
             defer { withExtendedLifetime(container) {} }
             try? await Task.sleep(for: Self.deferralDelay)

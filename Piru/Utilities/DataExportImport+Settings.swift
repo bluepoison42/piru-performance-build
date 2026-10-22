@@ -66,6 +66,7 @@ enum ExportedSettings {
         .init(key: "dockLabels", domain: .appGroup, kind: .data),
         .init(key: "stackRedoses", domain: .appGroup, kind: .bool),
         .init(key: "showSessionVitals", domain: .appGroup, kind: .bool),
+        .init(key: CheckInScheduler.everySessionKey, domain: .appGroup, kind: .bool),
         .init(key: "timelineZoom", domain: .appGroup, kind: .double),
         .init(key: "timelineCompression", domain: .appGroup, kind: .bool),
         .init(key: "timelinePKCurves", domain: .appGroup, kind: .bool),
