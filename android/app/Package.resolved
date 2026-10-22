@@ -1,5 +1,5 @@
 {
-  "originHash" : "8e3839ba179d8aef93c7892530eef760f6a51680c772245629c8c14758d11c7a",
+  "originHash" : "2123dc36c886c96221293b068585f213cd55cd98d5ba42bb8dbb3e4e57238565",
   "pins" : [
     {
       "identity" : "elfkit",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-android-bridge.git",
       "state" : {
-        "revision" : "b03d0680b1eb70ace0bf5e7530dde934265a4d5c",
-        "version" : "0.7.3"
+        "revision" : "fb3e0362ea8944c2f5dfba90172a144102ab7885",
+        "version" : "0.7.4"
       }
     },
     {
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-fuse-ui.git",
       "state" : {
-        "revision" : "ed3c56c544e6e963bd8b8360dce0b5a0350fad8f",
-        "version" : "1.19.0"
+        "revision" : "a463da1cfc524da857d346199119c26e49a86b2b",
+        "version" : "1.19.1"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-ui.git",
       "state" : {
-        "revision" : "62625123da8c330eab50cece706f3fa77271b629",
-        "version" : "1.62.0"
+        "revision" : "958ca61f626ffec6a1e31c4b2575c285cae70fb9",
+        "version" : "1.64.0"
       }
     },
     {
