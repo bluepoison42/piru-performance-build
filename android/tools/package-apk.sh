@@ -28,6 +28,20 @@ LOG="$PIRU_ANDROID/build/gradle.log"
 SKIP_BRIDGE_ANDROID_BUILD_DISABLED=1 SKIP_BRIDGE_ROBOLECTRIC_BUILD_DISABLED=1 \
     gradle "assemble${(C)${PIRU_CONFIG:-debug}}" --console=plain > "$LOG" 2>&1 || { grep -E '^e: |What went wrong' -A4 "$LOG" | head -40; exit 1; }
 OUT="$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/$CONFIG"
+# The APK ships arm64-v8a alone, with libPiru.so in it: an ABI directory without libPiru.so
+# would let a device of that ABI install an app that cannot load.
+BUILT="$OUT/app-$CONFIG.apk"
+[[ $CONFIG == release ]] && BUILT="$OUT/app-release-unsigned.apk"
+LIBS=$(unzip -Z1 "$BUILT" 'lib/*' 2>/dev/null || true)
+OTHER=$(print -r -- "$LIBS" | sed -n 's|^lib/\([^/]*\)/.*|\1|p' | sort -u | grep -vx 'arm64-v8a' || true)
+if [[ -n "$OTHER" ]]; then
+    echo "error: $BUILT holds native libraries for ABIs other than arm64-v8a: ${OTHER//$'\n'/ }" >&2
+    exit 1
+fi
+if ! print -r -- "$LIBS" | grep -qx 'lib/arm64-v8a/libPiru.so'; then
+    echo "error: $BUILT lacks lib/arm64-v8a/libPiru.so" >&2
+    exit 1
+fi
 if [[ $CONFIG == release && -n "${PIRU_UNSIGNED:-}" ]]; then
     echo "$OUT/app-release-unsigned.apk"
     exit 0

@@ -7280,6 +7280,27 @@ T = {
         "一份报告有助于修复它。报告包含 Piru 如何关闭及其自身的日志，不含你日记里的任何内容，发送到哪里由你决定。",
         "一份報告有助於修復它。報告包含 Piru 如何關閉及其本身的日誌，不含你日記裡的任何內容，傳送到哪裡由你決定。",
     ),
+    # Android-only strings: the substance-catalog launch gate (Android/Views/CatalogGate+Android.swift).
+    "Piru Couldn't Set Up Its Substance Library": (
+        "Piru 无法设置物质库",
+        "Piru 無法設定物質庫",
+    ),
+    "Setting up the substance library needs %@ of free space on this phone. Free up some space, then try again. Your journal is untouched.": (
+        "设置物质库需要这台手机有 %@ 的可用空间。腾出一些空间后再试一次。你的日记没有受到影响。",
+        "設定物質庫需要這支手機有 %@ 的可用空間。騰出一些空間後再試一次。你的日記沒有受到影響。",
+    ),
+    "The substance library couldn't be copied onto this phone (%@). Your journal is untouched.": (
+        "无法将物质库复制到这台手机上（%@）。你的日记没有受到影响。",
+        "無法將物質庫複製到這支手機上（%@）。你的日記沒有受到影響。",
+    ),
+    "This copy of Piru is missing its substance library. Installing Piru again from its release page restores it and keeps your journal.": (
+        "这个 Piru 缺少物质库。从发布页面重新安装 Piru 即可恢复，你的日记会保留。",
+        "這個 Piru 缺少物質庫。從發布頁面重新安裝 Piru 即可恢復，你的日記會保留。",
+    ),
+    "Try Again": (
+        "再试一次",
+        "再試一次",
+    ),
     "This half-life is out of range: projections take 1 minute to 10 years.": (
         "这个半衰期超出范围：可推算的范围是 1 分钟到 10 年。",
         "這個半衰期超出範圍：可推算的範圍是 1 分鐘到 10 年。",
@@ -7676,6 +7697,11 @@ if __name__ == "__main__":
         "The report could not be written.",
         "Piru Closed Unexpectedly",
         "A report helps fix it. It holds how Piru closed and its own log, nothing from your journal, and you choose where it goes.",
+        "Piru Couldn't Set Up Its Substance Library",
+        "Setting up the substance library needs %@ of free space on this phone. Free up some space, then try again. Your journal is untouched.",
+        "The substance library couldn't be copied onto this phone (%@). Your journal is untouched.",
+        "This copy of Piru is missing its substance library. Installing Piru again from its release page restores it and keeps your journal.",
+        "Try Again",
         "Curve Scale",
         "Dose Strength",
         "Largest Dose, 7 Days",

@@ -30,9 +30,19 @@ android {
         }
     }
 
+    // Stored uncompressed, the catalog copies out of the APK (Resources+Android.swift) as plain
+    // reads, with no 5 MB → 18 MB inflate on the launch that copies it.
+    androidResources {
+        noCompress += "sqlite"
+    }
+
     defaultConfig {
         minSdk = libs.versions.android.sdk.min.get().toInt()
         targetSdk = libs.versions.android.sdk.compile.get().toInt()
+        // libPiru.so is built for arm64 alone; another ABI would install and fail to load it.
+        ndk {
+            abiFilters += "arm64-v8a"
+        }
         // skip.tools.skip-build-plugin will automatically use Skip.env properties for:
         // applicationId = ANDROID_APPLICATION_ID ?? PRODUCT_BUNDLE_IDENTIFIER
         // versionCode = CURRENT_PROJECT_VERSION
