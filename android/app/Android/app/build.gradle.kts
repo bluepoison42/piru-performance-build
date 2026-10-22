@@ -30,6 +30,12 @@ android {
         }
     }
 
+    // Stored uncompressed, the catalog copies out of the APK (Resources+Android.swift) as plain
+    // reads, with no 5 MB → 18 MB inflate on the launch that copies it.
+    androidResources {
+        noCompress += "sqlite"
+    }
+
     defaultConfig {
         minSdk = libs.versions.android.sdk.min.get().toInt()
         targetSdk = libs.versions.android.sdk.compile.get().toInt()

@@ -11,15 +11,19 @@ import SwiftUI
 /* SKIP @bridge */ public struct PiruRootView: View {
     /* SKIP @bridge */ public init() {}
 
+    /// The store, the launch passes and every view sit behind `CatalogGate`, which copies the
+    /// substance catalog onto the phone before anything can read it.
     public var body: some View {
-        ContentView()
-            .modelContainer(PiruAndroidLaunch.container)
-            .task {
-                AppUpdateCheck.shared.startLaunchCheck()
-                await AppLaunch.finishLaunching(container: PiruAndroidLaunch.container)
-                PiruAndroidLaunch.finishedLaunching = true
-            }
-            .modifier(ProblemReportPrompt())
+        CatalogGate {
+            ContentView()
+                .modelContainer(PiruAndroidLaunch.container)
+                .task {
+                    AppUpdateCheck.shared.startLaunchCheck()
+                    await AppLaunch.finishLaunching(container: PiruAndroidLaunch.container)
+                    PiruAndroidLaunch.finishedLaunching = true
+                }
+        }
+        .modifier(ProblemReportPrompt())
     }
 }
 

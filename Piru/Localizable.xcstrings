@@ -64257,6 +64257,35 @@
         }
       }
     },
+    "Piru Couldn't Set Up Its Substance Library" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru no pudo preparar su biblioteca de sustancias"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru no pudo preparar su biblioteca de sustancias"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 无法设置物质库"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 無法設定物質庫"
+          }
+        }
+      }
+    },
     "Piru does not know a substance named “%@”." : {
       "localizations" : {
         "es" : {
@@ -75396,6 +75425,35 @@
         }
       }
     },
+    "Setting up the substance library needs %@ of free space on this phone. Free up some space, then try again. Your journal is untouched." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparar la biblioteca de sustancias necesita %@ de espacio libre en este teléfono. Libera algo de espacio y vuelve a intentarlo. Tu diario sigue intacto."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparar la biblioteca de sustancias necesita %@ de espacio libre en este teléfono. Libera algo de espacio y vuelve a intentarlo. Tu diario sigue intacto."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置物质库需要这台手机有 %@ 的可用空间。腾出一些空间后再试一次。你的日记没有受到影响。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定物質庫需要這支手機有 %@ 的可用空間。騰出一些空間後再試一次。你的日記沒有受到影響。"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "es" : {
@@ -85064,6 +85122,35 @@
         }
       }
     },
+    "The substance library couldn't be copied onto this phone (%@). Your journal is untouched." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo copiar la biblioteca de sustancias en este teléfono (%@). Tu diario sigue intacto."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo copiar la biblioteca de sustancias en este teléfono (%@). Tu diario sigue intacto."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法将物质库复制到这台手机上（%@）。你的日记没有受到影响。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法將物質庫複製到這支手機上（%@）。你的日記沒有受到影響。"
+          }
+        }
+      }
+    },
     "The substance's usual route when empty." : {
       "localizations" : {
         "es" : {
@@ -85593,6 +85680,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "該化合物沒有經過驗證的人體劑量資料。以下資訊僅供參考，原始文獻見所連結的來源。請勿根據相關化合物推算劑量。"
+          }
+        }
+      }
+    },
+    "This copy of Piru is missing its substance library. Installing Piru again from its release page restores it and keeps your journal." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A esta copia de Piru le falta su biblioteca de sustancias. Instalar Piru de nuevo desde su página de versiones la restaura y conserva tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A esta copia de Piru le falta su biblioteca de sustancias. Instalar Piru de nuevo desde su página de versiones la restaura y conserva tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个 Piru 缺少物质库。从发布页面重新安装 Piru 即可恢复，你的日记会保留。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個 Piru 缺少物質庫。從發布頁面重新安裝 Piru 即可恢復，你的日記會保留。"
           }
         }
       }
@@ -88266,6 +88382,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "嘗試調整篩選條件。"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a intentar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a intentar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再试一次"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試一次"
           }
         }
       }
