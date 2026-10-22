@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-model.git",
       "state" : {
-        "revision" : "bd8a83dfe098eff4626b974dd3f706d017e08d79",
-        "version" : "1.8.1"
+        "revision" : "3de7c8315f35035a905225b9057d4272772aa0ef",
+        "version" : "1.8.0"
       }
     },
     {
