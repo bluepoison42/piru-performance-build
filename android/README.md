@@ -128,6 +128,10 @@ PortableData must preserve these SwiftData behaviors. Tests use Piru's real `@Mo
 8. `.unique` attributes upsert; a read-only configuration cannot write.
 9. Loading and saving are linear in the store size; relationships are resolved with a keyed
    index, not a scan per owner.
+10. A context that ends frees the models it read, which the app's per-call background
+    contexts depend on: each live model holds a JNI global reference, and ART aborts at 51,200.
+    Where SwiftData differs: a model held past its context keeps its to-one relationships, but
+    its to-many sides are emptied, where SwiftData's would keep the context alive.
 
 ## Distribution, signing and data
 

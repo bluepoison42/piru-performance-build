@@ -21,9 +21,13 @@ struct RelationshipTests {
         #expect(session.doses?.count == 4)
         #expect(session.lastDoseDate == late.timestamp)
         try context.save()
-        let reread = try #require(try ModelContext(store.container()).sessions().first)
-        #expect(reread.doses?.count == 4)
-        #expect(reread.lastDoseDate == late.timestamp)
+        // A context lets go of its sessions' doses when it ends, so it is held for the reads.
+        let rereading = try ModelContext(store.container())
+        let reread = try #require(try rereading.sessions().first)
+        withExtendedLifetime(rereading) {
+            #expect(reread.doses?.count == 4)
+            #expect(reread.lastDoseDate == late.timestamp)
+        }
     }
 
     /// SessionService.move deletes the source once its doses are empty.
@@ -103,7 +107,10 @@ struct RelationshipTests {
         #expect(session.doses?.count == 2)
         #expect(session.doses?.contains { $0 === dose } == false)
         try context.save()
-        #expect(try ModelContext(store.container()).sessions().first?.doses?.count == 2)
+        let rereading = try ModelContext(store.container())
+        let rereadCount = try rereading.sessions().first?.doses?.count
+        withExtendedLifetime(rereading) {}
+        #expect(rereadCount == 2)
     }
 
     @Test

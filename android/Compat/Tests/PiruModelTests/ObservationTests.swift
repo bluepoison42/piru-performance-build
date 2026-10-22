@@ -121,6 +121,77 @@ struct ObservationTests {
         #expect(log.contains("willSet", \DoseEntry.isApproximate))
         #expect(!log.contains("willSet", \DoseEntry.notes))
     }
+
+    /// A context made for one background read lets go of the models it read once it is gone,
+    /// and their bridges with them. On Android each bridge holds a JNI global reference, and
+    /// ART aborts the process when 51,200 of them are live.
+    @Test
+    func `A dropped context releases the models it read and their bridges`() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let container = try store.container()
+        let live = LiveCount()
+        ModelObservation.makeBridge = { CountingBridge(token: LiveToken(live)) }
+        defer { ModelObservation.makeBridge = nil }
+        weak var dose: DoseEntry?
+        weak var session: Session?
+        weak var note: SessionNote?
+        do {
+            let context = ModelContext(container)
+            dose = try context.doses().first
+            session = dose?.session
+            note = session?.notes?.first
+            #expect(session?.doses?.count == 3)
+            #expect(live.value > 0)
+        }
+        #expect(dose == nil)
+        #expect(session == nil)
+        #expect(note == nil)
+        #expect(live.value == 0)
+    }
+
+    /// What a held model points at stays reachable after its context is gone.
+    @Test
+    func `A dose held past its context still reaches its session`() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let dose = try #require(try ModelContext(store.container()).doses().first)
+        #expect(dose.session?.title == "Saturday")
+    }
+}
+
+private final nonisolated class LiveCount: Sendable {
+    private let count = Mutex(0)
+
+    var value: Int {
+        count.withLock { $0 }
+    }
+
+    func add(_ delta: Int) {
+        count.withLock { $0 += delta }
+    }
+}
+
+/// Stands in for the JNI global reference a Skip bridge holds: counted while it lives.
+private final nonisolated class LiveToken: Sendable {
+    let live: LiveCount
+
+    init(_ live: LiveCount) {
+        self.live = live
+        live.add(1)
+    }
+
+    deinit {
+        live.add(-1)
+    }
+}
+
+private nonisolated struct CountingBridge: ModelObservationBridge {
+    let token: LiveToken
+
+    func access<Subject: Observable>(_: Subject, keyPath _: KeyPath<Subject, some Any>) {}
+    func willSet<Subject: Observable>(_: Subject, keyPath _: KeyPath<Subject, some Any>) {}
+    func didSet<Subject: Observable>(_: Subject, keyPath _: KeyPath<Subject, some Any>) {}
 }
 
 private final nonisolated class Recorder: Sendable {

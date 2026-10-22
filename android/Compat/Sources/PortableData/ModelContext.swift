@@ -186,6 +186,26 @@ public final class ModelContext: @unchecked Sendable {
         self.container = container
     }
 
+    /// Lets go of the models this context read. A dose points at its session and the
+    /// session's doses point back, so a context that ended with them still linked would
+    /// leave every model it reached alive; on Android each holds a JNI global reference
+    /// through its Skip bridge, and ART aborts the process when 51,200 are live. Emptying
+    /// the to-many sides breaks every cycle through one while a dose held past its context
+    /// still reaches its session. A session held past its context reads no doses, where
+    /// SwiftData's model would keep its context alive: read a to-many side while its
+    /// context is held.
+    deinit {
+        for entry in Array(registry.values) + Array(deleted.values) {
+            let description = EntityDescription.of(type(of: entry.model))
+            for inverse in description.inverses where !inverse.children(entry.model).isEmpty {
+                inverse.setChildren(entry.model, [])
+            }
+            for relationship in description.toMany where !relationship.get(entry.model).isEmpty {
+                relationship.set(entry.model, [])
+            }
+        }
+    }
+
     public var hasChanges: Bool {
         if !inserted.isEmpty || !deleted.isEmpty { return true }
         return candidates.contains { registry[$0].map(isDirty) ?? false }
