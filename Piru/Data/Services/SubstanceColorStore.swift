@@ -46,7 +46,19 @@ enum SubstanceColorStore {
         return row
     }
 
-    /// Applies a picker result to `name`'s row, creating it when absent.
+    /// The key two names share when they are the same substance: the catalog
+    /// name an alias or an older spelling resolves to ("Lysergic acid
+    /// diethylamide" and "LSD-25" are both "lsd"), else the name itself.
+    /// Lowercased, as every row lookup is.
+    @MainActor
+    static func identity(of name: String) -> String {
+        (SubstanceLibrary.lookup(name)?.name ?? name).lowercased()
+    }
+
+    /// Applies a picker result to every row that names the same substance as
+    /// `name`, creating one when there is none. Doses keep the name they were
+    /// logged under, so one substance can own several rows; coloring only one
+    /// of them would split its doses across two colors.
     @MainActor
     static func apply(_ choice: SubstanceColorChoice, to name: String, in context: ModelContext) {
         let rows = (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? []
@@ -56,10 +68,13 @@ enum SubstanceColorStore {
         case .default: (tint, usesDefault) = (defaultTint(for: name), true)
         case let .custom(picked): (tint, usesDefault) = (picked, false)
         }
-        if let row = rows.first(where: { $0.substance.lowercased() == name.lowercased() }) {
-            row.set(tint, usesDefault: usesDefault)
-        } else {
+        let key = identity(of: name)
+        let matching = rows.filter { identity(of: $0.substance) == key }
+        if matching.isEmpty {
             context.insert(SubstanceColor(substance: name, tint: tint, usesDefault: usesDefault))
+        }
+        for row in matching {
+            row.set(tint, usesDefault: usesDefault)
         }
         try? context.save()
         ActiveSessionManager.shared.applyColorUpdates(allColors: (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? [])

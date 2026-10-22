@@ -3,7 +3,8 @@ import SwiftUI
 
 /// Every substance the user has met, with its color, grouped by class. A row
 /// opens the picker; a custom color can be reset from its row, and all of them
-/// from the toolbar.
+/// from the toolbar. A substance logged under several names (an alias, an older
+/// spelling) is one row, as ``SubstanceColorStore/apply(_:to:in:)`` colors it.
 struct SubstanceColorsListView: View {
     @Query(sort: \SubstanceColor.substance) private var substanceColors: [SubstanceColor]
     @Environment(\.modelContext) private var modelContext
@@ -11,9 +12,10 @@ struct SubstanceColorsListView: View {
     @State private var searchText = ""
     @State private var collapsed: Set<SubstanceCategory> = []
     @State private var confirmingResetAll = false
-    /// Each row's class, resolved once per change to the set of names so a
-    /// body pass only filters and buckets.
+    /// Each row's class and substance identity, resolved once per change to the
+    /// set of names so a body pass only filters and buckets.
     @State private var categories: [String: SubstanceCategory] = [:]
+    @State private var identities: [String: String] = [:]
 
     private struct EditingSubstance: Identifiable {
         let name: String
@@ -26,12 +28,31 @@ struct SubstanceColorsListView: View {
         var id: SubstanceCategory { category }
     }
 
+    /// One row per substance: the row stored under its catalog name when there
+    /// is one, else the first, standing for every row that names it.
+    private var representatives: [SubstanceColor] {
+        var byIdentity: [String: SubstanceColor] = [:]
+        var order: [String] = []
+        for row in substanceColors {
+            let identity = identities[row.substance] ?? row.substance.lowercased()
+            if let held = byIdentity[identity] {
+                if held.substance.lowercased() != identity, row.substance.lowercased() == identity {
+                    byIdentity[identity] = row
+                }
+            } else {
+                byIdentity[identity] = row
+                order.append(identity)
+            }
+        }
+        return order.compactMap { byIdentity[$0] }
+    }
+
     /// Rows matching the search, bucketed by class in the class enum's order.
     /// An unresolvable name (a removed custom substance) files under `other`.
     private var sections: [ClassSection] {
         let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
         var buckets: [SubstanceCategory: [SubstanceColor]] = [:]
-        for row in substanceColors {
+        for row in representatives {
             let display = CustomSubstanceStore.shared.displayName(for: row.substance)
             guard query.isEmpty || row.substance.lowercased().contains(query) || display.lowercased().contains(query)
             else { continue }
@@ -113,6 +134,10 @@ struct SubstanceColorsListView: View {
             await SubstanceStore.shared.ensureAllLoaded()
             categories = Dictionary(
                 substanceColors.map { ($0.substance, SubstanceLibrary.lookup($0.substance)?.category ?? .other) },
+                uniquingKeysWith: { first, _ in first },
+            )
+            identities = Dictionary(
+                substanceColors.map { ($0.substance, SubstanceColorStore.identity(of: $0.substance)) },
                 uniquingKeysWith: { first, _ in first },
             )
         }

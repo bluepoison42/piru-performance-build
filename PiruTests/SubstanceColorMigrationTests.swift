@@ -134,6 +134,34 @@ struct SubstanceColorMigrationTests {
         #expect(byName["Caffeine"]?.isLegacy == true)
     }
 
+    /// Doses keep the name they were logged under, so a substance met under an
+    /// older name or an alias has a row per name. A picked color reaches every one
+    /// of them; another substance's row is left alone.
+    @Test
+    func `A picked color reaches every row that names the same substance`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let url = tmpStoreURL()
+        try seedBuild52Store(at: url)
+        // Held for the test: a context that outlives its container traps.
+        let container = try openCurrent(at: url)
+        let context = container.mainContext
+        context.insert(SubstanceColor(substance: "Lysergic acid diethylamide", tint: .neutral, usesDefault: false))
+        context.insert(SubstanceColor(substance: "lsd-25", tint: .neutral, usesDefault: true))
+        try context.save()
+
+        let picked = P3Color(red: 0.9, green: 0.4, blue: 0.5)
+        SubstanceColorStore.apply(.custom(picked), to: "LSD", in: context)
+
+        let rows = try context.fetch(FetchDescriptor<SubstanceColor>())
+        let byName = Dictionary(uniqueKeysWithValues: rows.map { ($0.substance, $0) })
+        for name in ["LSD", "Lysergic acid diethylamide", "lsd-25"] {
+            #expect(byName[name]?.tint == picked, "\(name)")
+            #expect(byName[name]?.usesDefault == false, "\(name)")
+        }
+        #expect(byName["Caffeine"]?.isLegacy == true)
+        #expect(rows.count == 4)
+    }
+
     @Test
     func `The mint pass gives a logged substance with no row its default`() async throws {
         let url = tmpStoreURL()
