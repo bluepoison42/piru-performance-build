@@ -93,7 +93,7 @@ enum CheckInScheduler {
         /// Why a row reads the way it does. A schedule that listed every time
         /// as "coming" would be wrong twice over: a prompt whose hour has gone
         /// is not coming, and one inside quiet hours is never scheduled at all
-        /// (``sync(session:)`` skips it).
+        /// (``prompts(for:now:defaults:)`` skips it).
         enum State: Hashable {
             case scheduled
             case quietHours
@@ -143,19 +143,115 @@ enum CheckInScheduler {
         !NotificationPreferencesStore.allows(.checkIn)
     }
 
-    /// Apply the session's stored cadence: cancel what is pending and schedule
-    /// afresh from the latest dose. Call after the cadence changes; a dose added
-    /// to the session reaches it through ``dosesLogged(in:)`` (the anchor moved).
-    static func sync(session: Session) {
-        cancel(sessionID: session.id)
-        guard let cadence = Cadence(storedMinutes: session.checkInIntervalMinutes) else { return }
-        guard NotificationPreferencesStore.allows(.checkIn) else { return }
+    /// Replace the session's pending check-ins with its stored schedule,
+    /// anchored on the latest dose. Call after the cadence changes; a dose
+    /// added to the session reaches it through ``dosesLogged(in:)`` (the anchor
+    /// moved).
+    ///
+    /// The schedule is read from the session now. Applying it removes every
+    /// identifier a check-in of this session can carry (``identifiers(sessionID:)``)
+    /// and then adds the new requests one at a time, awaiting each. Replacements
+    /// of one session run in the order they were asked for, and each stops at
+    /// its next step once a newer one exists, so a superseded schedule never
+    /// lands after the newer one cleared it. With nothing ahead of it the
+    /// removal happens before this returns.
+    ///
+    /// - Returns: the replacement, for a caller that needs it finished.
+    @discardableResult
+    static func sync(
+        session: Session,
+        center: any PendingNotificationCenter = SystemPendingNotificationCenter(),
+        defaults: UserDefaults = .standard,
+    ) -> Task<Void, Never> {
+        let sessionID = session.id
+        let prompts = prompts(for: session, defaults: defaults)
+        let generation = (latestReplacement[sessionID] ?? 0) + 1
+        latestReplacement[sessionID] = generation
+        let previous = runningReplacement[sessionID]
+        let replacement = Task.immediate { @MainActor in
+            @MainActor
+            func isLatest() -> Bool {
+                latestReplacement[sessionID] == generation
+            }
+            defer {
+                if isLatest() {
+                    latestReplacement[sessionID] = nil
+                    runningReplacement[sessionID] = nil
+                }
+            }
+            await previous?.value
+            guard isLatest() else { return }
+            center.removePendingRequests(withIdentifiers: identifiers(sessionID: sessionID))
+            for prompt in prompts {
+                guard isLatest() else { return }
+                let interval = prompt.date.timeIntervalSinceNow
+                guard interval > 0 else { continue }
+                let request = UNNotificationRequest(
+                    identifier: prompt.identifier,
+                    content: prompt.content,
+                    trigger: UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false),
+                )
+                do {
+                    try await center.add(request)
+                } catch {
+                    Logger.checkIn.error("Check-in schedule failed: \(error.localizedDescription, privacy: .public)")
+                }
+            }
+            Logger.checkIn.debug("Scheduled \(prompts.count) check-ins for session \(sessionID.uuidString, privacy: .public)")
+        }
+        // A replacement that finished before returning has already cleared
+        // its entry; holding it would only keep a finished task.
+        if latestReplacement[sessionID] == generation {
+            runningReplacement[sessionID] = replacement
+        }
+        return replacement
+    }
+
+    /// Per session, the generation of the newest replacement asked for.
+    private static var latestReplacement: [UUID: Int] = [:]
+    /// Per session, the newest replacement, which the next one waits for.
+    private static var runningReplacement: [UUID: Task<Void, Never>] = [:]
+
+    /// The most check-ins one session can have pending: the longest schedule
+    /// any cadence or custom list yields. Removing every ordinal below it by
+    /// identifier clears a previous schedule whatever its length, and
+    /// whichever launch scheduled it, without asking the system what is
+    /// pending.
+    nonisolated static let maximumPending = max(
+        CheckInOffsets.maximumCount,
+        Cadence.allCases.map(\.fixedOffsetMinutes.count).max() ?? 0,
+    )
+
+    /// Every identifier a check-in of the session can be scheduled under.
+    nonisolated static func identifiers(sessionID: UUID) -> [String] {
+        (0 ..< maximumPending).map { identifier(sessionID: sessionID, ordinal: $0) }
+    }
+
+    /// The `ordinal`th check-in of a session's schedule, counted over its
+    /// fire dates still ahead.
+    nonisolated static func identifier(sessionID: UUID, ordinal: Int) -> String {
+        NotificationType.checkIn.identifier(anchor: sessionID.uuidString, ordinal: String(ordinal))
+    }
+
+    /// One check-in to schedule: its identifier, when it fires, and what it says.
+    struct Prompt {
+        let identifier: String
+        let date: Date
+        let content: UNMutableNotificationContent
+    }
+
+    /// The check-ins the session's stored schedule asks for after `now`:
+    /// none when it runs no schedule or check-ins are off app-wide, and none
+    /// inside quiet hours. Read from the session at the moment of the call.
+    static func prompts(for session: Session, now: Date = .now, defaults: UserDefaults = .standard) -> [Prompt] {
+        guard let cadence = Cadence(storedMinutes: session.checkInIntervalMinutes) else { return [] }
+        guard NotificationPreferencesStore.allows(.checkIn, defaults: defaults) else { return [] }
         let dates = fireDates(
             cadence: cadence,
             custom: session.checkInOffsetMinutes,
             anchor: anchor(for: session),
+            now: now,
         )
-        let center = UNUserNotificationCenter.current()
         let thread = SessionNotificationScheduler.sessionIdentifier(for: session.startDate)
         // A session that only carries medication is asked the medication
         // question, in the words its own control uses.
@@ -167,37 +263,17 @@ enum CheckInScheduler {
         let body = isMedication
             ? String(localized: "One tap records how this dose is going: less than usual, about right, or more.")
             : String(localized: "Add a note to your session: what you notice, at this moment.")
-        for (index, date) in dates.enumerated() {
-            if NotificationPreferencesStore.isInQuietHours(date) { continue }
+        let deepLink = "\(DeepLink.scheme)://session/\(session.id.uuidString)?note=checkIn"
+        return dates.enumerated().compactMap { index, date in
+            if NotificationPreferencesStore.isInQuietHours(date, defaults: defaults) { return nil }
             let content = UNMutableNotificationContent(
                 title: title,
                 body: body,
                 category: categoryID,
                 threadIdentifier: thread,
             )
-            content.userInfo = [
-                DoseNotificationManager.deepLinkUserInfoKey: "\(DeepLink.scheme)://session/\(session.id.uuidString)?note=checkIn",
-            ]
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: date.timeIntervalSinceNow, repeats: false)
-            let request = UNNotificationRequest(
-                identifier: NotificationType.checkIn.identifier(anchor: session.id.uuidString, ordinal: String(index)),
-                content: content,
-                trigger: trigger,
-            )
-            center.add(request) { error in
-                if let error {
-                    Logger.checkIn.error("Check-in schedule failed: \(error.localizedDescription, privacy: .public)")
-                }
-            }
-        }
-        Logger.checkIn.debug("Scheduled \(dates.count) check-ins for session \(session.id.uuidString, privacy: .public)")
-    }
-
-    static func cancel(sessionID: UUID) {
-        let prefix = NotificationType.checkIn.identifierPrefix + sessionID.uuidString
-        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-            let ids = requests.map(\.identifier).filter { $0.hasPrefix(prefix) }
-            if !ids.isEmpty { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids) }
+            content.userInfo = [DoseNotificationManager.deepLinkUserInfoKey: deepLink]
+            return Prompt(identifier: identifier(sessionID: session.id, ordinal: index), date: date, content: content)
         }
     }
 
@@ -262,7 +338,7 @@ enum CheckInScheduler {
 
     /// Bring a session's check-ins up to date with a dose that just landed in
     /// it. Returns whether the session runs check-ins afterwards, so the caller
-    /// knows to ``sync(session:)``: the anchor moved even when the times did not.
+    /// knows to ``sync(session:center:defaults:)``: the anchor moved even when the times did not.
     ///
     /// - A session with none starts them when `everySession` is on, it holds an
     ///   offerable dose, nobody has turned them down for it, and at least one
@@ -346,5 +422,24 @@ enum CheckInScheduler {
                 sync(session: session)
             }
         }
+    }
+}
+
+/// Where check-ins are scheduled and cleared: the system's notification
+/// center, or a recording one in tests.
+@MainActor
+protocol PendingNotificationCenter {
+    func removePendingRequests(withIdentifiers identifiers: [String])
+    func add(_ request: UNNotificationRequest) async throws
+}
+
+/// `UNUserNotificationCenter.current()` as a ``PendingNotificationCenter``.
+struct SystemPendingNotificationCenter: PendingNotificationCenter {
+    func removePendingRequests(withIdentifiers identifiers: [String]) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+    }
+
+    func add(_ request: UNNotificationRequest) async throws {
+        try await UNUserNotificationCenter.current().add(request)
     }
 }

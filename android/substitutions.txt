@@ -146,6 +146,11 @@ Bundle\.main\.url\(forResource:	AndroidResources.url(forResource:
 
 # Skip cannot bridge a calendar trigger's DateComponents (Notifications+Android.swift).
 \bUNCalendarNotificationTrigger\(dateMatching:	AndroidCalendarTrigger.make(dateMatching:
+# semantic: whether a removal also cancels the completion-handler adds asked for before it. Those
+# adds run one at a time after the call returns (AndroidNotificationQueue, Notifications+Android.swift),
+# so Skip's removal alone would run ahead of them and the add would bring the request back. The
+# queue's own call to Skip's removal is made on `skipCenter`, which this rule leaves as written.
+(?<!skipCenter\.)\bremovePendingNotificationRequests\(withIdentifiers:	androidRemovePendingNotificationRequests(withIdentifiers:
 
 # Materials become the fills they read as on iOS (Color+Android.swift, stage.py MATERIALS).
 \.ultraThinMaterial\b	.androidUltraThinMaterial
