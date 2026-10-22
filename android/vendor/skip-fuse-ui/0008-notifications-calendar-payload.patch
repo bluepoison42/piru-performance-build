@@ -1,0 +1,157 @@
+UNCalendarNotificationTrigger hands its DateComponents to SkipUI as `Any`, which the bridge cannot carry to Kotlin, so scheduling one is a fatal error; pending requests come back with a push trigger instead of their own; and the interruption level is missing. The components now cross as named Int values with their time zone (`dateComponents` is typed, as on iOS), pending requests carry their time-interval or calendar trigger with the date it fires, and the interruption level reaches SkipUI. Needs skip-ui 0017. Proposed upstream.
+
+diff --git a/Sources/SkipSwiftUI/UIKit/UserNotifications.swift b/Sources/SkipSwiftUI/UIKit/UserNotifications.swift
+index 61ff9a43..245d4a8b 100644
+--- a/Sources/SkipSwiftUI/UIKit/UserNotifications.swift
++++ b/Sources/SkipSwiftUI/UIKit/UserNotifications.swift
+@@ -201,7 +201,13 @@ public final class UNNotificationRequest: @unchecked Sendable {
+     init(Java_request: SkipUI.UNNotificationRequest) {
+         self.identifier = Java_request.identifier
+         self.content = UNNotificationContent(Java_content: Java_request.content)
+-        self.trigger = UNPushNotificationTrigger(repeats: false)
++        if let trigger = Java_request.bridgedTimeIntervalTrigger {
++            self.trigger = UNTimeIntervalNotificationTrigger(Java_trigger: trigger)
++        } else if let trigger = Java_request.bridgedCalendarTrigger {
++            self.trigger = UNCalendarNotificationTrigger(Java_trigger: trigger)
++        } else {
++            self.trigger = UNPushNotificationTrigger(repeats: false)
++        }
+     }
+ 
+     var Java_request: SkipUI.UNNotificationRequest {
+@@ -261,6 +267,7 @@ public class UNNotificationContent {
+     public internal(set) var summaryArgument: String
+     public internal(set) var summaryArgumentCount: Int
+     public internal(set) var filterCriteria: String?
++    public internal(set) var interruptionLevel: UNNotificationInterruptionLevel = .active
+ 
+     public init(title: String = "", subtitle: String = "", body: String = "", badge: Int? = nil, sound: UNNotificationSound? = UNNotificationSound.default, launchImageName: String = "", userInfo: [AnyHashable: Any] = [:], attachments: [UNNotificationAttachment] = [], categoryIdentifier: String = "", threadIdentifier: String = "", targetContentIdentifier: String? = nil, summaryArgument: String = "", summaryArgumentCount: Int = 0, filterCriteria: String? = nil) {
+         self.title = title
+@@ -294,10 +301,13 @@ public class UNNotificationContent {
+         self.summaryArgument = Java_content.summaryArgument
+         self.summaryArgumentCount = Java_content.summaryArgumentCount
+         self.filterCriteria = Java_content.filterCriteria
++        self.interruptionLevel = UNNotificationInterruptionLevel(rawValue: UInt(Java_content.bridgedInterruptionLevel)) ?? .active
+     }
+ 
+     var Java_content: SkipUI.UNNotificationContent {
+-        return SkipUI.UNNotificationContent.bridgedContent(title: title, subtitle: subtitle, body: body, badge: badge, sound: sound?.Java_sound, launchImageName: launchImageName, userInfo: userInfo, attachments: attachments.map(\.Java_attachment), categoryIdentifier: categoryIdentifier, threadIdentifier: threadIdentifier, targetContentIdentifier: targetContentIdentifier, summaryArgument: summaryArgument, summaryArgumentCount: summaryArgumentCount, filterCriteria: filterCriteria)
++        let content = SkipUI.UNNotificationContent.bridgedContent(title: title, subtitle: subtitle, body: body, badge: badge, sound: sound?.Java_sound, launchImageName: launchImageName, userInfo: userInfo, attachments: attachments.map(\.Java_attachment), categoryIdentifier: categoryIdentifier, threadIdentifier: threadIdentifier, targetContentIdentifier: targetContentIdentifier, summaryArgument: summaryArgument, summaryArgumentCount: summaryArgumentCount, filterCriteria: filterCriteria)
++        content.bridgedInterruptionLevel = Int(interruptionLevel.rawValue)
++        return content
+     }
+ }
+ 
+@@ -358,6 +368,17 @@ public final class UNMutableNotificationContent : UNNotificationContent {
+         get { super.filterCriteria }
+         set { super.filterCriteria = newValue }
+     }
++    public override var interruptionLevel: UNNotificationInterruptionLevel {
++        get { super.interruptionLevel }
++        set { super.interruptionLevel = newValue }
++    }
++}
++
++public enum UNNotificationInterruptionLevel : UInt, Sendable {
++    case passive = 0
++    case active = 1
++    case timeSensitive = 2
++    case critical = 3
+ }
+ 
+ public final class UNNotificationSound {
+@@ -455,14 +476,18 @@ public class UNNotificationTrigger {
+ 
+ public final class UNTimeIntervalNotificationTrigger: UNNotificationTrigger {
+     public let timeInterval: TimeInterval
++    /// The date a pending request fires, as SkipUI saved it when the request was scheduled.
++    private let fireDate: Date?
+ 
+     public init(timeInterval: TimeInterval, repeats: Bool) {
+         self.timeInterval = timeInterval
++        self.fireDate = nil
+         super.init(repeats: repeats)
+     }
+ 
+     init(Java_trigger: SkipUI.UNTimeIntervalNotificationTrigger) {
+         self.timeInterval = Java_trigger.timeInterval
++        self.fireDate = Java_trigger.bridgedFireDate
+         super.init(Java_trigger: Java_trigger)
+     }
+ 
+@@ -471,25 +496,68 @@ public final class UNTimeIntervalNotificationTrigger: UNNotificationTrigger {
+     }
+ 
+     public func nextTriggerDate() -> Date? {
+-        return Java_trigger.nextTriggerDate()
++        let now = Date()
++        guard let fireDate else {
++            return now.addingTimeInterval(timeInterval)
++        }
++        guard repeats, timeInterval > 0, fireDate <= now else {
++            return fireDate
++        }
++        let periods = (now.timeIntervalSince(fireDate) / timeInterval).rounded(.down) + 1
++        return fireDate.addingTimeInterval(periods * timeInterval)
+     }
+ }
+ 
+ public final class UNCalendarNotificationTrigger: UNNotificationTrigger {
+-    public let dateComponents: Any /* DateComponents */
++    public let dateComponents: DateComponents
+ 
+-    public init(dateMatching dateComponents: Any /* DateComponents */, repeats: Bool) {
++    public init(dateMatching dateComponents: DateComponents, repeats: Bool) {
+         self.dateComponents = dateComponents
+         super.init(repeats: repeats)
+     }
+ 
+-    init(Java_request: SkipUI.UNCalendarNotificationTrigger) {
+-        self.dateComponents = Java_request.dateComponents
+-        super.init(repeats: false)
++    init(Java_trigger: SkipUI.UNCalendarNotificationTrigger) {
++        var dateComponents = DateComponents()
++        let values = Java_trigger.bridgedComponents
++        if let identifier = Java_trigger.bridgedTimeZoneIdentifier {
++            dateComponents.timeZone = TimeZone(identifier: identifier)
++        }
++        dateComponents.era = values["era"]
++        dateComponents.year = values["year"]
++        dateComponents.month = values["month"]
++        dateComponents.day = values["day"]
++        dateComponents.hour = values["hour"]
++        dateComponents.minute = values["minute"]
++        dateComponents.second = values["second"]
++        dateComponents.nanosecond = values["nanosecond"]
++        dateComponents.weekday = values["weekday"]
++        dateComponents.weekdayOrdinal = values["weekdayOrdinal"]
++        dateComponents.quarter = values["quarter"]
++        dateComponents.weekOfMonth = values["weekOfMonth"]
++        dateComponents.weekOfYear = values["weekOfYear"]
++        dateComponents.yearForWeekOfYear = values["yearForWeekOfYear"]
++        self.dateComponents = dateComponents
++        super.init(Java_trigger: Java_trigger)
+     }
+ 
++    /// The components cross the bridge by name, each as an `Int`: a `DateComponents` value cannot reach Kotlin.
+     override var Java_trigger: SkipUI.UNCalendarNotificationTrigger {
+-        return SkipUI.UNCalendarNotificationTrigger(dateMatching: dateComponents as! DateComponents, repeats: repeats)
++        var values: [String: Int] = [:]
++        values["era"] = dateComponents.era
++        values["year"] = dateComponents.year
++        values["month"] = dateComponents.month
++        values["day"] = dateComponents.day
++        values["hour"] = dateComponents.hour
++        values["minute"] = dateComponents.minute
++        values["second"] = dateComponents.second
++        values["nanosecond"] = dateComponents.nanosecond
++        values["weekday"] = dateComponents.weekday
++        values["weekdayOrdinal"] = dateComponents.weekdayOrdinal
++        values["quarter"] = dateComponents.quarter
++        values["weekOfMonth"] = dateComponents.weekOfMonth
++        values["weekOfYear"] = dateComponents.weekOfYear
++        values["yearForWeekOfYear"] = dateComponents.yearForWeekOfYear
++        return SkipUI.UNCalendarNotificationTrigger.bridgedTrigger(components: values, timeZoneIdentifier: dateComponents.timeZone?.identifier, repeats: repeats)
+     }
+ 
+     public func nextTriggerDate() -> Date? {
