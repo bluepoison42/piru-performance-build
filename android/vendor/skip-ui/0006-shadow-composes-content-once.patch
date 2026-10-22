@@ -1,8 +1,8 @@
 diff --git a/Sources/SkipUI/Skip/Shadowed.kt b/Sources/SkipUI/Skip/Shadowed.kt
-index d52cbbd..5170f16 100644
+index e57d4fa..5170f16 100644
 --- a/Sources/SkipUI/Skip/Shadowed.kt
 +++ b/Sources/SkipUI/Skip/Shadowed.kt
-@@ -2,60 +2,60 @@
+@@ -2,63 +2,60 @@
  // SPDX-License-Identifier: MPL-2.0
  package skip.ui
  
@@ -26,6 +26,7 @@ index d52cbbd..5170f16 100644
 +import androidx.compose.ui.graphics.rememberGraphicsLayer
  import androidx.compose.ui.layout.Layout
  import androidx.compose.ui.platform.LocalDensity
+-import androidx.compose.ui.semantics.clearAndSetSemantics
 -import androidx.compose.ui.unit.Constraints
  import androidx.compose.ui.unit.Dp
 +import androidx.compose.ui.unit.IntOffset
@@ -48,7 +49,9 @@ index d52cbbd..5170f16 100644
 +    val shadowLayer = rememberGraphicsLayer()
  
 -    val contentContext = context.content()
+-    // The shadow is a second copy of the content: keep it out of the accessibility tree.
 -    val shadowContext = context.content(modifier = Modifier
+-        .clearAndSetSemantics {}
 -        .drawWithContent {
 -            val matrix = shadowColorMatrix(color)
 -            val filter = ColorFilter.colorMatrix(matrix)

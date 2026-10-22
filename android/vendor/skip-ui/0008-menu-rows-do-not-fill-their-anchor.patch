@@ -1,23 +1,8 @@
-diff --git a/Sources/SkipUI/SkipUI/Commands/Menu.swift b/Sources/SkipUI/SkipUI/Commands/Menu.swift
---- a/Sources/SkipUI/SkipUI/Commands/Menu.swift
-+++ b/Sources/SkipUI/SkipUI/Commands/Menu.swift
-@@ -146,6 +146,12 @@
-             EnvironmentValues.shared.setValues {
-                 placement.remove(ViewPlacement.toolbar) // Menus popovers are displayed outside the toolbar context
-                 $0.set_placement(placement)
-+                // The popup's rows are not the label's content: a row that fills the popup must not
-+                // turn the label's container into one that fills, which pushes a toolbar's title out.
-+                $0.set_flexibleWidth(nil)
-+                $0.set_flexibleHeight(nil)
-+                $0.set_flexibleWidthModifier(nil)
-+                $0.set_flexibleHeightModifier(nil)
-                 return ComposeResult.ok
-             } in: {
-                 let renderables = (nestedMenu.value?.content ?? content).Evaluate(context: context, options: 0)
 diff --git a/Sources/SkipUI/SkipUI/Commands/ContextMenu.swift b/Sources/SkipUI/SkipUI/Commands/ContextMenu.swift
+index a927f02..7219520 100644
 --- a/Sources/SkipUI/SkipUI/Commands/ContextMenu.swift
 +++ b/Sources/SkipUI/SkipUI/Commands/ContextMenu.swift
-@@ -104,6 +104,12 @@
+@@ -104,6 +104,12 @@ class ContextMenuModifier: RenderModifier {
                  EnvironmentValues.shared.setValues {
                      placement.remove(ViewPlacement.toolbar)
                      $0.set_placement(placement)
@@ -30,3 +15,20 @@ diff --git a/Sources/SkipUI/SkipUI/Commands/ContextMenu.swift b/Sources/SkipUI/S
                      return ComposeResult.ok
                  } in: {
                      let renderables = nestedMenu.value?.content.Evaluate(context: contentContext, options: 0) ?? primaryMenuItems
+diff --git a/Sources/SkipUI/SkipUI/Commands/Menu.swift b/Sources/SkipUI/SkipUI/Commands/Menu.swift
+index b387798..139524b 100644
+--- a/Sources/SkipUI/SkipUI/Commands/Menu.swift
++++ b/Sources/SkipUI/SkipUI/Commands/Menu.swift
+@@ -146,6 +146,12 @@ public final class Menu : View, Renderable {
+             EnvironmentValues.shared.setValues {
+                 placement.remove(ViewPlacement.toolbar) // Menus popovers are displayed outside the toolbar context
+                 $0.set_placement(placement)
++                // The popup's rows are not the label's content: a row that fills the popup must not
++                // turn the label's container into one that fills, which pushes a toolbar's title out.
++                $0.set_flexibleWidth(nil)
++                $0.set_flexibleHeight(nil)
++                $0.set_flexibleWidthModifier(nil)
++                $0.set_flexibleHeightModifier(nil)
+                 return ComposeResult.ok
+             } in: {
+                 let renderables = (nestedMenu.value?.content ?? content).Evaluate(context: context, options: 0)

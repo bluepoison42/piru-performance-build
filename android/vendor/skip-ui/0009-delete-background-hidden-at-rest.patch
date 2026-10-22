@@ -1,7 +1,8 @@
 diff --git a/Sources/SkipUI/SkipUI/Containers/List.swift b/Sources/SkipUI/SkipUI/Containers/List.swift
+index 5b0058c..203c299 100644
 --- a/Sources/SkipUI/SkipUI/Containers/List.swift
 +++ b/Sources/SkipUI/SkipUI/Containers/List.swift
-@@ -580,9 +580,11 @@
+@@ -845,9 +845,11 @@ public final class List : View, Renderable {
  
              itemContent = {
                  SwipeToDismissBox(state: dismissState, enableDismissFromEndToStart: true, enableDismissFromStartToEnd: false, modifier: $0, backgroundContent: {

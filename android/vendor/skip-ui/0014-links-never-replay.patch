@@ -16,10 +16,10 @@ index 663998c..6d2ef3f 100644
              }
              newIntent.value = nil
 diff --git a/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift b/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift
-index a9f5c80..e50f799 100644
+index d67e5fc..24bdfb1 100644
 --- a/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift
 +++ b/Sources/SkipUI/SkipUI/UIKit/UIApplication.swift
-@@ -75,6 +75,7 @@ let logger: Logger = Logger(subsystem: "skip.ui", category: "SkipUI") // adb log
+@@ -76,6 +76,7 @@ let logger: Logger = Logger(subsystem: "skip.ui", category: "SkipUI") // adb log
      public static func launch(_ activity: androidx.activity.ComponentActivity) {
          if activity !== shared.androidActivity {
              shared.androidActivity = activity
@@ -27,7 +27,7 @@ index a9f5c80..e50f799 100644
  
              // Must registerForActivityResult on or before Activity.onCreate
              do {
-@@ -94,6 +95,29 @@ let logger: Logger = Logger(subsystem: "skip.ui", category: "SkipUI") // adb log
+@@ -97,6 +98,29 @@ let logger: Logger = Logger(subsystem: "skip.ui", category: "SkipUI") // adb log
          }
      }
  
@@ -57,7 +57,7 @@ index a9f5c80..e50f799 100644
      func onActivityDestroy() {
          // The permission launcher appears to hold a strong reference to the activity, so we must nil it to avoid memory leaks
          self.requestPermissionLauncher = nil
-@@ -484,5 +508,12 @@ struct UIApplicationLifecycleEventObserver: LifecycleEventObserver, DefaultLifec
+@@ -487,5 +511,12 @@ struct UIApplicationLifecycleEventObserver: LifecycleEventObserver, DefaultLifec
          }
      }
  }

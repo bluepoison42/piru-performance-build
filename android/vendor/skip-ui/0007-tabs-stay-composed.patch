@@ -63,19 +63,19 @@ index 0000000..0573358
 +    }
 +}
 diff --git a/Sources/SkipUI/SkipUI/Containers/TabView.swift b/Sources/SkipUI/SkipUI/Containers/TabView.swift
-index 7a2eec5..dc67d90 100644
+index cfe382d..3d0f2a6 100644
 --- a/Sources/SkipUI/SkipUI/Containers/TabView.swift
 +++ b/Sources/SkipUI/SkipUI/Containers/TabView.swift
-@@ -49,6 +49,8 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
- import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
+@@ -50,6 +50,8 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
  import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
  import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
 +import androidx.compose.ui.layout.Layout
 +import androidx.compose.runtime.CompositionLocalProvider
  import androidx.compose.runtime.MutableState
  import androidx.compose.runtime.SideEffect
  import androidx.compose.runtime.Stable
-@@ -81,6 +83,8 @@ import androidx.navigation3.runtime.rememberDecoratedNavEntries
+@@ -82,6 +84,8 @@ import androidx.navigation3.runtime.rememberDecoratedNavEntries
  import androidx.navigation3.runtime.rememberNavBackStack
  import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
  import androidx.navigation3.ui.NavDisplay
@@ -84,7 +84,7 @@ index 7a2eec5..dc67d90 100644
  import androidx.navigation3.ui.defaultPopTransitionSpec
  import androidx.navigation3.ui.defaultPredictivePopTransitionSpec
  import androidx.navigation3.ui.defaultTransitionSpec
-@@ -255,8 +259,9 @@ public struct TabView : View, Renderable {
+@@ -263,8 +267,9 @@ public struct TabView : View, Renderable {
          // Isolate access to current route within child Composable so route nav does not force us to recompose
          navigateToCurrentRoute(tabBackStacks: tabBackStacks, selectedTabIndex: selectedTabIndex, tabRenderables: tabRenderables)
  
@@ -96,7 +96,7 @@ index 7a2eec5..dc67d90 100644
  
          let safeArea = EnvironmentValues.shared._safeArea
          /// Latest TabView-scope safe area; use inside long-lived nav entry closures so inset updates (e.g. status bar hide) propagate without relying on lexical capture of `safeArea`.
-@@ -277,7 +282,7 @@ public struct TabView : View, Renderable {
+@@ -285,7 +290,7 @@ public struct TabView : View, Renderable {
  
          // Reduce the tab bar preferences outside the bar composable. Otherwise the reduced value may change
          // when the bottom bar recomposes
@@ -105,7 +105,7 @@ index 7a2eec5..dc67d90 100644
  
          // When we layout, extend into the safe area if it is due to system bars, not into any app chrome. We extend
          // into the top bar too so that tab content can also extend into the top area without getting cut off during
-@@ -485,7 +490,6 @@ public struct TabView : View, Renderable {
+@@ -493,7 +498,6 @@ public struct TabView : View, Renderable {
                          primaryActionContent: {},
                          content: {
                              let entryContext = context.content()
@@ -113,7 +113,7 @@ index 7a2eec5..dc67d90 100644
                              let tabEntryProvider: (NavKey) -> NavEntry<NavKey> = { key in
                                  let tabKey = key as! SkipTabViewRouteKey
                                  return NavEntry(tabKey, content: { key in
-@@ -513,7 +517,7 @@ public struct TabView : View, Renderable {
+@@ -521,7 +525,7 @@ public struct TabView : View, Renderable {
                                          // This block is called multiple times on tab switch. Use stable arguments that will prevent our entry from
                                          // recomposing when called with the same values
                                          let arguments = TabEntryArguments(tabIndex: tabIndex, modifier: contentModifier, safeArea: contentSafeArea)
@@ -122,7 +122,7 @@ index 7a2eec5..dc67d90 100644
                                              RenderEntry(with: arguments, context: entryContext)
                                          }
                                      }
-@@ -534,27 +538,50 @@ public struct TabView : View, Renderable {
+@@ -542,27 +546,50 @@ public struct TabView : View, Renderable {
                                  }
                                  tabIndex += 1
                              }
@@ -193,10 +193,10 @@ index 7a2eec5..dc67d90 100644
                      )
                  }
 diff --git a/Sources/SkipUI/SkipUI/Layout/Presentation.swift b/Sources/SkipUI/SkipUI/Layout/Presentation.swift
-index 1483e42..6a3ec72 100644
+index 3bcfdcb..a4fc02d 100644
 --- a/Sources/SkipUI/SkipUI/Layout/Presentation.swift
 +++ b/Sources/SkipUI/SkipUI/Layout/Presentation.swift
-@@ -271,7 +271,9 @@ final class DisableScrollToDismissConnection : NestedScrollConnection {
+@@ -290,7 +290,9 @@ final class DisableScrollToDismissConnection : NestedScrollConnection {
  // SKIP INSERT: @OptIn(ExperimentalMaterial3Api::class)
  @Composable func ConfirmationDialogPresentation(title: Text?, isPresented: Binding<Bool>, context: ComposeContext, actions: any View, message: (any View)? = nil) {
      let sheetState = rememberModalBottomSheetState(skipPartiallyExpanded: true)
@@ -207,7 +207,7 @@ index 1483e42..6a3ec72 100644
          // Collect buttons and message text
          let actionRenderables = actions.Evaluate(context: context, options: 0)
          let composableActions: kotlin.collections.List<Renderable> = actionRenderables.mapNotNull {
-@@ -305,7 +307,7 @@ final class DisableScrollToDismissConnection : NestedScrollConnection {
+@@ -324,7 +326,7 @@ final class DisableScrollToDismissConnection : NestedScrollConnection {
              }
          }
      }
@@ -216,7 +216,7 @@ index 1483e42..6a3ec72 100644
          LaunchedEffect(true) {
              if sheetState.targetValue != SheetValue.Hidden {
                  sheetState.hide()
-@@ -472,7 +474,8 @@ final class DisableScrollToDismissConnection : NestedScrollConnection {
+@@ -491,7 +493,8 @@ final class DisableScrollToDismissConnection : NestedScrollConnection {
  
  // SKIP INSERT: @OptIn(ExperimentalMaterial3Api::class)
  @Composable func AlertPresentation(title: Text? = nil, titleResource: Int? = nil, isPresented: Binding<Bool>, context: ComposeContext, actions: any View, message: (any View)? = nil) {
@@ -252,10 +252,10 @@ index 3b7cf2c..3a405f7 100644
                      }
                  }
 diff --git a/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift b/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift
-index 8ce55d4..e9e9c30 100644
+index af448f0..40deb96 100644
 --- a/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift
 +++ b/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift
-@@ -868,11 +868,9 @@ extension View {
+@@ -869,11 +869,9 @@ extension View {
          #if SKIP
          // TODO: would it be better to use the (new) onFirstVisible and onVisibilityChanged APIs here?
          return ModifiedContent(content: self, modifier: SideEffectModifier { _ in
@@ -270,7 +270,7 @@ index 8ce55d4..e9e9c30 100644
              return ComposeResult.ok
          })
          #else
-@@ -967,12 +965,8 @@ extension View {
+@@ -968,12 +966,8 @@ extension View {
      public func onDisappear(perform action: (() -> Void)? = nil) -> any View {
          #if SKIP
          return ModifiedContent(content: self, modifier: SideEffectModifier { _ in
@@ -285,7 +285,7 @@ index 8ce55d4..e9e9c30 100644
              return ComposeResult.ok
          })
          #else
-@@ -1482,13 +1476,11 @@ extension View {
+@@ -1483,13 +1477,11 @@ extension View {
          #if SKIP
          return ModifiedContent(content: self, modifier: SideEffectModifier { _ in
              let handler = rememberUpdatedState(action)
@@ -301,7 +301,7 @@ index 8ce55d4..e9e9c30 100644
              }
              return ComposeResult.ok
          })
-@@ -1502,7 +1494,7 @@ extension View {
+@@ -1503,7 +1495,7 @@ extension View {
          #if SKIP
          return ModifiedContent(content: self, modifier: SideEffectModifier { _ in
              let actionState = rememberUpdatedState(bridgedAction)
@@ -310,7 +310,7 @@ index 8ce55d4..e9e9c30 100644
                  let task = Task {
                      kotlinx.coroutines.suspendCancellableCoroutine { continuation in
                          let completionHandler = CompletionHandler({
-@@ -1514,9 +1506,7 @@ extension View {
+@@ -1515,9 +1507,7 @@ extension View {
                          actionState.value(completionHandler)
                      }
                  }
