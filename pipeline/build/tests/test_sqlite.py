@@ -966,6 +966,20 @@ class TestBuiltDatabaseInvariants(unittest.TestCase):
         leaked = [r["alias"] for r in rows if r["alias"].lower() in bad_aliases]
         self.assertEqual(leaked, [], f"distinct-molecule aliases leaked onto Cannabis: {leaked}")
 
+    def test_lysergic_acid_amide_names_lsa(self):
+        """ "Lysergic acid amide" is LSA (ergine), a different molecule from LSD.
+        Wikidata lists it on LSD; alias-kinds.json's `belongsTo` hands it to LSA,
+        so the name resolves there and the wrong-molecule sweep drops it from LSD."""
+        owners = [
+            r["canonical_name"]
+            for r in self.db.execute("""
+                SELECT s.canonical_name FROM aliases a
+                JOIN substances s ON s.id = a.substance_id
+                WHERE lower(a.alias) = 'lysergic acid amide'
+            """).fetchall()
+        ]
+        self.assertEqual(owners, ["LSA"])
+
     def test_cannabidiol_collapsed_to_cbd(self):
         """`Cannabidiol` as a separate substance entry should not exist —
         the name-remap collapses it into the canonical `CBD` row."""

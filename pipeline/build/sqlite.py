@@ -11400,7 +11400,9 @@ class Build:
           · `junk` — not the name of anything — always goes.
           · `distinct_substance` goes only when it carries **no isomer or release
             facet** AND the name resolves to some other substance, so search still
-            lands somewhere.
+            lands somewhere. An entry's `belongsTo` names the substance it does
+            name, which is given the alias first ("lysergic acid amide", on LSD
+            from Wikidata, is LSA's).
         Anything else is reported, not deleted: those are the rows that need a real
         record of their own (Sodium Chloride under Sodium) or an isomer annotation
         the facet pass missed (Levmetamfetamine under Methamphetamine).
@@ -11409,6 +11411,7 @@ class Build:
         stats = {
             "dropped_junk": 0,
             "dropped_wrong_molecule": 0,
+            "moved_to_owner": 0,
             "kept_faceted": 0,
             "kept_unresolvable": 0,
         }
@@ -11439,6 +11442,10 @@ class Build:
                 if isomer or release_form:
                     stats["kept_faceted"] += 1
                     continue
+                owner = self.substance_ids.get(normalise(entry.get("belongsTo") or ""))
+                if owner is not None and owner != sid:
+                    self._add_alias(owner, entry["alias"], "piru-curated")
+                    stats["moved_to_owner"] += 1
                 elsewhere = self.cur.execute(
                     "SELECT 1 FROM aliases WHERE alias_normalized = ? AND substance_id != ?"
                     " UNION SELECT 1 FROM substances WHERE normalized_name = ? AND id != ?"

@@ -1298,7 +1298,8 @@
       },
       {
         "alias": "lysergic acid amide",
-        "kind": "distinct_substance"
+        "kind": "distinct_substance",
+        "belongsTo": "LSA"
       },
       {
         "alias": "lysergic acid diethylamide",
