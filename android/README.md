@@ -132,6 +132,12 @@ PortableData must preserve these SwiftData behaviors. Tests use Piru's real `@Mo
     contexts depend on: each live model holds a JNI global reference, and ART aborts at 51,200.
     Where SwiftData differs: a model held past its context keeps its to-one relationships, but
     its to-many sides are emptied, where SwiftData's would keep the context alive.
+11. Every model a context lets go of is unlinked from the rest through one function, whether
+    the context ended, another context deleted its row, or a save or rollback discarded it:
+    its to-many sides empty, it leaves its owners' inverse arrays, and it stays deleted.
+12. A model's Compose bridge is made on its first main-thread read outside PortableData's own
+    passes (loading, merging, rebuilding inverses, fetching, saving), and is called on the main
+    thread only; Observation itself hears reads and writes on every thread.
 
 ## Distribution, signing and data
 

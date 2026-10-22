@@ -70,15 +70,17 @@ public func _willSet<Target: PersistentModel>(_ child: some PersistentModel, fro
     let context = child._$backing.context
     if context?.isApplying == true { return }
     let childType = ObjectIdentifier(type(of: child))
-    for inverse in EntityDescription.of(Target.self).inverses where ObjectIdentifier(inverse.child) == childType {
-        guard inverse.owner(of: child) === old else { continue }
-        if let old {
-            inverse.remove(child, from: old)
+    ModelObservation.traversing {
+        for inverse in EntityDescription.of(Target.self).inverses where ObjectIdentifier(inverse.child) == childType {
+            guard inverse.owner(of: child) === old else { continue }
+            if let old {
+                inverse.remove(child, from: old)
+            }
+            if let new {
+                inverse.add(child, to: new)
+            }
+            break
         }
-        if let new {
-            inverse.add(child, to: new)
-        }
-        break
     }
     context?.noteMutation(of: child)
 }

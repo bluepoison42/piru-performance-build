@@ -186,29 +186,18 @@ public final class ModelContext: @unchecked Sendable {
         self.container = container
     }
 
-    /// Lets go of the models this context read. A dose points at its session and the
-    /// session's doses point back, so a context that ended with them still linked would
-    /// leave every model it reached alive; on Android each holds a JNI global reference
-    /// through its Skip bridge, and ART aborts the process when 51,200 are live. Emptying
-    /// the to-many sides breaks every cycle through one while a dose held past its context
-    /// still reaches its session. A session held past its context reads no doses, where
-    /// SwiftData's model would keep its context alive: read a to-many side while its
-    /// context is held.
+    /// Lets go of the models this context read, through ``detach(_:)``. A session held past
+    /// its context reads no doses, where SwiftData's model would keep its context alive:
+    /// read a to-many side while its context is held.
     deinit {
-        for entry in Array(registry.values) + Array(deleted.values) {
-            let description = EntityDescription.of(type(of: entry.model))
-            for inverse in description.inverses where !inverse.children(entry.model).isEmpty {
-                inverse.setChildren(entry.model, [])
-            }
-            for relationship in description.toMany where !relationship.get(entry.model).isEmpty {
-                relationship.set(entry.model, [])
-            }
-        }
+        detach((Array(registry.values) + Array(deleted.values)).map(\.model))
     }
 
     public var hasChanges: Bool {
         if !inserted.isEmpty || !deleted.isEmpty { return true }
-        return candidates.contains { registry[$0].map(isDirty) ?? false }
+        return ModelObservation.traversing {
+            candidates.contains { registry[$0].map(isDirty) ?? false }
+        }
     }
 
     /// The held models that may differ from what they last saved: inserted ones, those whose
@@ -224,7 +213,13 @@ public final class ModelContext: @unchecked Sendable {
 
     // MARK: Changes
 
-    public func insert<T: PersistentModel>(_ model: T) {
+    public func insert(_ model: some PersistentModel) {
+        ModelObservation.traversing {
+            insertModel(model)
+        }
+    }
+
+    private func insertModel<T: PersistentModel>(_ model: T) {
         if let id = model._$backing.identifier {
             if let entry = deleted[id], entry.model === model {
                 deleted[id] = nil
@@ -253,13 +248,17 @@ public final class ModelContext: @unchecked Sendable {
     }
 
     public func delete(_ model: some PersistentModel) {
-        remove(model)
+        ModelObservation.traversing {
+            remove(model)
+        }
         changed()
     }
 
     public func delete<T: PersistentModel>(model _: T.Type, where predicate: Predicate<T>? = nil) throws {
-        for model in try fetch(FetchDescriptor(predicate: predicate)) {
-            remove(model)
+        try ModelObservation.traversing {
+            for model in try fetch(FetchDescriptor(predicate: predicate)) {
+                remove(model)
+            }
         }
         changed()
     }
@@ -318,15 +317,25 @@ public final class ModelContext: @unchecked Sendable {
     /// Puts every held model back to its last saved values, forgets inserted models and
     /// restores deleted ones, as SwiftData's rollback does. Held references stay valid.
     public func rollback() {
+        ModelObservation.traversing {
+            rollbackModels()
+        }
+        changeHandler?()
+    }
+
+    private func rollbackModels() {
         isApplying = true
         defer { isApplying = false }
+        var discarded: [any PersistentModel] = []
         for id in inserted {
             guard let entry = registry[id] else { continue }
             unregister(id)
             entry.model._$backing.context = nil
             entry.model._$backing.identifier = nil
+            discarded.append(entry.model)
         }
         inserted.removeAll()
+        detach(discarded)
         for (id, entry) in deleted {
             entry.model._$backing.isDeleted = false
             register(entry, id)
@@ -341,7 +350,6 @@ public final class ModelContext: @unchecked Sendable {
         }
         touched.removeAll()
         rebuildInverses()
-        changeHandler?()
     }
 
     // MARK: Saving
@@ -350,6 +358,12 @@ public final class ModelContext: @unchecked Sendable {
     /// that cannot be encoded fails the save before anything is written. A row another
     /// context deleted stays deleted; this context's changes to it are dropped.
     public func save() throws {
+        try ModelObservation.traversing {
+            try saveChanges()
+        }
+    }
+
+    private func saveChanges() throws {
         guard !container.store.readOnly else {
             if hasChanges { throw PortableDataError.readOnly }
             return
@@ -442,13 +456,13 @@ public final class ModelContext: @unchecked Sendable {
         }
         connect(absorbed)
         inserted.removeAll()
-        for id in outcome.vanished {
-            forget(id)
-        }
-        for entry in deleted.values {
-            entry.model._$backing.context = nil
+        forget(outcome.vanished)
+        let discarded = deleted.values.map(\.model)
+        for model in discarded {
+            model._$backing.context = nil
         }
         deleted.removeAll()
+        detach(discarded)
         touched.removeAll()
         isApplying = false
         var others = outcome.others
@@ -462,9 +476,13 @@ public final class ModelContext: @unchecked Sendable {
         container.contextSaved(self)
     }
 
+    /// A model's encoding. An accessor's first write report asks for it too, outside any
+    /// other pass, so it holds off bridges itself.
     private func encode(_ model: any PersistentModel, _ id: PersistentIdentifier) throws -> [String: Data] {
         var snapshot = Snapshot(identifier: id)
-        try model._$encode(into: &snapshot)
+        try ModelObservation.traversing {
+            try model._$encode(into: &snapshot)
+        }
         return snapshot.written
     }
 
@@ -564,6 +582,7 @@ public final class ModelContext: @unchecked Sendable {
             inserted.remove(target)
             touched.remove(target)
             held.model._$backing.context = nil
+            detach([held.model])
         }
         entry.model._$backing.identifier = target
         entry.committed = committed
@@ -611,6 +630,12 @@ public final class ModelContext: @unchecked Sendable {
     // MARK: Reads
 
     public func fetch<T: PersistentModel>(_ descriptor: FetchDescriptor<T>) throws -> [T] {
+        try ModelObservation.traversing {
+            try fetchModels(descriptor)
+        }
+    }
+
+    private func fetchModels<T: PersistentModel>(_ descriptor: FetchDescriptor<T>) throws -> [T] {
         try refresh()
         try ensureLoaded(T.self)
         var results = models(T._$entityName).compactMap { $0 as? T }
@@ -636,7 +661,9 @@ public final class ModelContext: @unchecked Sendable {
     public func model(for identifier: PersistentIdentifier) -> any PersistentModel {
         if let model = registry[identifier]?.model { return model }
         if let type = container.type(named: identifier.entityName) {
-            try? load(type)
+            ModelObservation.traversing {
+                try? load(type)
+            }
         }
         guard let model = registry[identifier]?.model else {
             fatalError("PortableData: no \(identifier.entityName) with identifier \(identifier.primaryKey) in the store")
@@ -670,14 +697,57 @@ public final class ModelContext: @unchecked Sendable {
         registry[id] = nil
     }
 
-    /// Lets go of a model whose row another context deleted.
-    private func forget(_ id: PersistentIdentifier) {
-        guard let entry = registry[id] ?? deleted[id] else { return }
-        unregister(id)
-        deleted[id] = nil
-        touched.remove(id)
-        entry.model._$backing.isDeleted = true
-        entry.model._$backing.context = nil
+    /// Lets go of the models whose rows another context deleted. Each stays marked deleted,
+    /// and its graph is detached while this context can still reach it.
+    private func forget(_ ids: some Sequence<PersistentIdentifier>) {
+        var forgotten: [any PersistentModel] = []
+        for id in ids {
+            guard let entry = registry[id] ?? deleted[id] else { continue }
+            unregister(id)
+            deleted[id] = nil
+            touched.remove(id)
+            entry.model._$backing.isDeleted = true
+            entry.model._$backing.context = nil
+            forgotten.append(entry.model)
+        }
+        detach(forgotten)
+    }
+
+    /// Unlinks models this context lets go of (when it ends, when another context deleted
+    /// their rows, when a save or rollback discards them) from one another and from the
+    /// models it still holds. A dose points at its session and the session's doses point
+    /// back, so a graph let go of still linked would stay alive as long as any one of its
+    /// models did; on Android each live model holds a JNI global reference through its Skip
+    /// bridge, and ART aborts the process when 51,200 are live.
+    ///
+    /// Every to-many side of each model is emptied, which breaks each cycle, and each model
+    /// leaves the inverse arrays of the owners it points at. Its to-one relationships and its
+    /// deleted state stay, so a dose held past its context still reaches its session. The
+    /// writes register nothing and mark nothing changed.
+    private func detach(_ models: [any PersistentModel]) {
+        guard !models.isEmpty else { return }
+        ModelObservation.traversing {
+            let wasApplying = isApplying
+            isApplying = true
+            defer { isApplying = wasApplying }
+            for model in models {
+                let description = EntityDescription.of(type(of: model))
+                for inverse in description.inverses where !inverse.children(model).isEmpty {
+                    inverse.setChildren(model, [])
+                }
+                for relationship in description.toMany where !relationship.get(model).isEmpty {
+                    relationship.set(model, [])
+                }
+            }
+            for model in models {
+                for relationship in EntityDescription.of(type(of: model)).toOne {
+                    guard let target = relationship.get(model) else { continue }
+                    for inverse in EntityDescription.of(relationship.target).inverses where inverse.childPath == relationship.path {
+                        inverse.remove(model, from: target)
+                    }
+                }
+            }
+        }
     }
 
     // MARK: Loading
@@ -866,7 +936,7 @@ public final class ModelContext: @unchecked Sendable {
     /// Brings the context up to date after another context's save and tells the UI layer,
     /// as SwiftData merges a background save into the main context.
     func storeChanged() {
-        if (try? refresh()) == true {
+        if ModelObservation.traversing({ try? refresh() }) == true {
             changeHandler?()
         }
     }
@@ -885,11 +955,9 @@ public final class ModelContext: @unchecked Sendable {
                 gone.insert(id)
             }
         }
-        var changed = false
-        for id in gone where registry[id]?.committed != nil || deleted[id] != nil {
-            forget(id)
-            changed = true
-        }
+        let forgotten = gone.filter { registry[$0]?.committed != nil || deleted[$0] != nil }
+        forget(forgotten)
+        let forgot = !forgotten.isEmpty
         var updated: [(Entry, [String: Data], Set<String>?)] = []
         for row in changes.rows {
             let id = PersistentIdentifier(entityName: row.entity, primaryKey: row.primaryKey)
@@ -906,7 +974,7 @@ public final class ModelContext: @unchecked Sendable {
             }
         }
         connect(updated)
-        return changed || !updated.isEmpty
+        return forgot || !updated.isEmpty
     }
 
     /// Takes the keys of `row` that differ from what `entry` last read, except those this

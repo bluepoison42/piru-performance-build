@@ -158,6 +158,139 @@ struct ObservationTests {
         let dose = try #require(try ModelContext(store.container()).doses().first)
         #expect(dose.session?.title == "Saturday")
     }
+
+    /// Astra's `remoteDeleteRetention` probe: a context that read a session and its note
+    /// lets go of both when another context deletes the session and the cascade takes the
+    /// note, though the two still point at each other when the deletion arrives.
+    @Test
+    func `A graph another context deletes is released by a context that read it`() throws {
+        let store = TestStore()
+        let container = try store.container()
+        do {
+            let seeding = ModelContext(container)
+            let session = Session(startDate: origin, title: "Saturday")
+            seeding.insert(session)
+            seeding.insert(SessionNote(text: "calm", session: session))
+            try seeding.save()
+        }
+        let live = LiveCount()
+        ModelObservation.makeBridge = { CountingBridge(token: LiveToken(live)) }
+        defer { ModelObservation.makeBridge = nil }
+        weak var session: Session?
+        weak var note: SessionNote?
+        let reader = ModelContext(container)
+        do {
+            let read = try #require(try reader.sessions().first)
+            let readNote = try #require(read.notes?.first)
+            #expect(readNote.session === read)
+            session = read
+            note = readNote
+        }
+        #expect(live.value > 0)
+
+        let writer = ModelContext(container)
+        try writer.delete(model: Session.self)
+        try writer.save()
+        #expect(try reader.sessions().isEmpty)
+
+        #expect(session == nil)
+        #expect(note == nil)
+        #expect(live.value == 0)
+    }
+
+    /// A model a remote deletion let go of stays deleted and keeps its to-one relationships;
+    /// its to-many sides are empty.
+    @Test
+    func `A model a remote deletion lets go of stays deleted and keeps its to-one`() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let container = try store.container()
+        let reader = ModelContext(container)
+        let session = try #require(try reader.sessions().first)
+        let note = try #require(session.notes?.first)
+
+        let writer = ModelContext(container)
+        try writer.delete(model: Session.self)
+        try writer.save()
+        _ = try reader.sessions()
+
+        #expect(session.isDeleted)
+        #expect(note.isDeleted)
+        #expect(session.modelContext == nil)
+        #expect(note.session === session)
+        #expect(session.notes?.isEmpty ?? true)
+        #expect(session.doses?.isEmpty ?? true)
+        #expect(!reader.hasChanges)
+    }
+
+    /// Astra's `ordinaryContextCleanup` control: a context that inserted and saved a graph
+    /// frees it when it ends.
+    @Test
+    func `A context that saved a graph frees it when it ends`() throws {
+        let store = TestStore()
+        let container = try store.container()
+        weak var session: Session?
+        weak var note: SessionNote?
+        do {
+            let context = ModelContext(container)
+            let inserted = Session(startDate: origin, title: "Saturday")
+            let insertedNote = SessionNote(text: "calm", session: inserted)
+            context.insert(inserted)
+            context.insert(insertedNote)
+            try context.save()
+            #expect(inserted.notes?.count == 1)
+            session = inserted
+            note = insertedNote
+        }
+        #expect(session == nil)
+        #expect(note == nil)
+    }
+
+    /// Discarded models are let go of the same way: inserts a rollback forgets, and deletions
+    /// a save commits.
+    @Test
+    func `A rollback and a save free the graphs they discard while the context lives`() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let context = try ModelContext(store.container())
+        weak var rolledBack: Session?
+        weak var rolledBackNote: SessionNote?
+        weak var rolledBackDose: DoseEntry?
+        do {
+            let held = try #require(try context.sessions().first)
+            do {
+                let session = Session(startDate: origin, title: "Sunday")
+                let note = SessionNote(text: "tired", session: session)
+                let dose = DoseEntry(substance: "late", amount: 1, timestamp: origin)
+                dose.session = held
+                context.insert(session)
+                context.insert(note)
+                context.insert(dose)
+                #expect(held.doses?.count == 4)
+                rolledBack = session
+                rolledBackNote = note
+                rolledBackDose = dose
+            }
+            context.rollback()
+            #expect(rolledBack == nil)
+            #expect(rolledBackNote == nil)
+            #expect(rolledBackDose == nil)
+            #expect(held.doses?.count == 3)
+        }
+
+        weak var deleted: Session?
+        weak var deletedNote: SessionNote?
+        do {
+            let session = try #require(try context.sessions().first)
+            deleted = session
+            deletedNote = session.notes?.first
+            context.delete(session)
+        }
+        try context.save()
+        #expect(deleted == nil)
+        #expect(deletedNote == nil)
+        #expect(!context.hasChanges)
+    }
 }
 
 private final nonisolated class LiveCount: Sendable {
