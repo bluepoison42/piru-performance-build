@@ -25,6 +25,13 @@
   skip-fuse-ui patch, run phase 1 for that target (`swift build --triple arm64-apple-ios …
   --target SkipUI` in the stage) and check the patch reached
   `.build/plugins/outputs/<package>/…/*.kt` before packaging.
+- **A newly vendored package needs its pin rewritten.** `stage.py` copies the committed lock into
+  the stage on every run and drops a vendored package's pin only on a run where its patches
+  changed. A pin still naming the upstream release resolves through the mirror to that
+  revision, which the vendored clone also holds, so the next build checks out the release
+  without its patches. Check `.build/checkouts/<package>` for the patch after the build, and
+  commit the stage's `Package.resolved` in the same change that adds the package to
+  `VENDORED`.
 - **The lock holds only at the path it was made in.** `Package.resolved`'s `originHash` covers
   the staged manifest, which names `android/Compat` by absolute path; from another checkout
   path SwiftPM treats the file as stale, re-resolves, and moves unvendored packages
