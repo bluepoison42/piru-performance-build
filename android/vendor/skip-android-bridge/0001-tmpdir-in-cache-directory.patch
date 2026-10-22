@@ -1,0 +1,18 @@
+FileManager.temporaryDirectory reads TMPDIR and falls back to /data/local/tmp/, which an app cannot write, and the bridge bootstrap sets the other directories Foundation reads (XDG_CACHE_HOME, XDG_DATA_HOME, CFFIXED_USER_HOME) but not TMPDIR, so temporary files fail on Android releases that leave it unset. The bootstrap sets TMPDIR to the app's cache directory unless the system already did.
+
+diff --git a/Sources/SkipAndroidBridge/AndroidBridgeBootstrap.swift b/Sources/SkipAndroidBridge/AndroidBridgeBootstrap.swift
+index 3038fdc..18ece57 100644
+--- a/Sources/SkipAndroidBridge/AndroidBridgeBootstrap.swift
++++ b/Sources/SkipAndroidBridge/AndroidBridgeBootstrap.swift
+@@ -133,6 +133,11 @@ private func bootstrapFileManagerProperties(filesDir: String, cacheDir: String)
+     // https://github.com/swiftlang/swift-corelibs-foundation/blob/main/Sources/CoreFoundation/CFPlatform.c#L331C66-L331C83
+     setenv("CFFIXED_USER_HOME", filesDir, 0)
+ 
++    // FileManager.temporaryDirectory reads TMPDIR and otherwise falls back to /data/local/tmp/, which an
++    // app cannot write. Android sets TMPDIR to the app's cache directory only on some releases.
++    // https://github.com/swiftlang/swift-foundation/blob/main/Sources/FoundationEssentials/String/String%2BPath.swift
++    setenv("TMPDIR", cacheDir, 0)
++
+     // ensure that we can get the `.applicationSupportDirectory`, which should use the `XDG_DATA_HOME` environment
+     //let applicationSupportDirectory = URL.applicationSupportDirectory // unavailable on Android
+     let applicationSupportDirectory = try! FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)

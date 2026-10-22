@@ -1,0 +1,106 @@
+A bridged @Observable reports each read and write from whichever thread makes it, and the provenance hook fed them into the animation stack and read cursor, which belong to the main actor: a model read on a background thread raced the main thread's appends and trapped in Array's copy. The hook now records the thread the first withAnimation scope runs on and ignores bridged accesses on any other, where no scope can be open and no modifier's arguments are being read.
+
+diff --git a/Sources/SkipSwiftUI/Animation/StateProvenance.swift b/Sources/SkipSwiftUI/Animation/StateProvenance.swift
+index 67a9e92..52eaa0b 100644
+--- a/Sources/SkipSwiftUI/Animation/StateProvenance.swift
++++ b/Sources/SkipSwiftUI/Animation/StateProvenance.swift
+@@ -3,6 +3,13 @@
+ import Foundation
+ import SkipAndroidBridge
+ import SkipUI
++#if canImport(Darwin)
++import Darwin
++#elseif canImport(Android)
++import Android
++#elseif canImport(Glibc)
++import Glibc
++#endif
+ 
+ /// One animated write, shared by its readers until a consuming composition is applied.
+ /// Identity matters: a later write using an equal animation must receive a fresh stamp.
+@@ -44,9 +51,15 @@ struct CapturedAnimationProvenance {
+ ///
+ /// All members are main-thread confined: body evaluation and Java materialization run on the
+ /// main actor (the generated `Swift_composableBody` bridges through `assumeMainActorUnchecked`).
++/// Bridged `@Observable` accesses are the exception: they report from whichever thread reads or
++/// writes the object, so ``bridgedWriteToken()`` and ``recordBridgedRead(_:)`` act only on the
++/// thread that owns this state and ignore the rest.
+ enum StateProvenance {
+     nonisolated(unsafe) private static var animationStack: [Animation] = []
+     nonisolated(unsafe) private static var readCursor: [AnimationWriteStamp] = []
++    /// The thread the first `withAnimation` scope ran on, the main actor's. Recorded rather than
++    /// tested with a main-thread predicate: under Robolectric the main actor is the JVM test thread.
++    nonisolated(unsafe) private static var ownerThread: pthread_t?
+ 
+     /// Push the animation of an entered `withAnimation` scope.
+     ///
+@@ -65,18 +78,36 @@ enum StateProvenance {
+     /// Installed lazily at the first `withAnimation` — stamps can only exist after an
+     /// animation-scoped write, so earlier reads have nothing to record.
+     private static let installObservationHook: Void = {
++        ownerThread = pthread_self()
+         #if SKIP_BRIDGE
+         BridgedObservationProvenance.currentToken = {
+-            return StateProvenance.makeWriteStamp()
++            return StateProvenance.bridgedWriteToken()
+         }
+         BridgedObservationProvenance.recordRead = { token in
+-            if let stamp = token as? AnimationWriteStamp {
+-                StateProvenance.recordRead(stamp)
+-            }
++            StateProvenance.recordBridgedRead(token)
+         }
+         #endif
+     }()
+ 
++    /// The stamp a bridged observable write carries: the innermost animation's on the owning
++    /// thread, and none on any other, where no `withAnimation` scope can be open.
++    static func bridgedWriteToken() -> AnimationWriteStamp? {
++        guard isOnOwnerThread else { return nil }
++        return makeWriteStamp()
++    }
++
++    /// A bridged observable read joins the read cursor on the owning thread. A read on any other
++    /// thread belongs to no modifier's arguments.
++    static func recordBridgedRead(_ token: Any?) {
++        guard isOnOwnerThread, let stamp = token as? AnimationWriteStamp else { return }
++        recordRead(stamp)
++    }
++
++    private static var isOnOwnerThread: Bool {
++        guard let ownerThread else { return false }
++        return pthread_equal(ownerThread, pthread_self()) != 0
++    }
++
+     /// Pop the most recently entered `withAnimation` scope.
+     static func popAnimation() {
+         if !animationStack.isEmpty {
+diff --git a/Tests/SkipSwiftUITests/StateProvenanceTests.swift b/Tests/SkipSwiftUITests/StateProvenanceTests.swift
+index 0ce6788..bae4f5f 100644
+--- a/Tests/SkipSwiftUITests/StateProvenanceTests.swift
++++ b/Tests/SkipSwiftUITests/StateProvenanceTests.swift
+@@ -34,6 +34,24 @@ import XCTest
+         XCTAssertNil(StateProvenance.currentAnimation)
+     }
+ 
++    func testBridgedAccessesOffTheOwningThreadAreIgnored() async {
++        StateProvenance.pushAnimation(.linear(duration: 1))
++        defer { StateProvenance.popAnimation() }
++
++        // On the owning thread a bridged write is stamped and its read joins the cursor.
++        nonisolated(unsafe) let stamp = StateProvenance.bridgedWriteToken()
++        XCTAssertNotNil(stamp)
++
++        // Off it, a write carries no stamp and a read records nothing.
++        let stampedOffThread = await Task.detached { StateProvenance.bridgedWriteToken() != nil }.value
++        XCTAssertFalse(stampedOffThread)
++        await Task.detached { StateProvenance.recordBridgedRead(stamp) }.value
++        XCTAssertNil(StateProvenance.capture().animation)
++
++        StateProvenance.recordBridgedRead(stamp)
++        XCTAssertNotNil(StateProvenance.capture().animation)
++    }
++
+     func testStateBoxStampsAndReportsProvenance() {
+         let box = BridgedStateBox(0, comparator: { $0 == $1 })
+ 
