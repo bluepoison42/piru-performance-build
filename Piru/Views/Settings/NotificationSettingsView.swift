@@ -305,7 +305,9 @@ struct NotificationTypeDetailSheet: View {
 
     private var timeSensitiveSection: some View {
         Section {
-            ForEach(category.types.filter(\.supportsTimeSensitive)) { type in
+            // Ids apart from typesSection's: on Android every section of a List is one
+            // Compose LazyColumn, which aborts on a key it has already placed.
+            ForEach(category.types.filter(\.supportsTimeSensitive), id: \.timeSensitiveRowID) { type in
                 Toggle(isOn: timeSensitiveBinding(type)) {
                     Label(type.rowTitle, systemImage: type.rowSymbol)
                 }
@@ -588,5 +590,13 @@ extension NotificationType {
         case .checkIn:
             "\"How is it going?\" at set points in a session, each opening a timestamped note. Off unless you turn it on, for one session or for every session."
         }
+    }
+}
+
+private extension NotificationType {
+    /// The row's id in the Time Sensitive section, apart from the type's own `id`
+    /// that its row in the section above uses.
+    var timeSensitiveRowID: String {
+        "timeSensitive.\(rawValue)"
     }
 }
