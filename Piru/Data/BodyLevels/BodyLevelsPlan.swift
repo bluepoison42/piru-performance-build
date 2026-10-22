@@ -30,11 +30,10 @@ extension BodyLevelsManager {
         /// Resolve the log into a plan, or `nil` when nothing has a modeled
         /// body-load in the window (only supplements / unmodeled forms logged).
         @MainActor
-        static func build(entries: [DoseEntry], colors: [SubstanceColor], range: UsageTimeRange, now: Date) -> Plan? {
+        static func build(entries: [BodyLoadEntry], colorMap: [String: Color], range: UsageTimeRange, now: Date) -> Plan? {
             let dates = sampleDates(range: range, entries: entries, now: now)
             guard !dates.isEmpty else { return nil }
 
-            let colorMap = colors.colorMap
             var substanceCache: [String: Substance?] = [:]
             func lookup(_ name: String) -> Substance? {
                 let key = name.lowercased()
@@ -55,14 +54,14 @@ extension BodyLevelsManager {
                 // unmodeled release form without a per-product envelope has no
                 // honest absorption limb.
                 if substance?.modelsBodyLoad == false { continue }
-                guard let dose = substance?.quantity(of: entry) ?? entry.quantity else { continue }
+                guard let dose = entry.quantity(using: substance) else { continue }
                 let productDuration = entry.productDuration
                 // A depot administration keeps its slow depot half-life and no acute
                 // absorption limb (see PKResolver / ActiveSubstanceCalculator), so it
                 // plots as a slow depot decay rather than a fast base-drug spike.
-                let isDepot = PKResolver.isDepot(entry: entry)
+                let isDepot = entry.isDepot
                 if !isDepot, productDuration == nil, entry.namesUnmodeledForm { continue }
-                guard let halfLife = PKResolver.halfLifeMinutes(for: entry, substance: substance) else { continue }
+                guard let halfLife = entry.halfLifeMinutes(substance: substance, isDepot: isDepot) else { continue }
                 let (ke, ka) = PKResolver.rateConstants(
                     halfLifeMinutes: halfLife,
                     duration: isDepot ? nil : entry.applyingMeal(to: productDuration ?? substance?.resolveDuration(
@@ -126,7 +125,7 @@ extension BodyLevelsManager {
         /// step. Steps are chosen so a short-half-life sawtooth stays legible on the
         /// tighter ranges while a year renders its envelope without a 17k-point comb.
         @MainActor
-        private static func sampleDates(range: UsageTimeRange, entries: [DoseEntry], now: Date) -> [Date] {
+        private static func sampleDates(range: UsageTimeRange, entries: [BodyLoadEntry], now: Date) -> [Date] {
             let start: Date
             if let days = range.days {
                 start = now.addingTimeInterval(-Double(days) * 86_400)
@@ -158,5 +157,43 @@ extension BodyLevelsManager {
             if dates.last != now { dates.append(now) }
             return dates
         }
+    }
+}
+
+/// What a plan asks of a logged dose, answered from its stored fields exactly as the
+/// `DoseEntry` members of the same names answer from the model.
+extension BodyLoadEntry {
+    /// The amount parsed against `substance`'s units, its aliases included, or as written
+    /// when the substance is unknown; `nil` for an unknown dose.
+    func quantity(using substance: Substance?) -> DoseQuantity? {
+        guard !isUnknownDose else { return nil }
+        return substance?.quantity(amount, unit: unit) ?? DoseQuantity(amount, unit: unit)
+    }
+
+    var namesUnmodeledForm: Bool {
+        DoseEntry.namesUnmodeledForm(releaseForm: releaseForm)
+    }
+
+    @MainActor var productDuration: DurationProfile? {
+        DoseEntry.productDuration(named: productName)
+    }
+
+    @MainActor var isDepot: Bool {
+        PKResolver.isDepot(
+            releaseForm: releaseForm, route: route, saltForm: saltForm, substanceUID: substanceUID, substance: substance,
+        )
+    }
+
+    /// The depot-aware half-life ``PKResolver/halfLifeMinutes(for:substance:)`` gives the
+    /// model, for a caller that has already asked ``isDepot``.
+    @MainActor
+    func halfLifeMinutes(substance resolved: Substance?, isDepot: Bool) -> Double? {
+        PKResolver.depotHalfLifeMinutes(substanceUID: substanceUID, substance: substance, saltForm: saltForm, isDepot: isDepot)
+            ?? PKResolver.halfLifeMinutes(substance: resolved)
+    }
+
+    @MainActor
+    func applyingMeal(to duration: DurationProfile?) -> DurationProfile? {
+        MealState.shifting(duration, by: meal, substance: substance, product: productName, route: route)
     }
 }
