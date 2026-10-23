@@ -107,7 +107,7 @@ nonisolated struct PiruNotificationPreferencesData: Codable, Equatable {
 // MARK: - Mapping
 
 extension PiruProfileData {
-    init(_ record: UserProfileRecord) {
+    nonisolated init(_ record: UserProfileRecord) {
         disclosureTier = record.disclosureTierRaw
         bodyWeightKg = record.bodyWeightKg
         weightSource = record.weightSourceRaw
@@ -125,7 +125,7 @@ extension PiruProfileData {
 }
 
 extension PiruNotificationPreferencesData {
-    init(_ record: NotificationPreferences) {
+    nonisolated init(_ record: NotificationPreferences) {
         masterEnabled = record.masterEnabled
         hydrationEnabled = record.hydrationEnabled
         sleepEnabled = record.sleepEnabled
@@ -172,7 +172,7 @@ extension PiruNotificationPreferencesData {
 
 extension DataExportImport {
     /// The per-record sections of ``PiruFile`` beyond the journal itself.
-    struct NativeRecords {
+    nonisolated struct NativeRecords {
         var labMeasurements: [PiruLabMeasurementData]
         var customUnits: [PiruCustomUnitData]
         var drinkPresets: [PiruDrinkPresetData]
@@ -182,8 +182,7 @@ extension DataExportImport {
         var notificationPreferences: PiruNotificationPreferencesData?
     }
 
-    @MainActor
-    static func makeNativeRecords(context: ModelContext) throws -> NativeRecords {
+    nonisolated static func makeNativeRecords(context: ModelContext) throws -> NativeRecords {
         let labs = try context.fetch(FetchDescriptor<LabMeasurement>(sortBy: [SortDescriptor(\.date)]))
         let units = try context.fetch(FetchDescriptor<CustomUnitPreset>(sortBy: [SortDescriptor(\.sortOrder)]))
         let drinks = try context.fetch(FetchDescriptor<CustomDrinkPreset>(sortBy: [SortDescriptor(\.sortOrder)]))

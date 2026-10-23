@@ -6,7 +6,6 @@
 // A new phone restores by picking the same folder and entering the passphrase.
 // Wired into upstream by patches/0016-folder-backup.patch.
 
-import CryptoKit
 import Foundation
 import os
 import SkipBridge
@@ -32,11 +31,15 @@ final class FolderBackupManager {
     private static let folderURIKey = "backup.folder.uri"
     private static let folderNameKey = "backup.folder.name"
     private static let lastDateKey = "backup.folder.lastSuccessDate"
-    private static let lastHashKey = "backup.folder.lastPlaintextHash"
+    private static let writtenRevisionKey = "backup.folder.writtenRevision"
     /// Coalesces rapid foreground/background transitions.
     private static let minInterval: TimeInterval = 30
 
     private let defaults = UserDefaults.androidAppGroup ?? .standard
+    private let revisionGate = BackupRevisionGate(
+        defaults: UserDefaults.androidAppGroup ?? .standard,
+        key: FolderBackupManager.writtenRevisionKey,
+    )
 
     private(set) var status: BackupManager.Status = .idle
     private(set) var folder: Folder?
@@ -76,7 +79,8 @@ final class FolderBackupManager {
         self.folder = folder
         defaults.set(folder.uri, forKey: Self.folderURIKey)
         defaults.set(folder.name, forKey: Self.folderNameKey)
-        setLastBackup(nil, hash: nil)
+        setLastBackup(nil)
+        revisionGate.reset()
         await run(context: context, force: true)
     }
 
@@ -86,50 +90,70 @@ final class FolderBackupManager {
         folder = nil
         defaults.removeObject(forKey: Self.folderURIKey)
         defaults.removeObject(forKey: Self.folderNameKey)
-        setLastBackup(nil, hash: nil)
+        setLastBackup(nil)
+        revisionGate.reset()
         FolderBackupPassphrase.remove()
         status = .idle
     }
 
     // MARK: - Backup
 
-    /// Export → seal with the passphrase → write into the folder. Skips when no folder is
-    /// set, when nothing changed since the last backup, or when called again within
-    /// ``minInterval``; `force` skips only the interval.
+    /// Capture → seal with the passphrase → write into the folder. Skips when no folder is
+    /// set, when the captured data has the revision the folder already holds, or when called
+    /// again within ``minInterval``; `force` skips only the interval.
+    ///
+    /// The main actor saves pending edits and reads custom substances and settings; the model
+    /// graph is gathered on a background context, and encoding, hashing, key derivation and
+    /// the provider's IO run off the main actor.
     func run(context: ModelContext, force: Bool = false) async {
         guard let folder, let passphrase else { return }
         if case .running = status { return }
         if !force, let last = lastBackupDate, Date().timeIntervalSince(last) < Self.minInterval { return }
 
         status = .running
-        do {
-            let plaintext = try DataExportImport.exportJSON(context: context)
-            let hash = SHA256.hash(data: plaintext).map { String(format: "%02x", $0) }.joined()
-            if hash == defaults.string(forKey: Self.lastHashKey), lastBackupDate != nil {
-                status = .idle
-                return
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                Logger.backupManager.error("Folder backup could not save pending edits: \(error.localizedDescription, privacy: .public)")
             }
-            // Key derivation (600 000 PBKDF2 rounds) and the provider's IO run off the main actor.
-            let uri = folder.uri
-            try await Task.detached(name: "Folder backup") {
-                let envelope = try BackupCrypto.encryptWithPassphrase(plaintext, passphrase: passphrase)
-                let staging = FileManager.default.temporaryDirectory.appendingPathComponent(Self.filename)
-                defer { try? FileManager.default.removeItem(at: staging) }
-                try envelope.write(to: staging, options: .atomic)
-                if let failure = AndroidBackupFolder.write(tree: uri, name: Self.filename, source: staging) {
-                    throw FolderBackupError.failed(failure)
-                }
-            }.value
-            // Turned off or moved to another folder while this one was being written.
-            guard self.folder == folder else { return }
-            let now = Date()
-            setLastBackup(now, hash: hash)
-            status = .success(now)
-            Logger.backupManager.notice("Folder backup written.")
+        }
+        let container = context.container
+        do {
+            let outcome = try await revisionGate.run {
+                try await DataExportImport.captureBackup(container: container)
+            } write: { snapshot in
+                try await Self.write(snapshot, passphrase: passphrase, tree: folder.uri)
+                // Turned off or moved to another folder while this one was being written.
+                guard self.folder == folder else { throw CancellationError() }
+            }
+            switch outcome {
+            case .unchanged:
+                status = .idle
+            case .written:
+                let now = Date()
+                setLastBackup(now)
+                status = .success(now)
+                Logger.backupManager.notice("Folder backup written.")
+            }
+        } catch is CancellationError {
+            status = .idle
         } catch {
             Logger.backupManager.error("Folder backup failed: \(error.localizedDescription, privacy: .public)")
             status = .failed(error.localizedDescription)
         }
+    }
+
+    private nonisolated static func write(_ snapshot: BackupSnapshot, passphrase: String, tree: String) async throws {
+        try await Task.detached(name: "Folder backup") {
+            let envelope = try BackupCrypto.encryptWithPassphrase(snapshot.plaintext(), passphrase: passphrase)
+            let staging = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+            defer { try? FileManager.default.removeItem(at: staging) }
+            try envelope.write(to: staging, options: .atomic)
+            if let failure = AndroidBackupFolder.write(tree: tree, name: filename, source: staging) {
+                throw FolderBackupError.failed(failure)
+            }
+        }.value
     }
 
     /// The backup already in `folder`, or `nil` when it holds none.
@@ -147,10 +171,9 @@ final class FolderBackupManager {
         }.value
     }
 
-    private func setLastBackup(_ date: Date?, hash: String?) {
+    private func setLastBackup(_ date: Date?) {
         lastBackupDate = date
         defaults.set(date?.timeIntervalSince1970 ?? 0, forKey: Self.lastDateKey)
-        defaults.set(hash, forKey: Self.lastHashKey)
     }
 }
 
