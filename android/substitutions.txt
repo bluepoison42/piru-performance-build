@@ -144,9 +144,6 @@ Bundle\.main\.object\(forInfoDictionaryKey:	AndroidInfoPlist.object(forInfoDicti
 Bundle\.main\.infoDictionary	AndroidInfoPlist.infoDictionary
 Bundle\.main\.url\(forResource:	AndroidResources.url(forResource:
 
-# A calendar trigger is a one-shot interval until Skip's native repeat is proven in a release
-# build (AndroidCalendarTrigger, Notifications+Android.swift).
-\bUNCalendarNotificationTrigger\(dateMatching:	AndroidCalendarTrigger.make(dateMatching:
 # semantic: whether a removal also cancels the completion-handler adds asked for before it. Those
 # adds run one at a time after the call returns (AndroidNotificationQueue, Notifications+Android.swift),
 # so Skip's removal alone would run ahead of them and the add would bring the request back. The

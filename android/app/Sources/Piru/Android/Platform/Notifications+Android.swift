@@ -199,18 +199,6 @@ final nonisolated class AndroidNotificationQueue: Sendable {
     }
 }
 
-/// A repeating calendar reminder on Android, as the next matching moment in a one-shot interval
-/// trigger. The routine reminders are rescheduled whenever the app runs, which carries it forward.
-/// It stands in for Skip's calendar trigger until a release build has delivered that trigger's
-/// repeats with the app closed (vendor patches skip-ui 0017, skip-fuse-ui 0008).
-enum AndroidCalendarTrigger {
-    static func make(dateMatching components: DateComponents, repeats _: Bool) -> UNNotificationTrigger {
-        let next = Calendar.current.nextDate(after: .now, matching: components, matchingPolicy: .nextTime)
-            ?? .now.addingTimeInterval(60)
-        return UNTimeIntervalNotificationTrigger(timeInterval: max(1, next.timeIntervalSinceNow), repeats: false)
-    }
-}
-
 /// The notification delegate on Android. SkipUI schedules a notification only when a delegate
 /// asks to present it, so `willPresent` answers as iOS shows a reminder in the foreground. A tap
 /// lands at the notification's deep link, as `DoseNotificationDelegate` does on iOS.
