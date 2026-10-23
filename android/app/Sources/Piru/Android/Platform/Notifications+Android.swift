@@ -68,6 +68,12 @@ nonisolated extension UNUserNotificationCenter {
     func androidRemovePendingNotificationRequests(withIdentifiers identifiers: [String]) {
         AndroidNotificationQueue.shared.remove(identifiers, from: self)
     }
+
+    /// The removal of every pending request, reached through substitutions.txt: it removes at once,
+    /// as Skip's does, and also cancels every completion-handler add asked for before it.
+    func androidRemoveAllPendingNotificationRequests() {
+        AndroidNotificationQueue.shared.removeAll(from: self)
+    }
 }
 
 /// Applies the completion-handler notification calls in the order they were made, as iOS's
@@ -91,6 +97,8 @@ final nonisolated class AndroidNotificationQueue: Sendable {
         /// The sequence number of the latest removal of each identifier, kept while the chain has
         /// operations an earlier removal could overtake.
         var removedAt: [String: Int] = [:]
+        /// The sequence number of the latest removal of every request, kept the same way.
+        var removedAllAt = 0
     }
 
     private let state = Mutex(State())
@@ -142,6 +150,16 @@ final nonisolated class AndroidNotificationQueue: Sendable {
         Self.removeNow(identifiers, from: center)
     }
 
+    func removeAll(from center: UNUserNotificationCenter) {
+        state.withLock { state in
+            guard state.unfinished > 0 else { return }
+            state.sequence += 1
+            state.removedAllAt = state.sequence
+        }
+        nonisolated(unsafe) let skipCenter = center
+        skipCenter.removeAllPendingNotificationRequests()
+    }
+
     /// Skip's own removal. substitutions.txt leaves a call on `skipCenter` as written, so this
     /// one reaches Skip rather than the twin that calls it.
     private static func removeNow(_ identifiers: [String], from skipCenter: UNUserNotificationCenter) {
@@ -170,13 +188,14 @@ final nonisolated class AndroidNotificationQueue: Sendable {
             if state.unfinished == 0 {
                 state.tail = nil
                 state.removedAt = [:]
+                state.removedAllAt = 0
             }
         }
     }
 
     /// Whether `identifier` was removed after the operation numbered `sequence` was asked for.
     private func isRemoved(_ identifier: String, after sequence: Int) -> Bool {
-        state.withLock { ($0.removedAt[identifier] ?? 0) > sequence }
+        state.withLock { max($0.removedAt[identifier] ?? 0, $0.removedAllAt) > sequence }
     }
 }
 

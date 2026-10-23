@@ -382,6 +382,8 @@ final class NotificationPreferencesStore {
             // reminder — turning the primary off silences the already-
             // materialized re-asks immediately, not on the next sync.
             if type == .routine { prefixes += NotificationType.routineFollowUp.identifierPrefixes }
+            // A check-in replacement still adding would land after the removal.
+            if type == .checkIn { CheckInScheduler.cancelAll(defaults: defaults) }
             Self.removePending(withPrefixes: prefixes)
         }
     }

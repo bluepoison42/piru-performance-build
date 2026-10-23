@@ -152,9 +152,10 @@ enum CheckInScheduler {
     /// identifier a check-in of this session can carry (``identifiers(sessionID:)``)
     /// and then adds the new requests one at a time, awaiting each. Replacements
     /// of one session run in the order they were asked for, and each stops at
-    /// its next step once a newer one exists, so a superseded schedule never
-    /// lands after the newer one cleared it. With nothing ahead of it the
-    /// removal happens before this returns.
+    /// its next step once a newer one exists or ``cancelAll(defaults:)`` runs, so a
+    /// superseded schedule never lands after the newer one cleared it. A request
+    /// whose add was under way when that happened is removed again once the add
+    /// returns. With nothing ahead of it the removal happens before this returns.
     ///
     /// - Returns: the replacement, for a caller that needs it finished.
     @discardableResult
@@ -167,23 +168,25 @@ enum CheckInScheduler {
         let prompts = prompts(for: session, defaults: defaults)
         let generation = (latestReplacement[sessionID] ?? 0) + 1
         latestReplacement[sessionID] = generation
+        let preferences = ObjectIdentifier(defaults)
+        let epoch = cancellationEpochs[preferences, default: 0]
         let previous = runningReplacement[sessionID]
         let replacement = Task.immediate { @MainActor in
             @MainActor
-            func isLatest() -> Bool {
-                latestReplacement[sessionID] == generation
+            func isCurrent() -> Bool {
+                latestReplacement[sessionID] == generation && cancellationEpochs[preferences, default: 0] == epoch
             }
             defer {
-                if isLatest() {
+                if latestReplacement[sessionID] == generation {
                     latestReplacement[sessionID] = nil
                     runningReplacement[sessionID] = nil
                 }
             }
             await previous?.value
-            guard isLatest() else { return }
+            guard isCurrent() else { return }
             center.removePendingRequests(withIdentifiers: identifiers(sessionID: sessionID))
             for prompt in prompts {
-                guard isLatest() else { return }
+                guard isCurrent() else { return }
                 let interval = prompt.date.timeIntervalSinceNow
                 guard interval > 0 else { continue }
                 let request = UNNotificationRequest(
@@ -196,6 +199,10 @@ enum CheckInScheduler {
                 } catch {
                     Logger.checkIn.error("Check-in schedule failed: \(error.localizedDescription, privacy: .public)")
                 }
+                guard isCurrent() else {
+                    center.removePendingRequests(withIdentifiers: [prompt.identifier])
+                    return
+                }
             }
             Logger.checkIn.debug("Scheduled \(prompts.count) check-ins for session \(sessionID.uuidString, privacy: .public)")
         }
@@ -207,8 +214,20 @@ enum CheckInScheduler {
         return replacement
     }
 
+    /// Stop every replacement in flight whose preferences live in `defaults`,
+    /// for a route that clears check-ins without scheduling new ones: muting
+    /// them, pausing all notifications, deleting the journal. Each stops before
+    /// its next add, and removes again the request whose add was under way. The
+    /// caller clears what is already pending.
+    static func cancelAll(defaults: UserDefaults = .standard) {
+        cancellationEpochs[ObjectIdentifier(defaults), default: 0] += 1
+    }
+
     /// Per session, the generation of the newest replacement asked for.
     private static var latestReplacement: [UUID: Int] = [:]
+    /// Per preferences store, advanced by ``cancelAll(defaults:)``; a replacement
+    /// asked for before it stops.
+    private static var cancellationEpochs: [ObjectIdentifier: Int] = [:]
     /// Per session, the newest replacement, which the next one waits for.
     private static var runningReplacement: [UUID: Task<Void, Never>] = [:]
 

@@ -223,6 +223,7 @@ final class DataStorageModel {
         ] {
             do { try cleanup() } catch { cleanupErrors.append(error.localizedDescription) }
         }
+        CheckInScheduler.cancelAll()
         let notifications = UNUserNotificationCenter.current()
         notifications.removeAllPendingNotificationRequests()
         notifications.removeAllDeliveredNotifications()
