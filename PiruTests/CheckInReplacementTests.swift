@@ -181,9 +181,9 @@ struct CheckInReplacementTests {
     // MARK: - Routes that clear check-ins without a replacement
 
     /// A configured preferences store reading this suite's defaults, check-ins on.
-    private func preferences() throws -> NotificationPreferencesStore {
+    private func preferences() -> NotificationPreferencesStore {
         let store = NotificationPreferencesStore()
-        try store.configure(container: container, defaults: defaults)
+        store.configure(container: container, defaults: defaults)
         store.setEnabled(.checkIn, true)
         return store
     }
@@ -208,14 +208,14 @@ struct CheckInReplacementTests {
 
     @Test
     func `Turning check-ins off in Settings stops a schedule still being added`() async throws {
-        let store = try preferences()
+        let store = preferences()
         let left = try await clearWhileAdding { store.setEnabled(.checkIn, false) }
         #expect(left.isEmpty)
     }
 
     @Test
     func `Pausing every notification stops a check-in schedule still being added`() async throws {
-        let store = try preferences()
+        let store = preferences()
         let left = try await clearWhileAdding { store.setMasterEnabled(false) }
         #expect(left.isEmpty)
     }

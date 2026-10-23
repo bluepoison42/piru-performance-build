@@ -112,7 +112,7 @@ private struct SpreadsheetDateOrderSection: View {
 
     var body: some View {
         Section {
-            Picker(selection: Binding(get: { order }, set: onChange)) {
+            Picker(selection: Binding(get: { order }, set: { onChange($0) })) {
                 ForEach(SpreadsheetDateOrder.allCases, id: \.self) { option in
                     Text(option.title).tag(option)
                 }
@@ -158,7 +158,7 @@ private struct SpreadsheetSwapSection: View {
 
     var body: some View {
         Section {
-            Toggle(isOn: Binding(get: { isOn }, set: onChange)) {
+            Toggle(isOn: Binding(get: { isOn }, set: { onChange($0) })) {
                 Text("Swap Latitude and Longitude")
             }
             .tint(Theme.accent)
