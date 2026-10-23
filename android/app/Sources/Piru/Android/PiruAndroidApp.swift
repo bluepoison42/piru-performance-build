@@ -18,9 +18,7 @@ import SwiftUI
             ContentView()
                 .modelContainer(PiruAndroidLaunch.container)
                 .task {
-                    AppUpdateCheck.shared.startLaunchCheck()
-                    await AppLaunch.finishLaunching(container: PiruAndroidLaunch.container)
-                    PiruAndroidLaunch.finishedLaunching = true
+                    await PiruAndroidLaunch.finishLaunching()
                 }
         }
         .modifier(ProblemReportPrompt())
@@ -71,7 +69,27 @@ import SwiftUI
 
 @MainActor
 enum PiruAndroidLaunch {
-    static var finishedLaunching = false
+    /// Set once the launch passes have run; lifecycle callbacks wait for it.
+    private(set) static var finishedLaunching = false
+    private static var launch: Task<Void, Never>?
+
+    /// Runs the launch passes once per process. Android recreates the root view with its
+    /// activity, and a recreated root joins the launch already running, or returns at once
+    /// when it has finished. The launch belongs to the process, so a root that goes away
+    /// while waiting leaves it running.
+    static func finishLaunching() async {
+        if let launch {
+            await launch.value
+            return
+        }
+        let task = Task("Finish launching") {
+            AppUpdateCheck.shared.startLaunchCheck()
+            await AppLaunch.finishLaunching(container: container)
+            finishedLaunching = true
+        }
+        launch = task
+        await task.value
+    }
 
     static let container: ModelContainer = {
         // iOS creates an app's Documents folder with its sandbox; Android's files/Documents

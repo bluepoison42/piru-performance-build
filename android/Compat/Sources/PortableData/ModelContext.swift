@@ -15,6 +15,13 @@ public final class ModelContainer: @unchecked Sendable {
         self.configurations = configurations
         let configuration = configurations.first
         store = try Store(url: configuration?.url, readOnly: configuration.map { !$0.allowsSave } ?? false)
+        if !store.readOnly {
+            for type in schema.types {
+                for keys in EntityDescription.of(type).uniqueKeys {
+                    try store.uniqueIndex(entity: type._$entityName, keys: keys)
+                }
+            }
+        }
     }
 
     public convenience init(for schema: Schema, configurations: ModelConfiguration...) throws {
@@ -177,6 +184,8 @@ public final class ModelContext: @unchecked Sendable {
     private var touched: Set<PersistentIdentifier> = []
     /// The store generation this context has read up to.
     private var generation = 0
+    /// Advances whenever what a fetch could return may have changed; see ``currentRevision()``.
+    private var revision = 0
     private var autosaveScheduled = false
     /// Set while the context itself writes into models (loading, applying another context's
     /// changes, rolling back), so the accessors' reports stand aside.
@@ -320,6 +329,7 @@ public final class ModelContext: @unchecked Sendable {
         ModelObservation.traversing {
             rollbackModels()
         }
+        revision += 1
         changeHandler?()
     }
 
@@ -370,10 +380,9 @@ public final class ModelContext: @unchecked Sendable {
         }
         adoptReferencedModels()
         applyInverseAppends()
-        try resolveUniqueInserts()
 
         var inserts: [PersistentIdentifier: [String: Data]] = [:]
-        var updates: [PersistentIdentifier: (encoded: [String: Data], changes: [String])] = [:]
+        var updates: [PersistentIdentifier: Update] = [:]
         for id in candidates {
             guard let entry = registry[id] else { continue }
             let encoded = try encode(entry.model, id)
@@ -397,6 +406,7 @@ public final class ModelContext: @unchecked Sendable {
         let renames = Dictionary(uniqueKeysWithValues: Set(inserts.keys.map(\.entityName)).union(updates.keys.map(\.entityName)).map {
             ($0, container.type(named: $0).map { EntityDescription.of($0).renames } ?? [:])
         })
+        let arrivals = members.values.joined().filter { inserts[$0] != nil }
         let outcome = try container.store.write { db, generation in
             var written: [PersistentIdentifier: [String: Data]] = [:]
             var found: [PersistentIdentifier: [String: Data]] = [:]
@@ -404,7 +414,9 @@ public final class ModelContext: @unchecked Sendable {
             for id in removals {
                 try Store.remove(db, id, generation: generation)
             }
-            for (id, update) in updates {
+            var plan = WritePlan(inserts: inserts, updates: updates)
+            try resolveUniqueInserts(db, &plan, arrivals: arrivals)
+            for (id, update) in plan.updates {
                 guard let current = try Store.row(db, id) else {
                     vanished.append(id)
                     continue
@@ -418,7 +430,7 @@ public final class ModelContext: @unchecked Sendable {
                 try Store.put(db, id, RowCodec.data(from: fields), generation: generation)
                 written[id] = fields
             }
-            for (id, encoded) in inserts {
+            for (id, encoded) in plan.inserts {
                 var fields = try Store.row(db, id).map(RowCodec.fields) ?? [:]
                 fields.merge(encoded) { $1 }
                 for original in (renames[id.entityName] ?? [:]).values {
@@ -430,12 +442,13 @@ public final class ModelContext: @unchecked Sendable {
             // Read after this save's writes, so a row it rewrote carries this generation and
             // only other contexts' writes come back.
             let others = try Store.changes(db, after: known, entities: entities)
-            return (generation: generation, written: written, found: found, vanished: vanished, others: others)
+            return (generation: generation, written: written, found: found, vanished: vanished, others: others, plan: plan)
         }
 
+        rehome(outcome.plan.moves, found: outcome.found)
         isApplying = true
         var absorbed: [(Entry, [String: Data], Set<String>?)] = []
-        for (id, update) in updates {
+        for (id, update) in outcome.plan.updates {
             guard let entry = registry[id], let fields = outcome.written[id], let found = outcome.found[id] else { continue }
             // Keys another context saved to this row since this context last read it.
             let committed = entry.committed ?? [:]
@@ -449,7 +462,7 @@ public final class ModelContext: @unchecked Sendable {
                 absorbed.append((entry, fields, remote))
             }
         }
-        for (id, encoded) in inserts {
+        for (id, encoded) in outcome.plan.inserts {
             guard let entry = registry[id] else { continue }
             entry.committed = outcome.written[id]
             settle(entry, encoded)
@@ -472,6 +485,7 @@ public final class ModelContext: @unchecked Sendable {
             rebuildInverses()
         }
         generation = outcome.generation
+        revision += 1
         changeHandler?()
         container.contextSaved(self)
     }
@@ -540,31 +554,44 @@ public final class ModelContext: @unchecked Sendable {
         }
     }
 
+    private typealias Update = (encoded: [String: Data], changes: [String])
+
+    /// The rows a save writes, keyed by the identity each is written under.
+    private struct WritePlan {
+        var inserts: [PersistentIdentifier: [String: Data]]
+        var updates: [PersistentIdentifier: Update]
+        /// Each inserted model that takes another model's identity, in the order it does so:
+        /// the identity it arrived with, then the one it takes.
+        var moves: [(from: PersistentIdentifier, to: PersistentIdentifier)] = []
+    }
+
     /// An inserted model whose unique attributes match a stored row takes that row's identity,
     /// so the save updates the row instead of adding a second one, as SwiftData upserts. Of
-    /// two inserts with the same values, the later one is kept. A held model the identity
-    /// belonged to is let go.
-    private func resolveUniqueInserts() throws {
+    /// two inserts with the same values, the later one is kept. Runs in the save's transaction,
+    /// after its deletions, so no other context's write comes between a lookup and the write
+    /// it decides, and a save that fails leaves every model with the identity it had.
+    private func resolveUniqueInserts(_ db: Database, _ plan: inout WritePlan, arrivals: [PersistentIdentifier]) throws {
         var claimed: [String: PersistentIdentifier] = [:]
-        let candidates = members.values.joined().filter { inserted.contains($0) }
-        for id in candidates {
-            guard let entry = registry[id], let type = container.type(named: id.entityName) else { continue }
-            let constraints = EntityDescription.of(type).uniqueKeys
-            guard !constraints.isEmpty else { continue }
-            let encoded = try encode(entry.model, id)
-            for keys in constraints {
+        for id in arrivals {
+            guard let encoded = plan.inserts[id], let type = container.type(named: id.entityName) else { continue }
+            for keys in EntityDescription.of(type).uniqueKeys {
                 let signature = ([id.entityName] + keys.map { String(decoding: encoded[$0] ?? Data(), as: UTF8.self) })
                     .joined(separator: "\u{0}")
-                if let earlier = claimed[signature], earlier != id {
-                    take(earlier, for: entry, from: id, committed: registry[earlier]?.committed)
+                if let earlier = claimed[signature] {
+                    plan.inserts[id] = nil
+                    if plan.inserts[earlier] != nil {
+                        plan.inserts[earlier] = encoded
+                    } else {
+                        plan.updates[earlier] = (encoded, Array(encoded.keys))
+                    }
+                    plan.moves.append((id, earlier))
                     break
                 }
-                let match = try container.store.read { db in
-                    try Store.uniqueMatch(db, entity: id.entityName, keys: keys, fields: encoded, excluding: id.primaryKey)
-                }
-                if let (primaryKey, data) = match {
+                if let (primaryKey, _) = try Store.uniqueMatch(db, entity: id.entityName, keys: keys, fields: encoded, excluding: id.primaryKey) {
                     let target = PersistentIdentifier(entityName: id.entityName, primaryKey: primaryKey)
-                    try take(target, for: entry, from: id, committed: registry[target]?.committed ?? RowCodec.fields(from: data))
+                    plan.inserts[id] = nil
+                    plan.updates[target] = (encoded, Array(encoded.keys))
+                    plan.moves.append((id, target))
                     claimed[signature] = target
                     break
                 }
@@ -573,26 +600,25 @@ public final class ModelContext: @unchecked Sendable {
         }
     }
 
-    private func take(_ target: PersistentIdentifier, for entry: Entry, from id: PersistentIdentifier, committed: [String: Data]?) {
-        let held = registry[target]
-        unregister(id)
-        inserted.remove(id)
-        if let held {
-            unregister(target)
-            inserted.remove(target)
-            touched.remove(target)
-            held.model._$backing.context = nil
-            detach([held.model])
+    /// Gives each moved model the identity it took and the row stored under it, letting go of
+    /// a held model that had the identity before.
+    private func rehome(_ moves: [(from: PersistentIdentifier, to: PersistentIdentifier)], found: [PersistentIdentifier: [String: Data]]) {
+        for (from, to) in moves {
+            guard let entry = registry[from] else { continue }
+            unregister(from)
+            inserted.remove(from)
+            touched.remove(from)
+            if let held = registry[to], held !== entry {
+                unregister(to)
+                inserted.remove(to)
+                touched.remove(to)
+                held.model._$backing.context = nil
+                detach([held.model])
+            }
+            entry.model._$backing.identifier = to
+            entry.committed = found[to]
+            register(entry, to)
         }
-        entry.model._$backing.identifier = target
-        entry.committed = committed
-        entry.baseline = held.map { $0.baseline ?? (try? encode($0.model, target)) ?? [:] } ?? [:]
-        if committed == nil {
-            inserted.insert(target)
-        } else {
-            touched.insert(target)
-        }
-        register(entry, target)
     }
 
     // MARK: Autosave
@@ -605,13 +631,28 @@ public final class ModelContext: @unchecked Sendable {
             entry.baseline = (try? encode(model, id)) ?? [:]
         }
         touched.insert(id)
+        revision += 1
         scheduleAutosave()
     }
 
     private func changed() {
+        revision += 1
         changeHandler?()
         scheduleAutosave()
     }
+
+    /// A number that stays the same exactly as long as every fetch would return what it did:
+    /// it advances on an insert, a delete, a write to a held model, a save, a rollback, an
+    /// entity read, and another context's save applied here, which this call applies first.
+    /// `nil` when the schema has an entity whose writes go unreported, so no number can say.
+    public func currentRevision() -> Int? {
+        ModelObservation.traversing {
+            _ = try? refresh()
+        }
+        return reportsEveryWrite ? revision : nil
+    }
+
+    private lazy var reportsEveryWrite = container.schema.types.allSatisfy { EntityDescription.of($0).tracksMutations }
 
     private func scheduleAutosave() {
         guard autosaveEnabled, !autosaveScheduled, !isApplying else { return }
@@ -650,8 +691,20 @@ public final class ModelContext: @unchecked Sendable {
         return Array(results[start ..< end])
     }
 
-    public func fetchCount(_ descriptor: FetchDescriptor<some PersistentModel>) throws -> Int {
-        try fetch(descriptor).count
+    /// The number of models `descriptor` fetches. Without a predicate, for an entity this
+    /// context has not read and has no unsaved inserts or deletions of, it is counted in SQL
+    /// and nothing is read; that count includes rows the context could not have read.
+    public func fetchCount<T: PersistentModel>(_ descriptor: FetchDescriptor<T>) throws -> Int {
+        let entity = T._$entityName
+        guard descriptor.predicate == nil, !loaded.contains(entity),
+              !inserted.contains(where: { $0.entityName == entity }),
+              !deleted.keys.contains(where: { $0.entityName == entity })
+        else {
+            return try fetch(descriptor).count
+        }
+        let stored = try container.store.read { db in try Store.count(db, entity: entity) }
+        let remaining = max(0, stored - max(0, descriptor.fetchOffset ?? 0))
+        return descriptor.fetchLimit.map { min($0, remaining) } ?? remaining
     }
 
     public func fetchIdentifiers(_ descriptor: FetchDescriptor<some PersistentModel>) throws -> [PersistentIdentifier] {
@@ -807,6 +860,7 @@ public final class ModelContext: @unchecked Sendable {
         loaded.formUnion(names)
         connect(arrived)
         rebuildInverses()
+        revision += 1
     }
 
     private func decode(_ row: Store.Row, _ id: PersistentIdentifier, as type: any PersistentModel.Type) -> (Entry, [String: Data])? {
@@ -930,6 +984,7 @@ public final class ModelContext: @unchecked Sendable {
         guard changes.generation > generation else { return false }
         guard apply(changes) else { return false }
         rebuildInverses()
+        revision += 1
         return true
     }
 

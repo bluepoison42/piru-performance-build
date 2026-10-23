@@ -48,17 +48,28 @@ extension View {
     }
 }
 
-/// Fetches on every read from the main context's identity map, which is an in-memory filter
-/// once the entity is loaded. Reading ``ModelChanges`` subscribes the reading view to inserts,
-/// deletes and saves.
+/// Fetches from the main context's identity map, which is an in-memory filter and sort once
+/// the entity is loaded, and keeps the result until the context's revision moves, so a body
+/// that reads the property several times filters and sorts the journal once. Reading
+/// ``ModelChanges`` subscribes the reading view to inserts, deletes and saves.
 @propertyWrapper
 struct Query<Element: PersistentModel> {
     private let descriptor: FetchDescriptor<Element>
+    private let cache = QueryCache<Element>()
 
     var wrappedValue: [Element] {
         guard let context = ModelContainer.application?.mainContext else { return [] }
         _ = ModelChanges.shared.token
-        return (try? context.fetch(descriptor)) ?? []
+        let revision = context.currentRevision()
+        if let revision, let cached = cache.result, cache.revision == revision, cache.context === context {
+            return cached
+        }
+        let result = (try? context.fetch(descriptor)) ?? []
+        // The fetch may read the entity for the first time, which moves the revision.
+        cache.revision = revision.flatMap { _ in context.currentRevision() }
+        cache.context = context
+        cache.result = result
+        return result
     }
 
     init() {
@@ -94,4 +105,11 @@ struct Query<Element: PersistentModel> {
     ) {
         descriptor = FetchDescriptor(predicate: filter, sortBy: [SortDescriptor(keyPath, order: order)])
     }
+}
+
+/// One ``Query``'s last result and the context revision it was fetched at.
+private final class QueryCache<Element: PersistentModel> {
+    var result: [Element]?
+    var revision: Int?
+    weak var context: ModelContext?
 }

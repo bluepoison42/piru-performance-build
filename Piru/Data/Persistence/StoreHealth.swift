@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import os
+import Synchronization
 
 /// Cheap, *catchable* integrity gate for an on-disk SQLite store, run before the
 /// file is handed to an ORM that would otherwise abort *natively* on corruption.
@@ -133,14 +134,44 @@ enum StoreHealth {
         }
         do {
             return try queue.read { db -> Verdict<Value> in
-                let result = try String.fetchOne(db, sql: "PRAGMA quick_check")
-                guard result == "ok" else { return .corrupt("quick_check: \(result ?? "nil")") }
+                let files = FileSignature(of: url)
+                if checked.withLock({ $0[url.path] }) != files {
+                    let result = try String.fetchOne(db, sql: "PRAGMA quick_check")
+                    guard result == "ok" else { return .corrupt("quick_check: \(result ?? "nil")") }
+                    if FileSignature(of: url) == files {
+                        checked.withLock { $0[url.path] = files }
+                    }
+                }
                 return try .healthy(inspect(db))
             }
         } catch let error as DatabaseError where error.indicatesCorruption {
             return .corrupt(error.description)
         } catch {
             return .inconclusive(error.localizedDescription)
+        }
+    }
+}
+
+private extension StoreHealth {
+    /// The store's files as they were when `quick_check` last passed on them, by store path.
+    /// A probe of files still the same skips the check: launch probes the store up to three
+    /// times before opening it, and each check reads every page of the journal.
+    nonisolated static let checked = Mutex<[String: FileSignature]>([:])
+
+    /// The size and modification time of a store and its write-ahead log.
+    nonisolated struct FileSignature: Equatable, Sendable {
+        struct File: Equatable, Sendable {
+            let size: Int?
+            let modified: Date?
+        }
+
+        let files: [File]
+
+        init(of url: URL) {
+            files = ["", "-wal"].map { suffix in
+                let attributes = (try? FileManager.default.attributesOfItem(atPath: url.path + suffix)) ?? [:]
+                return File(size: (attributes[.size] as? NSNumber)?.intValue, modified: attributes[.modificationDate] as? Date)
+            }
         }
     }
 }

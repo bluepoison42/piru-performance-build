@@ -120,27 +120,57 @@ final class Store: @unchecked Sendable {
     }
 
     /// The primary key and row of a stored model whose `keys` hold the same values as
-    /// `fields`, other than `excluding`.
+    /// `fields`, other than `excluding`. The lookup searches the index ``uniqueIndex(entity:keys:)``
+    /// creates, named outright: with no statistics SQLite would rather read every row of the
+    /// entity through the primary key.
     static func uniqueMatch(
         _ db: Database, entity: String, keys: [String], fields: [String: Data], excluding primaryKey: String,
     ) throws -> (String, Data)? {
-        var conditions: [String] = []
         var arguments: [(any DatabaseValueConvertible)?] = [entity, primaryKey]
         for key in keys {
             guard let value = fields[key], let text = String(data: value, encoding: .utf8) else { return nil }
-            conditions.append("json_extract(CAST(data AS TEXT), ?) IS json_extract(?, '$')")
-            arguments += [jsonPath(key), text]
+            arguments.append(text)
         }
-        let row = try GRDB.Row.fetchOne(
-            db,
-            sql: "SELECT pk, data FROM portable_models WHERE entity = ? AND pk != ? AND \(conditions.joined(separator: " AND ")) LIMIT 1",
-            arguments: StatementArguments(arguments),
-        )
+        let row = try GRDB.Row.fetchOne(db, sql: uniqueMatchSQL(entity: entity, keys: keys), arguments: StatementArguments(arguments))
         return row.map { ($0["pk"], $0["data"]) }
     }
 
-    private static func jsonPath(_ key: String) -> String {
-        "$.\"" + key.replacingOccurrences(of: "\"", with: "\\\"") + "\""
+    static func uniqueMatchSQL(entity: String, keys: [String]) -> String {
+        let conditions = ["entity = ?", "pk != ?", "json_valid(CAST(data AS TEXT))"]
+            + keys.map { "\(valueExpression($0)) IS json_extract(?, '$')" }
+        return """
+        SELECT pk, data FROM portable_models INDEXED BY \(uniqueIndexName(entity: entity, keys: keys).quotedDatabaseIdentifier)
+        WHERE \(conditions.joined(separator: " AND ")) LIMIT 1
+        """
+    }
+
+    /// Indexes the values of one unique constraint, so finding the row an insert would
+    /// duplicate is a search rather than a scan of the entity.
+    func uniqueIndex(entity: String, keys: [String]) throws {
+        let name = Self.uniqueIndexName(entity: entity, keys: keys)
+        let columns = (["entity"] + keys.map(Self.valueExpression)).joined(separator: ", ")
+        try queue.write { db in
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS \(name.quotedDatabaseIdentifier) ON portable_models (\(columns))")
+        }
+    }
+
+    private static func uniqueIndexName(entity: String, keys: [String]) -> String {
+        "portable_unique_" + ([entity] + keys).joined(separator: "_")
+    }
+
+    /// The stored value of `key`, written as a literal so SQLite matches it to an index on
+    /// the same expression; a bound JSON path leaves every such index unused. A row that is
+    /// not JSON has no value, where `json_extract` would fail every write to the table.
+    private static func valueExpression(_ key: String) -> String {
+        let path = "$.\"" + key.replacingOccurrences(of: "\"", with: "\\\"") + "\""
+        let literal = "'" + path.replacingOccurrences(of: "'", with: "''") + "'"
+        return "CASE WHEN json_valid(CAST(data AS TEXT)) THEN json_extract(CAST(data AS TEXT), \(literal)) END"
+    }
+
+    /// The number of stored rows of `entity`.
+    static func count(_ db: Database, entity: String) throws -> Int {
+        guard try db.tableExists("portable_models") else { return 0 }
+        return try Int.fetchOne(db, sql: "SELECT count(*) FROM portable_models WHERE entity = ?", arguments: [entity]) ?? 0
     }
 
     // MARK: Writing

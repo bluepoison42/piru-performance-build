@@ -64,7 +64,7 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
         ),
-        .testTarget(name: "PortableDataTests", dependencies: ["PortableData"]),
+        .testTarget(name: "PortableDataTests", dependencies: ["PortableData", .product(name: "GRDB", package: "GRDB.swift")]),
         // The persistence contract (android/README.md), tested against the app's own models as the
         // Android stage compiles them: StageSources copies each file named in staged-sources.txt
         // with android/substitutions.txt applied. The settings are the app's, as in PiruCore.
