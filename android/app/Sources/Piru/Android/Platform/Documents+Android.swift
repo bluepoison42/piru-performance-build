@@ -98,6 +98,7 @@ extension UTType {
         case "public.text", "public.plain-text": "text/plain"
         case "com.adobe.pdf": "application/pdf"
         case "public.comma-separated-values-text": "text/csv"
+        case "public.tab-separated-values-text": "text/tab-separated-values"
         case "public.png": "image/png"
         case "public.image": "image/*"
         case "net.daringfireball.markdown": "text/markdown"
@@ -111,6 +112,7 @@ extension UTType {
         case "txt": self = .plainText
         case "pdf": self = .pdf
         case "csv": self = .commaSeparatedText
+        case "tsv": self = .tabSeparatedText
         case "png": self = .png
         case "md": self = UTType(identifier: "net.daringfireball.markdown", preferredFilenameExtension: "md")
         default: return nil

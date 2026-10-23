@@ -82,6 +82,9 @@ struct SheetRouteView: View {
                     .withCancellationCloseButton()
             }
 
+        case .spreadsheetImport:
+            SpreadsheetImportSheet()
+
         case .advancedSearch:
             NavigationStack {
                 AdvancedSearchView()

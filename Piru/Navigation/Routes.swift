@@ -403,6 +403,10 @@ nonisolated enum SheetRoute: Hashable, Identifiable, Codable {
     /// Substance database settings
     case sourcePriority
 
+    /// Import a CSV or TSV dose log exported from a spreadsheet, mapping its
+    /// columns to Piru's fields.
+    case spreadsheetImport
+
     /// Every source's dose ladder for one route of one substance, on one scale —
     /// opened from the source line under the dose card. Read-only: it explains
     /// the spread, it doesn't change which source wins (that's `.sourcePriority`).

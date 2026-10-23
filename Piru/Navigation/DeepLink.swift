@@ -531,6 +531,7 @@ nonisolated enum DeepLink {
              .personalizeSubstance,
              .timeAdjust,
              .sourcePriority,
+             .spreadsheetImport,
              .doseSources,
              .advancedSearch,
              .inventoryItemEdit,

@@ -1679,6 +1679,34 @@
         }
       }
     },
+    "%@ and %lld more" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ y %lld más"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ y %lld más"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@，另有 %lld 个"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@，另有 %lld 個"
+          }
+        }
+      }
+    },
     "%@ at %@" : {
       "comment" : "Efficacy axis accessibility value for the focused substance",
       "localizations" : {
@@ -9209,6 +9237,34 @@
         }
       }
     },
+    "A CSV or TSV dose log from Google Sheets, Excel or Numbers" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un registro de dosis CSV o TSV de Google Sheets, Excel o Numbers"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un registro de dosis CSV o TSV de Google Sheets, Excel o Numbers"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "来自 Google 表格、Excel 或 Numbers 的 CSV 或 TSV 剂量日志"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "來自 Google 試算表、Excel 或 Numbers 的 CSV 或 TSV 劑量日誌"
+          }
+        }
+      }
+    },
     "A custom substance named \"%@\" already exists." : {
       "localizations" : {
         "es" : {
@@ -10074,6 +10130,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "只要記錄了一個有過程可記錄的劑量，場次就會自動開始狀態確認。時間點依據你服用的內容，再次服用時會往後移。可在場次選單中更改或停止。"
+          }
+        }
+      }
+    },
+    "A sheet with several tabs exports one file per tab. Import each one; doses already in your journal are skipped." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una hoja con varias pestañas se exporta en un archivo por pestaña. Importa cada uno; las dosis que ya están en tu diario se omiten."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una hoja con varias pestañas se exporta en un archivo por pestaña. Importa cada uno; las dosis que ya están en tu diario se omiten."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "含多个工作表的表格会按工作表分别导出为文件。逐个导入即可；日记中已有的剂量会被跳过。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "含多個工作表的試算表會按工作表分別匯出為檔案。逐一匯入即可；日記中已有的劑量會被略過。"
           }
         }
       }
@@ -14882,6 +14966,34 @@
         }
       }
     },
+    "Already in your journal" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya están en tu diario"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya están en tu diario"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日记中已有"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日記中已有"
+          }
+        }
+      }
+    },
     "Already keep a journal? Import a Piru backup, encrypted or not, or a PsyLog or DrugsPRO export. Or start with a clean slate." : {
       "localizations" : {
         "es" : {
@@ -15740,6 +15852,34 @@
         }
       }
     },
+    "And %lld more." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y %lld más."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y %lld más."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "另有 %lld 条。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "另有 %lld 筆。"
+          }
+        }
+      }
+    },
     "Anecdotal timing" : {
       "localizations" : {
         "es" : {
@@ -16380,6 +16520,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Watch"
+          }
+        }
+      }
+    },
+    "Approximate" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aproximada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aproximada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大约"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大約"
           }
         }
       }
@@ -17363,6 +17531,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "避免樓梯、尖銳物體和任何需要精細動作的事。"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrás"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrás"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "返回"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "返回"
           }
         }
       }
@@ -20105,6 +20301,34 @@
         }
       }
     },
+    "Bring in a dose log you kept in Google Sheets, Excel or Numbers. Export it as CSV, then choose the file. Piru reads its columns and shows you what it found before anything is saved." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trae un registro de dosis que llevabas en Google Sheets, Excel o Numbers. Expórtalo como CSV y elige el archivo. Piru lee sus columnas y te muestra lo que encontró antes de guardar nada."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trae un registro de dosis que llevabas en Google Sheets, Excel o Numbers. Expórtalo como CSV y elige el archivo. Piru lee sus columnas y te muestra lo que encontró antes de guardar nada."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "把你在 Google 表格、Excel 或 Numbers 中记录的剂量日志带进来。先将其导出为 CSV，再选择该文件。Piru 会读取各列，并在保存任何内容之前向你展示识别结果。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "把你在 Google 試算表、Excel 或 Numbers 中記錄的劑量日誌帶進來。先將其匯出為 CSV，再選擇該檔案。Piru 會讀取各欄，並在儲存任何內容之前向你展示辨識結果。"
+          }
+        }
+      }
+    },
     "Bring your history" : {
       "localizations" : {
         "es" : {
@@ -22523,6 +22747,34 @@
         }
       }
     },
+    "Choose a Date column and a Substance column to continue." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una columna de fecha y una de sustancia para continuar."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una columna de fecha y una de sustancia para continuar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择一个“日期”列和一个“物质”列以继续。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請選擇一個「日期」欄和一個「物質」欄以繼續。"
+          }
+        }
+      }
+    },
     "Choose a dose on the left, or search for a substance." : {
       "localizations" : {
         "es" : {
@@ -22688,6 +22940,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選擇飲品"
+          }
+        }
+      }
+    },
+    "Choose File…" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir archivo…"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir archivo…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇檔案…"
           }
         }
       }
@@ -23839,6 +24119,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你自己挑選的顏色將被取代。"
+          }
+        }
+      }
+    },
+    "Column %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Columna %@"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Columna %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %@ 列"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %@ 欄"
+          }
+        }
+      }
+    },
+    "Columns" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Columnas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Columnas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "列"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欄位"
           }
         }
       }
@@ -25836,6 +26172,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "冷藍灰，安靜"
+          }
+        }
+      }
+    },
+    "Coordinates outside the map were left off: rows %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se omitieron las coordenadas fuera del mapa: filas %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se omitieron las coordenadas fuera del mapa: filas %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "超出地图范围的坐标未导入：第 %@ 行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "超出地圖範圍的座標未匯入：第 %@ 列。"
           }
         }
       }
@@ -28170,6 +28534,90 @@
         }
       }
     },
+    "Date Order" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orden de la fecha"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orden de la fecha"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期顺序"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期順序"
+          }
+        }
+      }
+    },
+    "Dates disagree on their order: %lld read day first, %lld month first. Check the date order." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las fechas no coinciden en su orden: %lld con el día primero y %lld con el mes primero. Revisa el orden de las fechas."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las fechas no coinciden en su orden: %lld con el día primero y %lld con el mes primero. Revisa el orden de las fechas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期顺序不一致：%lld 个日在前，%lld 个月在前。请检查日期顺序。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期順序不一致：%lld 個日在前，%lld 個月在前。請檢查日期順序。"
+          }
+        }
+      }
+    },
+    "Dates in this file disagree on their order. The more common one is chosen." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las fechas de este archivo no coinciden en su orden. Se elige el más común."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las fechas de este archivo no coinciden en su orden. Se elige el más común."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件中的日期顺序不一致，已选择较常见的一种。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案中的日期順序不一致，已選擇較常見的一種。"
+          }
+        }
+      }
+    },
     "Day" : {
       "localizations" : {
         "es" : {
@@ -28250,6 +28698,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一天起始時間"
+          }
+        }
+      }
+    },
+    "Day/Month/Year" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día/mes/año"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día/mes/año"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日/月/年"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日/月/年"
           }
         }
       }
@@ -30584,6 +31060,34 @@
         }
       }
     },
+    "Dose as written: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis tal como se escribió: %@"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis tal como se escribió: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "剂量原文：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "劑量原文：%@"
+          }
+        }
+      }
+    },
     "Dose data" : {
       "localizations" : {
         "es" : {
@@ -31119,6 +31623,34 @@
         }
       }
     },
+    "Doses imported" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis importadas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis importadas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已导入的剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已匯入的劑量"
+          }
+        }
+      }
+    },
     "Doses in other units aren't counted." : {
       "localizations" : {
         "es" : {
@@ -31143,6 +31675,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "其他單位的劑量不計入。"
+          }
+        }
+      }
+    },
+    "Doses Piru couldn't read are imported as unknown doses, with the text kept in their notes: rows %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las dosis que Piru no pudo leer se importan como dosis desconocidas, con el texto guardado en sus notas: filas %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las dosis que Piru no pudo leer se importan como dosis desconocidas, con el texto guardado en sus notas: filas %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 无法读取的剂量以未知剂量导入，原文保留在备注中：第 %@ 行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 無法讀取的劑量以未知劑量匯入，原文保留在備註中：第 %@ 列。"
           }
         }
       }
@@ -31172,6 +31732,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "劑量仍為該物質本身的劑量。只有作用時長曲線會改變。"
+          }
+        }
+      }
+    },
+    "Doses to import" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis para importar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosis para importar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待导入的剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待匯入的劑量"
           }
         }
       }
@@ -38391,6 +38979,34 @@
         }
       }
     },
+    "Field" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Campo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Campo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字段"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欄位"
+          }
+        }
+      }
+    },
     "Filter" : {
       "localizations" : {
         "es" : {
@@ -38555,6 +39171,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "暗色草原上的螢火蟲"
+          }
+        }
+      }
+    },
+    "First Doses" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primeras dosis"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primeras dosis"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前几条剂量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前幾筆劑量"
           }
         }
       }
@@ -41030,6 +41674,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "歸入補充劑，不顯示在時間線圖表上。提醒為靜音。"
+          }
+        }
+      }
+    },
+    "Guessed" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supuesta"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supuesta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推测"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推測"
           }
         }
       }
@@ -44439,6 +45111,90 @@
         }
       }
     },
+    "Import" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入"
+          }
+        }
+      }
+    },
+    "Import a Spreadsheet" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar una hoja de cálculo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar una hoja de cálculo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入电子表格"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入試算表"
+          }
+        }
+      }
+    },
+    "Import Another File" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar otro archivo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar otro archivo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入另一个文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入另一個檔案"
+          }
+        }
+      }
+    },
     "Import Complete" : {
       "localizations" : {
         "es" : {
@@ -44579,6 +45335,34 @@
         }
       }
     },
+    "Import Spreadsheet…" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar hoja de cálculo…"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar hoja de cálculo…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入电子表格…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入試算表…"
+          }
+        }
+      }
+    },
     "Import…" : {
       "localizations" : {
         "es" : {
@@ -44603,6 +45387,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯入…"
+          }
+        }
+      }
+    },
+    "Imported" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importado"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importado"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已导入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已匯入"
+          }
+        }
+      }
+    },
+    "Imported doses are grouped into sessions in your journal." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las dosis importadas se agrupan en sesiones en tu diario."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las dosis importadas se agrupan en sesiones en tu diario."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入的剂量会在日记中按场次分组。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入的劑量會在日記中按場次分組。"
           }
         }
       }
@@ -47368,6 +48208,118 @@
         }
       }
     },
+    "Latitude" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latitud"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latitud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纬度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緯度"
+          }
+        }
+      }
+    },
+    "Latitude and longitude are read the other way round, because the latitude column has values past 90°." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La latitud y la longitud se leen al revés, porque la columna de latitud tiene valores de más de 90°."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La latitud y la longitud se leen al revés, porque la columna de latitud tiene valores de más de 90°."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纬度和经度按相反顺序读取，因为纬度列中有超过 90° 的数值。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緯度和經度按相反順序讀取，因為緯度欄中有超過 90° 的數值。"
+          }
+        }
+      }
+    },
+    "Latitude and longitude are read the other way round, because the sheet's own map links put them that way." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La latitud y la longitud se leen al revés, porque los propios enlaces de mapas de la hoja las ordenan así."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La latitud y la longitud se leen al revés, porque los propios enlaces de mapas de la hoja las ordenan así."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纬度和经度按相反顺序读取，因为表格自带的地图链接就是这样排列的。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緯度和經度按相反順序讀取，因為表格自帶的地圖連結就是這樣排列的。"
+          }
+        }
+      }
+    },
+    "Latitude and longitude are read the other way round." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La latitud y la longitud se leen al revés."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La latitud y la longitud se leen al revés."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纬度和经度按相反顺序读取。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緯度和經度按相反順序讀取。"
+          }
+        }
+      }
+    },
     "LD50 (dermal, rodent)" : {
       "localizations" : {
         "es" : {
@@ -47560,6 +48512,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "退出遊戲"
+          }
+        }
+      }
+    },
+    "Left Out" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitidas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitidas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未导入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未匯入"
           }
         }
       }
@@ -48233,6 +49213,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "明度"
+          }
+        }
+      }
+    },
+    "Likely" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probable"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probable"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可能"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可能"
           }
         }
       }
@@ -49733,6 +50741,34 @@
         }
       }
     },
+    "Longitude" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longitud"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longitud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "经度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "經度"
+          }
+        }
+      }
+    },
     "Look up interactions, explore a tolerance model, track your stock, and work out a solution's concentration." : {
       "localizations" : {
         "es" : {
@@ -50457,6 +51493,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "MAOI 阻斷清除血清素的酶，因此負荷會不斷累積而不是趨於平穩。風險是血清素症候群；MAOI 不會升高鋰的血藥濃度。"
+          }
+        }
+      }
+    },
+    "Map location" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación en el mapa"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación en el mapa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地图位置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地圖位置"
           }
         }
       }
@@ -53811,6 +54875,34 @@
         }
       }
     },
+    "Month/Day/Year" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mes/día/año"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mes/día/año"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月/日/年"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月/日/年"
+          }
+        }
+      }
+    },
     "Monthly" : {
       "localizations" : {
         "es" : {
@@ -56472,6 +57564,62 @@
         }
       }
     },
+    "No date in the file settles which number is the day, so dates are read as %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna fecha del archivo aclara qué número es el día, así que las fechas se leen como %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna fecha del archivo aclara qué número es el día, así que las fechas se leen como %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件中没有日期能确定哪个数字是日，因此日期按 %@ 读取。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案中沒有日期能確定哪個數字是日，因此日期按 %@ 讀取。"
+          }
+        }
+      }
+    },
+    "No date in this file settles which number is the day. Check a date you know." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna fecha de este archivo aclara qué número es el día. Comprueba una fecha que conozcas."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna fecha de este archivo aclara qué número es el día. Comprueba una fecha que conozcas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件中没有日期能确定哪个数字是日。请对照一个你确定的日期检查。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案中沒有日期能確定哪個數字是日。請對照一個你確定的日期檢查。"
+          }
+        }
+      }
+    },
     "No dose ladders matched" : {
       "localizations" : {
         "es" : {
@@ -58294,6 +59442,62 @@
         }
       }
     },
+    "Not Imported" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No importar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No importar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不导入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不匯入"
+          }
+        }
+      }
+    },
+    "Not in Piru's library, kept as written: %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No están en la biblioteca de Piru y se guardan tal como están escritas: %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No están en la biblioteca de Piru y se guardan tal como están escritas: %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不在 Piru 物质库中，按原文保留：%@。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不在 Piru 物質庫中，按原文保留：%@。"
+          }
+        }
+      }
+    },
     "Not in the library" : {
       "localizations" : {
         "es" : {
@@ -58970,6 +60174,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此刻體內沒有留存"
+          }
+        }
+      }
+    },
+    "Nothing is saved until you tap Import." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se guarda nada hasta que toques Importar."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se guarda nada hasta que toques Importar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点按“导入”之前不会保存任何内容。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點按「匯入」之前不會儲存任何內容。"
           }
         }
       }
@@ -60376,6 +61608,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "同一組實驗"
+          }
+        }
+      }
+    },
+    "One row per dose, for Excel, Numbers or Google Sheets. Imports back into Piru" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una fila por dosis, para Excel, Numbers o Google Sheets. Se puede volver a importar en Piru"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una fila por dosis, para Excel, Numbers o Google Sheets. Se puede volver a importar en Piru"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每个剂量一行，可用于 Excel、Numbers 或 Google 表格，也能再导入 Piru"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每個劑量一列，可用於 Excel、Numbers 或 Google 試算表，也能再匯入 Piru"
           }
         }
       }
@@ -64488,6 +65748,34 @@
         }
       }
     },
+    "Piru guessed what each column holds. Change any that are wrong." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru adivinó qué contiene cada columna. Cambia las que estén mal."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru adivinó qué contiene cada columna. Cambia las que estén mal."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 推测了每一列的内容。如有错误，请修改。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru 推測了每一欄的內容。如有錯誤，請修改。"
+          }
+        }
+      }
+    },
     "Piru has moved" : {
       "localizations" : {
         "es" : {
@@ -64600,7 +65888,36 @@
         }
       }
     },
+    "Piru, PsychonautWiki, a spreadsheet, or an encrypted backup" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru, PsychonautWiki, una hoja de cálculo o una copia cifrada"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru, PsychonautWiki, una hoja de cálculo o una copia cifrada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru、PsychonautWiki、电子表格或加密备份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piru、PsychonautWiki、試算表或加密備份"
+          }
+        }
+      }
+    },
     "Piru, PsychonautWiki, or an encrypted backup" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -65495,6 +66812,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "處方"
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista previa"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista previa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预览"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預覽"
           }
         }
       }
@@ -67943,6 +69288,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "受體和酶會做出調整，你的基線也往下移。大多數人說的耐受就是這種，每張卡片上那條進度條顯示的也是它。停用後基線就會回升，快慢由受體決定。"
+          }
+        }
+      }
+    },
+    "Recognized" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconocida"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconocida"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已识别"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已辨識"
           }
         }
       }
@@ -72025,6 +73398,34 @@
         }
       }
     },
+    "Route as written: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vía tal como se escribió: %@"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vía tal como se escribió: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "给药途径原文：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "給藥途徑原文：%@"
+          }
+        }
+      }
+    },
     "Route not yet migrated:" : {
       "localizations" : {
         "es" : {
@@ -72077,6 +73478,174 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "給藥途徑未知"
+          }
+        }
+      }
+    },
+    "Row %lld: “%@” isn't a date Piru can read" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld: Piru no puede leer “%@” como fecha"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld: Piru no puede leer “%@” como fecha"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %lld 行：Piru 无法读取日期“%@”"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %lld 列：Piru 無法讀取日期「%@」"
+          }
+        }
+      }
+    },
+    "Row %lld: no date" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld: sin fecha"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld: sin fecha"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %lld 行：没有日期"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %lld 列：沒有日期"
+          }
+        }
+      }
+    },
+    "Row %lld: no substance" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld: sin sustancia"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld: sin sustancia"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %lld 行：没有物质"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第 %lld 列：沒有物質"
+          }
+        }
+      }
+    },
+    "Rows left out" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filas omitidas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filas omitidas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未导入的行"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未匯入的列"
+          }
+        }
+      }
+    },
+    "Rows read" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filas leídas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filas leídas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已读取的行"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已讀取的列"
+          }
+        }
+      }
+    },
+    "Rows with no time of day are placed at noon: rows %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las filas sin hora se colocan a mediodía: filas %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las filas sin hora se colocan a mediodía: filas %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有时间的行记为中午：第 %@ 行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有時間的列記為中午：第 %@ 列。"
           }
         }
       }
@@ -79023,6 +80592,34 @@
         }
       }
     },
+    "Spreadsheet (CSV)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoja de cálculo (CSV)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoja de cálculo (CSV)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电子表格（CSV）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試算表（CSV）"
+          }
+        }
+      }
+    },
     "SSRIs inhibit TCA metabolism. Risk of TCA toxicity and serotonin syndrome." : {
       "localizations" : {
         "es" : {
@@ -82275,6 +83872,34 @@
         }
       }
     },
+    "Swap Latitude and Longitude" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercambiar latitud y longitud"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercambiar latitud y longitud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "交换纬度和经度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "交換緯度和經度"
+          }
+        }
+      }
+    },
     "swift-collections and swift-async-algorithms. Copyright © Apple Inc. and the Swift project authors." : {
       "localizations" : {
         "es" : {
@@ -84610,6 +86235,34 @@
         }
       }
     },
+    "The latitude column has values past 90°, which only a longitude can have." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La columna de latitud tiene valores de más de 90°, algo que solo puede tener una longitud."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La columna de latitud tiene valores de más de 90°, algo que solo puede tener una longitud."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纬度列中有超过 90° 的数值，只有经度才可能这样。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緯度欄中有超過 90° 的數值，只有經度才可能這樣。"
+          }
+        }
+      }
+    },
     "The learned part of tolerance" : {
       "localizations" : {
         "es" : {
@@ -85034,6 +86687,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "附著在血漿蛋白上隨之運行的比例。只有未結合的那部分才能發揮作用。"
+          }
+        }
+      }
+    },
+    "The sheet's map links put latitude and longitude the other way round from its column labels." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los enlaces de mapas de la hoja ponen la latitud y la longitud al revés que los títulos de sus columnas."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los enlaces de mapas de la hoja ponen la latitud y la longitud al revés que los títulos de sus columnas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表格的地图链接中纬度和经度的顺序与列标题相反。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表格的地圖連結中緯度和經度的順序與欄標題相反。"
           }
         }
       }
@@ -85797,6 +87478,34 @@
         }
       }
     },
+    "This file has no columns Piru can read. Export the sheet as CSV, with one dose per row." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no tiene columnas que Piru pueda leer. Exporta la hoja como CSV, con una dosis por fila."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no tiene columnas que Piru pueda leer. Exporta la hoja como CSV, con una dosis por fila."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个文件中没有 Piru 能读取的列。请将表格导出为 CSV，每行一个剂量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個檔案中沒有 Piru 能讀取的欄。請將試算表匯出為 CSV，每列一個劑量。"
+          }
+        }
+      }
+    },
     "This file is too large to be a Piru backup." : {
       "localizations" : {
         "es" : {
@@ -85821,6 +87530,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此檔案太大，不是有效的 Piru 備份。"
+          }
+        }
+      }
+    },
+    "This file is too large to import. Split it into smaller files and import each one." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo es demasiado grande para importarlo. Divídelo en archivos más pequeños e importa cada uno."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo es demasiado grande para importarlo. Divídelo en archivos más pequeños e importa cada uno."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件太大，无法导入。请拆分成较小的文件后逐个导入。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案太大，無法匯入。請拆分成較小的檔案後逐一匯入。"
           }
         }
       }
@@ -85877,6 +87614,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此檔案不是有效的 Piru 備份。"
+          }
+        }
+      }
+    },
+    "This file isn't text Piru can read. Export the sheet as CSV and try again." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no es texto que Piru pueda leer. Exporta la hoja como CSV e inténtalo de nuevo."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no es texto que Piru pueda leer. Exporta la hoja como CSV e inténtalo de nuevo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个文件不是 Piru 能读取的文本。请将表格导出为 CSV 后重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個檔案不是 Piru 能讀取的文字。請將試算表匯出為 CSV 後重試。"
           }
         }
       }
@@ -88552,6 +90317,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "請在設定中開啟定位權限，以使用你的目前位置。"
+          }
+        }
+      }
+    },
+    "Turn this on if places land in the wrong part of the world." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actívalo si los lugares aparecen en la parte equivocada del mundo."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actívalo si los lugares aparecen en la parte equivocada del mundo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果地点出现在世界上错误的位置，请打开此项。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果地點出現在世界上錯誤的位置，請開啟此項。"
           }
         }
       }
@@ -92981,6 +94774,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "計算溶液的濃度，或達到目標濃度所需的溶劑量。"
+          }
+        }
+      }
+    },
+    "Worth Checking" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conviene revisar"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conviene revisar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "值得检查"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "值得檢查"
           }
         }
       }

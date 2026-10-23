@@ -40,6 +40,8 @@ final class DataStorageModel {
     /// Named when the document is built, so the file carries the export's own
     /// time rather than the moment the screen was first drawn.
     private(set) var plainExportFilename: String?
+    /// The file type of the document waiting for the save panel.
+    private(set) var plainExportContentType = ExportFormat.piru.contentType
     private(set) var generatingFormat: ExportFormat?
 
     /// Recoverable copies — loaded async (enumerating sidecars opens each store).
@@ -75,6 +77,7 @@ final class DataStorageModel {
             let data = try await DataExportImport.exportJSONInBackground(format: format, context: context)
             plainExportDocument = PiruDocument(data: data)
             plainExportFilename = DataExportImport.exportFilename
+            plainExportContentType = format.contentType
             return true
         } catch {
             notice = Notice(title: String(localized: "Export Failed"), message: error.localizedDescription)
