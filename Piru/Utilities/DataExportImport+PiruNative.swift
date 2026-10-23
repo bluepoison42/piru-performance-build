@@ -319,7 +319,7 @@ nonisolated struct PiruManualEventData: Codable {
 // MARK: - Piru Native Export / Import
 
 extension DataExportImport {
-    private static var appVersionString: String {
+    private nonisolated static var appVersionString: String {
         let info = Bundle.main.infoDictionary
         let version = info?["CFBundleShortVersionString"] as? String ?? "?"
         let build = info?["CFBundleVersion"] as? String ?? "?"
@@ -332,6 +332,13 @@ extension DataExportImport {
         customStore: CustomSubstanceStore,
         settings: SettingsScope,
     ) throws -> PiruFile {
+        try makePiruFile(context: context, stores: ExportStoresSnapshot(customStore: customStore, settings: settings))
+    }
+
+    /// Builds the file from `context` and the out-of-store values already read
+    /// into `stores`. Runs on whatever isolation owns `context`, so a
+    /// background context gathers the graph off the main actor.
+    nonisolated static func makePiruFile(context: ModelContext, stores: ExportStoresSnapshot) throws -> PiruFile {
         let sessions = try context.fetch(FetchDescriptor<Session>(sortBy: [SortDescriptor(\.startDate)]))
         let allEntries = try context.fetch(FetchDescriptor<DoseEntry>())
         let dailyDoses = try context.fetch(FetchDescriptor<DailyDoseItem>())
@@ -405,7 +412,7 @@ extension DataExportImport {
                     saltForm: $0.saltForm, productName: $0.productName,
                 )
             },
-            customSubstances: customStore.all.map(PiruCustomSubstanceData.init),
+            customSubstances: stores.customSubstances,
             inventory: inventoryItems.map { item in
                 PiruInventoryData(
                     id: item.id,
@@ -438,7 +445,7 @@ extension DataExportImport {
             routineOccurrences: records.routineOccurrences,
             profile: records.profile,
             notificationPreferences: records.notificationPreferences,
-            settings: exportSettings(from: settings),
+            settings: stores.settings,
         )
     }
 
