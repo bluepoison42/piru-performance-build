@@ -82,7 +82,7 @@ enum PiruAndroidLaunch {
             await launch.value
             return
         }
-        let task = Task("Finish launching") {
+        let task = Task(name: "Finish launching") {
             AppUpdateCheck.shared.startLaunchCheck()
             await AppLaunch.finishLaunching(container: container)
             finishedLaunching = true
