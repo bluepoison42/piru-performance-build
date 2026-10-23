@@ -1270,6 +1270,10 @@ CREATE TABLE substances (
     misconceptions          TEXT,
     combinations            TEXT,
     water_heat              TEXT,
+    -- The route Quick Log and imports start on, from a curated file's
+    -- `defaultRoute`: the way the substance is usually taken (Cocaine
+    -- insufflated, Cannabis smoked). NULL = the app's oral-first route order.
+    default_route           TEXT,
     -- The molecule this preparation's pharmacology is actually measured on, when
     -- the preparation has none of its own. A plant has no Kᵢ: every receptor
     -- number ever recorded "for cannabis" was measured on Δ9-THC, and filing them
@@ -8093,6 +8097,11 @@ class Build:
                 self.cur.execute(
                     "UPDATE substances SET popularity = ? WHERE id = ?",
                     (to_float(s["popularity"]), sid),
+                )
+            if s.get("defaultRoute"):
+                self.cur.execute(
+                    "UPDATE substances SET default_route = ? WHERE id = ?",
+                    (normalise_route(s["defaultRoute"]), sid),
                 )
             # Curated editorial content (JSON-blob columns). Popular-substances
             # only; absent (NULL) for everything else. Never auto-derived.

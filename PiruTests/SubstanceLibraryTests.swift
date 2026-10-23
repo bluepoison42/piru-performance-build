@@ -170,4 +170,18 @@ struct SubstanceLibraryTests {
         #expect(bounded.count <= 3)
         #expect(unbounded.count >= bounded.count)
     }
+
+    @Test
+    func `A substance starts on the route it is usually taken by`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let expected: [(String, RouteOfAdministration)] = [
+            ("Cocaine", .insufflation), ("Cannabis", .inhalation), ("Ketamine", .insufflation),
+            ("DMT", .inhalation), ("MDMA", .oral), ("Caffeine", .oral),
+        ]
+        for (name, route) in expected {
+            let substance = try #require(SubstanceLibrary.lookup(name))
+            #expect(substance.defaultRoute == route, "\(name)")
+            #expect(try #require(SubstanceLibrary.resolveFull(name)).defaultRoute == route, "\(name) (full record)")
+        }
+    }
 }

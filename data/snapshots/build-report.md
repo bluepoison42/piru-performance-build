@@ -1,6 +1,6 @@
 # Piru SQLite build report
 
-Built 2026-10-22.0 → `Piru/Data/piru-substances.sqlite` (21,549,056 bytes, sha256 `9ae732e35993edf4c04653730a22c7b0951e46492fcc4ae54a26bf27391b5c2a`)
+Built 2026-10-23.0 → `Piru/Data/piru-substances.sqlite` (21,561,344 bytes, sha256 `d36ebfef14acd1e5efc50adcf76fb5edfbc45c0976dffdeb8f77ed1c920757bb`)
 
 ## Row counts
 

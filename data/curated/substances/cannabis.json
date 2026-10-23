@@ -1,5 +1,6 @@
 {
   "name": "Cannabis",
+  "defaultRoute": "inhalation",
   "activeIngredient": "THC",
   "aliases": [
     "大麻",

@@ -1699,7 +1699,7 @@ final class SubstanceStore {
 
     private func editorialColumns() -> Set<String> {
         if let editorialColumnSet { return editorialColumnSet }
-        let all: Set = ["popular_aliases", "misconceptions", "combinations", "water_heat"]
+        let all: Set = ["popular_aliases", "misconceptions", "combinations", "water_heat", "default_route"]
         let present: Set<String> = (try? substancesDB.read { db -> Set<String> in
             let names = try Row.fetchAll(db, sql: "PRAGMA table_info(substances)")
                 .compactMap { $0["name"] as String? }

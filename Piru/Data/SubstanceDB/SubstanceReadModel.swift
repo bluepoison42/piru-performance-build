@@ -286,6 +286,17 @@ struct SubstanceReadModel {
         routeRanks[r] ?? Int.max
     }
 
+    /// The route a substance starts on in Quick Log and imports: its curated
+    /// default (Cocaine insufflated, Cannabis smoked) when it has data on that
+    /// route, else the first of `routes`, which arrive sorted by ``routeRank(_:)``.
+    nonisolated static func defaultRoute(curated: String?, routes: [SubstanceRoute], tags: [String]) -> RouteOfAdministration {
+        if let curated, let route = routes.first(where: { $0.route.rawValue == curated })?.route {
+            return route
+        }
+        return routes.first?.route
+            ?? RouteOfAdministration.from(string: tags.contains("inhalation") ? "inhalation" : "oral")
+    }
+
     /// Canonical key for collapsing near-synonymous binding targets in the
     /// mechanism *summary* — "NMDA receptor" → "nmda", so a measured row doesn't
     /// double-list a curated target. Strips a trailing "receptor(s)" word,
@@ -313,7 +324,7 @@ struct SubstanceReadModel {
     func substance(id: Int64, editorialColumns ec: Set<String>) -> Substance? {
         // Include each curated editorial column only when the opened DB actually
         // has it — a fixture database may lack some of them.
-        let editorialColumns = ["popular_aliases", "misconceptions", "combinations", "water_heat"]
+        let editorialColumns = ["popular_aliases", "misconceptions", "combinations", "water_heat", "default_route"]
             .filter { ec.contains($0) }
             .map { ", \($0)" }
             .joined()
@@ -389,8 +400,10 @@ struct SubstanceReadModel {
                 let diazepamEquivalent = try resolvedDiazepamEquivalent(db: db, substanceID: id)
 
                 routes.sort { Self.routeRank($0.route) < Self.routeRank($1.route) }
-                let defaultRoute = routes.first?.route
-                    ?? RouteOfAdministration.from(string: tags.contains("inhalation") ? "inhalation" : "oral")
+                let defaultRoute = Self.defaultRoute(
+                    curated: ec.contains("default_route") ? coreRow["default_route"] : nil,
+                    routes: routes, tags: tags,
+                )
 
                 return Substance(
                     name: name,
@@ -1145,6 +1158,12 @@ struct SubstanceReadModel {
                         popularAliasesByID[row["id"]] = list
                     }
                 }
+                var curatedDefaultRouteByID: [Int64: String] = [:]
+                if substanceColumns.contains("default_route") {
+                    for row in try Row.fetchAll(db, sql: "SELECT id, default_route FROM substances WHERE default_route IS NOT NULL") {
+                        curatedDefaultRouteByID[row["id"]] = row["default_route"]
+                    }
+                }
                 let curatedBrandsByID = try Self.curatedBrands(db)
 
                 // Category — priority-resolved, with the non-informative "Other"
@@ -1263,8 +1282,7 @@ struct SubstanceReadModel {
                     // is undefined and substances like Diazepam would
                     // default to IV instead of oral.
                     routes.sort { Self.routeRank($0.route) < Self.routeRank($1.route) }
-                    let defaultRoute = routes.first?.route
-                        ?? RouteOfAdministration.from(string: tags.contains("inhalation") ? "inhalation" : "oral")
+                    let defaultRoute = Self.defaultRoute(curated: curatedDefaultRouteByID[sid], routes: routes, tags: tags)
                     return Substance(
                         name: name, displayName: displayNameByID[sid], aliases: aliases,
                         category: categoryByID[sid] ?? .other,

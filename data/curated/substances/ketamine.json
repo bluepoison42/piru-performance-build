@@ -1,5 +1,6 @@
 {
   "name": "Ketamine",
+  "defaultRoute": "insufflation",
   "aliases": [
     "氯胺酮",
     "K粉",

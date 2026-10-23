@@ -1,5 +1,6 @@
 {
   "name": "DMT",
+  "defaultRoute": "inhalation",
   "aliases": [
     "二甲基色胺"
   ]
