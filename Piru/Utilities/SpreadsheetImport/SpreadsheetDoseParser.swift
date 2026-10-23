@@ -1,42 +1,32 @@
 import Foundation
 
 /// Whether a column writes decimals with a comma ("0,75") or a point ("0.75").
-nonisolated struct SpreadsheetNumberStyle: Equatable, Sendable {
+nonisolated struct SpreadsheetNumberStyle: Hashable, Sendable {
     var decimalComma: Bool
 
     static let point = SpreadsheetNumberStyle(decimalComma: false)
     static let comma = SpreadsheetNumberStyle(decimalComma: true)
 
-    /// Decides from the values' own separators: a comma or point followed by
-    /// anything but exactly three digits can only be a decimal mark. When the
-    /// column never says, a semicolon-delimited file is taken to be written
-    /// with decimal commas, which is why it is semicolon-delimited.
-    static func infer(from values: [String], delimiter: Unicode.Scalar) -> SpreadsheetNumberStyle {
-        var commaDecimals = 0
-        var pointDecimals = 0
-        for value in values {
-            let characters = Array(value)
-            for (index, character) in characters.enumerated() where character == "," || character == "." {
-                guard index > 0, characters[index - 1].isASCIIDigit else { continue }
-                var digits = 0
-                var cursor = index + 1
-                while cursor < characters.count, characters[cursor].isASCIIDigit {
-                    digits += 1
-                    cursor += 1
-                }
-                guard digits > 0, digits != 3 else { continue }
-                if character == "," { commaDecimals += 1 } else { pointDecimals += 1 }
-            }
-        }
-        if commaDecimals != pointDecimals {
-            return SpreadsheetNumberStyle(decimalComma: commaDecimals > pointDecimals)
-        }
-        return SpreadsheetNumberStyle(decimalComma: delimiter == ";")
+    /// The column's own evidence when it settles the mark one way, else the
+    /// majority, else ``fallback(delimiter:decimalSeparator:)``.
+    static func infer(
+        from values: [String], delimiter: Unicode.Scalar, decimalSeparator: String? = Locale.current.decimalSeparator,
+    ) -> SpreadsheetNumberStyle {
+        let evidence = SpreadsheetNumberEvidence.collect(values)
+        return evidence.settled ?? evidence.majority ?? fallback(delimiter: delimiter, decimalSeparator: decimalSeparator)
+    }
+
+    /// The mark assumed when the values never say: a semicolon-delimited file
+    /// is written with decimal commas, which is why spreadsheets delimit it
+    /// with semicolons; otherwise the device's own decimal separator.
+    static func fallback(delimiter: Unicode.Scalar, decimalSeparator: String?) -> SpreadsheetNumberStyle {
+        if delimiter == ";" { return .comma }
+        return SpreadsheetNumberStyle(decimalComma: decimalSeparator == ",")
     }
 
     /// A number written with digits, a decimal mark, and thousands groups.
     /// "1,500" is 1500 in a decimal-point column and 1.5 in a decimal-comma one;
-    /// "0,75" and "0.75" are 0.75 in either.
+    /// "0,75", "0.75" and "0,125" are decimals in either.
     func parse(_ text: String) -> Double? {
         var token = text.trimmingCharacters(in: .whitespaces)
         var sign = 1.0
@@ -69,9 +59,11 @@ nonisolated struct SpreadsheetNumberStyle: Equatable, Sendable {
 
     /// One kind of separator: grouping when it repeats or separates exact
     /// groups of three in a column that does not use it as the decimal mark.
+    /// A leading group never starts with 0, so "0,125" is always a decimal.
     private static func resolve(_ token: String, mark: Character, isDecimal: Bool) -> String {
         let parts = token.split(separator: mark, omittingEmptySubsequences: false)
-        let grouped = parts.count > 1 && parts[0].count <= 3 && !parts[0].isEmpty && parts.dropFirst().allSatisfy { $0.count == 3 }
+        let grouped = parts.count > 1 && SpreadsheetNumberEvidence.isLeadingGroup(parts[0])
+            && parts.dropFirst().allSatisfy { $0.count == 3 }
         if parts.count > 2, grouped {
             return parts.joined()
         }
@@ -79,6 +71,93 @@ nonisolated struct SpreadsheetNumberStyle: Equatable, Sendable {
             return parts.joined()
         }
         return token.replacingOccurrences(of: String(mark), with: ".")
+    }
+}
+
+/// How a column's numbers vote on their decimal mark.
+///
+/// A separator can only be a decimal mark when anything but exactly three
+/// digits follows it, when the digits before it start with 0 or run past
+/// three, or when the other separator groups thousands before it ("1.250,5").
+/// It can only group thousands when it repeats ("1,250,000"). What is left
+/// ("1,250", "1.250") reads either way and is counted as ambiguous.
+nonisolated struct SpreadsheetNumberEvidence: Equatable, Sendable {
+    var commaDecimals = 0
+    var pointDecimals = 0
+    var ambiguous = 0
+
+    /// The mark the evidence names when all of it points one way.
+    var settled: SpreadsheetNumberStyle? {
+        if commaDecimals > 0, pointDecimals == 0 { return .comma }
+        if pointDecimals > 0, commaDecimals == 0 { return .point }
+        return nil
+    }
+
+    /// The mark more of the evidence names, when one is named more often.
+    var majority: SpreadsheetNumberStyle? {
+        commaDecimals == pointDecimals ? nil : SpreadsheetNumberStyle(decimalComma: commaDecimals > pointDecimals)
+    }
+
+    static func collect(_ values: [String]) -> SpreadsheetNumberEvidence {
+        var evidence = SpreadsheetNumberEvidence()
+        for value in values {
+            for run in numericRuns(value) {
+                evidence.count(run)
+            }
+        }
+        return evidence
+    }
+
+    /// Whether `group` can open a thousands-grouped number: one to three
+    /// digits, the first not 0.
+    static func isLeadingGroup(_ group: Substring) -> Bool {
+        (1 ... 3).contains(group.count) && group.first != "0"
+    }
+
+    private mutating func count(_ run: String) {
+        let separators = run.filter { $0 == "," || $0 == "." }
+        guard let first = separators.first, let last = separators.last else { return }
+        if first != last {
+            if separators.count(where: { $0 == last }) == 1 { vote(last) }
+            return
+        }
+        let parts = run.split(separator: first, omittingEmptySubsequences: false)
+        if parts.count > 2 {
+            if Self.isLeadingGroup(parts[0]), parts.dropFirst().allSatisfy({ $0.count == 3 }) {
+                vote(first == "," ? "." : ",")
+            }
+            return
+        }
+        if parts[1].count != 3 || !Self.isLeadingGroup(parts[0]) {
+            vote(first)
+        } else {
+            ambiguous += 1
+        }
+    }
+
+    private mutating func vote(_ decimal: Character) {
+        if decimal == "," { commaDecimals += 1 } else { pointDecimals += 1 }
+    }
+
+    /// The runs of digits in `text`, each with the commas and points that sit
+    /// between two of its digits.
+    private static func numericRuns(_ text: String) -> [String] {
+        let characters = Array(text)
+        var runs: [String] = []
+        var current = ""
+        for (index, character) in characters.enumerated() {
+            if character.isASCIIDigit {
+                current.append(character)
+            } else if character == "," || character == ".", current.last?.isASCIIDigit == true,
+                      index + 1 < characters.count, characters[index + 1].isASCIIDigit {
+                current.append(character)
+            } else if !current.isEmpty {
+                runs.append(current)
+                current = ""
+            }
+        }
+        if !current.isEmpty { runs.append(current) }
+        return runs
     }
 }
 
@@ -90,6 +169,15 @@ nonisolated struct SpreadsheetDose: Equatable, Sendable {
     var isApproximate = false
     /// Words the parser could not place, kept so nothing the cell said is lost.
     var leftover: String?
+}
+
+/// A unit stated outside the dose cell: in a unit column, or in the dose
+/// column's header.
+nonisolated enum SpreadsheetUnitReading: Equatable, Sendable {
+    /// A unit doses are logged in, in Piru's spelling.
+    case unit(String)
+    /// A unit expression no single amount can be logged in ("mg/kg"), as written.
+    case unsupported(String)
 }
 
 /// Piru's spelling for unit words: mass and volume units by their symbol,
@@ -107,6 +195,48 @@ nonisolated enum SpreadsheetUnits {
     /// A unit cell as Piru stores it: its canonical spelling, or as written.
     static func normalized(_ word: String) -> String {
         canonical(word) ?? word.trimmingCharacters(in: .whitespaces)
+    }
+
+    /// A unit column's cell: its unit in Piru's spelling with any stated basis
+    /// ("mg (freebase)"), ``SpreadsheetUnitReading/unsupported(_:)`` for a rate
+    /// or concentration ("mg/kg"), and anything else as written.
+    static func reading(ofUnitCell text: String) -> SpreadsheetUnitReading? {
+        let trimmed = text.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return nil }
+        guard let dose = SpreadsheetDoseParser.parse(trimmed, style: .point), let unit = dose.unit else {
+            return .unit(normalized(trimmed))
+        }
+        if dose.amount == nil { return .unsupported(trimmed) }
+        return .unit(dose.leftover == nil ? unit : trimmed)
+    }
+
+    /// A mass or volume unit named in a column header: "Dose (mg)", "Amount µg",
+    /// "Dose (mg freebase)". A unit expression Piru can't hold a dose in
+    /// ("Dose (mg/kg)", "Dose in mg per kg") reads as
+    /// ``SpreadsheetUnitReading/unsupported(_:)`` so the column's bare numbers
+    /// are never taken to be in a plain unit.
+    static func reading(ofHeader header: String) -> SpreadsheetUnitReading? {
+        guard let expression = unitExpression(in: header),
+              let dose = SpreadsheetDoseParser.parse(expression, style: .point), let unit = dose.unit,
+              DoseQuantity.massUnit(unit) != nil || DoseQuantity.basisMassUnit(unit) != nil || unit == "mL"
+        else { return nil }
+        return dose.amount == nil ? .unsupported(expression) : .unit(unit)
+    }
+
+    /// The part of a header that names a unit: the last parenthesized or
+    /// bracketed group, else everything from the first word that opens with a
+    /// mass or volume unit.
+    private static func unitExpression(in header: String) -> String? {
+        if let close = header.lastIndex(where: { $0 == ")" || $0 == "]" }),
+           let open = header[..<close].lastIndex(where: { $0 == "(" || $0 == "[" }) {
+            return String(header[header.index(after: open) ..< close]).trimmingCharacters(in: .whitespaces)
+        }
+        let words = header.split(whereSeparator: \.isWhitespace)
+        guard let first = words.firstIndex(where: { word in
+            let letters = String(word.prefix { $0.isLetter || $0 == "µ" || $0 == "μ" })
+            return canonical(letters).map { DoseQuantity.massUnit($0) != nil || $0 == "mL" } ?? false
+        }) else { return nil }
+        return words[first...].joined(separator: " ")
     }
 
     private static let extraMass: [String: UnitDoseMass] = [
@@ -148,34 +278,102 @@ nonisolated enum SpreadsheetUnits {
 /// "~5 mg", "one and a half pills", in English, Dutch, Spanish, German and
 /// French. A count with no unit word stays unitless for the caller to fill;
 /// a unit word with no count is one of it.
+///
+/// A stated basis stays on the unit, the way the catalog writes one: "5 mg
+/// (freebase)" is 5 of "mg (freebase)", which ``DoseQuantity`` compares only
+/// with the same unit. Sums convert between units of one kind ("0.1 g + 50 mg"
+/// is 150 mg). What Piru can't hold as a single amount leaves `amount` empty,
+/// so the cell imports as an unknown dose with its text kept: a rate or
+/// concentration ("5 mg/kg", "10 mg per ml", "5%"), any other qualifier in
+/// parentheses after the unit ("5 mg (absorbed)"), a sum across kinds of unit
+/// ("2 mg + 1 pill"), and a second number or unit with nothing joining it to
+/// the first ("1 pill 50 mg").
 nonisolated enum SpreadsheetDoseParser {
+    /// One added part of a dose: its number and, once named, its unit.
+    private struct Term {
+        var value: Double
+        var unit: String?
+    }
+
     static func parse(_ text: String, style: SpreadsheetNumberStyle) -> SpreadsheetDose? {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         var dose = SpreadsheetDose()
+        var terms: [Term] = []
+        // The term being read: its number, unit, and stated basis.
         var total: Double?
+        var unit: String?
+        var basis: String?
         var adding = false
         var multiplying = false
+        var unreadable = false
+        var lastWasUnit = false
+        // Words inside parentheses right after the unit, while they are read.
+        var qualifier: [String]?
         var leftover: [String] = []
-        let tokens = tokenize(trimmed.lowercased())
+        let tokens = tokenize(joiningBasisWords(trimmed.lowercased()))
+
+        func closeTerm() {
+            if let total {
+                terms.append(Term(value: total, unit: unit.map { unit in basis.map { "\(unit) (\($0))" } ?? unit }))
+            }
+            total = nil
+            unit = nil
+            basis = nil
+        }
 
         func apply(_ value: Double, isFraction: Bool, isMixedFraction: Bool = false) {
+            defer {
+                adding = false
+                multiplying = false
+            }
             guard let current = total else {
                 total = value
                 return
             }
-            if adding || isMixedFraction {
+            if adding {
+                if unit != nil {
+                    closeTerm()
+                    total = value
+                } else {
+                    total = current + value
+                }
+            } else if multiplying {
+                total = current * value
+            } else if unit != nil {
+                unreadable = true
+            } else if isMixedFraction {
                 total = current + value
-            } else if multiplying || isFraction || current != 0 {
+            } else if isFraction || current != 0 {
                 total = current * value
             }
-            adding = false
-            multiplying = false
+        }
+
+        func closeQualifier() {
+            guard let words = qualifier else { return }
+            qualifier = nil
+            guard !words.isEmpty else { return }
+            if basis == nil, let named = basisWords[words.joined(separator: " ")], unit.flatMap(DoseQuantity.massUnit) != nil {
+                basis = named
+            } else {
+                unreadable = true
+            }
         }
 
         var index = 0
         while index < tokens.count {
             let token = tokens[index]
+            let followsUnit = lastWasUnit
+            lastWasUnit = false
+            if qualifier != nil {
+                switch token {
+                case .symbol(")"): closeQualifier()
+                case let .word(word), let .number(word): qualifier?.append(word)
+                case .symbol: break
+                }
+                index += 1
+                continue
+            }
             switch token {
             case let .number(raw):
                 if index + 2 < tokens.count, case .symbol("-") = tokens[index + 1], case let .number(upperRaw) = tokens[index + 2],
@@ -210,10 +408,17 @@ nonisolated enum SpreadsheetDoseParser {
                     multiplying = true
                 } else if skipWords.contains(word) {
                     break
-                } else if dose.unit == nil, total != nil || SpreadsheetUnits.canonical(word) != nil {
+                } else if unit != nil, perWords.contains(word) {
+                    unreadable = true
+                } else if unit != nil, basis == nil, let named = basisWords[word], unit.flatMap(DoseQuantity.massUnit) != nil {
+                    basis = named
+                } else if unit == nil, total != nil || (terms.isEmpty && SpreadsheetUnits.canonical(word) != nil) {
                     // After a count any word is its unit ("3 blotters"); before
                     // one, only a word Piru knows as a unit ("pil").
-                    dose.unit = SpreadsheetUnits.normalized(word)
+                    unit = SpreadsheetUnits.normalized(word)
+                    lastWasUnit = true
+                } else if unit != nil, SpreadsheetUnits.canonical(word) != nil {
+                    unreadable = true
                 } else {
                     leftover.append(word)
                 }
@@ -222,16 +427,55 @@ nonisolated enum SpreadsheetDoseParser {
                 case "~", "≈", "±": dose.isApproximate = true
                 case "+", "&": if total != nil { adding = true }
                 case "×", "*": if total != nil { multiplying = true }
+                case "/": if unit != nil { unreadable = true }
+                case "%": unreadable = true
+                case "(": if followsUnit { qualifier = [] }
                 default: break
                 }
             }
             index += 1
         }
+        closeQualifier()
 
-        if total == nil, dose.unit != nil { total = 1 }
-        if let total, total > 0 { dose.amount = total }
+        if total == nil, unit != nil, terms.isEmpty { total = 1 }
+        closeTerm()
+        let combined = combine(terms)
+        dose.unit = combined?.unit ?? terms.lazy.compactMap(\.unit).first
+        if !unreadable, let amount = combined?.amount, amount > 0 { dose.amount = amount }
         dose.leftover = leftover.isEmpty ? nil : leftover.joined(separator: " ")
         return dose
+    }
+
+    /// The terms of a sum as one amount: as written when they share a unit (a
+    /// term with none takes the others'), converted to the finest of their
+    /// units when they are masses in different units, and `nil` across kinds
+    /// or when a unitless term sits among several units.
+    private static func combine(_ terms: [Term]) -> (amount: Double, unit: String?)? {
+        guard !terms.isEmpty else { return nil }
+        let units = terms.compactMap(\.unit)
+        let distinct = Set(units)
+        if distinct.count <= 1 {
+            return (terms.map(\.value).reduce(0, +), units.first)
+        }
+        guard units.count == terms.count else { return nil }
+        let quantities = terms.map { DoseQuantity($0.value, unit: $0.unit ?? "") }
+        guard Set(quantities.map(\.family)).count == 1 else { return nil }
+        let finest = quantities.min { lhs, rhs in
+            guard case let .mass(left) = lhs, case let .mass(right) = rhs else { return false }
+            return left.unit.converter.baseUnitValue(fromValue: 1) < right.unit.converter.baseUnitValue(fromValue: 1)
+        }
+        guard let target = finest?.unitSymbol else { return nil }
+        var sum = 0.0
+        for quantity in quantities {
+            guard let value = quantity.value(in: target) else { return nil }
+            sum += value
+        }
+        return (sum, target)
+    }
+
+    /// "free base" and "free-base" as the one word "freebase".
+    private static func joiningBasisWords(_ text: String) -> String {
+        text.replacingOccurrences(of: "free-base", with: "freebase").replacingOccurrences(of: "free base", with: "freebase")
     }
 
     /// A number token: decimal, or a fraction "1/2".
@@ -288,7 +532,7 @@ nonisolated enum SpreadsheetDoseParser {
             } else {
                 flush()
                 kind = " "
-                if "~≈±+&×*-–".contains(character) {
+                if "~≈±+&×*-–/%()".contains(character) {
                     tokens.append(.symbol(character == "–" ? "-" : character))
                 }
             }
@@ -337,6 +581,15 @@ nonisolated enum SpreadsheetDoseParser {
     static let articles: Set<String> = ["a", "an", "een", "un", "una", "ein", "eine", "une"]
 
     static let connectors: Set<String> = ["and", "en", "y", "und", "et", "plus"]
+
+    /// Words that make the amount a rate ("5 mg per kg", "pro Tag").
+    static let perWords: Set<String> = ["per", "pro", "por", "par", "each", "every"]
+
+    /// The bases a mass can be stated on, in the catalog's spelling.
+    static let basisWords: [String: String] = [
+        "freebase": "freebase", "base": "base", "salt": "salt", "zout": "salt", "sal": "salt", "salz": "salt", "sel": "salt",
+        "hcl": "hydrochloride", "hydrochloride": "hydrochloride",
+    ]
 
     static let skipWords: Set<String> = ["of", "van", "de", "del", "von", "d'", "the", "het", "la", "el", "le", "der", "die", "das"]
 

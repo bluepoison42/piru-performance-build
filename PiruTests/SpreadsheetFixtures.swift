@@ -97,12 +97,15 @@ enum SpreadsheetFixtures {
         return catalog[name.lowercased()].map { SpreadsheetSubstanceMatch(name: $0.0, defaultUnit: "mg", defaultRoute: $0.1) }
     }
 
-    static func analyze(_ text: String, region: String = "NL") -> SpreadsheetAnalysis {
-        SpreadsheetInference.analyze(DelimitedText.read(text), resolver: resolver, region: region)
+    /// `decimalSeparator` stands in for the device's, so a run doesn't depend on the simulator's locale.
+    static func analyze(_ text: String, region: String = "NL", decimalSeparator: String = ".") -> SpreadsheetAnalysis {
+        SpreadsheetInference.analyze(DelimitedText.read(text), resolver: resolver, region: region, decimalSeparator: decimalSeparator)
     }
 
-    static func convert(_ text: String, region: String = "NL") -> (SpreadsheetAnalysis, SpreadsheetConversion) {
-        let analysis = analyze(text, region: region)
+    static func convert(
+        _ text: String, region: String = "NL", decimalSeparator: String = ".",
+    ) -> (SpreadsheetAnalysis, SpreadsheetConversion) {
+        let analysis = analyze(text, region: region, decimalSeparator: decimalSeparator)
         let conversion = SpreadsheetConverter.convert(analysis, mapping: analysis.suggestedMapping, resolver: resolver, timeZone: amsterdam)
         return (analysis, conversion)
     }

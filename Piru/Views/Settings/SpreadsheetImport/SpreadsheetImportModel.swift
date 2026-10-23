@@ -90,6 +90,10 @@ final class SpreadsheetImportModel {
         mapping.swapCoordinates = swap
     }
 
+    func setDecimalStyle(_ style: SpreadsheetNumberStyle) {
+        mapping.decimalStyle = style
+    }
+
     /// A row needs both to become a dose.
     var canContinue: Bool {
         mapping.column(for: .date) != nil && mapping.column(for: .substance) != nil
@@ -102,6 +106,11 @@ final class SpreadsheetImportModel {
 
     var dateOrderIsAmbiguous: Bool {
         analysis?.dateOrderIsAmbiguous(mapping) ?? false
+    }
+
+    /// A number the decimal mark decides ("1,250"), when the mapped columns hold one.
+    var ambiguousNumberSample: String? {
+        analysis?.ambiguousNumberSample(mapping)
     }
 
     var showsCoordinateSwap: Bool {

@@ -51,10 +51,12 @@ struct SpreadsheetImportSheet: View {
                     dateOrderIsAmbiguous: model.dateOrderIsAmbiguous,
                     showsCoordinateSwap: model.showsCoordinateSwap,
                     swapEvidence: model.swapEvidence,
+                    ambiguousNumber: model.ambiguousNumberSample,
                     canContinue: model.canContinue,
                     onRole: { model.setRole($0, forColumn: $1) },
                     onDateOrder: { model.setDateOrder($0) },
                     onSwap: { model.setSwapCoordinates($0) },
+                    onDecimalStyle: { model.setDecimalStyle($0) },
                 )
             }
         case .preview:

@@ -46,14 +46,46 @@ struct SpreadsheetAnalysis {
     let dataRecords: [DelimitedRecord]
     let columns: [SpreadsheetColumn]
     fileprivate(set) var suggestedMapping: SpreadsheetMapping
-    /// Per column: how its numbers write decimals.
-    let numberStyles: [SpreadsheetNumberStyle]
-    /// Per column: how its numeric dates vote on day/month order.
+    /// Per column, from every row: how its numbers vote on their decimal mark.
+    let numberEvidence: [SpreadsheetNumberEvidence]
+    /// Per column, from every row: how its numeric dates vote on day/month order.
     let dateOrderEvidence: [SpreadsheetDateParser.OrderEvidence]
     /// Per column: a unit named in its header ("Dose (mg)").
-    let headerUnits: [String?]
+    let headerUnits: [SpreadsheetUnitReading?]
     /// Per column: every value is a serial day number.
     let serialDateColumns: Set<Int>
+
+    /// How `column` writes decimals: as its own numbers settle it, else as
+    /// `mapping` chooses for the sheet.
+    func numberStyle(_ column: Int, _ mapping: SpreadsheetMapping) -> SpreadsheetNumberStyle {
+        numberEvidence[column].settled ?? mapping.decimalStyle
+    }
+
+    /// The numeric columns `mapping` assigns that hold numbers reading either
+    /// way ("1,250") with no number of their own settling the mark, so the
+    /// mapping's ``SpreadsheetMapping/decimalStyle`` decides them.
+    func decimalStyleColumns(_ mapping: SpreadsheetMapping) -> [Int] {
+        [SpreadsheetColumnRole.amount, .latitude, .longitude].compactMap { role in
+            guard let column = mapping.column(for: role) else { return nil }
+            let evidence = numberEvidence[column]
+            return evidence.settled == nil && evidence.ambiguous > 0 ? column : nil
+        }
+    }
+
+    /// Whether `mapping`'s decimal mark decides any number.
+    func decimalStyleIsAmbiguous(_ mapping: SpreadsheetMapping) -> Bool {
+        !decimalStyleColumns(mapping).isEmpty
+    }
+
+    /// The first value the decimal mark decides, to show beside the choice.
+    func ambiguousNumberSample(_ mapping: SpreadsheetMapping) -> String? {
+        for column in decimalStyleColumns(mapping) {
+            if let record = dataRecords.first(where: { SpreadsheetNumberEvidence.collect([$0.cell(column)]).ambiguous > 0 }) {
+                return record.cell(column)
+            }
+        }
+        return nil
+    }
 
     /// Whether the date column, as `mapping` assigns it, gives no row that
     /// settles day/month order.
@@ -76,8 +108,8 @@ struct SpreadsheetAnalysis {
         guard let latitude = mapping.column(for: .latitude), let longitude = mapping.column(for: .longitude) else { return nil }
         let location = mapping.column(for: .location)
         let samples = dataRecords.compactMap { record -> SpreadsheetCoordinateSwap.Sample? in
-            guard let lat = numberStyles[latitude].parse(record.cell(latitude)),
-                  let lng = numberStyles[longitude].parse(record.cell(longitude))
+            guard let lat = numberStyle(latitude, mapping).parse(record.cell(latitude)),
+                  let lng = numberStyle(longitude, mapping).parse(record.cell(longitude))
             else { return nil }
             let link = location.flatMap { SpreadsheetLocationParser.place(from: record.cell($0))?.coordinate }
             return SpreadsheetCoordinateSwap.Sample(labeled: SpreadsheetCoordinate(latitude: lat, longitude: lng), link: link)
@@ -114,28 +146,35 @@ enum SpreadsheetInference {
         _ table: DelimitedTable,
         resolver: @escaping SpreadsheetSubstanceResolver,
         region: String? = Locale.current.region?.identifier,
+        decimalSeparator: String? = Locale.current.decimalSeparator,
     ) -> SpreadsheetAnalysis {
         let headerRow = detectHeader(table.records)
         let headerIndex = headerRow.flatMap { row in table.records.firstIndex { $0.row == row } }
         let dataRecords = headerIndex.map { Array(table.records[($0 + 1)...]) } ?? table.records
         let header = headerIndex.map { table.records[$0] }
         let width = table.columnCount
+        let fallbackStyle = SpreadsheetNumberStyle.fallback(delimiter: table.delimiter, decimalSeparator: decimalSeparator)
 
         var columns: [SpreadsheetColumn] = []
-        var styles: [SpreadsheetNumberStyle] = []
+        var numberEvidence: [SpreadsheetNumberEvidence] = []
         var evidence: [SpreadsheetDateParser.OrderEvidence] = []
-        var headerUnits: [String?] = []
+        var headerUnits: [SpreadsheetUnitReading?] = []
         var serialColumns = Set<Int>()
         var candidates: [(column: Int, role: SpreadsheetColumnRole, confidence: Double)] = []
         var resolverCache: [String: Bool] = [:]
 
         for column in 0 ..< width {
+            // Decimal marks and date order are read from every row, since one
+            // late "13/04" or "0,5" settles the whole column; content scores
+            // from a sample.
+            let allValues = dataRecords.map { $0.cell(column) }.filter { !$0.isEmpty }
             let values = dataRecords.prefix(sampleLimit).map { $0.cell(column) }.filter { !$0.isEmpty }
             let title = header?.cell(column) ?? ""
-            let style = SpreadsheetNumberStyle.infer(from: values, delimiter: table.delimiter)
-            styles.append(style)
-            evidence.append(SpreadsheetDateParser.orderEvidence(values))
-            headerUnits.append(headerUnit(title))
+            let columnEvidence = SpreadsheetNumberEvidence.collect(allValues)
+            numberEvidence.append(columnEvidence)
+            let style = columnEvidence.settled ?? columnEvidence.majority ?? fallbackStyle
+            evidence.append(SpreadsheetDateParser.orderEvidence(allValues))
+            headerUnits.append(SpreadsheetUnits.reading(ofHeader: title))
             let profile = ContentProfile(values: values, style: style) { name in
                 if let known = resolverCache[name] { return known }
                 let resolved = resolver(name) != nil
@@ -187,7 +226,10 @@ enum SpreadsheetInference {
             )
         }
 
-        var mapping = SpreadsheetMapping(roles: roles, dateOrder: .dayMonthYear, swapCoordinates: false)
+        var mapping = SpreadsheetMapping(roles: roles, dateOrder: .dayMonthYear, swapCoordinates: false, decimalStyle: fallbackStyle)
+        if let amountColumn = mapping.column(for: .amount), let majority = numberEvidence[amountColumn].majority {
+            mapping.decimalStyle = majority
+        }
         if let dateColumn = mapping.column(for: .date) {
             let votes = evidence[dateColumn]
             mapping.dateOrder = if votes.dayFirst == votes.monthFirst {
@@ -198,7 +240,7 @@ enum SpreadsheetInference {
         }
         var analysis = SpreadsheetAnalysis(
             table: table, headerRow: headerRow, dataRecords: dataRecords, columns: columns, suggestedMapping: mapping,
-            numberStyles: styles, dateOrderEvidence: evidence, headerUnits: headerUnits, serialDateColumns: serialColumns,
+            numberEvidence: numberEvidence, dateOrderEvidence: evidence, headerUnits: headerUnits, serialDateColumns: serialColumns,
         )
         analysis.suggestedMapping.swapCoordinates = analysis.swapEvidence(mapping) != nil
         return analysis
@@ -248,17 +290,6 @@ enum SpreadsheetInference {
     }
 
     // MARK: - Helpers
-
-    /// A unit named in a header: "Dose (mg)", "Amount µg".
-    static func headerUnit(_ header: String) -> String? {
-        let words = header.lowercased().split { !$0.isLetter && $0 != "µ" && $0 != "μ" }
-        for word in words.reversed() {
-            if let unit = SpreadsheetUnits.canonical(String(word)), DoseQuantity.massUnit(unit) != nil || unit == "mL" {
-                return unit
-            }
-        }
-        return nil
-    }
 
     /// For a sheet with no header: the unassigned column of the longest
     /// sentences, which is what a notes column looks like.

@@ -11,6 +11,8 @@ struct SpreadsheetDoseDraft: Equatable {
     var unit: String
     var route: RouteOfAdministration
     var timestamp: Date
+    /// The row gave no time of day, so ``timestamp`` is noon on its date.
+    var timeIsInferred = false
     var isApproximate = false
     var isUnknownDose = false
     var notes: String?
@@ -39,6 +41,9 @@ enum SpreadsheetWarning: Equatable {
     case dateOrderAssumed(SpreadsheetDateOrder)
     /// Rows settle the order both ways; the majority was used.
     case dateOrderConflict(dayFirst: Int, monthFirst: Int)
+    /// Rows with a number that reads as a decimal or in thousands ("1,250"),
+    /// read with the mapping's decimal mark because nothing in the column settles it.
+    case decimalStyleAssumed(SpreadsheetNumberStyle, rows: [Int])
     /// Names the catalog doesn't know, kept as written, most frequent first.
     case unresolvedSubstances([String])
     /// The latitude and longitude columns are read the other way round.
@@ -65,9 +70,11 @@ struct SpreadsheetConversion {
 /// A row needs a substance and a date to become a dose. Everything else falls
 /// back rather than failing: an empty dose cell is an unknown dose; a dose
 /// cell no rule reads is an unknown dose whose notes keep the text; a missing
-/// unit is the unit column's, then the header's, then the substance's own;
-/// a missing route is the substance's default; a missing time of day is noon,
-/// and said so. Times without an offset are wall-clock times in `timeZone`.
+/// unit is the unit column's, then the header's, then the substance's own,
+/// and a unit no single amount can be logged in ("mg/kg" in either) makes the
+/// dose unknown with its text kept; a missing route is the substance's
+/// default; a missing time of day is noon, and said so. Times without an
+/// offset are wall-clock times in `timeZone`.
 enum SpreadsheetConverter {
     static func convert(
         _ analysis: SpreadsheetAnalysis,
@@ -81,13 +88,15 @@ enum SpreadsheetConverter {
         var rejectedCoordinates: [Int] = []
         var unreadableDoses: [Int] = []
         var missingTimes: [Int] = []
+        var assumedDecimals: [Int] = []
 
         let column = { (role: SpreadsheetColumnRole) in mapping.column(for: role) }
         let substanceColumn = column(.substance)
         let dateColumn = column(.date)
         let amountColumn = column(.amount)
-        let amountStyle = amountColumn.map { analysis.numberStyles[$0] } ?? .point
+        let amountStyle = amountColumn.map { analysis.numberStyle($0, mapping) } ?? .point
         let headerUnit = amountColumn.flatMap { analysis.headerUnits[$0] }
+        let decimalColumns = analysis.decimalStyleColumns(mapping)
 
         for record in analysis.dataRecords {
             // The export's formula guard comes off here, so its text round-trips.
@@ -112,6 +121,7 @@ enum SpreadsheetConverter {
                 result.skipped.append(SpreadsheetSkippedRow(row: record.row, reason: .unreadableDate(dateText)))
                 continue
             }
+            var timeIsInferred = false
             if !dateValue.hasTime {
                 if let time = SpreadsheetDateParser.parseTime(cell(.time)) {
                     dateValue.hour = time.hour
@@ -119,6 +129,7 @@ enum SpreadsheetConverter {
                     dateValue.second = time.second
                 } else {
                     dateValue.hour = 12
+                    timeIsInferred = true
                     missingTimes.append(record.row)
                 }
             }
@@ -138,16 +149,29 @@ enum SpreadsheetConverter {
             var notes: [String] = []
             let doseText = cell(.amount)
             let dose = SpreadsheetDoseParser.parse(doseText, style: amountStyle)
-            let unitCell = cell(.unit)
-            let unit = dose?.unit
-                ?? (unitCell.isEmpty ? nil : SpreadsheetUnits.normalized(unitCell))
+            let statedUnit = dose?.unit.map(SpreadsheetUnitReading.unit)
+                ?? SpreadsheetUnits.reading(ofUnitCell: cell(.unit))
                 ?? headerUnit
-                ?? match?.defaultUnit
-                ?? "mg"
-            let amount = dose?.amount
+            var unit = match?.defaultUnit ?? "mg"
+            var amount = dose?.amount
+            var writtenUnit: String?
+            switch statedUnit {
+            case let .unit(stated):
+                unit = stated
+            case let .unsupported(expression):
+                amount = nil
+                writtenUnit = expression
+            case nil:
+                break
+            }
             if !doseText.isEmpty, amount == nil || dose?.leftover != nil {
                 if amount == nil { unreadableDoses.append(record.row) }
-                notes.append(String(localized: "Dose as written: \(doseText)"))
+                let written = writtenUnit.map { "\(doseText) \($0)" } ?? doseText
+                notes.append(String(localized: "Dose as written: \(written)"))
+            }
+            if let amountColumn, decimalColumns.contains(amountColumn),
+               SpreadsheetNumberEvidence.collect([doseText]).ambiguous > 0 {
+                assumedDecimals.append(record.row)
             }
 
             let routeText = cell(.route)
@@ -172,7 +196,12 @@ enum SpreadsheetConverter {
             if let latColumn = column(.latitude), let lngColumn = column(.longitude) {
                 let latText = record.cell(latColumn)
                 let lngText = record.cell(lngColumn)
-                if let lat = analysis.numberStyles[latColumn].parse(latText), let lng = analysis.numberStyles[lngColumn].parse(lngText) {
+                if decimalColumns.contains(latColumn) || decimalColumns.contains(lngColumn),
+                   SpreadsheetNumberEvidence.collect([latText, lngText]).ambiguous > 0, assumedDecimals.last != record.row {
+                    assumedDecimals.append(record.row)
+                }
+                if let lat = analysis.numberStyle(latColumn, mapping).parse(latText),
+                   let lng = analysis.numberStyle(lngColumn, mapping).parse(lngText) {
                     var labeled = SpreadsheetCoordinate(latitude: lat, longitude: lng)
                     if mapping.swapCoordinates { labeled = labeled.swapped }
                     if labeled.isValid {
@@ -194,6 +223,7 @@ enum SpreadsheetConverter {
                 unit: unit,
                 route: route,
                 timestamp: timestamp,
+                timeIsInferred: timeIsInferred,
                 isApproximate: amount != nil && (approximate || dose?.isApproximate == true),
                 isUnknownDose: amount == nil,
                 notes: noteText,
@@ -208,6 +238,9 @@ enum SpreadsheetConverter {
             result.warnings.append(.dateOrderConflict(dayFirst: conflict.dayFirst, monthFirst: conflict.monthFirst))
         } else if analysis.dateOrderIsAmbiguous(mapping) {
             result.warnings.append(.dateOrderAssumed(mapping.dateOrder))
+        }
+        if !assumedDecimals.isEmpty {
+            result.warnings.append(.decimalStyleAssumed(mapping.decimalStyle, rows: assumedDecimals))
         }
         if !unresolved.isEmpty {
             let names = unresolved.sorted { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }.map(\.key)

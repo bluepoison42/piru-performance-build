@@ -145,13 +145,16 @@ enum SpreadsheetColumnRole: String, CaseIterable, Identifiable {
     ]
 }
 
-/// What each column of a sheet is taken to be, and the two sheet-wide choices
-/// a mapping can't express per column.
+/// What each column of a sheet is taken to be, and the sheet-wide choices a
+/// mapping can't express per column.
 struct SpreadsheetMapping: Equatable {
     var roles: [SpreadsheetColumnRole]
     var dateOrder: SpreadsheetDateOrder
     /// Reads the latitude column as longitude and the longitude column as latitude.
     var swapCoordinates: Bool
+    /// The decimal mark for numbers that read either way ("1,250") in a column
+    /// whose other numbers don't settle it.
+    var decimalStyle = SpreadsheetNumberStyle.point
 
     /// The column assigned `role`, if any.
     func column(for role: SpreadsheetColumnRole) -> Int? {
