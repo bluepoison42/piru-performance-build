@@ -30,6 +30,12 @@ extension SpreadsheetDateOrder {
     }
 }
 
+extension SpreadsheetNumberStyle {
+    var title: String {
+        decimalComma ? String(localized: "Comma (1,5)") : String(localized: "Point (1.5)")
+    }
+}
+
 enum SpreadsheetImportCopy {
     /// How sure the guess for a column is, in words.
     static func confidence(_ value: Double) -> String {
@@ -44,6 +50,12 @@ enum SpreadsheetImportCopy {
             String(localized: "No date in the file settles which number is the day, so dates are read as \(order.title).")
         case let .dateOrderConflict(dayFirst, monthFirst):
             String(localized: "Dates disagree on their order: \(dayFirst) read day first, \(monthFirst) month first. Check the date order.")
+        case let .decimalStyleAssumed(style, rows):
+            if style.decimalComma {
+                String(localized: "Numbers like 1,250 read as a decimal or in thousands. They are read with a decimal comma, so 1,250 is 1.25. Check the decimal mark: rows \(rowList(rows)).")
+            } else {
+                String(localized: "Numbers like 1,250 read as a decimal or in thousands. They are read with a decimal point, so 1,250 is 1250. Check the decimal mark: rows \(rowList(rows)).")
+            }
         case let .unresolvedSubstances(names):
             String(localized: "Not in Piru's library, kept as written: \(list(names)).")
         case let .coordinatesSwapped(evidence):

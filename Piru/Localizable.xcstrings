@@ -297,6 +297,34 @@
         }
       }
     },
+    "“%@” could be a decimal or a number in thousands. Choose the decimal mark this file uses." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” puede ser un decimal o un número con separador de miles. Elige el separador decimal que usa este archivo."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” puede ser un decimal o un número con separador de miles. Elige el separador decimal que usa este archivo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@”既可能是小数，也可能是带千位分隔符的数。请选择这个文件使用的小数点符号。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」既可能是小數，也可能是帶千位分隔符號的數。請選擇這個檔案使用的小數點符號。"
+          }
+        }
+      }
+    },
     "“%@” isn’t in the library anymore. It may have been renamed or merged." : {
       "localizations" : {
         "es" : {
@@ -24543,6 +24571,34 @@
         }
       }
     },
+    "Comma (1,5)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coma (1,5)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coma (1,5)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "逗号（1,5）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "逗號（1,5）"
+          }
+        }
+      }
+    },
     "Common" : {
       "comment" : "Dose band",
       "localizations" : {
@@ -28894,6 +28950,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "有條目的日期會逐一列出。選擇某一天可篩選下方的時段圖表。"
+          }
+        }
+      }
+    },
+    "Decimal Mark" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separador decimal"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separador decimal"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小数点符号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小數點符號"
           }
         }
       }
@@ -60991,6 +61075,62 @@
         }
       }
     },
+    "Numbers like 1,250 read as a decimal or in thousands. They are read with a decimal comma, so 1,250 is 1.25. Check the decimal mark: rows %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los números como 1,250 pueden leerse como decimales o como miles. Se leen con coma decimal, así que 1,250 es 1.25. Revisa el separador decimal: filas %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los números como 1,250 pueden leerse como decimales o como miles. Se leen con coma decimal, así que 1,250 es 1.25. Revisa el separador decimal: filas %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "像 1,250 这样的数既可读作小数，也可读作千位。这些数按小数逗号读取，即 1,250 为 1.25。请检查小数点符号：第 %@ 行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "像 1,250 這樣的數既可讀作小數，也可讀作千位。這些數按小數逗號讀取，即 1,250 為 1.25。請檢查小數點符號：第 %@ 列。"
+          }
+        }
+      }
+    },
+    "Numbers like 1,250 read as a decimal or in thousands. They are read with a decimal point, so 1,250 is 1250. Check the decimal mark: rows %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los números como 1,250 pueden leerse como decimales o como miles. Se leen con punto decimal, así que 1,250 es 1250. Revisa el separador decimal: filas %@."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los números como 1,250 pueden leerse como decimales o como miles. Se leen con punto decimal, así que 1,250 es 1250. Revisa el separador decimal: filas %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "像 1,250 这样的数既可读作小数，也可读作千位。这些数按小数点读取，即 1,250 为 1250。请检查小数点符号：第 %@ 行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "像 1,250 這樣的數既可讀作小數，也可讀作千位。這些數按小數點讀取，即 1,250 為 1250。請檢查小數點符號：第 %@ 列。"
+          }
+        }
+      }
+    },
     "Numer alarmowy" : {
       "localizations" : {
         "es" : {
@@ -66221,6 +66361,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "梅紫與紫紅，來自開放百科"
+          }
+        }
+      }
+    },
+    "Point (1.5)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punto (1.5)"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punto (1.5)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "句点（1.5）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "句點（1.5）"
           }
         }
       }

@@ -8,7 +8,7 @@ extension DataExportImport {
     struct SpreadsheetImportOutcome: Equatable {
         let imported: Int
         /// Rows already in the journal, from an earlier import of the same or
-        /// an overlapping sheet, or repeated within this one.
+        /// an overlapping sheet.
         let duplicates: Int
     }
 
@@ -16,10 +16,7 @@ extension DataExportImport {
     /// dose the journal already holds, then clusters them into sessions and
     /// commits like every other import.
     ///
-    /// Duplicates are matched on substance (as the catalog names it), time to
-    /// the millisecond, amount, unit (in Piru's spelling) and route, so
-    /// importing a sheet twice, or two exported tabs that overlap, adds each
-    /// dose once.
+    /// Which drafts are already in the journal is ``spreadsheetDuplicates(_:context:resolver:)``.
     @MainActor
     @discardableResult
     static func importSpreadsheet(
@@ -27,11 +24,10 @@ extension DataExportImport {
         context: ModelContext,
         resolver: SpreadsheetSubstanceResolver = SpreadsheetSubstanceMatch.library,
     ) throws -> SpreadsheetImportOutcome {
-        var seen = spreadsheetKeys(in: context, resolver: resolver)
+        let duplicates = spreadsheetDuplicates(drafts, context: context, resolver: resolver)
         var imported = 0
         var names = Set<String>()
-        for draft in drafts {
-            guard seen.insert(spreadsheetDedupKey(draft)).inserted else { continue }
+        for (draft, isDuplicate) in zip(drafts, duplicates) where !isDuplicate {
             context.insert(DoseEntry(
                 substance: draft.substance,
                 amount: draft.amount,
@@ -58,35 +54,72 @@ extension DataExportImport {
         }
         resolveImportedDoses(in: context)
         try commitImport(context: context)
-        return SpreadsheetImportOutcome(imported: imported, duplicates: drafts.count - imported)
+        return SpreadsheetImportOutcome(imported: imported, duplicates: duplicates.count { $0 })
     }
 
-    /// How many of `drafts` the journal already holds or that repeat an
-    /// earlier draft, so the preview can say so before anything is written.
+    /// How many of `drafts` the journal already holds, so the preview can say
+    /// so before anything is written.
     @MainActor
     static func spreadsheetDuplicateCount(
         _ drafts: [SpreadsheetDoseDraft],
         context: ModelContext,
         resolver: SpreadsheetSubstanceResolver = SpreadsheetSubstanceMatch.library,
     ) -> Int {
-        var seen = spreadsheetKeys(in: context, resolver: resolver)
-        return drafts.count { !seen.insert(spreadsheetDedupKey($0)).inserted }
+        spreadsheetDuplicates(drafts, context: context, resolver: resolver).count { $0 }
     }
 
+    /// Per draft, whether the journal already holds it.
+    ///
+    /// A draft matches a journal dose on substance (as the catalog names it),
+    /// time to the millisecond, amount, unit (in Piru's spelling) and route,
+    /// so importing a sheet twice, or two exported tabs that overlap, adds
+    /// each dose once. Each journal dose answers for one draft: two identical
+    /// rows in a file are two doses, and against one copy in the journal one
+    /// of them still imports. Drafts are never matched against each other.
+    ///
+    /// A draft placed at noon for want of a time also needs the same notes,
+    /// because its time is a placeholder: two same-day doses of the same
+    /// amount differ only in what was written beside them, and a dose logged
+    /// by hand at noon has its own notes. A re-imported row carries the notes
+    /// its first import wrote, so it still matches.
     @MainActor
-    private static func spreadsheetKeys(in context: ModelContext, resolver: SpreadsheetSubstanceResolver) -> Set<String> {
+    static func spreadsheetDuplicates(
+        _ drafts: [SpreadsheetDoseDraft],
+        context: ModelContext,
+        resolver: SpreadsheetSubstanceResolver = SpreadsheetSubstanceMatch.library,
+    ) -> [Bool] {
+        var journal = spreadsheetJournalNotes(in: context, resolver: resolver)
+        return drafts.map { draft in
+            let key = spreadsheetDedupKey(draft)
+            guard var candidates = journal[key] else { return false }
+            let notes = draft.notes ?? ""
+            guard let match = candidates.firstIndex(of: notes) ?? (draft.timeIsInferred ? nil : candidates.indices.first) else {
+                return false
+            }
+            candidates.remove(at: match)
+            journal[key] = candidates.isEmpty ? nil : candidates
+            return true
+        }
+    }
+
+    /// The journal's doses by dedup key, each as its notes, one per dose.
+    @MainActor
+    private static func spreadsheetJournalNotes(in context: ModelContext, resolver: SpreadsheetSubstanceResolver) -> [String: [String]] {
         let existing = (try? context.fetch(FetchDescriptor<DoseEntry>())) ?? []
         var canonical: [String: String] = [:]
-        return Set(existing.map { entry in
+        var index: [String: [String]] = [:]
+        for entry in existing {
             let name = canonical[entry.substance] ?? {
                 let resolved = resolver(entry.substance)?.name ?? entry.substance
                 canonical[entry.substance] = resolved
                 return resolved
             }()
-            return spreadsheetDedupKey(
+            let key = spreadsheetDedupKey(
                 substance: name, timestamp: entry.timestamp, amount: entry.amount, unit: entry.unit, route: entry.route,
             )
-        })
+            index[key, default: []].append(entry.notes ?? "")
+        }
+        return index
     }
 
     private static func spreadsheetDedupKey(_ draft: SpreadsheetDoseDraft) -> String {

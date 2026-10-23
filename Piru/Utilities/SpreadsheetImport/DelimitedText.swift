@@ -192,16 +192,25 @@ nonisolated enum DelimitedText {
     /// Free text made safe to open in a spreadsheet: a cell that would start a
     /// formula gets a leading `'`, which spreadsheets read as "this is text".
     /// Only for text the person typed; numbers Piru writes itself stay bare.
+    ///
+    /// Text that already looks guarded ("'=1+1" as typed) gets one more `'`,
+    /// so ``restoringFormula(_:)``, which removes exactly one, gives it back
+    /// unchanged.
     static func neutralizingFormula(_ text: String) -> String {
-        guard let first = text.first, formulaLeads.contains(first) else { return text }
-        return "'" + text
+        looksGuarded(Substring(text)) ? "'" + text : text
     }
 
-    /// Undoes ``neutralizingFormula(_:)``: drops a leading `'` only when a
-    /// formula character follows it, so "'s avonds" keeps its apostrophe.
+    /// Undoes ``neutralizingFormula(_:)``: drops one leading `'` when what
+    /// follows it would have been guarded, so "'s avonds" keeps its apostrophe.
     static func restoringFormula(_ text: String) -> String {
-        guard text.hasPrefix("'"), let second = text.dropFirst().first, formulaLeads.contains(second) else { return text }
+        guard text.hasPrefix("'"), looksGuarded(text.dropFirst()) else { return text }
         return String(text.dropFirst())
+    }
+
+    /// Opens with a formula character, after any number of `'`.
+    private static func looksGuarded(_ text: Substring) -> Bool {
+        guard let first = text.first(where: { $0 != "'" }) else { return false }
+        return formulaLeads.contains(first)
     }
 
     /// `field` quoted when it holds the delimiter, a quote, a line break, or

@@ -111,6 +111,19 @@ struct SpreadsheetDateParserTests {
     }
 
     @Test
+    func `Dates that do not exist read as none, in every format`() {
+        for text in [
+            "2024-02-30T12:00:00Z", "2024-02-30", "2023-02-29 10:00", "2024-04-31", "30/02/2024", "29.02.2023 10:00",
+            "February 30, 2024", "31 juni 2015",
+        ] {
+            #expect(SpreadsheetDateParser.parse(text, order: .dayMonthYear) == nil, "\(text)")
+        }
+        #expect(SpreadsheetDateParser.parse("2024-02-29T12:00:00Z", order: .dayMonthYear)?.day == 29)
+        #expect(SpreadsheetDateParser.parse("29/02/2000", order: .dayMonthYear)?.day == 29)
+        #expect(SpreadsheetDateParser.parse("29/02/1900", order: .dayMonthYear) == nil)
+    }
+
+    @Test
     func `Text that is not a date reads as none`() {
         for text in ["200 mg", "Caffeine", "5", "slaap", "13/13/2024"] {
             #expect(SpreadsheetDateParser.parse(text, order: .dayMonthYear) == nil, "\(text)")
@@ -184,11 +197,54 @@ struct SpreadsheetDoseParserTests {
     }
 
     @Test
+    func `A leading zero makes a comma or point a decimal mark in either style`() {
+        #expect(SpreadsheetNumberStyle.point.parse("0,125") == 0.125)
+        #expect(SpreadsheetNumberStyle.comma.parse("0.125") == 0.125)
+        #expect(SpreadsheetDoseParser.parse("0,125 mg", style: .point)?.amount == 0.125)
+    }
+
+    @Test
+    func `Per-weight, per-volume and unplaced qualifiers leave the dose unknown`() throws {
+        for text in ["5 mg/kg", "5mg/kg", "5 mg per kg", "10 mg/ml", "2 µg/kg/h", "5 mg (with MAOI)", "5% THC"] {
+            let dose = try #require(SpreadsheetDoseParser.parse(text, style: .point), "\(text)")
+            #expect(dose.amount == nil, "\(text)")
+        }
+    }
+
+    @Test
+    func `A stated basis stays on the unit`() throws {
+        for (text, unit) in [
+            ("5 mg (freebase)", "mg (freebase)"), ("5 mg freebase", "mg (freebase)"), ("5 mg free base", "mg (freebase)"),
+            ("5 mg (HCl)", "mg (hydrochloride)"), ("100 µg base", "µg (base)"), ("20 mg (salt)", "mg (salt)"),
+        ] {
+            let dose = try #require(SpreadsheetDoseParser.parse(text, style: .point), "\(text)")
+            #expect(dose.amount == Double(text.prefix { $0.isNumber }), "\(text)")
+            #expect(dose.unit == unit, "\(text)")
+            #expect(dose.leftover == nil, "\(text)")
+        }
+    }
+
+    @Test
+    func `Sums convert between units of one kind and refuse to mix kinds`() throws {
+        let sum = try #require(SpreadsheetDoseParser.parse("0.1 g + 50 mg", style: .point))
+        #expect(abs((sum.amount ?? 0) - 150) < 1e-9)
+        #expect(sum.unit == "mg")
+        #expect(SpreadsheetDoseParser.parse("100 mg + 50", style: .point)?.amount == 150)
+        #expect(SpreadsheetDoseParser.parse("1 pill and a half", style: .point)?.amount == 1.5)
+        for text in ["2 mg + 1 pill", "5 mg (freebase) + 5 mg", "1 pill 50 mg", "10 ml + 5 mg"] {
+            #expect(SpreadsheetDoseParser.parse(text, style: .point)?.amount == nil, "\(text)")
+        }
+    }
+
+    @Test
     func `Number style follows the column's own decimals`() {
-        #expect(SpreadsheetNumberStyle.infer(from: ["0,75 joint", "200 mg"], delimiter: ",") == .comma)
-        #expect(SpreadsheetNumberStyle.infer(from: ["0.75", "1,500"], delimiter: ";") == .point)
-        #expect(SpreadsheetNumberStyle.infer(from: ["1,500"], delimiter: ";") == .comma)
-        #expect(SpreadsheetNumberStyle.infer(from: ["1,500"], delimiter: ",") == .point)
+        #expect(SpreadsheetNumberStyle.infer(from: ["0,75 joint", "200 mg"], delimiter: ",", decimalSeparator: ".") == .comma)
+        #expect(SpreadsheetNumberStyle.infer(from: ["0.75", "1,500"], delimiter: ";", decimalSeparator: ".") == .point)
+        #expect(SpreadsheetNumberStyle.infer(from: ["1,500"], delimiter: ";", decimalSeparator: ".") == .comma)
+        #expect(SpreadsheetNumberStyle.infer(from: ["1,500"], delimiter: ",", decimalSeparator: ".") == .point)
+        #expect(SpreadsheetNumberStyle.infer(from: ["1,500"], delimiter: ",", decimalSeparator: ",") == .comma)
+        #expect(SpreadsheetNumberStyle.infer(from: ["0,125"], delimiter: ",", decimalSeparator: ".") == .comma)
+        #expect(SpreadsheetNumberEvidence.collect(["1,500", "1.500", "0,125", "1.250,5", "12,5"]) == .init(commaDecimals: 3, pointDecimals: 0, ambiguous: 2))
     }
 }
 
@@ -264,7 +320,7 @@ struct SpreadsheetInferenceTests {
         #expect(analysis.table.delimiter == ";")
         #expect(analysis.suggestedMapping.roles == [.date, .substance, .amount, .unit, .route, .notes])
         #expect(analysis.suggestedMapping.dateOrder == .dayMonthYear)
-        #expect(analysis.numberStyles[2] == .comma)
+        #expect(analysis.numberStyle(2, analysis.suggestedMapping) == .comma)
     }
 
     @Test
@@ -417,6 +473,79 @@ struct SpreadsheetConversionTests {
     }
 
     @Test
+    func `A leading-zero decimal comma is never read as thousands`() {
+        let (_, conversion) = Fixtures.convert("Date,Drug,Dose\n2024-01-01 10:00,Caffeine,\"0,125 mg\"\n")
+        #expect(conversion.drafts[0].amount == 0.125)
+    }
+
+    @Test
+    func `A dose that reads either way follows the device, is flagged, and can be switched`() {
+        let sheet = "Date,Drug,Dose\n2024-01-01 10:00,Caffeine,\"1,250 mg\"\n2024-01-02 10:00,Caffeine,100 mg\n"
+        let (analysis, comma) = Fixtures.convert(sheet, decimalSeparator: ",")
+        #expect(comma.drafts[0].amount == 1.25)
+        #expect(comma.warnings.contains(.decimalStyleAssumed(.comma, rows: [2])))
+        #expect(analysis.decimalStyleIsAmbiguous(analysis.suggestedMapping))
+        #expect(analysis.ambiguousNumberSample(analysis.suggestedMapping) == "1,250 mg")
+
+        let (_, point) = Fixtures.convert(sheet, decimalSeparator: ".")
+        #expect(point.drafts[0].amount == 1_250)
+        #expect(point.warnings.contains(.decimalStyleAssumed(.point, rows: [2])))
+
+        var mapping = analysis.suggestedMapping
+        mapping.decimalStyle = .point
+        let switched = SpreadsheetConverter.convert(analysis, mapping: mapping, resolver: Fixtures.resolver, timeZone: Fixtures.amsterdam)
+        #expect(switched.drafts[0].amount == 1_250)
+    }
+
+    @Test
+    func `A column's own decimals settle the numbers that read either way`() {
+        let sheet = "Date,Drug,Dose\n2024-01-01 10:00,Caffeine,\"1,250 mg\"\n2024-01-02 10:00,Caffeine,\"0,5 mg\"\n"
+        let (analysis, conversion) = Fixtures.convert(sheet, decimalSeparator: ".")
+        #expect(conversion.drafts[0].amount == 1.25)
+        #expect(!analysis.decimalStyleIsAmbiguous(analysis.suggestedMapping))
+        #expect(!conversion.warnings.contains { if case .decimalStyleAssumed = $0 { true } else { false } })
+        // A repeated separator groups thousands, which settles the other mark.
+        let grouped = "Date,Drug,Dose\n2024-01-01 10:00,Caffeine,\"1,250 mg\"\n2024-01-02 10:00,Caffeine,\"1,250,000 µg\"\n"
+        #expect(Fixtures.convert(grouped, decimalSeparator: ",").1.drafts[0].amount == 1_250)
+    }
+
+    @Test
+    func `A header unit that is a rate is not applied as a plain unit`() {
+        #expect(SpreadsheetUnits.reading(ofHeader: "Dose (mg/kg)") == .unsupported("mg/kg"))
+        #expect(SpreadsheetUnits.reading(ofHeader: "Dose in mg per kg") == .unsupported("mg per kg"))
+        #expect(SpreadsheetUnits.reading(ofHeader: "Dose (mg)") == .unit("mg"))
+        #expect(SpreadsheetUnits.reading(ofHeader: "Amount µg") == .unit("µg"))
+        #expect(SpreadsheetUnits.reading(ofHeader: "Dose (mg freebase)") == .unit("mg (freebase)"))
+        #expect(SpreadsheetUnits.reading(ofHeader: "Dose") == nil)
+        #expect(SpreadsheetUnits.reading(ofUnitCell: "mg/kg") == .unsupported("mg/kg"))
+        let (_, unitColumn) = Fixtures.convert("Date,Drug,Dose,Unit\n2024-01-01 10:00,Caffeine,5,mg/kg\n2024-01-02 10:00,Caffeine,5,mg (freebase)\n")
+        #expect(unitColumn.drafts[0].isUnknownDose)
+        #expect(unitColumn.drafts[1].unit == "mg (freebase)")
+        #expect(unitColumn.drafts[1].amount == 5)
+        let (_, conversion) = Fixtures.convert("Date,Drug,Dose (mg/kg)\n2024-01-01 10:00,Caffeine,5\n")
+        #expect(conversion.drafts[0].isUnknownDose)
+        #expect(conversion.drafts[0].notes?.contains("mg/kg") == true)
+    }
+
+    @Test
+    func `A late row that settles the date order is heard`() {
+        var sheet = "Date,Drug,Dose\n"
+        for day in 0 ..< 450 {
+            sheet += "0\(day % 9 + 1)/0\(day % 9 + 1)/2024 10:00,Caffeine,100 mg\n"
+        }
+        sheet += "13/04/2024 10:00,Caffeine,100 mg\n"
+        let analysis = Fixtures.analyze(sheet, region: "US")
+        #expect(analysis.suggestedMapping.dateOrder == .dayMonthYear)
+    }
+
+    @Test
+    func `An impossible date skips its row`() {
+        let (_, conversion) = Fixtures.convert("Date,Drug,Dose\n2024-02-30T12:00:00Z,Caffeine,100 mg\n2024-02-28T12:00:00Z,Caffeine,100 mg\n")
+        #expect(conversion.skipped == [SpreadsheetSkippedRow(row: 2, reason: .unreadableDate("2024-02-30T12:00:00Z"))])
+        #expect(conversion.drafts.count == 1)
+    }
+
+    @Test
     func `Turning the swap off reads the labels as written`() {
         let analysis = Fixtures.analyze(Fixtures.iftttSheet)
         var mapping = analysis.suggestedMapping
@@ -460,6 +589,43 @@ struct SpreadsheetImportCommitTests {
         let doses = try context.fetch(FetchDescriptor<DoseEntry>())
         #expect(doses.count == 4)
         #expect(doses.allSatisfy { $0.session != nil })
+    }
+
+    @Test
+    func `Rows repeated within one file all import, and the journal is matched one for one`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let container = try makeContainer()
+        let context = container.mainContext
+        let sheet = "Date,Drug,Dose,Notes\n2024-03-02,Caffeine,100 mg,morning\n2024-03-02,Caffeine,100 mg,evening\n"
+        #expect(DataExportImport.spreadsheetDuplicateCount(drafts(sheet), context: context, resolver: Fixtures.resolver) == 0)
+        let first = try DataExportImport.importSpreadsheet(drafts(sheet), context: context, resolver: Fixtures.resolver)
+        #expect(first == .init(imported: 2, duplicates: 0))
+        let again = try DataExportImport.importSpreadsheet(drafts(sheet), context: context, resolver: Fixtures.resolver)
+        #expect(again == .init(imported: 0, duplicates: 2))
+
+        // The same timed dose twice in a file, once in the journal: one more lands.
+        let timed = "Date,Drug,Dose\n2024-03-05 09:00,Caffeine,100 mg\n"
+        try DataExportImport.importSpreadsheet(drafts(timed), context: context, resolver: Fixtures.resolver)
+        let twice = timed + "2024-03-05 09:00,Caffeine,100 mg\n"
+        let outcome = try DataExportImport.importSpreadsheet(drafts(twice), context: context, resolver: Fixtures.resolver)
+        #expect(outcome == .init(imported: 1, duplicates: 1))
+        #expect(try context.fetch(FetchDescriptor<DoseEntry>()).count == 4)
+    }
+
+    @Test
+    func `A noon placed for a missing time matches only a dose with the same notes`() async throws {
+        await SubstanceStore.shared.ensureAllLoaded()
+        let container = try makeContainer()
+        let context = container.mainContext
+        context.insert(DoseEntry(
+            substance: "Caffeine", amount: 100, unit: "mg", route: .oral, timestamp: Fixtures.date(2024, 3, 2, 12, 0), notes: "lunch",
+        ))
+        try context.save()
+        let sheet = "Date,Drug,Dose,Notes\n2024-03-02,Caffeine,100 mg,morning\n2024-03-02 12:00,Caffeine,100 mg,lunch\n"
+        let converted = drafts(sheet)
+        #expect(DataExportImport.spreadsheetDuplicateCount(converted, context: context, resolver: Fixtures.resolver) == 1)
+        let outcome = try DataExportImport.importSpreadsheet(converted, context: context, resolver: Fixtures.resolver)
+        #expect(outcome == .init(imported: 1, duplicates: 1))
     }
 
     @Test
@@ -578,7 +744,11 @@ struct SpreadsheetImportCommitTests {
         #expect(DelimitedText.neutralizingFormula("plain") == "plain")
         #expect(DelimitedText.restoringFormula("'=1+1") == "=1+1")
         #expect(DelimitedText.restoringFormula("'s nachts") == "'s nachts")
-        #expect(DelimitedText.restoringFormula("''=1") == "''=1")
+    }
+
+    @Test(arguments: ["'=1+1", "=1+1", "'s-Hertogenbosch", "''=1", "'-shaky", "plain", "'"])
+    func `The formula guard round-trips every text`(_ text: String) {
+        #expect(DelimitedText.restoringFormula(DelimitedText.neutralizingFormula(text)) == text)
     }
 
     @Test

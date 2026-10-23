@@ -29,8 +29,19 @@ nonisolated struct SpreadsheetDateValue: Equatable, Sendable {
     /// Seconds east of UTC, when the cell stated a zone ("Z", "+02:00").
     var utcOffset: Int?
 
+    /// Whether the day exists in its month on the Gregorian calendar, leap years
+    /// included. `Calendar.date(from:)` rolls 30 February over to 1 March
+    /// rather than refusing it, so every parsed date is checked here first.
+    var isValidDay: Bool {
+        guard (1 ... 12).contains(month), day >= 1 else { return false }
+        let leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+        let lengths = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        return day <= lengths[month - 1]
+    }
+
     /// The instant, reading wall-clock fields in `timeZone` unless the cell named its own offset.
     func date(in timeZone: TimeZone) -> Date? {
+        guard isValidDay else { return nil }
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = utcOffset.flatMap(TimeZone.init(secondsFromGMT:)) ?? timeZone
         let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute, second: second)
@@ -154,6 +165,7 @@ nonisolated enum SpreadsheetDateParser {
               (1 ... 12).contains(month), (1 ... 31).contains(day)
         else { return nil }
         var value = SpreadsheetDateValue(year: year, month: month, day: day)
+        guard value.isValidDay else { return nil }
         guard index < scalars.count else { return value }
         guard expect("T") || expect(" "), let hour = number(1 ... 2), expect(":"), let minute = number(2 ... 2),
               hour < 24, minute < 60
@@ -224,7 +236,7 @@ nonisolated enum SpreadsheetDateParser {
                 value = SpreadsheetDateValue(year: year, month: dayFirst ? second : first, day: dayFirst ? first : second)
             }
         }
-        guard (1 ... 12).contains(value.month), (1 ... 31).contains(value.day), (1900 ... 2200).contains(value.year) else { return nil }
+        guard value.isValidDay, (1900 ... 2200).contains(value.year) else { return nil }
         if let time {
             value.hour = time.hour
             value.minute = time.minute

@@ -1,8 +1,8 @@
 import SwiftUI
 
 /// Each column with the field Piru took it to be, a few of its values, and a
-/// picker to correct it; then the two sheet-wide choices, date order and
-/// coordinate swap, when they apply.
+/// picker to correct it; then the sheet-wide choices, date order, decimal
+/// mark and coordinate swap, when they apply.
 struct SpreadsheetMappingStep: View {
     let fileName: String?
     let columns: [SpreadsheetColumn]
@@ -11,10 +11,13 @@ struct SpreadsheetMappingStep: View {
     let dateOrderIsAmbiguous: Bool
     let showsCoordinateSwap: Bool
     let swapEvidence: SpreadsheetSwapEvidence?
+    /// A number that reads as a decimal or in thousands, when one needs the decimal mark chosen.
+    let ambiguousNumber: String?
     let canContinue: Bool
     let onRole: (SpreadsheetColumnRole, Int) -> Void
     let onDateOrder: (SpreadsheetDateOrder) -> Void
     let onSwap: (Bool) -> Void
+    let onDecimalStyle: (SpreadsheetNumberStyle) -> Void
 
     var body: some View {
         List {
@@ -39,6 +42,9 @@ struct SpreadsheetMappingStep: View {
 
             if showsDateOrder {
                 SpreadsheetDateOrderSection(order: mapping.dateOrder, isAmbiguous: dateOrderIsAmbiguous, onChange: onDateOrder)
+            }
+            if let ambiguousNumber {
+                SpreadsheetDecimalStyleSection(style: mapping.decimalStyle, sample: ambiguousNumber, onChange: onDecimalStyle)
             }
             if showsCoordinateSwap {
                 SpreadsheetSwapSection(isOn: mapping.swapCoordinates, evidence: swapEvidence, onChange: onSwap)
@@ -120,6 +126,27 @@ private struct SpreadsheetDateOrderSection: View {
             } else {
                 Text("Dates in this file disagree on their order. The more common one is chosen.")
             }
+        }
+    }
+}
+
+private struct SpreadsheetDecimalStyleSection: View {
+    let style: SpreadsheetNumberStyle
+    let sample: String
+    let onChange: (SpreadsheetNumberStyle) -> Void
+
+    var body: some View {
+        Section {
+            Picker(selection: Binding(get: { style }, set: { onChange($0) })) {
+                ForEach([SpreadsheetNumberStyle.comma, .point], id: \.decimalComma) { option in
+                    Text(option.title).tag(option)
+                }
+            } label: {
+                Text("Decimal Mark")
+            }
+            .listRowBackground(CardBackground())
+        } footer: {
+            Text("“\(sample)” could be a decimal or a number in thousands. Choose the decimal mark this file uses.")
         }
     }
 }
