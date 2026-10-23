@@ -246,6 +246,7 @@ private let excludedSettingKeys: [String: String] = [
     "piruScanFixture": "debug launch argument",
     "piruShowTips": "debug launch argument",
     "piruShowUpdateNotice": "debug launch argument",
+    "piruSpreadsheetFile": "debug launch argument",
     "psid.curatedBackfill.v1.disabled": "migration bookkeeping",
     "psid.doseBackfill.v1.disabled": "migration bookkeeping",
     "psid.doseBackfill.v1.snapshotTaken": "migration bookkeeping",

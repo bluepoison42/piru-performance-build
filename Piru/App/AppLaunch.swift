@@ -230,6 +230,15 @@ enum AppLaunch {
                     AppNavigator.shared.open(.tool(.identify), home: .tools)
                 }
             }
+            // `-piruSpreadsheetFile <path>` opens the spreadsheet import
+            // with that file read (SpreadsheetImportModel).
+            if SpreadsheetImportModel.debugPreloadPath != nil {
+                Task(name: "Spreadsheet import fixture") {
+                    try? await Task.sleep(for: .seconds(1))
+                    await SubstanceStore.shared.ensureAllLoaded()
+                    AppNavigator.shared.present(.spreadsheetImport)
+                }
+            }
             // `-piruScreenshots <dir>` walks every screen for
             // pipeline/screenshots.py to capture (ScreenshotTour).
             if ScreenshotTour.isRequested {

@@ -15,6 +15,7 @@ import UniformTypeIdentifiers
 /// take time lives in ``DataStorageModel``, and each section is its own view.
 struct DataStorageView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appNavigator) private var navigator
     @State private var model = DataStorageModel()
 
     /// Asks for a passphrase to seal a new encrypted backup.
@@ -46,6 +47,7 @@ struct DataStorageView: View {
                 onExportPlain: exportPlain,
                 onExportEncrypted: { showingExportPassphrase = true },
                 onImport: { showingImporter = true },
+                onImportSpreadsheet: { navigator.present(.spreadsheetImport) },
                 onRestoreICloud: {
                     model.prepareICloudRestore()
                     showingStrategyDialog = true
@@ -68,7 +70,7 @@ struct DataStorageView: View {
         .fileExporter(
             isPresented: $showingPlainExporter,
             document: model.plainExportDocument,
-            contentType: .json,
+            contentType: model.plainExportContentType,
             defaultFilename: model.plainExportFilename,
         ) { result in
             model.finishPlainExport(result)
@@ -352,6 +354,7 @@ private struct ExportImportSection: View {
     let onExportPlain: (ExportFormat) -> Void
     let onExportEncrypted: () -> Void
     let onImport: () -> Void
+    let onImportSpreadsheet: () -> Void
     let onRestoreICloud: () -> Void
 
     @State private var manager = BackupManager.shared
@@ -362,7 +365,7 @@ private struct ExportImportSection: View {
         Section {
             DataActionRow(
                 title: "Export…",
-                subtitle: "Piru, PsychonautWiki, or an encrypted backup",
+                subtitle: "Piru, PsychonautWiki, a spreadsheet, or an encrypted backup",
                 systemImage: "square.and.arrow.up",
                 showSpinner: isGenerating,
             ) {
@@ -375,6 +378,13 @@ private struct ExportImportSection: View {
                 subtitle: "A Piru, PsychonautWiki, or DrugsPRO file, or an encrypted backup",
                 systemImage: "square.and.arrow.down",
                 action: onImport,
+            )
+
+            DataActionRow(
+                title: "Import Spreadsheet…",
+                subtitle: "A CSV or TSV dose log from Google Sheets, Excel or Numbers",
+                systemImage: "tablecells",
+                action: onImportSpreadsheet,
             )
 
             if iCloudBackupFound {
@@ -407,6 +417,11 @@ private struct ExportImportSection: View {
                 subtitle: "For importing into the PsychonautWiki app",
                 systemImage: "arrow.up.doc",
             ) { afterPopoverDismiss { onExportPlain(.psyLog) } }
+            OptionRow(
+                title: "Spreadsheet (CSV)",
+                subtitle: "One row per dose, for Excel, Numbers or Google Sheets. Imports back into Piru",
+                systemImage: "tablecells",
+            ) { afterPopoverDismiss { onExportPlain(.spreadsheet) } }
             OptionRow(
                 title: "Encrypted Backup…",
                 subtitle: "Passphrase-protected. Save or send it anywhere",

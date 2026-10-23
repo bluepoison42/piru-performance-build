@@ -26,6 +26,7 @@ struct UTType: Hashable, Sendable {
     static let plainText = UTType(identifier: "public.plain-text", preferredFilenameExtension: "txt")
     static let pdf = UTType(identifier: "com.adobe.pdf", preferredFilenameExtension: "pdf")
     static let commaSeparatedText = UTType(identifier: "public.comma-separated-values-text", preferredFilenameExtension: "csv")
+    static let tabSeparatedText = UTType(identifier: "public.tab-separated-values-text", preferredFilenameExtension: "tsv")
     static let png = UTType(identifier: "public.png", preferredFilenameExtension: "png")
     static let image = UTType(identifier: "public.image", preferredFilenameExtension: nil)
 }

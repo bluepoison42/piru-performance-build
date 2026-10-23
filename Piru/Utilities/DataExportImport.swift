@@ -17,13 +17,22 @@ extension Date {
 
 // MARK: - Export / Import
 
-/// The two on-disk shapes Piru can write.
+/// The on-disk shapes Piru can write.
 enum ExportFormat: Equatable {
     /// Piru-native, lossless (sessions, per-dose location, background flags, …).
     case piru
     /// PsychonautWiki's modern interchange format — importable by PW, but lossy
     /// for Piru-only fields.
     case psyLog
+    /// The journal as one CSV row per dose, in the layout
+    /// ``DataExportImport/spreadsheetColumns`` names, which the spreadsheet
+    /// importer reads back.
+    case spreadsheet
+
+    /// The file type the export is saved as.
+    var contentType: UTType {
+        self == .spreadsheet ? .commaSeparatedText : .json
+    }
 }
 
 enum DataExportImport {
@@ -43,6 +52,7 @@ enum DataExportImport {
         switch format {
         case .piru: try encodeJSON(makePiruFile(context: context, customStore: customStore, settings: settings))
         case .psyLog: try encodeJSON(makePsyLogFile(context: context))
+        case .spreadsheet: try spreadsheetCSV(context: context)
         }
     }
 
@@ -62,6 +72,8 @@ enum DataExportImport {
         case .psyLog:
             let file = try makePsyLogFile(context: context)
             return try await Task.detached(priority: .userInitiated) { try encodeJSON(file) }.value
+        case .spreadsheet:
+            return try spreadsheetCSV(context: context)
         }
     }
 
@@ -164,17 +176,7 @@ enum DataExportImport {
         case .legacy:
             try importLegacy(data: data, context: context)
         }
-        // Cluster any session-less imports (PsyLog/DrugsPRO/legacy) into sessions. The
-        // native importer assigns its own sessions, so this is a no-op for it.
-        SessionService.assignUnassignedDoses(in: context)
-
-        // Resolve the PSID identity of anything that came in name-only — a PsyLog
-        // dose, or a native file written before PSID — so it keys on identity and
-        // titles from its resolved form right away, not only after the next launch.
-        // Data-driven (substanceUID == nil gate), so a fully-resolved native import
-        // finds nothing pending. Curated rows (imported favorites/daily) too.
-        PSIDBackfillMigration.run(context: context)
-        CuratedIdentityBackfillMigration.run(context: context)
+        resolveImportedDoses(in: context)
 
         // Last, because a changed source priority drops the substance catalog's
         // resolved caches, which the backfills above read.
@@ -182,11 +184,28 @@ enum DataExportImport {
             applySettings(fileSettings, mode: mode, to: settings)
         }
 
-        // Commit, then signal — the order every dose write follows. The tick wakes
-        // readers of the committed store (tolerance, body levels, launch caches,
-        // which fetch on `DatabaseActor`) and keys the Insights models' memos, so
-        // sent before the commit it lets them cache the pre-import log under the
-        // post-import revision, and nothing re-signals when autosave lands.
+        try commitImport(context: context)
+    }
+
+    /// Clusters session-less imported doses into sessions and resolves the PSID
+    /// identity of anything that came in name-only, so imported doses key on
+    /// identity and title from their resolved form right away, not only after
+    /// the next launch. Both passes are data-driven: a native import, which
+    /// assigns its own sessions and identities, finds nothing pending.
+    @MainActor
+    static func resolveImportedDoses(in context: ModelContext) {
+        SessionService.assignUnassignedDoses(in: context)
+        PSIDBackfillMigration.run(context: context)
+        CuratedIdentityBackfillMigration.run(context: context)
+    }
+
+    /// Commits an import, then signals — the order every dose write follows. The
+    /// tick wakes readers of the committed store (tolerance, body levels, launch
+    /// caches, which fetch on `DatabaseActor`) and keys the Insights models'
+    /// memos, so sent before the commit it lets them cache the pre-import log
+    /// under the post-import revision, and nothing re-signals when autosave lands.
+    @MainActor
+    static func commitImport(context: ModelContext) throws {
         try context.save()
         DoseLogService.shared.changed()
         WidgetCenter.shared.reloadAllTimelines()
@@ -352,7 +371,7 @@ nonisolated enum ImportFileError: Error {
 
 struct PiruDocument: FileDocument {
     static var readableContentTypes: [UTType] {
-        [.json]
+        [.json, .commaSeparatedText]
     }
 
     var data: Data
