@@ -295,8 +295,7 @@ nonisolated enum DeepLink {
     /// `time=` as a link may write it: ISO 8601 with or without fractional
     /// seconds (`2026-10-18T09:30:00Z`, `…09:30:00+02:00`), or Unix epoch seconds.
     private static func date(named value: String) -> Date? {
-        if let date = try? Date(value, strategy: .iso8601)
-            ?? (try? Date(value, strategy: .iso8601.time(includingFractionalSeconds: true))) {
+        if let date = try? Date(value, strategy: .iso8601) {
             return date
         }
         if let seconds = Double(value), seconds.isFinite, seconds > 0 {

@@ -1,6 +1,6 @@
 import Foundation
 
-enum RouteOfAdministration: String, Codable, CaseIterable, Identifiable {
+enum RouteOfAdministration: String, Codable, CaseIterable, Identifiable, Sendable {
     case oral
     case sublingual
     /// Absorbed across the cheek mucosa — nicotine pouches, snus, buccal films.
