@@ -42,5 +42,11 @@ s = s.split(marker)[0] + '\necho "CI build toolchain ready"\n'
 p.write_text(s)
 PY
 zsh "$PWD/android/tools/setup.sh"
+
+# Skip discovers SDKs through SwiftPM's default directory on a fresh runner.
+mkdir -p "$HOME/Library/org.swift.swiftpm"
+ln -s "$PIRU_ANDROID/swift-sdks" "$HOME/Library/org.swift.swiftpm/swift-sdks"
+[[ -d "$HOME/Library/org.swift.swiftpm/swift-sdks/swift-6.4.0-RELEASE_android.artifactbundle" ]]
 df -h "$RUNNER_TEMP"
+
 
