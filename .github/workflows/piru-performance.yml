@@ -45,19 +45,23 @@ jobs:
         run: zsh ci/perf/setup_ci.zsh
       - name: Fetch and verify the bundled substance database
         run: bash pipeline/fetch-db.sh
+      - name: Verify escaped optional strings on the actual decoder
+        run: |
+          xcrun swiftc ci/perf/parser-tests/PrimitiveJSON.swift ci/perf/parser-tests/Parsers.swift ci/perf/parser-tests/main.swift -o "$RUNNER_TEMP/piru-parser-tests"
+          "$RUNNER_TEMP/piru-parser-tests"
       # Persistence regressions passed in run 40273798026. History matching
       # above runs the actual production planner with migration-specific cases.
       - name: Build optimized Swift and Kotlin bridges
         shell: zsh {0}
         run: |
           source android/tools/env.sh
-          zsh android/tools/build-app.sh --jobs 2
+          zsh android/tools/build-app.sh --jobs 4
       - name: Package the unsigned release APK
         shell: zsh {0}
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70004-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70005-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload APK
         uses: actions/upload-artifact@v4

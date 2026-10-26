@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70004;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70005;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -43,7 +43,7 @@ if shortcuts.exists():
 builder = root / "android/tools/build-app.sh"
 text = builder.read_text(encoding="utf-8")
 assert "--package-path . --build-system native" in text
-builder.write_text(text.replace("--package-path . --build-system native", "--package-path . --build-system native --jobs 2"), encoding="utf-8")
+builder.write_text(text.replace("--package-path . --build-system native", "--package-path . --build-system native --jobs 4"), encoding="utf-8")
 for relative in ("android/tools/setup.sh", "android/tools/build-app.sh", "android/tools/package-apk.sh"):
     path = root / relative
     text = path.read_text(encoding="utf-8")
@@ -88,6 +88,7 @@ for name, (_, _, version) in vendors.items():
     assert state.get("version") == version and state["revision"] == revision, (name, state, version, revision)
 print("Verified all patched dependency versions and revisions, including SkipUI 1.64.0")
 ''', encoding="utf-8")
+
 builder = root / "android/tools/build-app.sh"
 text = builder.read_text(encoding="utf-8")
 anchor = 'xcrun swift package resolve --package-path . > "$PIRU_ANDROID/build/transpile.log" 2>&1'
@@ -562,3 +563,9 @@ do {
 } catch { }
 print("FIX PASSED: optional and required strings preserve quotes, newlines, backslashes, Unicode and genuine null; wrong types throw")
 ''', encoding="utf-8")
+
+# Unwrap failure before casting to an Optional, so escaped strings reach JSONDecoder.
+snapshot_file = persistence / "Snapshot.swift"
+snapshot_text = snapshot_file.read_text(encoding="utf-8")
+assert snapshot_text.count(old_guard) == 1
+snapshot_file.write_text(snapshot_text.replace(old_guard, new_guard), encoding="utf-8")
