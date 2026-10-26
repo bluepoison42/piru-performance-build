@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70003;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70004;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -477,3 +477,46 @@ assert(slots.updates.count == 1 && slots.updates[slotB.id]?.satisfyingEntryID ==
 print("Actual historical planner regression passed: prior-night credit, stale-day removal, sticky user skips, slot matching, no schedule creation and idempotence.")
 ''')
 print("Prepared background history repair, import repair and actual production-planner regression checks")
+
+# Android's Canvas compatibility layer creates a Compose node for every fill.
+# Batch same-color, disjoint atom circles instead of creating one node per atom.
+molecule = root / "Piru/Views/Library/MoleculeView.swift"
+text = molecule.read_text(encoding="utf-8")
+old = '''            let r = ballRadius * scale
+            for index in shape.atoms.indices {
+                guard let p = point(index) else { continue }
+                context.fill(
+                    Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2)),
+                    with: .color(color),
+                )
+            }'''
+new = '''            let r = ballRadius * scale
+            var balls = Path()
+            for index in shape.atoms.indices {
+                guard let p = point(index) else { continue }
+                balls.addEllipse(in: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2))
+            }
+            context.fill(balls, with: .color(color))'''
+assert text.count(old) == 1
+molecule.write_text(text.replace(old, new), encoding="utf-8")
+
+library = root / "Piru/Views/Library/LibraryBrowseView.swift"
+text = library.read_text(encoding="utf-8")
+for opacity, radius in (("0.3", "10"), ("0.45", "glowRadius"), ("0.35", "10")):
+    old = f"content.shadow(color: color.opacity({opacity}), radius: {radius}, x: 0, y: 5)"
+    new = f"content.background {{ shape.fill(color).shadow(color: color.opacity({opacity}), radius: {radius}, x: 0, y: 5) }}"
+    assert text.count(old) == 1
+    text = text.replace(old, new)
+library.write_text(text, encoding="utf-8")
+
+# Disjoint circles of the same color have identical coverage when batched,
+# including transparent colors. Bundled coordinates and radii are unchanged.
+import math
+shapes = json.loads((root / "Piru/Data/MoleculeShapes.json").read_text(encoding="utf-8"))
+assert len(shapes) == 12
+minimum = min(math.dist(a, b) for s in shapes.values() for i, a in enumerate(s["atoms"]) for b in s["atoms"][i+1:])
+assert minimum > 6.0, "Overlapping atom circles need a transparency-equivalence review"
+assert "var ballRadius: CGFloat = 3.0" in molecule.read_text(encoding="utf-8")
+assert molecule.read_text(encoding="utf-8").count("context.fill(") == 1
+assert molecule.read_text(encoding="utf-8").count("context.stroke(") == 1
+print(f"Library rendering verified: {len(shapes)} unchanged molecule shapes, minimum atom spacing {minimum:.5f} > diameter6; two Canvas nodes per molecule; shape-only outer shadows")
