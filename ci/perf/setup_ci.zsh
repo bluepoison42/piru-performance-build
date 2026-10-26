@@ -38,6 +38,6 @@ assert marker in s
 s = s.split(marker)[0] + '\necho "CI build toolchain ready"\n'
 p.write_text(s)
 PY
-zsh android/tools/setup.sh
+zsh "$PWD/android/tools/setup.sh"
 df -h "$RUNNER_TEMP"
 
