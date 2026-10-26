@@ -58,6 +58,14 @@ text = text.replace(old_python, "URL(fileURLWithPath: " + json.dumps(str(Path(sy
 plugin.write_text(text, encoding="utf-8")
 print("Verified official fixes; isolated application ID:", new_id)
 
+# The free Intel runner has 14 GB; keep Gradle and Kotlin in one bounded heap.
+gradle = root / "android/app/Android/gradle.properties"
+text = gradle.read_text(encoding="utf-8")
+assert "org.gradle.jvmargs=-Xmx6g" in text and "kotlin.daemon.jvmargs=-Xmx8g" in text
+text = text.replace("org.gradle.jvmargs=-Xmx6g", "org.gradle.jvmargs=-Xmx10g")
+text = text.replace("kotlin.daemon.jvmargs=-Xmx8g", "kotlin.compiler.execution.strategy=in-process\norg.gradle.workers.max=2")
+gradle.write_text(text, encoding="utf-8")
+
 # SwiftPM otherwise selects a newer unpatched tag from the mirrored repository.
 package = root / "android/app/Package.swift"
 text = package.read_text(encoding="utf-8")

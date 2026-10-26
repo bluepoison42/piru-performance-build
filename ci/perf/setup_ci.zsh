@@ -10,6 +10,7 @@ export PIRU_CONFIG=release
 export PIRU_UNSIGNED=1
 
 xcodebuild -version
+sysctl -n hw.memsize
 "$JAVA_HOME/bin/java" -version
 brew install gradle librsvg trash
 
