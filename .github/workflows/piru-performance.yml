@@ -19,6 +19,10 @@ jobs:
           java-version: '21'
       - name: Verify fixes and prepare an isolated test app
         run: python3 ci/perf/prepare_variant.py
+      - name: Verify medication-day boundary on real shared Swift code
+        run: |
+          xcrun swiftc Shared/CalendarSessionDay.swift ci/perf/day-tests/Identity.swift ci/perf/day-tests/main.swift -o "$RUNNER_TEMP/piru-day-tests"
+          "$RUNNER_TEMP/piru-day-tests"
       - name: Set up pinned native Android build tools
         run: zsh ci/perf/setup_ci.zsh
       - name: Fetch and verify the bundled substance database
