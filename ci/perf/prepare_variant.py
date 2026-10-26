@@ -166,7 +166,7 @@ calendar.timeZone = TimeZone(identifier: "America/Edmonton")!
 for (start, end, hours) in [("2026-03-07T11:00:00Z", "2026-03-08T10:00:00Z", 23), ("2026-10-31T10:00:00Z", "2026-11-01T11:00:00Z", 25)] {
     let first = date(start), next = date(end)
     assert(calendar.sessionDayStart(for: first) == first)
-    assert(calendar.sessionDayEnd(for: first) == next)
+    assert(calendar.sessionDayEnd(for: first) == next, "Boundary start \\(first); expected end \\(next); actual \\(calendar.sessionDayEnd(for: first)); zone \\(calendar.timeZone)")
     assert(Int(next.timeIntervalSince(first) / 3600) == hours)
     assert(calendar.component(.hour, from: next) == 4)
     assert(calendar.medicationDayLabel(for: next.addingTimeInterval(-1)) == calendar.startOfDay(for: first))
