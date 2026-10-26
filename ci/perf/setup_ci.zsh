@@ -44,9 +44,11 @@ PY
 zsh "$PWD/android/tools/setup.sh"
 
 # Skip discovers SDKs through SwiftPM's default directory on a fresh runner.
-mkdir -p "$HOME/Library/org.swift.swiftpm"
-ln -s "$PIRU_ANDROID/swift-sdks" "$HOME/Library/org.swift.swiftpm/swift-sdks"
+mkdir -p "$HOME/Library/org.swift.swiftpm/swift-sdks"
+ditto "$PIRU_ANDROID/swift-sdks/" "$HOME/Library/org.swift.swiftpm/swift-sdks/"
 [[ -d "$HOME/Library/org.swift.swiftpm/swift-sdks/swift-6.4.0-RELEASE_android.artifactbundle" ]]
+source "$PWD/android/tools/env.sh"
+swift sdk list
 df -h "$RUNNER_TEMP"
 
 

@@ -163,7 +163,7 @@ assert(calendar.medicationDayLabel(for: earlyDose) == date("2026-05-22T00:00:00Z
 defaults.set(4, forKey: Calendar.dayBoundaryHourKey)
 calendar.timeZone = TimeZone(identifier: "America/Edmonton")!
 // Spring/fall days have 23/25 hours; the boundary remains local 04:00.
-for (start, end, hours) in [("2026-03-07T11:00:00Z", "2026-03-08T10:00:00Z", 23), ("2026-10-31T10:00:00Z", "2026-11-01T11:00:00Z", 25)] {
+for (start, end, hours) in [("2026-03-07T11:00:00Z", "2026-03-08T10:00:00Z", 23), ("2025-11-01T10:00:00Z", "2025-11-02T11:00:00Z", 25)] {
     let first = date(start), next = date(end)
     assert(calendar.sessionDayStart(for: first) == first)
     assert(calendar.sessionDayEnd(for: first) == next, "Boundary start \\(first); expected end \\(next); actual \\(calendar.sessionDayEnd(for: first)); zone \\(calendar.timeZone)")
