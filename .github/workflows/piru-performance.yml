@@ -21,7 +21,7 @@ jobs:
         run: python3 ci/perf/prepare_variant.py
       - name: Verify medication-day boundary on real shared Swift code
         run: |
-          xcrun swiftc Shared/CalendarSessionDay.swift ci/perf/day-tests/Identity.swift ci/perf/day-tests/main.swift -o "$RUNNER_TEMP/piru-day-tests"
+          xcrun swiftc Shared/CalendarSessionDay.swift ci/perf/day-tests/Identity.swift ci/perf/day-tests/NotificationScheduler.swift ci/perf/day-tests/main.swift -o "$RUNNER_TEMP/piru-day-tests"
           "$RUNNER_TEMP/piru-day-tests"
       - name: Set up pinned native Android build tools
         run: zsh ci/perf/setup_ci.zsh
@@ -39,7 +39,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70001-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70002-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload APK
         uses: actions/upload-artifact@v4
