@@ -58,6 +58,35 @@ text = text.replace(old_python, "URL(fileURLWithPath: " + json.dumps(str(Path(sy
 plugin.write_text(text, encoding="utf-8")
 print("Verified official fixes; isolated application ID:", new_id)
 
+# SwiftPM otherwise selects a newer unpatched tag from the mirrored repository.
+package = root / "android/app/Package.swift"
+text = package.read_text(encoding="utf-8")
+anchor = '.package(url: "https://github.com/skiptools/skip-fuse-ui.git", exact: "1.19.1"),'
+assert anchor in text
+text = text.replace(anchor, anchor + '\n        .package(url: "https://github.com/skiptools/skip-ui.git", exact: "1.64.0"),')
+package.write_text(text, encoding="utf-8")
+pin_check = root / "ci/perf/verify_pins.py"
+pin_check.parent.mkdir(parents=True, exist_ok=True)
+pin_check.write_text('''import ast, json, subprocess, sys
+from pathlib import Path
+stage = Path(sys.argv[1])
+tool = Path(sys.argv[2])
+tree = ast.parse(tool.read_text())
+vendors = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "VENDORED" for t in node.targets))
+pins = {p["identity"].lower(): p["state"] for p in json.loads((stage / "Package.resolved").read_text())["pins"]}
+for name, (_, _, version) in vendors.items():
+    state = pins[name.lower()]
+    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=stage / "Vendor" / name, text=True).strip()
+    assert state.get("version") == version and state["revision"] == revision, (name, state, version, revision)
+print("Verified all patched dependency versions and revisions, including SkipUI 1.64.0")
+''', encoding="utf-8")
+builder = root / "android/tools/build-app.sh"
+text = builder.read_text(encoding="utf-8")
+anchor = 'xcrun swift package resolve --package-path . > "$PIRU_ANDROID/build/transpile.log" 2>&1'
+assert anchor in text
+text = text.replace(anchor, anchor + '\npython3 "$TOOLS/../../ci/perf/verify_pins.py" "$PIRU_ANDROID/stage" "$TOOLS/stage.py" || exit 1')
+builder.write_text(text, encoding="utf-8")
+
 # The medication checklist and quick-log chips must use the journal's day boundary.
 calendar = root / "Shared/CalendarSessionDay.swift"
 text = calendar.read_text(encoding="utf-8")
