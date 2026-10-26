@@ -1,0 +1,59 @@
+name: Build Piru performance test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: macos-26
+    timeout-minutes: 120
+    env:
+      PIRU_ANDROID: ${{ runner.temp }}/piru-android
+      PIRU_CONFIG: release
+      PIRU_UNSIGNED: '1'
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Verify fixes and prepare an isolated test app
+        run: python3 ci/perf/prepare_variant.py
+      - name: Set up pinned native Android build tools
+        run: zsh ci/perf/setup_ci.zsh
+      - name: Fetch and verify the bundled substance database
+        run: bash pipeline/fetch-db.sh
+      - name: Run portable database regression tests
+        shell: zsh {0}
+        run: |
+          source android/tools/env.sh
+          swift test --package-path android/Compat --scratch-path "$RUNNER_TEMP/portable-tests" --jobs 2
+      - name: Build optimized Swift and Kotlin bridges
+        shell: zsh {0}
+        run: |
+          source android/tools/env.sh
+          zsh android/tools/build-app.sh --jobs 2
+      - name: Package the unsigned release APK
+        shell: zsh {0}
+        run: |
+          zsh android/tools/package-apk.sh
+          mkdir -p deliverables
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70001-unsigned.apk
+          shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: piru-performance-apk
+          path: deliverables/
+          retention-days: 3
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-diagnostics
+          path: |
+            ${{ runner.temp }}/piru-android/build/*.log
+            ${{ runner.temp }}/piru-android/build/*.errors
+          if-no-files-found: ignore
+          retention-days: 3
