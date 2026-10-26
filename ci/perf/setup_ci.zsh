@@ -1,6 +1,8 @@
 #!/bin/zsh
 set -e
 export HOMEBREW_NO_AUTO_UPDATE=1
+export DEVELOPER_DIR="$(/usr/bin/xcode-select -p)"
+echo "DEVELOPER_DIR=$DEVELOPER_DIR" >> "$GITHUB_ENV"
 export PIRU_ANDROID="${RUNNER_TEMP:?}/piru-android"
 echo "PIRU_ANDROID=$PIRU_ANDROID" >> "$GITHUB_ENV"
 export PIRU_CONFIG=release

@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import re
 import sys
 
@@ -49,4 +50,10 @@ for relative in ("android/tools/setup.sh", "android/tools/build-app.sh", "androi
     text = text.replace('export JAVA_HOME=$(/usr/libexec/java_home -v 21)', 'export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"')
     text = text.replace('/usr/libexec/java_home -v 21 > /dev/null 2>&1 || missing+=', '[[ -x "${JAVA_HOME}/bin/java" ]] || missing+=')
     path.write_text(text, encoding="utf-8")
+plugin = root / "android/Compat/Plugins/StageSources/StageSources.swift"
+text = plugin.read_text(encoding="utf-8")
+old_python = 'URL(fileURLWithPath: "/usr/bin/python3")'
+assert old_python in text
+text = text.replace(old_python, "URL(fileURLWithPath: " + json.dumps(str(Path(sys.executable).resolve())) + ")")
+plugin.write_text(text, encoding="utf-8")
 print("Verified official fixes; isolated application ID:", new_id)
