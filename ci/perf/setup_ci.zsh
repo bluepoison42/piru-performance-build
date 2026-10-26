@@ -48,7 +48,10 @@ mkdir -p "$HOME/Library/org.swift.swiftpm/swift-sdks"
 ditto "$PIRU_ANDROID/swift-sdks/" "$HOME/Library/org.swift.swiftpm/swift-sdks/"
 [[ -d "$HOME/Library/org.swift.swiftpm/swift-sdks/swift-6.4.0-RELEASE_android.artifactbundle" ]]
 source "$PWD/android/tools/env.sh"
+export SWIFT_TOOLCHAIN_DIR="$PIRU_ANDROID/toolchains"
+echo "SWIFT_TOOLCHAIN_DIR=$SWIFT_TOOLCHAIN_DIR" >> "$GITHUB_ENV"
 swift sdk list
+skip android toolchain version --plain
 df -h "$RUNNER_TEMP"
 
 
