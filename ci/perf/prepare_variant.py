@@ -520,3 +520,45 @@ assert "var ballRadius: CGFloat = 3.0" in molecule.read_text(encoding="utf-8")
 assert molecule.read_text(encoding="utf-8").count("context.fill(") == 1
 assert molecule.read_text(encoding="utf-8").count("context.stroke(") == 1
 print(f"Library rendering verified: {len(shapes)} unchanged molecule shapes, minimum atom spacing {minimum:.5f} > diameter6; two Canvas nodes per molecule; shape-only outer shadows")
+
+# Test the real generic decoder in isolation, before changing the application.
+parser_tests = root / "ci/perf/parser-tests"
+parser_tests.mkdir(parents=True, exist_ok=True)
+persistence = root / "android/Compat/Sources/PortableData"
+method = swift_member((persistence / "Snapshot.swift").read_text(encoding="utf-8"), "static func decode<T: Decodable>(_: T.Type, from raw:")
+old_guard = "if let primitive = T.self as? any PrimitiveJSON.Type, let value = primitive.init(json: raw) as? T {"
+new_guard = "if let primitive = T.self as? any PrimitiveJSON.Type, let decoded = primitive.init(json: raw), let value = decoded as? T {"
+assert method.count(old_guard) == 1
+fixed_method = method.replace(old_guard, new_guard)
+(parser_tests / "PrimitiveJSON.swift").write_text((persistence / "PrimitiveJSON.swift").read_text(encoding="utf-8"), encoding="utf-8")
+support = '''import Foundation
+enum RowCodec { static func isNull(_ data: Data) -> Bool { data.elementsEqual("null".utf8) } }
+enum PortableDataError: Error { case undecodable(entity: String, key: String, underlying: String) }
+'''
+support += "enum OriginalParser { static let decoder = JSONDecoder()\n" + method + "\n}\n"
+support += "enum FixedParser { static let decoder = JSONDecoder()\n" + fixed_method + "\n}\n"
+(parser_tests / "Parsers.swift").write_text(support, encoding="utf-8")
+(parser_tests / "main.swift").write_text(r'''import Foundation
+let encoder = JSONEncoder()
+let escaped = "Original alias: \"Example\""
+let encoded = try encoder.encode(escaped)
+let old: String? = try OriginalParser.decode(String?.self, from: encoded, entity: "Fixture", key: "note")
+assert(old == nil, "The suspected optional-cast failure was not reproduced")
+print("REPRODUCED: the original escaped optional string decodes as nil after storage")
+for original in ["plain", escaped, "line1\nline2", "path\\folder", "中文 and emoji 🧪"] {
+    let raw = try encoder.encode(original)
+    let restored: String? = try FixedParser.decode(String?.self, from: raw, entity: "Fixture", key: "note")
+    assert(restored == original)
+    let required: String = try FixedParser.decode(String.self, from: raw, entity: "Fixture", key: "note")
+    assert(required == original)
+}
+let none: String? = try FixedParser.decode(String?.self, from: Data("null".utf8), entity: "Fixture", key: "note")
+assert(none == nil)
+let unicode: String? = try FixedParser.decode(String?.self, from: Data(#""\u0041""#.utf8), entity: "Fixture", key: "note")
+assert(unicode == "A")
+do {
+    let _: String? = try FixedParser.decode(String?.self, from: Data("123".utf8), entity: "Fixture", key: "note")
+    assertionFailure("Wrongly typed data must throw instead of becoming nil")
+} catch { }
+print("FIX PASSED: optional and required strings preserve quotes, newlines, backslashes, Unicode and genuine null; wrong types throw")
+''', encoding="utf-8")

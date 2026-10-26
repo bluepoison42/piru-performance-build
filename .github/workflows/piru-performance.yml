@@ -1,10 +1,28 @@
 name: Build Piru performance test
 on:
   workflow_dispatch:
+    inputs:
+      parser_only:
+        description: Run the isolated persistence parser regression only
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
+  parser-regression:
+    if: ${{ inputs.parser_only }}
+    runs-on: macos-26
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare actual parser implementations
+        run: python3 ci/perf/prepare_variant.py
+      - name: Reproduce escaped optional-string decoding and verify the fix
+        run: |
+          xcrun swiftc ci/perf/parser-tests/PrimitiveJSON.swift ci/perf/parser-tests/Parsers.swift ci/perf/parser-tests/main.swift -o "$RUNNER_TEMP/piru-parser-tests"
+          "$RUNNER_TEMP/piru-parser-tests"
   android:
+    if: ${{ !inputs.parser_only }}
     runs-on: macos-26-intel
     timeout-minutes: 180
     env:
