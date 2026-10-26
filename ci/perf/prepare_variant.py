@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70002;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70003;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -308,3 +308,172 @@ let overnightSlot = ActualNotificationScheduler.followUpFireDates(timeMinutes: 1
 assert(overnightSlot.first!.fireDate == date("2026-05-22T02:00:00Z"))
 print("Actual reminder regression passed: overnight slots, next evening, taken-day suppression and 04:00 expiry.")
 ''')
+
+# Re-derive existing historical expectations, without applying today's schedule
+# to the past or changing doses, timestamps, occurrence identities or user skips.
+history_code = '''    /// A boundary change invalidates cached past-day matches, not user choices.
+    /// Only existing expectations are recalculated; no past schedules are invented.
+    nonisolated static func historicalPlan(
+        occurrences: [OccurrenceSnapshot], entries: [EntrySnapshot]
+    ) -> Plan {
+        let items = occurrences.map {
+            ItemSnapshot(substance: $0.substance, substanceUID: $0.substanceUID,
+                         route: $0.route, slots: [$0.slotMinutes])
+        }
+        var result = plan(dueItems: items, occurrences: occurrences, expired: [], entries: entries)
+        for row in occurrences {
+            guard let outcome = result.updates[row.id] else { continue }
+            let state: RoutineOccurrence.State = outcome.state == .pending ? .missed : outcome.state
+            if row.state == state && row.satisfyingEntryID == outcome.satisfyingEntryID {
+                result.updates.removeValue(forKey: row.id)
+            } else {
+                result.updates[row.id] = (state, outcome.satisfyingEntryID)
+            }
+        }
+        return result
+    }
+
+    /// Mutates only derived states. The importer commits this with its other data.
+    @discardableResult
+    nonisolated static func repairHistoricalDays(in context: ModelContext, now: Date = .now) throws -> Int {
+        let calendar = Calendar.current
+        let today = calendar.medicationDayLabel(for: now)
+        let predicate = #Predicate<RoutineOccurrence> { $0.dueDay < today }
+        let rows = try context.fetch(FetchDescriptor(predicate: predicate))
+        var changed = 0
+        for (day, occurrences) in Dictionary(grouping: rows, by: \\.dueDay) {
+            let start = calendar.medicationDayStart(forLabel: day)
+            let end = calendar.sessionDayEnd(for: start)
+            let entryPredicate = #Predicate<DoseEntry> { $0.timestamp >= start && $0.timestamp < end }
+            let entries = try context.fetch(FetchDescriptor(predicate: entryPredicate))
+            let snapshots = occurrences.map {
+                OccurrenceSnapshot(id: $0.persistentModelID, substance: $0.substance,
+                    substanceUID: $0.substanceUID, route: $0.route, slotMinutes: $0.slotMinutes,
+                    state: $0.state, satisfyingEntryID: $0.satisfyingEntryID)
+            }
+            let entrySnapshots = entries.map {
+                EntrySnapshot(id: $0.id, substance: $0.substance, substanceUID: $0.substanceUID,
+                              route: $0.route, timestamp: $0.timestamp)
+            }
+            let result = historicalPlan(occurrences: snapshots, entries: entrySnapshots)
+            for occurrence in occurrences {
+                guard let outcome = result.updates[occurrence.persistentModelID] else { continue }
+                occurrence.state = outcome.state
+                occurrence.satisfyingEntryID = outcome.satisfyingEntryID
+                changed += 1
+            }
+        }
+        return changed
+    }
+
+    /// An upgrade repairs an already populated installation off the UI actor.
+    @DatabaseActor
+    static func repairHistoricalDays(container: ModelContainer, now: Date = .now) throws -> Int {
+        let context = ModelContext(container)
+        let changed = try repairHistoricalDays(in: context, now: now)
+        if changed > 0 { try context.save() }
+        return changed
+    }
+
+'''
+service = root / "Piru/Data/Services/RoutineOccurrenceService.swift"
+text = service.read_text(encoding="utf-8")
+anchor = "    // MARK: - Snapshots"
+assert text.count(anchor) == 1
+text = text.replace(anchor, history_code + anchor)
+service.write_text(text, encoding="utf-8")
+
+importer = root / "Piru/Utilities/DataExportImport.swift"
+text = importer.read_text(encoding="utf-8")
+anchor = "        try commitImport(context: context)"
+assert text.count(anchor) == 1
+text = text.replace(anchor, "        if fileSettings != nil {\n            try RoutineOccurrenceService.repairHistoricalDays(in: context)\n        }\n\n" + anchor)
+importer.write_text(text, encoding="utf-8")
+
+launch = root / "android/app/Sources/Piru/Android/PiruAndroidApp.swift"
+text = launch.read_text(encoding="utf-8")
+anchor = "            await AppLaunch.finishLaunching(container: container)"
+assert text.count(anchor) == 1
+text = text.replace(anchor, anchor + '''
+            let historyKey = "piru.medicationHistoryBoundary.v1"
+            let boundary = Calendar.sessionDayBoundaryHour
+            if UserDefaults.standard.object(forKey: historyKey) as? Int != boundary {
+                do {
+                    let changed = try await RoutineOccurrenceService.repairHistoricalDays(container: container)
+                    UserDefaults.standard.set(boundary, forKey: historyKey)
+                    if changed > 0 {
+                        DoseLogService.shared.changed()
+                        DoseNotificationManager.syncMedReminders(in: container.mainContext)
+                    }
+                } catch {
+                    print("Piru: medication-day history repair failed; will retry next launch.")
+                }
+            }''')
+launch.write_text(text, encoding="utf-8")
+
+# Limit packaging to the application and its dependencies. The unqualified task
+# also builds unused root-library copies alongside the included Skip modules.
+packager = root / "android/tools/package-apk.sh"
+text = packager.read_text(encoding="utf-8")
+anchor = 'gradle "assemble${(C)${PIRU_CONFIG:-debug}}" --console=plain'
+assert text.count(anchor) == 1
+text = text.replace(anchor, 'gradle ":app:assemble${(C)${PIRU_CONFIG:-debug}}" --console=plain')
+packager.write_text(text, encoding="utf-8")
+
+# Exercise the actual production planner, not a second implementation.
+def swift_member(text, anchor):
+    start = text.index(anchor)
+    brace = text.index("{", start)
+    depth, end = 1, brace + 1
+    while depth:
+        depth += (text[end] == "{") - (text[end] == "}")
+        end += 1
+    return text[start:end]
+
+service_text = service.read_text(encoding="utf-8")
+anchors = ["nonisolated struct ItemSnapshot:", "nonisolated struct OccurrenceSnapshot:",
+           "nonisolated struct EntrySnapshot:", "nonisolated struct Plan:",
+           "nonisolated static func plan(\n", "nonisolated static func historicalPlan(",
+           "private nonisolated static func corresponds(", "private nonisolated static func matches(",
+           "private nonisolated static func minutesOfDay(", "private nonisolated static func distance("]
+identity = swift_member((root / "Shared/MedSchedule.swift").read_text(encoding="utf-8"), "static func identityMatches(")
+protocol = swift_member(service_text, "nonisolated protocol LiveOccurrence")
+support = '''import Foundation
+struct PersistentIdentifier: Hashable, Sendable { let value: String }
+enum RouteOfAdministration: Sendable { case oral, subcutaneous }
+enum RoutineOccurrence { enum State: Sendable { case pending, logged, missed, skipped } }
+enum MedSchedule {\n''' + identity + "\n}\n" + protocol
+support += "\nnonisolated enum ActualHistoryPlanner {\n" + "\n".join(swift_member(service_text, a) for a in anchors) + "\n}\n"
+(tests / "HistoryPlanner.swift").write_text(support, encoding="utf-8")
+with (tests / "main.swift").open("a", encoding="utf-8") as test:
+    test.write('''
+let occurrenceID = PersistentIdentifier(value: "existing")
+let doseID = UUID()
+let earlyTimestamp = date("2026-05-22T01:09:00Z")
+let missed = ActualHistoryPlanner.OccurrenceSnapshot(id: occurrenceID, substance: "Guanfacine", substanceUID: "GUAN",
+    route: .oral, slotMinutes: nil, state: .missed, satisfyingEntryID: nil)
+let earlyEntry = ActualHistoryPlanner.EntrySnapshot(id: doseID, substance: "Guanfacine", substanceUID: "GUAN",
+    route: .oral, timestamp: earlyTimestamp)
+let repaired = ActualHistoryPlanner.historicalPlan(occurrences: [missed], entries: [earlyEntry])
+assert(repaired.updates[occurrenceID]?.state == .logged)
+assert(repaired.updates[occurrenceID]?.satisfyingEntryID == doseID)
+assert(repaired.inserts.isEmpty && repaired.deletes.isEmpty && repaired.expire.isEmpty)
+assert(earlyEntry.timestamp == earlyTimestamp)
+let logged = ActualHistoryPlanner.OccurrenceSnapshot(id: occurrenceID, substance: "Guanfacine", substanceUID: "GUAN",
+    route: .oral, slotMinutes: nil, state: .logged, satisfyingEntryID: doseID)
+assert(ActualHistoryPlanner.historicalPlan(occurrences: [logged], entries: [earlyEntry]).isEmpty)
+let wrongDay = ActualHistoryPlanner.historicalPlan(occurrences: [logged], entries: [])
+assert(wrongDay.updates[occurrenceID]?.state == .missed)
+assert(ActualHistoryPlanner.historicalPlan(occurrences: [missed], entries: []).isEmpty)
+let skipped = ActualHistoryPlanner.OccurrenceSnapshot(id: occurrenceID, substance: "Guanfacine", substanceUID: "GUAN",
+    route: .oral, slotMinutes: nil, state: .skipped, satisfyingEntryID: nil)
+assert(ActualHistoryPlanner.historicalPlan(occurrences: [skipped], entries: [earlyEntry]).isEmpty)
+let slotA = ActualHistoryPlanner.OccurrenceSnapshot(id: PersistentIdentifier(value: "night"), substance: "Guanfacine", substanceUID: "GUAN",
+    route: .oral, slotMinutes: 1380, state: .missed, satisfyingEntryID: nil)
+let slotB = ActualHistoryPlanner.OccurrenceSnapshot(id: PersistentIdentifier(value: "overnight"), substance: "Guanfacine", substanceUID: "GUAN",
+    route: .oral, slotMinutes: 120, state: .missed, satisfyingEntryID: nil)
+let slots = ActualHistoryPlanner.historicalPlan(occurrences: [slotA, slotB], entries: [earlyEntry])
+assert(slots.updates.count == 1 && slots.updates[slotB.id]?.satisfyingEntryID == doseID)
+print("Actual historical planner regression passed: prior-night credit, stale-day removal, sticky user skips, slot matching, no schedule creation and idempotence.")
+''')
+print("Prepared background history repair, import repair and actual production-planner regression checks")

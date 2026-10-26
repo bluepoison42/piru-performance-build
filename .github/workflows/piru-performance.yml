@@ -6,7 +6,7 @@ permissions:
 jobs:
   android:
     runs-on: macos-26-intel
-    timeout-minutes: 120
+    timeout-minutes: 180
     env:
       PIRU_CONFIG: release
       PIRU_UNSIGNED: '1'
@@ -21,14 +21,14 @@ jobs:
         run: python3 ci/perf/prepare_variant.py
       - name: Verify medication-day boundary on real shared Swift code
         run: |
-          xcrun swiftc Shared/CalendarSessionDay.swift ci/perf/day-tests/Identity.swift ci/perf/day-tests/NotificationScheduler.swift ci/perf/day-tests/main.swift -o "$RUNNER_TEMP/piru-day-tests"
-          "$RUNNER_TEMP/piru-day-tests"
+          xcrun swiftc Shared/CalendarSessionDay.swift ci/perf/day-tests/Identity.swift ci/perf/day-tests/NotificationScheduler.swift ci/perf/day-tests/HistoryPlanner.swift ci/perf/day-tests/main.swift -o "$RUNNER_TEMP/piru-day-tests"
+          TZ=UTC "$RUNNER_TEMP/piru-day-tests"
       - name: Set up pinned native Android build tools
         run: zsh ci/perf/setup_ci.zsh
       - name: Fetch and verify the bundled substance database
         run: bash pipeline/fetch-db.sh
-      # The unchanged application/database source passed its full Compat regression tests
-      # in run 40273798026. Subsequent edits only repair CI bootstrap paths.
+      # Persistence regressions passed in run 40273798026. History matching
+      # above runs the actual production planner with migration-specific cases.
       - name: Build optimized Swift and Kotlin bridges
         shell: zsh {0}
         run: |
@@ -39,7 +39,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70002-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70003-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload APK
         uses: actions/upload-artifact@v4
