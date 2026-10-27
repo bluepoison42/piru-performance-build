@@ -605,7 +605,9 @@ print("Host-only macro renamed to avoid shadowing Apple Foundation; production S
 ''', encoding="utf-8")
 anchor = "    private var revision = 0"
 assert context_text.count(anchor) == 1
-context_text = context_text.replace(anchor, anchor + '''
+context_text = context_text.replace(anchor, '''    private var revision = 0 {
+        didSet { sortedReads.removeAll(keepingCapacity: true) }
+    }
     // One sort per entity, bounded independently of query count. Only direct
     // stored attributes qualify; computed properties may depend on other state.
     private var sortedReads: [String: (revision: Int, order: Any, result: Any)] = [:]''')
