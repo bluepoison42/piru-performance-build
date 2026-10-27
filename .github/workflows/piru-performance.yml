@@ -94,10 +94,11 @@ jobs:
       - name: Reproduce repeated full-log sorting and test revision invalidation
         shell: bash
         run: |
+          python3 ci/perf/query-tests/prepare_host.py
           cp android/Compat/Sources/PortableData/ModelContext.swift "$RUNNER_TEMP/ModelContext-fixed.swift"
           cp ci/perf/query-tests/ModelContext-original.swift android/Compat/Sources/PortableData/ModelContext.swift
           set +e
-          swift test --package-path android/Compat --jobs 2 -Xswiftc -DFOUNDATION_FRAMEWORK --filter QueryResultCacheTests/repeatedRequestsReuseAnUnchangedSort > "$RUNNER_TEMP/query-baseline.log" 2>&1
+          swift test --package-path android/Compat --jobs 2 --filter QueryResultCacheTests/repeatedRequestsReuseAnUnchangedSort > "$RUNNER_TEMP/query-baseline.log" 2>&1
           baseline_status=$?
           set -e
           test "$baseline_status" -ne 0
@@ -105,7 +106,7 @@ jobs:
           grep -F 'Test run with 1 test' "$RUNNER_TEMP/query-baseline.log"
           echo 'REPRODUCED: the original context repeatedly sorts unchanged rows'
           cp "$RUNNER_TEMP/ModelContext-fixed.swift" android/Compat/Sources/PortableData/ModelContext.swift
-          swift test --package-path android/Compat --jobs 2 -Xswiftc -DFOUNDATION_FRAMEWORK
+          swift test --package-path android/Compat --jobs 2
       - name: Upload query baseline log
         if: always()
         uses: actions/upload-artifact@v4
