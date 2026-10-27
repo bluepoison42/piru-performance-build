@@ -6,6 +6,10 @@ on:
         description: Run the isolated persistence parser regression only
         type: boolean
         default: false
+      cache_only:
+        description: Run persistence and repeated-query regressions only
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -22,7 +26,7 @@ jobs:
           xcrun swiftc ci/perf/parser-tests/PrimitiveJSON.swift ci/perf/parser-tests/Parsers.swift ci/perf/parser-tests/main.swift -o "$RUNNER_TEMP/piru-parser-tests"
           "$RUNNER_TEMP/piru-parser-tests"
   android:
-    if: ${{ !inputs.parser_only }}
+    if: ${{ !inputs.parser_only && !inputs.cache_only }}
     runs-on: macos-26-intel
     timeout-minutes: 180
     env:
@@ -61,7 +65,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70005-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70006-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -77,5 +81,36 @@ jobs:
           path: |
             ${{ runner.temp }}/piru-android/build/*.log
             ${{ runner.temp }}/piru-android/build/*.errors
+          if-no-files-found: ignore
+          retention-days: 3
+  cache-regression:
+    if: ${{ inputs.cache_only }}
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the actual persistence implementation and tests
+        run: python3 ci/perf/prepare_variant.py
+      - name: Reproduce repeated full-log sorting and test revision invalidation
+        shell: bash
+        run: |
+          cp android/Compat/Sources/PortableData/ModelContext.swift "$RUNNER_TEMP/ModelContext-fixed.swift"
+          cp ci/perf/query-tests/ModelContext-original.swift android/Compat/Sources/PortableData/ModelContext.swift
+          set +e
+          swift test --package-path android/Compat --jobs 2 --filter QueryResultCacheTests/repeatedRequestsReuseAnUnchangedSort > "$RUNNER_TEMP/query-baseline.log" 2>&1
+          baseline_status=$?
+          set -e
+          test "$baseline_status" -ne 0
+          grep -F 'Repeated fetch unexpectedly sorted unchanged rows' "$RUNNER_TEMP/query-baseline.log"
+          grep -F 'Test run with 1 test' "$RUNNER_TEMP/query-baseline.log"
+          echo 'REPRODUCED: the original context repeatedly sorts unchanged rows'
+          cp "$RUNNER_TEMP/ModelContext-fixed.swift" android/Compat/Sources/PortableData/ModelContext.swift
+          swift test --package-path android/Compat --jobs 2
+      - name: Upload query baseline log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: query-baseline-log
+          path: ${{ runner.temp }}/query-baseline.log
           if-no-files-found: ignore
           retention-days: 3

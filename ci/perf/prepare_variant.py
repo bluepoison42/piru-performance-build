@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70005;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70006;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -569,3 +569,196 @@ snapshot_file = persistence / "Snapshot.swift"
 snapshot_text = snapshot_file.read_text(encoding="utf-8")
 assert snapshot_text.count(old_guard) == 1
 snapshot_file.write_text(snapshot_text.replace(old_guard, new_guard), encoding="utf-8")
+
+# A Query wrapper can be recreated when its parent tab recomposes. Share an
+# unchanged unfiltered sort in the context, where all model mutations are seen.
+entity_file = persistence / "EntityDescription.swift"
+entity_text = entity_file.read_text(encoding="utf-8")
+anchor = "    public var tracksMutations = true"
+assert entity_text.count(anchor) == 1
+entity_text = entity_text.replace(anchor, anchor + "\n    private(set) var attributePaths: Set<AnyKeyPath> = []")
+old_property = "    public func property(_: String, _: KeyPath<some Any, some Any>, deleteRule _: Schema.Relationship.DeleteRule) {}"
+assert entity_text.count(old_property) == 1
+entity_text = entity_text.replace(old_property, '''    public func property(_: String, _ path: KeyPath<some Any, some Any>, deleteRule _: Schema.Relationship.DeleteRule) {
+        attributePaths.insert(path)
+    }''')
+entity_file.write_text(entity_text, encoding="utf-8")
+
+context_file = persistence / "ModelContext.swift"
+context_text = context_file.read_text(encoding="utf-8")
+query_tests = root / "ci/perf/query-tests"
+query_tests.mkdir(parents=True, exist_ok=True)
+(query_tests / "ModelContext-original.swift").write_text(context_text, encoding="utf-8")
+anchor = "    private var revision = 0"
+assert context_text.count(anchor) == 1
+context_text = context_text.replace(anchor, anchor + '''
+    // One sort per entity, bounded independently of query count. Only direct
+    // stored attributes qualify; computed properties may depend on other state.
+    private var sortedReads: [String: (revision: Int, order: Any, result: Any)] = [:]''')
+old_read = '''        var results = models(T._$entityName).compactMap { $0 as? T }
+        if let predicate = descriptor.predicate {
+            results = try results.filter { try predicate.evaluate($0) }
+        }
+        if !descriptor.sortBy.isEmpty {
+            results.sort(using: descriptor.sortBy)
+        }'''
+assert context_text.count(old_read) == 1
+context_text = context_text.replace(old_read, '''        let entity = T._$entityName
+        let attributes = EntityDescription.of(T.self).attributePaths
+        let cacheable = descriptor.predicate == nil && reportsEveryWrite && descriptor.sortBy.allSatisfy {
+            $0.keyPath.map { attributes.contains($0) } ?? false
+        }
+        var results: [T]
+        if cacheable, let cached = sortedReads[entity], cached.revision == revision,
+           let order = cached.order as? [SortDescriptor<T>], order == descriptor.sortBy,
+           let rows = cached.result as? [T] {
+            results = rows
+        } else {
+            results = models(entity).compactMap { $0 as? T }
+            if let predicate = descriptor.predicate {
+                results = try results.filter { try predicate.evaluate($0) }
+            }
+            if !descriptor.sortBy.isEmpty {
+                results.sort(using: descriptor.sortBy)
+            }
+            if cacheable {
+                sortedReads[entity] = (revision, descriptor.sortBy, results)
+            }
+        }''')
+context_file.write_text(context_text, encoding="utf-8")
+
+(root / "android/Compat/Tests/PortableDataTests/QueryResultCacheTests.swift").write_text(r'''import Foundation
+import Synchronization
+import PortableData
+import Testing
+
+private enum QuerySortProbe {
+    static let comparisons = Mutex(0)
+    static let direction = Mutex(1)
+    static func reset() { comparisons.withLock { $0 = 0 } }
+    static var count: Int { comparisons.withLock { $0 } }
+}
+
+private struct CountedRank: Codable, Comparable, Sendable {
+    var value: Int
+    static func < (lhs: Self, rhs: Self) -> Bool {
+        QuerySortProbe.comparisons.withLock { $0 += 1 }
+        return lhs.value < rhs.value
+    }
+}
+
+@Model
+private final class QueryCacheRow {
+    var id: UUID = UUID()
+    var rank: CountedRank
+    var notes: String?
+    var computedRank: CountedRank {
+        CountedRank(value: rank.value * QuerySortProbe.direction.withLock { $0 })
+    }
+    init(_ rank: Int) { self.rank = CountedRank(value: rank); notes = "alias: \"fixture\"" }
+}
+
+@Model
+private final class UntrackedQueryCacheRow {
+    var id: UUID = UUID()
+    var rank: CountedRank { didSet {} }
+    init(_ rank: Int) { self.rank = CountedRank(value: rank) }
+}
+
+@Suite(.serialized)
+struct QueryResultCacheTests {
+    private func fixture(_ count: Int = 8) throws -> (ModelContainer, ModelContext, [QueryCacheRow]) {
+        let url = FileManager.default.temporaryDirectory.appending(path: "query-cache-\(UUID()).sqlite")
+        let container = try ModelContainer(for: QueryCacheRow.self, configurations: ModelConfiguration(url: url))
+        let context = ModelContext(container)
+        let rows = (0..<count).reversed().map { QueryCacheRow($0) }
+        rows.forEach { context.insert($0) }
+        try context.save()
+        return (container, context, rows)
+    }
+
+    @Test func repeatedRequestsReuseAnUnchangedSort() throws {
+        let (_, context, _) = try fixture(1794)
+        _ = try context.fetch(FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)]))
+        QuerySortProbe.reset()
+        for _ in 0..<5 {
+            let rows = try context.fetch(FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)]))
+            #expect(rows.first?.rank.value == 0)
+            #expect(rows.last?.rank.value == 1793)
+        }
+        #expect(QuerySortProbe.count == 0, "Repeated fetch unexpectedly sorted unchanged rows")
+    }
+
+    @Test func orderAndPagingAreIndependent() throws {
+        let (_, context, _) = try fixture()
+        _ = try context.fetch(FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)]))
+        var page = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)])
+        page.fetchOffset = 2; page.fetchLimit = 3
+        QuerySortProbe.reset()
+        #expect(try context.fetch(page).map(\.rank.value) == [2,3,4])
+        #expect(QuerySortProbe.count == 0)
+        let reverse = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank, order: .reverse)])
+        #expect(try context.fetch(reverse).map(\.rank.value) == Array((0..<8).reversed()))
+        #expect(QuerySortProbe.count > 0)
+    }
+
+    @Test func mutationsInsertionsDeletionsAndRollbackRefreshTheSort() throws {
+        let (_, context, rows) = try fixture()
+        let query = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)])
+        _ = try context.fetch(query)
+        rows[0].rank = CountedRank(value: -1)
+        #expect(try context.fetch(query).first === rows[0])
+        context.rollback()
+        #expect(try context.fetch(query).first?.rank.value == 0)
+        let added = QueryCacheRow(-2)
+        context.insert(added)
+        #expect(try context.fetch(query).first === added)
+        context.delete(added)
+        #expect(try context.fetch(query).count == 8)
+        #expect(try context.fetch(query).first?.notes == "alias: \"fixture\"")
+    }
+
+    @Test func otherContainersSavesAreVisible() throws {
+        let (container, context, _) = try fixture()
+        let query = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)])
+        _ = try context.fetch(query)
+        let other = try ModelContext(ModelContainer(for: Schema([QueryCacheRow.self]), configurations: container.configurations))
+        let row = try #require(other.fetch(query).last)
+        row.rank = CountedRank(value: -3)
+        try other.save()
+        #expect(try context.fetch(query).first?.id == row.id)
+        #expect(try context.fetch(query).first?.rank.value == -3)
+    }
+
+    @Test func predicatesNeverReuseAnUnfilteredResult() throws {
+        let (_, context, _) = try fixture()
+        _ = try context.fetch(FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)]))
+        let filter = FetchDescriptor<QueryCacheRow>(predicate: #Predicate { $0.rank.value >= 4 }, sortBy: [SortDescriptor(\.rank)])
+        #expect(try context.fetch(filter).map(\.rank.value) == [4,5,6,7])
+        QuerySortProbe.reset()
+        #expect(try context.fetch(filter).count == 4)
+        #expect(QuerySortProbe.count > 0)
+    }
+
+    @Test func computedSortKeysAreNotCached() throws {
+        let (_, context, _) = try fixture()
+        let query = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.computedRank)])
+        #expect(try context.fetch(query).first?.rank.value == 0)
+        QuerySortProbe.direction.withLock { $0 = -1 }
+        defer { QuerySortProbe.direction.withLock { $0 = 1 } }
+        #expect(try context.fetch(query).first?.rank.value == 7)
+    }
+
+    @Test func unreportedWritesAreNotCached() throws {
+        let container = try ModelContainer(for: UntrackedQueryCacheRow.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let a = UntrackedQueryCacheRow(0), b = UntrackedQueryCacheRow(1)
+        context.insert(a); context.insert(b)
+        let query = FetchDescriptor<UntrackedQueryCacheRow>(sortBy: [SortDescriptor(\.rank)])
+        #expect(context.currentRevision() == nil)
+        #expect(try context.fetch(query).first === a)
+        b.rank = CountedRank(value: -1)
+        #expect(try context.fetch(query).first === b)
+    }
+}
+''', encoding="utf-8")
