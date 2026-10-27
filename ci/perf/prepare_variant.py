@@ -608,9 +608,9 @@ assert context_text.count(anchor) == 1
 context_text = context_text.replace(anchor, '''    private var revision = 0 {
         didSet { sortedReads.removeAll(keepingCapacity: true) }
     }
-    // One sort per entity, bounded independently of query count. Only direct
-    // stored attributes qualify; computed properties may depend on other state.
-    private var sortedReads: [String: (revision: Int, order: Any, result: Any)] = [:]''')
+    // Keep ascending, descending and unsorted reads from evicting each other
+    // between tabs. Only stored attributes qualify; computed keys may change.
+    private var sortedReads: [String: [(revision: Int, order: Any, result: Any)]] = [:]''')
 old_read = '''        var results = models(T._$entityName).compactMap { $0 as? T }
         if let predicate = descriptor.predicate {
             results = try results.filter { try predicate.evaluate($0) }
@@ -625,8 +625,9 @@ context_text = context_text.replace(old_read, '''        let entity = T._$entity
             $0.keyPath.map { attributes.contains($0) } ?? false
         }
         var results: [T]
-        if cacheable, let cached = sortedReads[entity], cached.revision == revision,
-           let order = cached.order as? [SortDescriptor<T>], order == descriptor.sortBy,
+        if cacheable, let cached = sortedReads[entity]?.first(where: {
+            $0.revision == revision && ($0.order as? [SortDescriptor<T>]) == descriptor.sortBy
+        }),
            let rows = cached.result as? [T] {
             results = rows
         } else {
@@ -638,7 +639,9 @@ context_text = context_text.replace(old_read, '''        let entity = T._$entity
                 results.sort(using: descriptor.sortBy)
             }
             if cacheable {
-                sortedReads[entity] = (revision, descriptor.sortBy, results)
+                var plans = sortedReads[entity] ?? []
+                plans.append((revision, descriptor.sortBy, results))
+                sortedReads[entity] = Array(plans.suffix(3))
             }
         }''')
 context_file.write_text(context_text, encoding="utf-8")
@@ -716,6 +719,11 @@ struct QueryResultCacheTests {
         let reverse = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank, order: .reverse)])
         #expect(try context.fetch(reverse).map(\.rank.value) == Array((0..<8).reversed()))
         #expect(QuerySortProbe.count > 0)
+        _ = try context.fetch(FetchDescriptor<QueryCacheRow>())
+        QuerySortProbe.reset()
+        #expect(try context.fetch(page).map(\.rank.value) == [2,3,4])
+        #expect(try context.fetch(reverse).first?.rank.value == 7)
+        #expect(QuerySortProbe.count == 0, "Chronological and unsorted tab queries evicted each other")
     }
 
     @Test func mutationsInsertionsDeletionsAndRollbackRefreshTheSort() throws {
