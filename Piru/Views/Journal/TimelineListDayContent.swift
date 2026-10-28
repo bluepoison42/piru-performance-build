@@ -52,19 +52,20 @@ struct TimelineListDayContent: View {
 
             noteRows(notes[nil] ?? [])
 
-            GlassEffectContainer {
-                VStack(spacing: TimelineDayLayout.groupGap) {
-                    ForEach(runs) { run in
-                        if let sessionID = run.sessionID {
-                            groupRows(run.groups, notes: notes)
-                                .padding(TimelineDayLayout.envelopePad)
-                                .padding(.bottom, TimelineDayLayout.envelopeFooterHeight)
-                                .background {
-                                    SessionEnvelopeButton { onSessionTap(sessionID) }
-                                }
-                        } else {
-                            groupRows(run.groups, notes: notes)
-                        }
+            // No GlassEffectContainer around the bubbles: it renders them into
+            // one platform view, and every bubble's long-press menu then opens
+            // the first bubble's dose (see TimelineStripDayContent).
+            VStack(spacing: TimelineDayLayout.groupGap) {
+                ForEach(runs) { run in
+                    if let sessionID = run.sessionID {
+                        groupRows(run.groups, notes: notes)
+                            .padding(TimelineDayLayout.envelopePad)
+                            .padding(.bottom, TimelineDayLayout.envelopeFooterHeight)
+                            .background {
+                                SessionEnvelopeButton { onSessionTap(sessionID) }
+                            }
+                    } else {
+                        groupRows(run.groups, notes: notes)
                     }
                 }
             }

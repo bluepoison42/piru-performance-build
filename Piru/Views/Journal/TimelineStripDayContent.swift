@@ -156,30 +156,29 @@ struct TimelineStripDayContent: View {
                     .offset(y: envelope.yStart)
             }
 
-            // Zero spacing: stacked bubbles sit 8 pt apart, and a partial glass
-            // merge between neighbors reads as a smear, so they never blend.
-            GlassEffectContainer(spacing: 0) {
-                ZStack(alignment: .topLeading) {
-                    ForEach(day.cardGroups) { group in
-                        VStack(spacing: TimelineDayLayout.cardSpacing) {
-                            ForEach(group.visibleItems) { item in
-                                TimelineDoseBubble(
-                                    item: item,
-                                    style: day.style.bubbleStyle,
-                                    pkMode: day.style.pkMode,
-                                ) {
-                                    if let sessionID = group.sessionOpenedByBubble {
-                                        onSessionTap(sessionID)
-                                    } else {
-                                        onEntryTap(item)
-                                    }
-                                }
+            // Never wrap the bubbles in a GlassEffectContainer: the container
+            // renders every glass child into one platform view, so each
+            // bubble's long-press menu resolves to that view — it opens the
+            // first bubble's dose and lifts the whole column. Each bubble's
+            // glass stands alone, which also keeps neighbors from merging.
+            ForEach(day.cardGroups) { group in
+                VStack(spacing: TimelineDayLayout.cardSpacing) {
+                    ForEach(group.visibleItems) { item in
+                        TimelineDoseBubble(
+                            item: item,
+                            style: day.style.bubbleStyle,
+                            pkMode: day.style.pkMode,
+                        ) {
+                            if let sessionID = group.sessionOpenedByBubble {
+                                onSessionTap(sessionID)
+                            } else {
+                                onEntryTap(item)
                             }
                         }
-                        .padding(.horizontal, Self.bubbleInset)
-                        .offset(y: group.topY)
                     }
                 }
+                .padding(.horizontal, Self.bubbleInset)
+                .offset(y: group.topY)
             }
         }
         .frame(width: width, alignment: .topLeading)

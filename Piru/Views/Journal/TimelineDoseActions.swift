@@ -6,9 +6,11 @@ import SwiftUI
 /// dose-level actions the entry detail's ⋯ menu holds, reachable from the
 /// Journal without opening the dose.
 ///
-/// `preview` is what the long press lifts. The bubbles of a group share one
-/// `GlassEffectContainer`, and the system's default lift snapshots the whole
-/// container — every bubble in the group — so the menu names its own.
+/// `preview` is what the long press lifts: the bubble alone, drawn flat,
+/// since the lifted copy has no backdrop for glass to sample. The menu
+/// resolves to the bubble only while its glass is its own platform view, so
+/// the bubbles must never share a `GlassEffectContainer`: inside one, every
+/// bubble's menu opens the first bubble's dose and lifts the whole stack.
 extension View {
     func timelineDoseActions(
         _ item: TimelineDayLayout.CardItem,
