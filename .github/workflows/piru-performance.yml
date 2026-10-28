@@ -65,7 +65,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70006-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.5.1-70007-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -106,12 +106,24 @@ jobs:
           grep -F 'Test run with 1 test' "$RUNNER_TEMP/query-baseline.log"
           echo 'REPRODUCED: the original context repeatedly sorts unchanged rows'
           cp "$RUNNER_TEMP/ModelContext-fixed.swift" android/Compat/Sources/PortableData/ModelContext.swift
+          cp android/Compat/Sources/PortableData/Observation.swift "$RUNNER_TEMP/Observation-fixed.swift"
+          cp ci/perf/query-tests/Observation-original.swift android/Compat/Sources/PortableData/Observation.swift
+          set +e
+          swift test --package-path android/Compat --jobs 2 --filter BridgeTests > "$RUNNER_TEMP/bridge-baseline.log" 2>&1
+          bridge_status=$?
+          set -e
+          test "$bridge_status" -ne 0
+          grep -F "A fetch's own reads reached the renderer's bridge" "$RUNNER_TEMP/bridge-baseline.log"
+          echo 'REPRODUCED: the original bridge hears every key a fetch filters and sorts by'
+          cp "$RUNNER_TEMP/Observation-fixed.swift" android/Compat/Sources/PortableData/Observation.swift
           swift test --package-path android/Compat --jobs 2
       - name: Upload query baseline log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: query-baseline-log
-          path: ${{ runner.temp }}/query-baseline.log
+          path: |
+            ${{ runner.temp }}/query-baseline.log
+            ${{ runner.temp }}/bridge-baseline.log
           if-no-files-found: ignore
           retention-days: 3

@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70006;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70007;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -32,6 +32,10 @@ assert 'android:label="${PRODUCT_NAME}"' in text
 text = text.replace('android:label="${PRODUCT_NAME}"', 'android:label="Piru Perf Test"')
 # The test app should not compete with the official app for normal Piru links.
 text = re.sub(r"\s*<intent-filter\b[^>]*>.*?</intent-filter>", lambda match: "" if "android.intent.action.VIEW" in match.group() else match.group(), text, flags=re.S)
+# Release stays non-debuggable; this only lets simpleperf/Perfetto sample it.
+anchor = '        android:icon="@mipmap/ic_launcher">\n'
+assert text.count(anchor) == 1
+text = text.replace(anchor, anchor + '        <profileable android:shell="true" tools:targetApi="29" />\n')
 manifest.write_text(text, encoding="utf-8")
 assert 'android:allowBackup="false"' in text
 assert 'android:authorities="${applicationId}.files"' in text
@@ -786,3 +790,69 @@ struct QueryResultCacheTests {
     }
 }
 ''', encoding="utf-8")
+
+# A main-thread read of a model a view has shown also goes to Skip's registrar,
+# a JNI call into Compose state. The 70002 profile spent ~25% of the main thread
+# there, under SortDescriptor.compare: a fetch's sort reads each row's keys
+# O(n log n) times. PortableData's own passes need no such subscription; views
+# refresh on the context's change handler and DoseLogService's revision, and
+# rows without a bridge were already read without one. Writes still report.
+observation_file = persistence / "Observation.swift"
+observation_text = observation_file.read_text(encoding="utf-8")
+old_access = "        slot.bridge(making: true)?.access(subject, keyPath: keyPath)\n"
+assert observation_text.count(old_access) == 1
+observation_text = observation_text.replace(old_access, "        slot.reader()?.access(subject, keyPath: keyPath)\n")
+anchor = "    private var made: (any ModelObservationBridge)?\n"
+assert observation_text.count(anchor) == 1
+observation_text = observation_text.replace(anchor, anchor + '''
+    /// The bridge a main-thread read reports to; none during PortableData's own passes,
+    /// whose reads a view does not depend on.
+    func reader() -> (any ModelObservationBridge)? {
+        guard isMainThread(), ModelObservation.makesBridges else { return nil }
+        return bridge(making: true)
+    }
+''')
+observation_file.write_text(observation_text, encoding="utf-8")
+
+bridge_tests = root / "android/Compat/Tests/PiruModelTests/BridgeTests.swift"
+bridge_text = bridge_tests.read_text(encoding="utf-8")
+anchor = "\n}\n\nprivate struct PassFailed: Error {}\n"
+assert bridge_text.count(anchor) == 1
+bridge_text = bridge_text.replace(anchor, '''
+
+    @Test
+    func `A fetch's filter and sort report no reads to bridges views made, and writes still reach them`() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let context = try ModelContext(store.container())
+        let bridges = BridgeLog()
+        ModelObservation.makeBridge = { CountingBridge(log: bridges) }
+        defer { ModelObservation.makeBridge = nil }
+
+        for dose in try context.doses() {
+            _ = dose.substance
+        }
+        #expect(bridges.made == 3)
+        let shown = bridges.calls
+
+        let floor = origin.addingTimeInterval(-1)
+        let sorted = try context.fetch(FetchDescriptor<DoseEntry>(
+            predicate: #Predicate { $0.timestamp > floor },
+            sortBy: [SortDescriptor(\\.substance, order: .reverse), SortDescriptor(\\.timestamp)],
+        ))
+        #expect(bridges.calls == shown, "A fetch's own reads reached the renderer's bridge")
+        #expect(sorted.first?.substance == "caffeine2")
+        #expect(bridges.calls == shown + 1)
+        sorted[0].amount = 7
+        #expect(bridges.writes(to: \\DoseEntry.amount) == 1)
+        #expect(bridges.made == 3)
+    }
+}
+
+private struct PassFailed: Error {}
+''')
+bridge_tests.write_text(bridge_text, encoding="utf-8")
+(query_tests / "Observation-original.swift").write_text(
+    (persistence / "Observation.swift").read_text(encoding="utf-8").replace(
+        "        slot.reader()?.access(subject, keyPath: keyPath)\n", old_access), encoding="utf-8")
+print("Prepared bridge-free traversal reads: sorts and filters make no JNI call per key read")
