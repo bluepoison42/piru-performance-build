@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70008;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70009;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -1131,6 +1131,10 @@ support = '''import Foundation
 import PortableData
 
 nonisolated enum AppIdentity { static let appGroup = "piru.ci.medication-tests" }
+// StageSources rewrites the App Group suite to this Android accessor (Foundation+Android.swift).
+extension UserDefaults {
+    nonisolated static var androidAppGroup: UserDefaults? { UserDefaults(suiteName: AppIdentity.appGroup) }
+}
 enum AdherenceCalculator {
 ''' + is_due + "\n}\n" + service_text + '''
 // Only OS/UI side effects are doubles. Reconcile, history matching, commit order and
@@ -1354,3 +1358,53 @@ assert repair.index("FetchDescriptor<DoseEntry>") < repair.index("for (day, occu
 assert "context.fetch(" not in repair[repair.index("for (day, occurrences)"):]
 assert "clipRect(left = left" not in shadow_patch.read_text(encoding="utf-8")
 print("Prepared 70008 audit regressions: willSet reentry, shared import commit, real history database, boundary-change pipeline and exact-day occurrences")
+
+# 70009: keep the revealed delete action outside the moving tap-catcher and
+# give collapsed tray rows a native button action. Keep drag arbitration intact.
+tray_views = root / "Piru/Views/QuickLog/DoseTrayViews.swift"
+text = tray_views.read_text(encoding="utf-8")
+anchor = """                .offset(x: offset)
+                .overlay {
+                    if offset != 0 {
+"""
+assert text.count(anchor) == 1, "Tray swipe overlay anchor changed"
+text = text.replace(anchor, """                .overlay {
+                    if offset != 0 {
+""")
+anchor = """                // The swipe gesture is invisible to assistive tech"""
+assert text.count(anchor) == 1, "Tray swipe accessibility anchor changed"
+text = text.replace(anchor, """                // Move the tap-catcher too, leaving the revealed delete button hittable.
+                .offset(x: offset)
+""" + anchor)
+anchor = """        .accessibilityLabel("Remove")
+        .opacity(offset < -1 ? 1 : 0)
+"""
+assert text.count(anchor) == 1, "Tray delete visibility anchor changed"
+text = text.replace(anchor, anchor + "        .allowsHitTesting(offset < -1)\n")
+
+row = swift_member(text, "struct TrayRow: View {")
+anchor = """    var body: some View {
+        // Session-row grammar"""
+assert row.count(anchor) == 1, "Collapsed tray row body anchor changed"
+row = row.replace(anchor, """    var body: some View {
+        Button(action: expand) {
+            rowContent
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint("Expands the editor")
+    }
+
+    private var rowContent: some View {
+        // Session-row grammar""")
+anchor = """        .onTapGesture(perform: expand)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint("Expands the editor")
+"""
+assert row.count(anchor) == 1, "Collapsed tray tap anchor changed"
+row = row.replace(anchor, "")
+text = text.replace(swift_member(text, "struct TrayRow: View {"), row)
+tray_views.write_text(text, encoding="utf-8")
+print("Prepared 70009 tray: moving dismiss overlay, hidden delete hit-testing off, plain edit button; swipe recognizers unchanged")
