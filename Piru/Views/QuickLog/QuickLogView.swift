@@ -389,7 +389,7 @@ struct QuickLogView: View {
             let times = item.reminderTimesMinutes.map(String.init).joined(separator: ",")
             let days = item.frequencyDays.map(String.init).joined(separator: ",")
             let dose = "\(item.substance)|\(item.productName ?? "")|\(item.route.rawValue)|\(item.amount)|\(item.unit)|\(item.isBackgroundMed)"
-            let schedule = "\(times)|\(item.isQuiet)|\(item.isAsNeeded)|\(item.maxPerDay ?? -1)|\(item.frequencyRaw)|\(days)|\(item.startDate.timeIntervalSinceReferenceDate)"
+            let schedule = "\(times)|\(item.isQuiet)|\(item.isAsNeeded)|\(item.maxPerDay ?? -1)|\(item.frequencyRaw)|\(item.frequencyIntervalDays)|\(days)|\(item.startDate.timeIntervalSinceReferenceDate)"
             return RoutineSignatureRow(id: item.persistentModelID, fields: "\(dose)|\(schedule)|\(item.sortOrder)")
         }
     }

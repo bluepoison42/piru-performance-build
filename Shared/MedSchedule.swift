@@ -11,7 +11,13 @@ import Foundation
 nonisolated enum MedSchedule {
     /// Whether a scheduled item is due on `date`, given its frequency and start
     /// date. See ``DoseFrequency`` for the cadence semantics.
-    static func isDue(startDate: Date, frequency: DoseFrequency, frequencyDays: [Int], on date: Date) -> Bool {
+    ///
+    /// `intervalDays` is the item's own N for ``DoseFrequency/everyNDays``
+    /// (``DailyDoseItem/frequencyIntervalDays``); the fixed-offset cadences
+    /// ignore it.
+    static func isDue(
+        startDate: Date, frequency: DoseFrequency, frequencyDays: [Int], intervalDays: Int, on date: Date,
+    ) -> Bool {
         let calendar = Calendar.current
         let day = calendar.startOfDay(for: date)
         let start = calendar.startOfDay(for: startDate)
@@ -23,17 +29,10 @@ nonisolated enum MedSchedule {
         case .daily:
             return true
 
-        case .everyOtherDay:
+        case .everyOtherDay, .weekly, .biweekly, .everyNDays:
+            let interval = frequency.intervalDays(custom: intervalDays) ?? 1
             let days = calendar.dateComponents([.day], from: start, to: day).day ?? 0
-            return days.isMultiple(of: 2)
-
-        case .weekly:
-            let days = calendar.dateComponents([.day], from: start, to: day).day ?? 0
-            return days.isMultiple(of: 7)
-
-        case .biweekly:
-            let days = calendar.dateComponents([.day], from: start, to: day).day ?? 0
-            return days.isMultiple(of: 14)
+            return days.isMultiple(of: interval)
 
         case .monthly:
             let startDay = calendar.component(.day, from: start)

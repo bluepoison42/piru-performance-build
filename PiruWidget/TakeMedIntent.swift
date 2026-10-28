@@ -90,7 +90,7 @@ enum MedIntentLogger {
         for item in items where !item.isAsNeeded && include(item) {
             guard MedSchedule.isDue(
                 startDate: item.startDate, frequency: item.frequency,
-                frequencyDays: item.frequencyDays, on: now,
+                frequencyDays: item.frequencyDays, intervalDays: item.frequencyIntervalDays, on: now,
             ) else { continue }
 
             let expected = max(1, item.reminderTimesMinutes.count)

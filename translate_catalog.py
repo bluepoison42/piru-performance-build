@@ -3746,6 +3746,8 @@ T = {
     "~%lld minutes": ("约 %lld 分钟", "約 %lld 分鐘"),
     "~%lld – %lld minutes": ("约 %1$lld – %2$lld 分钟", "約 %1$lld – %2$lld 分鐘"),
     # Frequencies
+    "Every few days": ("每隔几天", "每隔幾天"),
+    "Every %lld days": ("每 %lld 天", "每 %lld 天"),
     "Daily": ("每日", "每日"),
     "Every other day": ("隔日", "隔日"),
     "Weekly": ("每周", "每週"),
@@ -8775,6 +8777,13 @@ if __name__ == "__main__":
             "seconds",
             "Time since administration",
             "Endpoint: modeled “any drug effect” rating on a visual analog scale",
+        }
+    )
+    # Every-N-days schedule (2026-10-28).
+    NEW_KEYS.update(
+        {
+            "Every few days",
+            "Every %lld days",
         }
     )
     # Check-ins on every session (2026-10-19).

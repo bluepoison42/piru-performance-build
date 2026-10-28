@@ -35,6 +35,7 @@ private final class MedFormDraft {
     // Schedule
     var schedule: FormSchedule = .frequency(.daily)
     var selectedWeekdays: Set<Int> = []
+    var intervalDays = DoseFrequency.defaultIntervalDays
     var startDate: Date = .now
     var maxPerDay: Int?
 
@@ -206,6 +207,12 @@ struct MedFormView: View {
 
             if draft.frequency == .specificDays, !draft.isAsNeeded {
                 weekdayPicker
+            }
+
+            if draft.frequency == .everyNDays, !draft.isAsNeeded {
+                Stepper(value: $draft.intervalDays, in: DoseFrequency.intervalRange) {
+                    Text("Every \(draft.intervalDays) days")
+                }
             }
 
             if draft.frequency != .daily, draft.frequency != .specificDays, !draft.isAsNeeded {
@@ -421,6 +428,7 @@ struct MedFormView: View {
             draft.route = item.route
             draft.schedule = item.isAsNeeded ? .asNeeded : .frequency(item.frequency)
             draft.selectedWeekdays = Set(item.frequencyDays)
+            draft.intervalDays = item.frequencyIntervalDays
             draft.startDate = item.startDate == .distantPast ? .now : item.startDate
             draft.maxPerDay = item.maxPerDay
             draft.times = item.reminderTimesMinutes.map { MedReminderTime(minutes: $0) }
@@ -461,6 +469,7 @@ struct MedFormView: View {
         target.route = draft.route
         target.frequency = draft.isAsNeeded ? .daily : draft.frequency
         target.frequencyDays = Array(draft.selectedWeekdays)
+        target.frequencyIntervalDays = draft.intervalDays
         target.startDate = draft.startDate
         target.reminderTimesMinutes = draft.isAsNeeded ? [] : sortedTimes
         target.remind = draft.remind

@@ -260,6 +260,9 @@ nonisolated struct PiruDailyDoseData: Codable {
     var isQuiet: Bool?
     var isAsNeeded: Bool?
     var maxPerDay: Int?
+    /// The N of an every-N-days schedule. Optional on decode, so an older
+    /// file imports with the model's default.
+    var frequencyIntervalDays: Int?
 }
 
 /// One picked color. Format 2 writes `p3`; format 1 files carry `hexColor`, an
@@ -391,6 +394,7 @@ extension DataExportImport {
                 reminderTimesMinutes: item.reminderTimesMinutes, remind: item.remind,
                 askAgainOverrideMinutes: item.askAgainOverrideMinutes,
                 isQuiet: item.isQuiet, isAsNeeded: item.isAsNeeded, maxPerDay: item.maxPerDay,
+                frequencyIntervalDays: item.frequencyIntervalDays,
             )
         }
         let records = try makeNativeRecords(context: context)
@@ -594,7 +598,9 @@ extension DataExportImport {
                 substance: item.substance, amount: item.amount, unit: item.unit, route: item.route,
                 sortOrder: item.sortOrder, category: item.category,
                 frequency: DoseFrequency(rawValue: item.frequencyRaw) ?? .daily,
-                frequencyDays: item.frequencyDays, startDate: Date(ms: item.startDate),
+                frequencyDays: item.frequencyDays,
+                frequencyIntervalDays: item.frequencyIntervalDays ?? DoseFrequency.defaultIntervalDays,
+                startDate: Date(ms: item.startDate),
                 isBackgroundMed: item.isBackgroundMed,
                 substanceUID: item.substanceUID, isomer: item.isomer, releaseForm: item.releaseForm,
                 saltForm: item.saltForm, productName: item.productName,

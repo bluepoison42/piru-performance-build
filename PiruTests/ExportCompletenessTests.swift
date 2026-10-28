@@ -67,6 +67,7 @@ private enum Fields {
         field("isQuiet", \.isQuiet), field("isAsNeeded", \.isAsNeeded), field("maxPerDay", \.maxPerDay),
         field("frequencyRaw", \.frequencyRaw),
         field("frequencyDaysData") { $0.frequencyDays == $1.frequencyDays },
+        field("frequencyIntervalDays", \.frequencyIntervalDays),
         field("startDate", \.startDate),
     ]
 
@@ -437,7 +438,7 @@ struct ExportRoundTripTests {
 
         let med = DailyDoseItem(
             substance: "Sertraline", amount: 50, unit: "µg", route: .sublingual, sortOrder: 3, category: "Morning",
-            frequency: .specificDays, frequencyDays: [2, 4], startDate: t0, isBackgroundMed: true,
+            frequency: .specificDays, frequencyDays: [2, 4], frequencyIntervalDays: 9, startDate: t0, isBackgroundMed: true,
             substanceUID: "uid-sertraline", isomer: "s", releaseForm: "ER", saltForm: "HCl", productName: "Zoloft",
             reminderTimesMinutes: [480, 1200], remind: false, isQuiet: true, isAsNeeded: true, maxPerDay: 2,
         )

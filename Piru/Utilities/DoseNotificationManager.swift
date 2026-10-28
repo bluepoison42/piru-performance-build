@@ -629,12 +629,13 @@ enum DoseNotificationManager {
     private static let maxFollowUpRequests = 30
 
     /// The next due days (as `startOfDay`) for a med's schedule, scanned far
-    /// enough ahead to cover a monthly cadence.
+    /// enough ahead to find two occurrences of the longest cadence (every 90
+    /// days, ``DoseFrequency/intervalRange``).
     private static func nextDueDays(for item: DailyDoseItem, limit: Int, now: Date) -> [Date] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: now)
         var result: [Date] = []
-        for offset in 0 ..< 62 {
+        for offset in 0 ..< 2 * DoseFrequency.intervalRange.upperBound + 1 {
             guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
             if AdherenceCalculator.isDue(item, on: day) {
                 result.append(day)

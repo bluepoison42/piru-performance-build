@@ -107,7 +107,12 @@ struct MedDetailView: View {
             .listRowBackground(CardBackground())
         }
         .themedPage()
+        // Titled as the editor it is: every row below writes straight to the
+        // med, and a bare page read as a static summary to testers.
+        .navigationTitle("Edit Med")
         .inlineNavigationTitle()
+        // Room under Delete Med for the tab bar's session accessory.
+        .contentMargins(.bottom, Spacing.xxxl, for: .scrollContent)
         // Every field edits the model directly; one resync on close reschedules
         // reminders from the saved state (times, cadence, quiet grouping).
         .onDisappear {
@@ -182,6 +187,11 @@ struct MedDetailView: View {
             } else if item.frequency == .specificDays {
                 weekdayPicker
             } else if item.frequency != .daily {
+                if item.frequency == .everyNDays {
+                    Stepper(value: $item.frequencyIntervalDays, in: DoseFrequency.intervalRange) {
+                        Text("Every \(item.frequencyIntervalDays) days")
+                    }
+                }
                 DatePicker("Starting from", selection: startDateBinding, displayedComponents: .date)
             }
         } header: {
@@ -412,6 +422,6 @@ struct MedDetailView: View {
         if count > 1 {
             return "\(dose) · \(String(localized: "\(count)× daily"))"
         }
-        return "\(dose) · \(String(localized: item.frequency.shortLabel))"
+        return "\(dose) · \(item.frequencyShortLabel)"
     }
 }

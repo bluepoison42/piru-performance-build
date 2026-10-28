@@ -268,7 +268,7 @@ private struct MedRow: View {
             text += " · \(String(localized: "also \(others.map(Self.timeText).joined(separator: ", "))"))"
         }
         if item.frequency != .daily {
-            text += " · \(String(localized: item.frequency.shortLabel))"
+            text += " · \(item.frequencyShortLabel)"
         }
         return text
     }

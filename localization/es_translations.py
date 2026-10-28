@@ -23,6 +23,8 @@ Not medical advice→No es consejo médico.
 """
 
 ES = {
+    "Every few days": "Cada varios días",
+    "Every %lld days": "Cada %lld días",
     # Combination products (custom-substance editor, quick-log search, journal).
     "Type": "Tipo",
     "Compound": "Compuesto",
