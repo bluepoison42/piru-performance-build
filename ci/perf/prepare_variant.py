@@ -1424,7 +1424,7 @@ project.write_text(text.replace("CURRENT_PROJECT_VERSION = 70009;", "CURRENT_PRO
 
 main710 = root / "android/app/Android/app/src/main/kotlin/Main.kt"
 replace710(main710, '        if (intent.hasExtra("piru_shadow_mode")) {',
-           '        skip.ui.PiruNextPerf.mask = intent.getIntExtra("piru_next_mask", 0)\n'
+           '        skip.ui.PiruNextPerf.initialize(intent.getIntExtra("piru_next_mask", 0))\n'
            '        if (intent.hasExtra("piru_shadow_mode")) {')
 
 # Same optional-Bool dynamic call as AndroidBackupFolder.isAccessible/pick.
@@ -1497,7 +1497,16 @@ patch710 = "Cold-start piru_next_mask experiments: fixed Canvas flag, simple col
 patch710 += vendor_diff710("Sources/SkipUI/Skip/PiruNextPerf.kt", "", '''package skip.ui
 
 object PiruNextPerf {
-    var mask: Int = 0
+    @Volatile private var mask: Int = 0
+    private var initialized = false
+
+    @JvmStatic
+    @Synchronized
+    fun initialize(value: Int) {
+        if (initialized) return
+        mask = value
+        initialized = true
+    }
 
     @JvmStatic
     fun enabled(bit: Int): Boolean = (mask and bit) != 0
@@ -1582,6 +1591,18 @@ snapshot_new710 = snapshot710.replace("        let dir = store.deletingLastPathC
         return succeeded''')
 assert "return succeeded" in snapshot_new710
 replace710(recovery710, snapshot710, snapshot_new710)
+replace710(recovery710, snapshot_new710, snapshot_new710.replace(
+    "let stamp = Int(Date().timeIntervalSince1970)",
+    'let stamp = "\\(Int64(Date().timeIntervalSince1970 * 1000))_\\(UUID().uuidString.prefix(8))"'))
+replace710(recovery710, "        guard let seconds = TimeInterval(stamp) else { return nil }", '''        let parts = stamp.split(separator: "_", maxSplits: 1)
+        guard let value = parts.first, let number = TimeInterval(value) else { return nil }
+        let seconds = parts.count == 2 ? number / 1000 : number''')
+replace710(recovery710, '                // Sidecar main files only (skip their -shm/-wal): default.store.<tag>-<ts>',
+           '                // Accept both legacy seconds and unique millisecond_UUID snapshots.')
+replace710(recovery710, '                guard name.hasPrefix(storeName + "."), !name.hasSuffix("-shm"), !name.hasSuffix("-wal")',
+           '                guard name.hasPrefix(storeName + "."), !name.hasSuffix("-shm"), !name.hasSuffix("-wal"), sidecarTimestamp(name) != nil')
+replace710(recovery710, '    /// Parse the trailing `-<unix-seconds>` timestamp from a sidecar filename.',
+           '    /// Parse legacy seconds or unique `<unix-milliseconds>_<UUID>` snapshot stamps.')
 manager710 = root / "Piru/Data/Backup/BackupManager.swift"
 replace710(manager710, '            StoreRecovery.snapshotStore(reason: "prerestore")', '''            guard StoreRecovery.snapshotStore(reason: "prerestore") else {
                 throw ManagerError.snapshotFailed
@@ -1592,14 +1613,33 @@ replace710(manager710, "            case .fileTooLarge:\n", '''            case 
             case .fileTooLarge:
 ''')
 
-# B5: check both before and after capture, including failures first discovered
-# while loading the export graph. The existing managers log the thrown error.
+# B5: fresh full reads before and after capture cannot inherit historical failures
+# or overlook corrupt rows hidden by an already-loaded context.
+context710 = persistence / "ModelContext.swift"
+replace710(context710, "    private var loaded: Set<String> = []", '''    private var loaded: Set<String> = []
+    private var backupReadFailures: [LoadFailure] = []''')
+context_text710 = context710.read_text(encoding="utf-8")
+assert context_text710.count("container.report(LoadFailure(") == 2
+context710.write_text(context_text710.replace("container.report(LoadFailure(", "reportLoadFailure(LoadFailure("), encoding="utf-8")
+replace710(context710, "    private func load(_ type: any PersistentModel.Type) throws {", '''    // Called only on a fresh context dedicated to this complete backup read.
+    func readAllForBackup() throws -> [LoadFailure] {
+        for type in container.schema.types { try load(type) }
+        return backupReadFailures
+    }
+
+    private func reportLoadFailure(_ failure: LoadFailure) {
+        backupReadFailures.append(failure)
+        container.report(failure)
+    }
+
+    private func load(_ type: any PersistentModel.Type) throws {''')
 complete710 = persistence / "BackupReadability.swift"
 complete710.write_text('''import Foundation
 
 extension ModelContainer {
     public func requireCompleteBackup() throws {
-        guard loadFailures.isEmpty else {
+        let reader = ModelContext(self)
+        guard try reader.readAllForBackup().isEmpty else {
             throw NSError(domain: "Piru.Backup", code: 1, userInfo: [
                 NSLocalizedDescriptionKey: "Backup aborted because stored records could not be decoded. The previous backup was kept."
             ])
@@ -1648,10 +1688,23 @@ replace710(psy710, ingestion710, new_ingestion710)
 replace710(psy710, "                    units: entry.unit,\n", "                    units: entry.unit,\n                    isUnknownDose: entry.isUnknownDose,\n")
 replace710(psy710, '''                // Skip entries with missing or zero dose
                 guard let dose = ingestion.dose, dose > 0 else { continue }''', '''                // Zero is meaningful only when the file explicitly marks the dose unknown.
-                guard let dose = ingestion.dose,
-                      dose > 0 || (dose == 0 && ingestion.isUnknownDose)
-                else { continue }''')
+                guard let rawDose = ingestion.dose,
+                      rawDose > 0 || (rawDose == 0 && ingestion.isUnknownDose)
+                else { continue }
+                let dose = ingestion.isUnknownDose ? 0 : rawDose''')
 replace710(psy710, "                    longitude: location?.longitude,\n", "                    longitude: location?.longitude,\n                    isUnknownDose: ingestion.isUnknownDose,\n")
+psy_import710 = swift_member(psy710.read_text(encoding="utf-8"), "static func importPsyLog(")
+psy_import_new710 = psy_import710.replace("amount: $0.amount", "amount: $0.isUnknownDose ? 0 : $0.amount")
+for route710 in ("$0.route", ".other"):
+    psy_import_new710 = psy_import_new710.replace(
+        "unit: $0.unit, route: " + route710 + ")",
+        "unit: $0.unit, route: " + route710 + ') + ($0.isUnknownDose ? "|unknown" : "|known")')
+for route710 in ("route", ".other"):
+    psy_import_new710 = psy_import_new710.replace(
+        "unit: ingestion.units, route: " + route710 + ")",
+        "unit: ingestion.units, route: " + route710 + ') + (ingestion.isUnknownDose ? "|unknown" : "|known")')
+assert psy_import_new710.count('"|unknown"') == 4
+replace710(psy710, psy_import710, psy_import_new710)
 
 # B15: the shared publication order is Swift so PiruModelTests can exercise the
 # real policy, with only provider IO replaced by fault-injecting test closures.
@@ -1660,81 +1713,196 @@ publication710 = root / "android/app/Sources/Piru/Android/Backup/FolderBackupPub
 publication710.write_text('''import Foundation
 
 nonisolated enum FolderBackupPublication {
+    nonisolated struct StageResult {
+        let uri: String?
+        let error: String?
+    }
+
     static func write(
         name: String,
-        stage: (String) throws -> String?,
+        stage: (String) throws -> StageResult,
         publish: (String) throws -> String?
     ) rethrows -> String? {
         // A previous attempt may have lost its final name but left a complete
         // partial. Never truncate or discard that recovery copy on a retry.
         let partial = name + "." + UUID().uuidString + ".partial"
-        if let failure = try stage(partial) { return failure }
-        return try publish(partial)
+        let result = try stage(partial)
+        if let failure = result.error { return failure }
+        guard let uri = result.uri else { return "The folder did not return a staged backup URI." }
+        return try publish(uri)
     }
 }
 ''', encoding="utf-8")
 replace710(backup, "            return try kotlin.write(tree, name, source.path) as String?", '''            return try FolderBackupPublication.write(name: name) { partial in
-                try kotlin.stage(tree, partial, source.path) as String?
-            } publish: { partial in
-                try kotlin.publish(tree, name, partial, source.path) as String?
+                let result: AnyDynamicObject? = try kotlin.stage(tree, name, partial, source.path)
+                guard let result else {
+                    return FolderBackupPublication.StageResult(uri: nil, error: "The folder did not return a stage result.")
+                }
+                return FolderBackupPublication.StageResult(uri: try result.getUri() as String?, error: try result.getError() as String?)
+            } publish: { uri in
+                try kotlin.publish(tree, name, uri, source.path) as String?
             }''')
 folder_kt710 = root / "android/app/Sources/Piru/Skip/AndroidBackupFolder.kt"
+replace710(folder_kt710, "class AndroidBackupFolder {", '''class BackupStageResult(val uri: String?, val error: String?)
+
+class AndroidBackupFolder {''')
 replace710(folder_kt710, '        private const val PARTIAL_SUFFIX = ".partial"\n', "")
 folder_text710 = folder_kt710.read_text(encoding="utf-8")
 folder_begin710 = folder_text710.index("        /// Writes the file at `sourcePath`")
 folder_end710 = folder_text710.index("        private fun picked(", folder_begin710)
-replace710(folder_kt710, folder_text710[folder_begin710:folder_end710], '''        /// Writes a fresh, uniquely named partial. No earlier backup is removed here.
+replace710(folder_kt710, folder_text710[folder_begin710:folder_end710], '''        /// Return the provider's actual URI separately from any error.
         @JvmStatic
-        fun stage(tree: String, partialName: String, sourcePath: String): String? {
-            val context = context ?: return "unavailable"
+        @Synchronized
+        fun stage(tree: String, name: String, partialName: String, sourcePath: String): BackupStageResult {
+            val context = context ?: return BackupStageResult(null, "unavailable")
+            var partial: Uri? = null
+            var complete = false
             return try {
-                val partial = DocumentsContract.createDocument(
+                val created = DocumentsContract.createDocument(
                     context.contentResolver, folder(Uri.parse(tree)), MIME_TYPE, partialName
                 ) ?: throw IllegalStateException("The folder refused a new file.")
-                copy(context, File(sourcePath), partial)
-                null
+                partial = created
+                copy(context, File(sourcePath), created)
+                complete = true
+                val copies = completePartials(context, tree, name)
+                copies.add(created.toString())
+                savePartials(context, tree, name, copies)
+                prunePartials(context, tree, name, keep = 2)
+                BackupStageResult(created.toString(), null)
             } catch (error: Exception) {
-                error.localizedMessage ?: error.toString()
+                if (!complete) partial?.let { deleteChecked(context, it) }
+                BackupStageResult(null, error.localizedMessage ?: error.toString())
             }
         }
 
         /// Called only after stage completed and closed the stream. A failed publish
         /// leaves its complete partial intact, including when the final name was lost.
         @JvmStatic
-        fun publish(tree: String, name: String, partialName: String, sourcePath: String): String? {
+        @Synchronized
+        fun publish(tree: String, name: String, partialUri: String, sourcePath: String): String? {
             val context = context ?: return "unavailable"
             val resolver = context.contentResolver
+            var incompleteTarget: Uri? = null
             return try {
                 val treeUri = Uri.parse(tree)
-                val partial = child(context, treeUri, partialName)
-                    ?: throw IllegalStateException("The completed partial backup is missing.")
+                val partial = Uri.parse(partialUri)
                 val existing = child(context, treeUri, name)
+                // Remove the recovery entry durably BEFORE its URI can become the final.
+                // A later index-write failure must never make pruning delete that final.
+                val pending = completePartials(context, tree, name)
+                pending.remove(partialUri)
+                savePartials(context, tree, name, pending)
                 val renamed = try {
                     existing?.let {
-                        if (!DocumentsContract.deleteDocument(resolver, it)) {
+                        if (!deleteChecked(context, it)) {
                             throw IllegalStateException("The previous backup could not be replaced.")
                         }
                     }
-                    DocumentsContract.renameDocument(resolver, partial, name) != null
+                    DocumentsContract.renameDocument(resolver, partial, name)
                 } catch (error: Exception) {
-                    false
+                    android.util.Log.w("PiruBackup", "Rename failed; trying a copy.", error)
+                    null
                 }
-                if (!renamed) {
+                val published = if (renamed != null) {
+                    renamed
+                } else {
+                    pending.add(partialUri)
+                    savePartials(context, tree, name, pending)
                     val target = child(context, treeUri, name)
                         ?: DocumentsContract.createDocument(resolver, folder(treeUri), MIME_TYPE, name)
                         ?: throw IllegalStateException("The folder refused a new file.")
+                    incompleteTarget = target
                     copy(context, File(sourcePath), target)
-                    // A successful close is required before discarding this attempt's
-                    // recovery copy. Earlier partials are deliberately left alone.
-                    DocumentsContract.deleteDocument(resolver, partial)
+                    incompleteTarget = null
+                    target
+                }
+                // The final is now complete. Cleanup failures must not turn it into a
+                // failed publication; keep failed deletions in the ledger for a retry.
+                try {
+                    prunePartials(context, tree, name, keep = 0)
+                    cleanupLegacyPartials(context, treeUri, name, published)
+                } catch (error: Exception) {
+                    android.util.Log.w("PiruBackup", "Partial cleanup failed.", error)
                 }
                 null
             } catch (error: Exception) {
+                incompleteTarget?.let { deleteChecked(context, it) }
                 error.localizedMessage ?: error.toString()
             }
         }
 
+        // Persist actual URIs in creation order: provider names and directory visibility
+        // are not reliable identifiers, and process restarts must not reset retention.
+        private fun completePartials(context: Context, tree: String, name: String): MutableList<String> =
+            (context.getSharedPreferences("piru-backup-partials", Context.MODE_PRIVATE)
+                .getString(tree + "\\n" + name, "") ?: "")
+                .split('\\n').filter { it.isNotEmpty() }.distinct().toMutableList()
+
+        private fun savePartials(context: Context, tree: String, name: String, copies: List<String>) {
+            if (!context.getSharedPreferences("piru-backup-partials", Context.MODE_PRIVATE).edit()
+                .putString(tree + "\\n" + name, copies.joinToString("\\n")).commit()) {
+                throw IllegalStateException("The recovery-copy index could not be saved.")
+            }
+        }
+
+        private fun prunePartials(context: Context, tree: String, name: String, keep: Int) {
+            val copies = completePartials(context, tree, name)
+            for (uri in copies.dropLast(keep)) {
+                if (deleteChecked(context, Uri.parse(uri))) copies.remove(uri)
+            }
+            savePartials(context, tree, name, copies)
+        }
+
+        private fun deleteChecked(context: Context, uri: Uri): Boolean = try {
+            val deleted = DocumentsContract.deleteDocument(context.contentResolver, uri)
+            if (!deleted) android.util.Log.w("PiruBackup", "Provider refused to delete a backup document: $uri")
+            deleted
+        } catch (error: Exception) {
+            android.util.Log.w("PiruBackup", "Backup document deletion failed: $uri", error)
+            false
+        }
+
+        // Old versions did not record URIs. Reclaim recognizable leftovers only after
+        // a final backup is complete, never by assuming that an old partial is complete.
+        private fun cleanupLegacyPartials(context: Context, tree: Uri, name: String, published: Uri) {
+            val children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+                ?: throw IllegalStateException("The folder did not return a children URI.")
+            val columns = arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+            val stale = mutableListOf<Uri>()
+            val cursor = context.contentResolver.query(children, columns, null, null, null)
+                ?: throw IllegalStateException("The folder could not be listed for cleanup.")
+            cursor.use {
+                while (it.moveToNext()) {
+                    val label = it.getString(1) ?: continue
+                    val id = it.getString(0) ?: continue
+                    if (label.startsWith(name + ".") && label.endsWith(".partial")) {
+                        val uri = DocumentsContract.buildDocumentUriUsingTree(tree, id)
+                        if (uri != null && uri != published) stale.add(uri)
+                    }
+                }
+            }
+            for (uri in stale) deleteChecked(context, uri)
+        }
+
 ''')
+replace710(folder_kt710,
+           "            DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))",
+           '''            DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+                ?: throw IllegalStateException("The folder did not return a document URI.")''')
+child710 = swift_member(folder_kt710.read_text(encoding="utf-8"), "private fun child(")
+child_new710 = child710.replace(
+    "            val columns =", '                ?: throw IllegalStateException("The folder did not return a children URI.")\n            val columns =')
+child_new710 = child_new710.replace(
+    "            context.contentResolver.query(children, columns, null, null, null)?.use { cursor ->",
+    '''            val result = context.contentResolver.query(children, columns, null, null, null)
+                ?: throw IllegalStateException("The folder could not be listed.")
+            result.use { cursor ->''')
+child_new710 = child_new710.replace(
+    "                        return DocumentsContract.buildDocumentUriUsingTree(tree, cursor.getString(0))",
+    '''                        val id = cursor.getString(0) ?: continue
+                        return DocumentsContract.buildDocumentUriUsingTree(tree, id)
+                            ?: throw IllegalStateException("The folder did not return a document URI.")''')
+replace710(folder_kt710, child710, child_new710)
 
 # Regression fixtures use exact production members/blocks, as MedicationDayProduction
 # does. Only OS services and unrelated import sections are doubles; dedup, decoding,
@@ -1806,12 +1974,18 @@ support710 += '''    static func importCustomSubstances(_ values: [PiruCustomSub
         try commitImport(context: context)
     }
 ''' + swift_member(importer.read_text(encoding="utf-8"), "static func deleteAll(context:") + "\n}\n"
-support710 += '''enum StoreRecovery {
+support710 += '''enum JournalResetGeneration { static let dateKey = "piru-data-safety-test-reset" }
+enum StoreRecovery {
     static var testStoreURL = URL(fileURLWithPath: "/unconfigured-piru-test")
     static func canonicalStoreURL() -> URL { testStoreURL }
+    static func legacyStoreURL() -> URL? { nil }
+    static let storeName = "journal.store"
+    static let intentionalReasons: Set<String> = ["predelete", "prerestore", "prepsid"]
     static let storeSuffixes = ["", "-shm", "-wal"]
     @discardableResult
-''' + swift_member(recovery710.read_text(encoding="utf-8"), "static func snapshotStore(reason:") + "\n}\n"
+''' + "\n".join(swift_member(recovery710.read_text(encoding="utf-8"), anchor) for anchor in (
+    "static func snapshotStore(reason:", "static func sidecarReason(", "static func sidecarTimestamp(",
+    "static func recoveryCandidates(")) + "\n}\n"
 support710 += "final class BackupManager {\n" + restore_strategy710 + "\n" + manager_error710 + "\n" + apply710 + "\n}\n"
 (model_tests / "DataSafetyProduction.swift").write_text(support710, encoding="utf-8")
 
@@ -1869,7 +2043,7 @@ struct DataSafetyTests {
         let context = ModelContext(container)
         let id = UUID()
         try DataExportImport.importNativeDoseFile(native([dose(id)]), context: context)
-        let local = try #require(context.dose(id))
+        let local = try #require(try context.dose(id))
         local.amount = 20
         local.notes = "local edit"
         try context.save()
@@ -1904,15 +2078,36 @@ struct DataSafetyTests {
             try Data(("complete" + suffix).utf8).write(to: directory.appending(path: "journal.store" + suffix))
         }
         #expect(StoreRecovery.snapshotStore(reason: "good"))
+        #expect(StoreRecovery.snapshotStore(reason: "good"))
         let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
         let snapshots = files.filter { $0.lastPathComponent.hasPrefix("journal.store.good-") }
-        #expect(snapshots.count == 3)
+        #expect(snapshots.count == 6)
         for file in snapshots {
             let suffix = file.lastPathComponent.hasSuffix("-wal") ? "-wal" : file.lastPathComponent.hasSuffix("-shm") ? "-shm" : ""
             #expect(try Data(contentsOf: file) == Data(("complete" + suffix).utf8))
         }
         #expect(!StoreRecovery.snapshotStore(reason: "missing/parent"))
         #expect(try Data(contentsOf: StoreRecovery.testStoreURL) == Data("complete".utf8))
+    }
+
+    @Test func recoveryEnumerationAndDatesAcceptLegacyAndUniqueSnapshots() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let previous = StoreRecovery.testStoreURL
+        defer { StoreRecovery.testStoreURL = previous }
+        StoreRecovery.testStoreURL = directory.appending(path: "journal.store")
+        let names = ["journal.store.prerestore-1790000000", "journal.store.prerestore-1790000000123_a1b2c3d4"]
+        for name in names {
+            for suffix in StoreRecovery.storeSuffixes {
+                try Data().write(to: directory.appending(path: name + suffix))
+            }
+            #expect(StoreRecovery.sidecarReason(name) == "prerestore")
+        }
+        let candidates = StoreRecovery.recoveryCandidates(excluding: StoreRecovery.testStoreURL, includeIntentional: true)
+        #expect(Set(candidates.map(\.lastPathComponent)) == Set(names))
+        #expect(StoreRecovery.recoveryCandidates(excluding: StoreRecovery.testStoreURL, includeIntentional: false).isEmpty)
+        #expect(StoreRecovery.sidecarTimestamp(names[0]) == Date(timeIntervalSince1970: 1_790_000_000))
+        #expect(StoreRecovery.sidecarTimestamp(names[1] + "-wal") == Date(timeIntervalSince1970: 1_790_000_000.123))
     }
 
     @Test func replaceAbortsBeforeDeleteWhenProductionSnapshotCannotCopy() throws {
@@ -1922,14 +2117,8 @@ struct DataSafetyTests {
         let context = ModelContext(container)
         let previous = StoreRecovery.testStoreURL
         defer { StoreRecovery.testStoreURL = previous }
-        StoreRecovery.testStoreURL = store.url
-        // Block the snapshot destination across clock ticks, without altering live SQLite files.
-        let now = Int(Date().timeIntervalSince1970)
-        for stamp in (now - 1) ... (now + 120) {
-            let destination = store.url.deletingLastPathComponent()
-                .appending(path: "journal.store.prerestore-\(stamp)")
-            try Data("existing recovery evidence".utf8).write(to: destination)
-        }
+        // Force a missing source without touching the live database or depending on names.
+        StoreRecovery.testStoreURL = store.url.appending(path: "missing-store")
         do {
             try BackupManager().apply(plaintext: native([dose(UUID())]), strategy: .replace, context: context)
             Issue.record("Replace proceeded after a failed snapshot")
@@ -1944,8 +2133,9 @@ struct DataSafetyTests {
     @Test func loadFailuresDiscoveredDuringCaptureKeepThePreviousBackup() throws {
         let store = TestStore()
         try seedJournal(store)
-        try store.execute("INSERT INTO portable_models (entity, pk, data) VALUES ('DoseEntry', 'broken', CAST('{bad' AS BLOB))")
         let container = try store.container()
+        let cached = ModelContext(container)
+        #expect(try cached.doses().count == 3)
         #expect(container.loadFailures.isEmpty)
         let backup = store.url.deletingLastPathComponent().appending(path: "existing-backup")
         let original = Data("complete previous backup".utf8)
@@ -1953,7 +2143,8 @@ struct DataSafetyTests {
         var rejected = false
         do {
             let data = try DataExportImport.checkedBackup(container: container) {
-                _ = try ModelContext(container).doses()
+                try store.execute("INSERT INTO portable_models (entity, pk, data) VALUES ('DoseEntry', 'broken', CAST('{bad' AS BLOB))")
+                _ = try cached.doses()
                 return Data("incomplete export".utf8)
             }
             try data.write(to: backup)
@@ -1972,6 +2163,32 @@ struct DataSafetyTests {
         #expect(try store.count("DoseEntry") == 4)
     }
 
+    @Test func repairedRowsAllowBackupAgainOnTheSameContainer() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let originalRows = try store.rows("DoseEntry")
+        let original = try #require(originalRows.first)
+        let goodData = try JSONSerialization.data(withJSONObject: original.value)
+        let container = try store.container()
+        try store.execute("UPDATE portable_models SET data = CAST('{bad' AS BLOB) WHERE entity = 'DoseEntry' AND pk = ?", [original.key])
+        let cached = ModelContext(container)
+        #expect(try cached.doses().count == 2)
+        #expect(!container.loadFailures.isEmpty)
+        for _ in 0 ..< 2 {
+            var rejected = false
+            do {
+                _ = try DataExportImport.checkedBackup(container: container) { try cached.doses().count }
+            } catch { rejected = true }
+            #expect(rejected)
+        }
+        try store.execute("UPDATE portable_models SET data = ? WHERE entity = 'DoseEntry' AND pk = ?", [goodData, original.key])
+        let count = try DataExportImport.checkedBackup(container: container) { try ModelContext(container).doses().count }
+        #expect(count == 3)
+        // Historical diagnostics remain available but do not poison the new complete read.
+        #expect(!container.loadFailures.isEmpty)
+        #expect(try DataExportImport.checkedBackup(container: container) { try ModelContext(container).doses().count } == 3)
+    }
+
     @Test func readableBackupStillCapturesNormally() throws {
         let store = TestStore()
         try seedJournal(store)
@@ -1988,7 +2205,7 @@ struct DataSafetyTests {
             #expect(files["backup"] == old)
             #expect(partial.hasSuffix(".partial"))
             files[partial] = Data("truncated".utf8)
-            return "write failed"
+            return FolderBackupPublication.StageResult(uri: nil, error: "write failed")
         } publish: { _ in
             published = true
             return nil
@@ -2004,7 +2221,7 @@ struct DataSafetyTests {
             #expect(files["backup"] != nil)
             files[partial] = complete
             recoveryName = partial
-            return nil
+            return FolderBackupPublication.StageResult(uri: partial, error: nil)
         } publish: { partial in
             #expect(files[partial] == complete)
             // Provider fault: old final deleted, rename failed, fallback copy cut short.
@@ -2016,7 +2233,7 @@ struct DataSafetyTests {
         let retry = FolderBackupPublication.write(name: "backup") { partial in
             #expect(partial != recoveryName)
             files[partial] = Data()
-            return "new file failed"
+            return FolderBackupPublication.StageResult(uri: nil, error: "new file failed")
         } publish: { _ in
             publishedAgain = true
             return nil
@@ -2027,17 +2244,65 @@ struct DataSafetyTests {
 
     @Test func completedPartialIsPublishedAfterStageSucceeds() throws {
         var order: [String] = []
-        var stagedName = ""
+        let providerURI = "content://provider/renamed-and-not-yet-listed"
         let error = FolderBackupPublication.write(name: "backup") { partial in
-            stagedName = partial
+            #expect(partial != providerURI)
             order.append("stage closed")
-            return nil
+            return FolderBackupPublication.StageResult(uri: providerURI, error: nil)
         } publish: { partial in
-            #expect(partial == stagedName)
+            #expect(partial == providerURI)
             order.append("publish")
             return nil
         }
         #expect(error == nil && order == ["stage closed", "publish"])
+    }
+
+    @Test func missingStageURINeverPublishes() {
+        var published = false
+        let error = FolderBackupPublication.write(name: "backup") { _ in
+            FolderBackupPublication.StageResult(uri: nil, error: nil)
+        } publish: { _ in
+            published = true
+            return nil
+        }
+        #expect(error != nil && !published)
+    }
+
+    @Test func psyLogPositiveUnknownJSONImportsOnlyOnceAndDoesNotMatchKnownZero() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let known = DoseEntry(substance: "unknown-med", amount: 0, unit: "mg", route: .other,
+            timestamp: Date(ms: 1_790_000_000_000))
+        context.insert(known)
+        try context.save()
+        let data = Data(#"{"experiences":[{"ingestions":[{"substanceName":"unknown-med","dose":42,"isUnknownDose":true,"units":"mg","administrationRoute":"SMOKED","time":1790000000000}]}]}"#.utf8)
+        try DataExportImport.importPsyLog(data: data, context: context, customStore: .shared)
+        try context.save()
+        let reopened = ModelContext(container)
+        try DataExportImport.importPsyLog(data: data, context: reopened, customStore: .shared)
+        try reopened.save()
+        let doses = try ModelContext(container).doses()
+        #expect(doses.count == 2)
+        #expect(doses.filter(\.isUnknownDose).count == 1)
+        #expect(doses.allSatisfy { $0.amount == 0 })
+        #expect(doses.first { !$0.isUnknownDose }?.route == .other)
+        #expect(try ModelContext(container).sessions().count == 1)
+    }
+
+    @Test func psyLogPositiveUnknownJSONRepeatedIntoEmptyStoreCreatesOneRecord() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let data = Data(#"{"experiences":[{"ingestions":[{"substanceName":"unknown-med","dose":42,"isUnknownDose":true,"units":"mg","time":1790000000000}]}]}"#.utf8)
+        for _ in 0 ..< 2 {
+            let context = ModelContext(container)
+            try DataExportImport.importPsyLog(data: data, context: context, customStore: .shared)
+            try context.save()
+        }
+        let reopened = ModelContext(container)
+        let doses = try reopened.doses()
+        #expect(doses.count == 1 && doses.first?.amount == 0 && doses.first?.isUnknownDose == true)
+        #expect(try reopened.sessions().count == 1)
     }
 
     @Test func psyLogUnknownDoseSurvivesProductionExportEncodingAndImport() throws {
@@ -2092,6 +2357,8 @@ assert main_text710.count('getIntExtra("piru_next_mask", 0)') == 1
 for forbidden710 in ("PIRU_AB_PACK_PADDING", "PIRU_AB_HOIST_PLAIN", "PIRU_AB_DECORATIVE_CANVAS"):
     assert forbidden710 not in (root / "android/app/Package.swift").read_text(encoding="utf-8")
 assert "var mask: Int = 0" in patch710
+assert "@Volatile private var mask" in patch710 and "if (initialized) return" in patch710
+assert "PiruNextPerf.mask =" not in main_text710
 assert "while tabIndex < decoratorCount" in patch710 and "rememberSkipTabViewBackStacks" not in patch710
 assert 'as Bool?' in canvas710.read_text(encoding="utf-8")
 assert 'enabled(1) as Bool' not in canvas710.read_text(encoding="utf-8")
@@ -2101,6 +2368,10 @@ assert "if let id = d.id, seenIDs.insert" not in native_make710
 assert apply710.index("guard StoreRecovery.snapshotStore") < apply710.index("try DataExportImport.deleteAll")
 snapshot_final710 = swift_member(recovery710.read_text(encoding="utf-8"), "static func snapshotStore(reason:")
 assert "succeeded = false" in snapshot_final710 and snapshot_final710.rstrip().endswith("return succeeded\n    }")
+assert "UUID().uuidString.prefix(8)" in snapshot_final710
+assert "ModelContext(self)" in complete710.read_text(encoding="utf-8")
+assert "guard loadFailures.isEmpty" not in complete710.read_text(encoding="utf-8")
+assert "for type in container.schema.types { try load(type) }" in context710.read_text(encoding="utf-8")
 automatic_final710 = swift_member(manager710.read_text(encoding="utf-8"), "func runAutomaticBackup(context:")
 assert automatic_final710.index("checkedBackup") < automatic_final710.index("exportJSON") < automatic_final710.index("writeICloud")
 assert "Logger.backupManager.error" in automatic_final710
@@ -2110,12 +2381,19 @@ assert "captureBackup(container: container)" in backup.read_text(encoding="utf-8
 assert "Logger.backupManager.error" in backup.read_text(encoding="utf-8")
 stage_kt710 = swift_member(folder_kt710.read_text(encoding="utf-8"), "fun stage(")
 publish_kt710 = swift_member(folder_kt710.read_text(encoding="utf-8"), "fun publish(")
-assert "deleteDocument" not in stage_kt710 and "copy(context, File(sourcePath), partial)" in stage_kt710
-assert publish_kt710.index("copy(context, File(sourcePath), target)") < publish_kt710.index("deleteDocument(resolver, partial)")
+assert stage_kt710.index("copy(context, File(sourcePath), created)") < stage_kt710.index("complete = true") < stage_kt710.index("keep = 2")
+assert "if (!complete) partial?.let { deleteChecked(context, it) }" in stage_kt710
+assert "BackupStageResult(created.toString(), null)" in stage_kt710
+assert "val partial = Uri.parse(partialUri)" in publish_kt710 and "partialName" not in publish_kt710
+assert publish_kt710.index("savePartials(context, tree, name, pending)") < publish_kt710.index("DocumentsContract.renameDocument")
+assert publish_kt710.index("copy(context, File(sourcePath), target)") < publish_kt710.index("keep = 0")
+assert "incompleteTarget?.let { deleteChecked(context, it) }" in publish_kt710
+assert "if (!deleted) android.util.Log.w" in folder_kt710.read_text(encoding="utf-8")
 assert 'partialName)?.let { DocumentsContract.deleteDocument' not in folder_kt710.read_text(encoding="utf-8")
 assert "static var androidAppGroup: UserDefaults?" in (model_tests / "MedicationDayProduction.swift").read_text(encoding="utf-8")
 assert "MedicationDayProduction.swift" not in staged.read_text(encoding="utf-8"), "Do not rewrite the shim itself into recursion"
-assert (model_tests / "DataSafetyTests.swift").read_text(encoding="utf-8").count("@Test func ") == 12
+assert (model_tests / "DataSafetyTests.swift").read_text(encoding="utf-8").count("@Test func ") == 17
+assert "let local = try #require(try context.dose(id))" in (model_tests / "DataSafetyTests.swift").read_text(encoding="utf-8")
 print("70010 wiring assertions passed: cold-start order, native IDs, snapshot-before-delete, both backup guards, partial retention and StageSources shim")
 
 print("Prepared 70010: piru_next_mask 0/1/2/4, UUID-first native import, required restore snapshot, complete-backup guard, retained partials and unknown PsyLog doses")
