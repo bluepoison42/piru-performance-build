@@ -69,7 +69,7 @@ struct ProductCardView: View, Equatable {
                 .padding(.horizontal, OneRowChipMetrics.horizontalPadding)
                 .padding(.vertical, OneRowChipMetrics.verticalPadding)
                 .background(isStaged ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.accent.opacity(Theme.Opacity.tint)))
-                .foregroundStyle(isStaged ? AnyShapeStyle(.white) : AnyShapeStyle(Theme.accent))
+                .foregroundStyle(isStaged ? AnyShapeStyle(Color.white) : AnyShapeStyle(Theme.accent))
                 .clipShape(Capsule())
                 .contentShape(Capsule())
         }
