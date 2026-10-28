@@ -203,28 +203,44 @@ private struct MyMedsToolCard: View {
     }
 
     var body: some View {
-        let scheduled = items.filter { !$0.isAsNeeded }
         GlanceCard(icon: "pills", title: Text("My Meds"), route: .myMeds) {
-            if scheduled.isEmpty {
+            if items.isEmpty {
                 Text("Set up your daily medications and supplements")
                     .font(.subheadline)
                     .foregroundStyle(Theme.secondaryLabel)
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else {
                 let slots = MyMedsModel.slots(items: items, occurrences: todayOccurrences)
-                VStack(spacing: 0) {
-                    ForEach(slots.prefix(3), id: \.id) { slot in
-                        medsRow(slot)
+                if slots.isEmpty {
+                    // Nothing on today's schedule (an off day, or only
+                    // as-needed meds): the next due day when one is in reach.
+                    if let next = nextScheduledDose() {
+                        footerLine(systemImage: "calendar", text: Text("Next: \(next)"))
+                    } else {
+                        footerLine(systemImage: "checkmark.circle", text: Text("Nothing due"))
                     }
-                    if slots.count > 3 {
-                        GlanceMoreRow(count: slots.count - 3)
-                            .padding(.top, Spacing.xs)
+                } else {
+                    VStack(spacing: 0) {
+                        ForEach(slots.prefix(3), id: \.id) { slot in
+                            medsRow(slot)
+                        }
+                        if slots.count > 3 {
+                            GlanceMoreRow(count: slots.count - 3)
+                                .padding(.top, Spacing.xs)
+                        }
                     }
-                }
 
-                let nextSlot = slots.first { $0.state == .pending && !$0.isDueNow && $0.time != nil }
-                if let nextSlot {
-                    nextDueLine(slot: nextSlot)
+                    let nextSlot = slots.first { $0.state == .pending && !$0.isDueNow && $0.time != nil }
+                    if let nextSlot, let time = nextSlot.time {
+                        footerLine(
+                            systemImage: "clock",
+                            text: Text("Next: \(displayName(for: nextSlot.med)) at \(Self.timeText(time))"),
+                        )
+                    } else if slots.allSatisfy({ $0.state == .taken }) {
+                        footerLine(systemImage: "checkmark.circle", text: Text("All taken"))
+                    } else if !slots.contains(where: { $0.state == .pending }) {
+                        footerLine(systemImage: "checkmark.circle", text: Text("Nothing due"))
+                    }
                 }
             }
         }
@@ -232,6 +248,26 @@ private struct MyMedsToolCard: View {
             await SubstanceStore.shared.ensureAllLoaded()
             warmed = true
         }
+    }
+
+    /// The first scheduled med due after today and its day ("Memantine,
+    /// Thursday"), looking as far ahead as the longest cadence repeats.
+    /// `nil` when only as-needed meds are set up.
+    private func nextScheduledDose() -> String? {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        let scheduled = items.filter { !$0.isAsNeeded }
+        guard !scheduled.isEmpty else { return nil }
+        for offset in 1 ... DoseFrequency.intervalRange.upperBound {
+            guard let day = calendar.date(byAdding: .day, value: offset, to: today),
+                  let item = scheduled.first(where: { AdherenceCalculator.isDue($0, on: day) })
+            else { continue }
+            let dayText = offset < 7
+                ? day.formatted(.dateTime.weekday(.wide))
+                : day.formatted(.dateTime.month(.abbreviated).day())
+            return "\(displayName(for: DailyMedSnapshot(item))), \(dayText)"
+        }
+        return nil
     }
 
     private func medsRow(_ slot: MyMedsCard.MedSlot) -> some View {
@@ -277,13 +313,16 @@ private struct MyMedsToolCard: View {
         }
     }
 
-    private func nextDueLine(slot: MyMedsCard.MedSlot) -> some View {
+    /// The quiet line under the rows: the next timed dose, or today's state
+    /// when nothing is left to come.
+    private func footerLine(systemImage: String, text: Text) -> some View {
         HStack(spacing: Spacing.lg) {
-            Image(systemName: "clock")
+            Image(systemName: systemImage)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.secondaryLabel)
                 .frame(width: 18)
-            Text("Next: \(displayName(for: slot.med)) at \(Self.timeText(slot.time!))")
+                .accessibilityHidden(true)
+            text
                 .font(.footnote)
                 .foregroundStyle(Theme.secondaryLabel)
                 .lineLimit(1)

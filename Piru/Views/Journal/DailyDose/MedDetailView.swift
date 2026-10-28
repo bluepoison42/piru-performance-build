@@ -111,8 +111,7 @@ struct MedDetailView: View {
         // med, and a bare page read as a static summary to testers.
         .navigationTitle("Edit Med")
         .inlineNavigationTitle()
-        // Room under Delete Med for the tab bar's session accessory.
-        .contentMargins(.bottom, Spacing.xxxl, for: .scrollContent)
+        .tabAccessoryClearance()
         // Every field edits the model directly; one resync on close reschedules
         // reminders from the saved state (times, cadence, quiet grouping).
         .onDisappear {
@@ -241,10 +240,11 @@ struct MedDetailView: View {
 
     private var remindersSection: some View {
         Section {
-            Toggle(isOn: $item.remind) {
+            // Never `.disabled` on an empty time list: `remind` defaults on, so
+            // a med with no set time would sit lit and ignore every tap.
+            Toggle(isOn: remindBinding) {
                 Label("Remind Me", systemImage: "bell")
             }
-            .disabled(item.reminderTimesMinutes.isEmpty)
 
             if item.remind, !item.reminderTimesMinutes.isEmpty {
                 Picker(selection: askAgainBinding) {
@@ -343,6 +343,23 @@ struct MedDetailView: View {
         Binding(
             get: { item.startDate == .distantPast ? .now : item.startDate },
             set: { item.startDate = $0 },
+        )
+    }
+
+    /// Reads on only when a reminder can actually fire (a set time exists).
+    /// Turning it on for a med with no time adds the suggested first time,
+    /// since a reminder needs a time to fire at.
+    private var remindBinding: Binding<Bool> {
+        Binding(
+            get: { item.remind && !item.reminderTimesMinutes.isEmpty },
+            set: { isOn in
+                if isOn, item.reminderTimesMinutes.isEmpty {
+                    withAnimation(.snappy) {
+                        item.reminderTimesMinutes = [nextSuggestedTime(after: [])]
+                    }
+                }
+                item.remind = isOn
+            },
         )
     }
 

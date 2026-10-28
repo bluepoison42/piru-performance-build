@@ -3,18 +3,21 @@ import SwiftData
 
 // MARK: - Dose Frequency
 
+/// Declaration order is the schedule pickers' order (`allCases`): the
+/// day-based cadences, then weeks, then months. Persistence goes through
+/// `rawValue`, so reordering cases is safe.
 enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
     case daily
     case everyOtherDay
-    case weekly
-    case biweekly
-    case monthly
-    case specificDays
     /// Every N days, N stored in ``DailyDoseItem/frequencyIntervalDays``.
     /// `everyOtherDay` stays its own case so rows saved before this one keep
     /// their rawValue; an older binary reading "everyNDays" falls back to
     /// `.daily` through ``DailyDoseItem/frequency``'s `?? .daily`.
     case everyNDays
+    case specificDays
+    case weekly
+    case biweekly
+    case monthly
 
     var id: String {
         rawValue
@@ -28,7 +31,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         case .biweekly: "Every 2 weeks"
         case .monthly: "Monthly"
         case .specificDays: "Specific days"
-        case .everyNDays: "Every few days"
+        case .everyNDays: "Custom interval"
         }
     }
 
@@ -46,10 +49,10 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    /// The day counts the "Every few days" stepper offers.
+    /// The day counts the custom-interval stepper offers.
     nonisolated static let intervalRange: ClosedRange<Int> = 2 ... 90
 
-    /// The count a new "Every few days" schedule starts at.
+    /// The count a new custom-interval schedule starts at.
     nonisolated static let defaultIntervalDays = 3
 
     nonisolated var shortLabel: LocalizedStringResource {
@@ -60,7 +63,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         case .biweekly: "Biweekly"
         case .monthly: "Monthly"
         case .specificDays: "Custom days"
-        case .everyNDays: "Every few days"
+        case .everyNDays: "Custom interval"
         }
     }
 }
