@@ -84,4 +84,83 @@ struct TimelineCurveScaleTests {
         )
         #expect(redosed[0] < single[0])
     }
+
+    // MARK: - Stacking within the lane
+
+    /// The stacked value of `states` drawn with `weights`, sampled every five
+    /// minutes across their curves.
+    private func stackedSamples(_ states: [ActiveSubstanceState], weights: [Double]) -> [Double] {
+        let ends = states.map(TimelineStripBuilder.drawMinutes(for:))
+        let first = states.map(\.doseTimestamp).min()!
+        let last = zip(states, ends).map { $0.doseTimestamp.addingTimeInterval($1 * 60) }.max()!
+        return stride(from: 0.0, through: last.timeIntervalSince(first), by: 300).map { offset in
+            TimelineStripBuilder.effectValue(at: first.addingTimeInterval(offset), states: states, weights: weights, ends: ends)
+        }
+    }
+
+    @Test
+    func `A lone dose keeps its own weight`() {
+        let states = [dose(daysIn: 0, magnitude: 0.9)]
+        let ends = states.map(TimelineStripBuilder.drawMinutes(for:))
+        #expect(TimelineStripBuilder.stackDivisors(states: states, weights: [0.9], ends: ends) == [1])
+    }
+
+    @Test
+    func `Doses far apart keep their own weights`() {
+        let states = [dose(daysIn: 0, magnitude: 1), dose(daysIn: 1, magnitude: 1)]
+        let ends = states.map(TimelineStripBuilder.drawMinutes(for:))
+        #expect(TimelineStripBuilder.stackDivisors(states: states, weights: [1, 1], ends: ends) == [1, 1])
+    }
+
+    @Test
+    func `Two full doses an hour apart stack to the lane's edge with their shape kept`() {
+        let states = [dose(daysIn: 0, magnitude: 1), dose(daysIn: 1.0 / 24, magnitude: 1)]
+        let ends = states.map(TimelineStripBuilder.drawMinutes(for:))
+        let divisors = TimelineStripBuilder.stackDivisors(states: states, weights: [1, 1], ends: ends)
+        #expect(divisors.allSatisfy { $0 > 1 })
+        let raw = stackedSamples(states, weights: [1, 1])
+        let scaled = stackedSamples(states, weights: zip([1.0, 1.0], divisors).map { $0 / $1 })
+        #expect(raw.max()! > 1.2)
+        // Crest sampling can miss the true top by a hair; the clamp takes that.
+        #expect(scaled.max()! <= 1.02)
+        #expect(scaled.max()! > 0.9)
+        // Scaled, not clipped: no long run of samples pinned at the edge.
+        let pinned = scaled.count(where: { $0 > 0.99 })
+        #expect(pinned < raw.count(where: { $0 > 1 }))
+    }
+
+    @Test
+    func `A curve is drawn until it has settled onto the axis`() {
+        // A profile whose total sits inside its own offset: the shape there is
+        // still well above baseline, so the drawn end runs past it.
+        let base = dose(daysIn: 0, magnitude: 1)
+        let cut = ActiveSubstanceState(
+            substanceName: base.substanceName,
+            tint: base.tint,
+            doseTimestamp: base.doseTimestamp,
+            amount: 1,
+            unit: "g",
+            route: "oral",
+            onsetEndMinutes: 20,
+            comeupEndMinutes: 30,
+            peakEndMinutes: 120,
+            offsetEndMinutes: 300,
+            afterglowEndMinutes: nil,
+            totalMinutes: 240,
+            doseIntensity: 1,
+            doseMagnitude: 1,
+            doseIsUnscaled: false,
+            tachyphylaxis: 0,
+            comeupSpreadMinutes: nil,
+            peakSpreadMinutes: nil,
+            offsetSpreadMinutes: nil,
+        )
+        #expect(TimelineCurveModel.intensity(at: cut.totalMinutes, for: cut) > 0.05)
+        let end = TimelineStripBuilder.drawMinutes(for: cut)
+        #expect(end > cut.totalMinutes)
+        #expect(TimelineCurveModel.intensity(at: end, for: cut) < 0.02)
+        // A profile that already lands by its total keeps it.
+        let landed = dose(daysIn: 0, magnitude: 1)
+        #expect(TimelineStripBuilder.drawMinutes(for: landed) >= landed.totalMinutes)
+    }
 }

@@ -18,7 +18,7 @@ nonisolated enum TimelineStripCache {
     nonisolated struct Key: Codable, Equatable, Sendable {
         /// Bumped when the encoded layout changes shape, so a file from an
         /// older build misses instead of half-decoding.
-        var format = 6
+        var format = 7
         let storeGeneration: Int
         let entryCount: Int
         let newestTimestamp: Date?
