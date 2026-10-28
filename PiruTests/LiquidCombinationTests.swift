@@ -78,7 +78,8 @@ struct LiquidCombinationTests {
         #expect(tray.staged.allSatisfy { $0.combinationName == "Test solution" })
         #expect(tray.staged.allSatisfy { $0.volumeML == 0.25 })
         #expect(tray.staged.map(\.abv) == [2, 5])
-        #expect(tray.staged.allSatisfy(\.isLiquidCombinationRow))
+        let allLiquid = tray.staged.allSatisfy(\.isLiquidCombinationRow)
+        #expect(allLiquid)
     }
 
     /// The default pick (no volume given) stages 1 mL, whatever quantity says.
