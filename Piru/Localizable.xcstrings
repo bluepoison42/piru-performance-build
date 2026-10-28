@@ -297,6 +297,34 @@
         }
       }
     },
+    "\"%@\" already names a substance. Choose another name for this product." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«%@» ya es el nombre de una sustancia. Elige otro nombre para este producto."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«%@» ya es el nombre de una sustancia. Elige otro nombre para este producto."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@”已是一种物质的名称。请为这个制剂另取一个名字。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」已是一種物質的名稱。請為這個製劑另取一個名字。"
+          }
+        }
+      }
+    },
     "“%@” could be a decimal or a number in thousands. Choose the decimal mark this file uses." : {
       "localizations" : {
         "es" : {
@@ -3083,6 +3111,34 @@
         }
       }
     },
+    "%@ solution" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solución de %@"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solución de %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 溶液"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 溶液"
+          }
+        }
+      }
+    },
     "%@ stays active in your body long after %@ itself is gone." : {
       "localizations" : {
         "en" : {
@@ -4343,6 +4399,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld bpm"
+          }
+        }
+      }
+    },
+    "%lld capsule" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld cápsula"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld cápsula"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 粒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 粒"
+          }
+        }
+      }
+    },
+    "%lld capsules" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld cápsulas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld cápsulas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 粒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 粒"
           }
         }
       }
@@ -5814,6 +5926,62 @@
         }
       }
     },
+    "%lld pill" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pastilla"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pastilla"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 片"
+          }
+        }
+      }
+    },
+    "%lld pills" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pastillas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pastillas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 片"
+          }
+        }
+      }
+    },
     "%lld RCTs" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6037,6 +6205,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 項研究"
+          }
+        }
+      }
+    },
+    "%lld tablet" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld comprimido"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld comprimido"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 錠"
+          }
+        }
+      }
+    },
+    "%lld tablets" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld comprimidos"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld comprimidos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 錠"
           }
         }
       }
@@ -9546,6 +9770,7 @@
       }
     },
     "A liquid. Each component's amount is per mL, and logging it asks for the volume you took." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -13504,6 +13729,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "為葡萄柚會減緩其分解（CYP3A4）的物質加入逐劑葡萄柚開關，讓記錄保留這一資訊。"
+          }
+        }
+      }
+    },
+    "Adds it to My Meds" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo agrega a Mis medicamentos"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo agrega a Mis medicamentos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将其添加到我的用药"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將其加入我的用藥"
           }
         }
       }
@@ -21595,6 +21848,34 @@
         }
       }
     },
+    "Capsules" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cápsulas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cápsulas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "胶囊"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "膠囊"
+          }
+        }
+      }
+    },
     "Carbamazepine" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -22605,6 +22886,34 @@
         }
       }
     },
+    "Checked off by logging this product." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se marca al registrar este producto."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se marca al registrar este producto."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "记录这个制剂即算完成。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記錄這個製劑即算完成。"
+          }
+        }
+      }
+    },
     "Checking for recoverable copies…" : {
       "localizations" : {
         "es" : {
@@ -23024,6 +23333,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選擇檔案…"
+          }
+        }
+      }
+    },
+    "Choose Substance" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir sustancia"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir sustancia"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择物质"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇物質"
           }
         }
       }
@@ -25505,6 +25842,7 @@
       }
     },
     "Compound" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -25528,6 +25866,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "單一成分"
+          }
+        }
+      }
+    },
+    "Compounded" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compuesto"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compuesto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复方"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "複方"
           }
         }
       }
@@ -27800,6 +28166,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自訂半衰期"
+          }
+        }
+      }
+    },
+    "Custom interval" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo personalizado"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo personalizado"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义间隔"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自訂間隔"
           }
         }
       }
@@ -33028,6 +33422,62 @@
         }
       }
     },
+    "Each component's amount is per mL, and logging it asks for the volume you took." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cantidad de cada componente es por mL, y al registrarlo se te pide el volumen que tomaste."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cantidad de cada componente es por mL, y al registrarlo se te pide el volumen que tomaste."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每种成分的含量按每毫升计，记录时会请你填写服用的容量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每種成分的含量按每毫升計，記錄時會請你填寫服用的容量。"
+          }
+        }
+      }
+    },
+    "Each component's amount is per unit." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cantidad de cada componente es por unidad."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cantidad de cada componente es por unidad."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每种成分的含量按每单位计。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每種成分的含量按每單位計。"
+          }
+        }
+      }
+    },
     "Each entry appears on the timeline, showing overlaps and when the model estimates the effects will fade." : {
       "localizations" : {
         "es" : {
@@ -33505,6 +33955,7 @@
       }
     },
     "Edit Combination" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -33784,6 +34235,34 @@
         }
       }
     },
+    "Edit Product" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar producto"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar producto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑制剂"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯製劑"
+          }
+        }
+      }
+    },
     "Edit routines and favorites" : {
       "localizations" : {
         "es" : {
@@ -34004,6 +34483,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "效應估算"
+          }
+        }
+      }
+    },
+    "Effect Glossary" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glosario de efectos"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glosario de efectos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "效应词汇表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "效應詞彙表"
           }
         }
       }
@@ -37437,6 +37944,7 @@
       }
     },
     "Every few days" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -50965,6 +51473,34 @@
         }
       }
     },
+    "Logged as a whole: one pick records each component." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se registra entero: una selección registra cada componente."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se registra entero: una selección registra cada componente."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "整体记录：选一次即记录每种成分。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "整體記錄：選一次即記錄每種成分。"
+          }
+        }
+      }
+    },
     "Logged with no number, so it stays out of curves, totals, and tolerance." : {
       "localizations" : {
         "es" : {
@@ -52340,6 +52876,7 @@
       }
     },
     "Measured" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -56681,6 +57218,34 @@
         }
       }
     },
+    "Name Taken" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre en uso"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre en uso"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称已被使用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名稱已被使用"
+          }
+        }
+      }
+    },
     "names & tags" : {
       "comment" : "Sources list — what a source supplies",
       "localizations" : {
@@ -56907,6 +57472,7 @@
       }
     },
     "New Combination" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -64894,6 +65460,7 @@
       }
     },
     "Per mL" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -64922,6 +65489,7 @@
       }
     },
     "Per unit" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -65712,6 +66280,7 @@
       }
     },
     "Picking this in the quick log stages one dose per component." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -65791,6 +66360,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pieta House"
+          }
+        }
+      }
+    },
+    "Pills" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pastillas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pastillas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "药片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "藥片"
           }
         }
       }
@@ -67825,6 +68422,34 @@
         }
       }
     },
+    "Product" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Producto"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Producto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "制剂"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "製劑"
+          }
+        }
+      }
+    },
     "Product name (e.g. Co-codamol)" : {
       "localizations" : {
         "es" : {
@@ -67849,6 +68474,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "產品名稱（如 Co-codamol）"
+          }
+        }
+      }
+    },
+    "Products you made, ready to add as a med." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Productos que creaste, listos para agregar como medicamento."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Productos que creaste, listos para agregar como medicamento."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你创建的制剂，可添加为用药。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你建立的製劑，可加入為用藥。"
           }
         }
       }
@@ -79603,6 +80256,34 @@
         }
       }
     },
+    "Single compound" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un solo compuesto"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un solo compuesto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单一成分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單一成分"
+          }
+        }
+      }
+    },
     "Single dose" : {
       "localizations" : {
         "es" : {
@@ -80560,6 +81241,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "柔粉、亮粉、液態玻璃"
+          }
+        }
+      }
+    },
+    "Solid" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sólido"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sólido"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固体"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固體"
           }
         }
       }
@@ -85007,6 +85716,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pastilla"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "片剂"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "錠劑"
+          }
+        }
+      }
+    },
+    "Tablets" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprimidos"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprimidos"
           }
         },
         "zh-Hans" : {
@@ -91331,6 +92068,7 @@
       }
     },
     "Type" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -91668,6 +92406,7 @@
       }
     },
     "Unit (e.g. tablet, capsule)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -93768,6 +94507,7 @@
       }
     },
     "Volume of %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -94356,6 +95096,34 @@
         }
       }
     },
+    "What each effect means, grouped by kind" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué significa cada efecto, agrupado por tipo"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué significa cada efecto, agrupado por tipo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每种效应的含义，按类别分组"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每種效應的含義，按類別分組"
+          }
+        }
+      }
+    },
     "What is this box?" : {
       "localizations" : {
         "es" : {
@@ -94413,6 +95181,7 @@
       }
     },
     "What one of these is called. Each component's amount is per unit." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -96881,6 +97650,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "處於解離狀態時，你對自己受影響程度的判斷並不可靠。"
+          }
+        }
+      }
+    },
+    "Your Products" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus productos"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus productos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的制剂"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的製劑"
           }
         }
       }
