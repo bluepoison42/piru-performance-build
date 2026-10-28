@@ -1068,6 +1068,7 @@ T = {
     "Not recorded": ("未记录", "未記錄"),
     "Removes the descriptor": ("移除描述词", "移除描述詞"),
     "Search effects": ("搜索效应", "搜尋效應"),
+    "Matches “%@”": ("匹配“%@”", "符合「%@」"),
     'Shulgin & Shulgin, PiHKAL: A Chemical Love Story (1991), "The Shulgin Rating Scale".': (
         "Shulgin & Shulgin，《PiHKAL: A Chemical Love Story》(1991)，“The Shulgin Rating Scale”。",
         "Shulgin & Shulgin，《PiHKAL: A Chemical Love Story》(1991)，「The Shulgin Rating Scale」。",
@@ -8707,6 +8708,7 @@ if __name__ == "__main__":
         "Download",
         "Check for Updates",
         "Once a day, Piru asks GitHub for the newest release. Nothing about you or your journal is sent.",
+        "Matches “%@”",
     }
 
     NEW_KEYS.update(

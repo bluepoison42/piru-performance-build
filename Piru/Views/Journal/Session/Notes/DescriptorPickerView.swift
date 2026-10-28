@@ -21,13 +21,21 @@ struct DescriptorPickerView: View {
                     rollupSection(rollup)
                 }
             } else {
-                let hits = ontology.search(query)
-                if hits.isEmpty {
+                let groups = hitGroups(for: query)
+                if groups.isEmpty {
                     ContentUnavailableView.search(text: query)
                 } else {
-                    Section {
-                        ForEach(hits) { hit in
-                            hitRow(hit)
+                    ForEach(groups) { group in
+                        Section {
+                            ForEach(group.hits) { hit in
+                                DescriptorHitRow(
+                                    hit: hit,
+                                    isOn: selectedSet.contains(hit.concept.id),
+                                    toggle: { toggle(hit.concept.id) },
+                                )
+                            }
+                        } header: {
+                            Text(verbatim: group.title.capitalizedFirst)
                         }
                     }
                 }
@@ -118,26 +126,67 @@ struct DescriptorPickerView: View {
         .accessibilityHint(concept.definition.map { Text(verbatim: $0) } ?? Text(""))
     }
 
-    // MARK: - Search hit
+    // MARK: - Search hits
 
-    private func hitRow(_ hit: SubjectiveEffectHit) -> some View {
-        let isOn = selectedSet.contains(hit.concept.id)
-        let parent = ontology.rollup(of: hit.concept)
-        return Button {
-            toggle(hit.concept.id)
-        } label: {
+    /// Search hits grouped under their rollup, so the group's name is printed
+    /// once as a section header. Groups keep the rank order of their best hit.
+    private func hitGroups(for query: String) -> [DescriptorHitGroup] {
+        var groups: [DescriptorHitGroup] = []
+        var indexByKey: [String: Int] = [:]
+        for hit in ontology.search(query) {
+            let parent = ontology.rollup(of: hit.concept)
+            let key = parent?.id ?? hit.concept.domain
+            if let index = indexByKey[key] {
+                groups[index].hits.append(hit)
+            } else {
+                indexByKey[key] = groups.count
+                groups.append(DescriptorHitGroup(id: key, title: parent?.name ?? hit.concept.domain, hits: [hit]))
+            }
+        }
+        return groups
+    }
+
+    private func toggle(_ id: String) {
+        if let index = selection.firstIndex(of: id) {
+            selection.remove(at: index)
+        } else {
+            selection.append(id)
+        }
+    }
+}
+
+private struct DescriptorHitGroup: Identifiable {
+    let id: String
+    let title: String
+    var hits: [SubjectiveEffectHit]
+}
+
+/// One search hit: the effect's name, its definition on up to two lines, and
+/// the alias that matched when the match came through one.
+private struct DescriptorHitRow: View {
+    let hit: SubjectiveEffectHit
+    let isOn: Bool
+    let toggle: () -> Void
+
+    var body: some View {
+        Button(action: toggle) {
             HStack(spacing: Spacing.lg) {
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
-                    Text(hit.concept.name)
+                    Text(verbatim: hit.concept.name)
                         .foregroundStyle(.primary)
-                    HStack(spacing: Spacing.xs) {
-                        if let alias = hit.matchedAlias {
-                            Text(verbatim: "“\(alias)” · ")
-                        }
-                        Text(verbatim: parent?.name ?? hit.concept.domain)
+                    if let definition = hit.concept.definition, !definition.isEmpty {
+                        Text(verbatim: definition)
+                            .font(.footnote)
+                            .foregroundStyle(Theme.secondaryLabel)
+                            .lineLimit(2)
+                            .truncationMode(.tail)
                     }
-                    .captionSecondary()
-                    .lineLimit(1)
+                    if let alias = hit.matchedAlias {
+                        Text("Matches “\(alias)”")
+                            .font(.caption)
+                            .foregroundStyle(Theme.tertiaryLabel)
+                            .lineLimit(1)
+                    }
                 }
                 Spacer()
                 Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
@@ -148,14 +197,6 @@ struct DescriptorPickerView: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isOn ? .isSelected : [])
-    }
-
-    private func toggle(_ id: String) {
-        if let index = selection.firstIndex(of: id) {
-            selection.remove(at: index)
-        } else {
-            selection.append(id)
-        }
     }
 }
 

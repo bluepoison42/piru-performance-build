@@ -2544,6 +2544,7 @@ ES = {
     "Search": "Buscar",
     "Search Colors": "Buscar colores",
     "Search effects": "Buscar efectos",
+    "Matches “%@”": "Coincide con «%@»",
     "Search entries...": "Buscar registros...",
     "Search experiences on Erowid": "Buscar experiencias en Erowid",
     "Search for a place or address": "Buscar un lugar o dirección",
