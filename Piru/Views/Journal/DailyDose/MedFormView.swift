@@ -55,6 +55,28 @@ private final class MedFormDraft {
     var productName: String?
     var availableRoutes: [RouteOfAdministration] = RouteOfAdministration.allCases
 
+    // Product — a liquid, or a compound of several substances, is saved as a
+    // combination product (``MedProductDraft``) that the med then names.
+
+    /// Several substances in one product (co-codamol), rather than one.
+    var isCompounded = false
+    var product = MedProductDraft()
+    /// Whether the user picked a schedule, so switching to a product no
+    /// longer moves it to As needed on their behalf.
+    var scheduleTouched = false
+
+    /// Taken by volume, each component's amount per mL.
+    var isLiquid: Bool {
+        get { product.isLiquid }
+        set { product.isLiquid = newValue }
+    }
+
+    /// The med is a product rather than a plain substance: a liquid, a
+    /// compound, or a product already saved (one solid component included).
+    var isProduct: Bool {
+        isCompounded || isLiquid || product.existing != nil
+    }
+
     var isAsNeeded: Bool {
         schedule == .asNeeded
     }
@@ -78,7 +100,22 @@ struct MedFormView: View {
 
     var item: DailyDoseItem?
 
-    @State private var draft = MedFormDraft()
+    @State private var draft: MedFormDraft
+    @State private var showsNameTaken = false
+
+    /// `product` opens the form on a saved product no med names yet, so
+    /// saving makes it one: an As needed med of one unit (or mL) by default.
+    init(item: DailyDoseItem? = nil, product: CustomSubstanceEntry? = nil) {
+        self.item = item
+        let draft = MedFormDraft()
+        if let product {
+            draft.product = MedProductDraft(product: product)
+            draft.isCompounded = (product.components?.count ?? 0) > 1
+            draft.schedule = .asNeeded
+            draft.amount = 1
+        }
+        _draft = State(initialValue: draft)
+    }
 
     @Query(sort: \DailyDoseItem.sortOrder) private var existingItems: [DailyDoseItem]
     @Query private var notificationPreferences: [NotificationPreferences]
@@ -113,8 +150,20 @@ struct MedFormView: View {
         NavigationStack {
             Form {
                 Group {
-                    substanceSection
-                    dosageSection
+                    // The kind is chosen once: a saved product keeps it, since
+                    // a count of pills and a volume mean different doses.
+                    if !isEditing, draft.product.existing == nil {
+                        kindSection
+                    }
+                    if draft.isProduct {
+                        MedProductNameSection(draft: draft.product)
+                        MedProductUnitSection(draft: draft.product)
+                        MedProductComponentsSection(draft: draft.product, allowsSeveral: draft.isCompounded)
+                        MedProductDoseSection(amount: $draft.amount, unitWord: draft.product.unitWord, isLiquid: draft.isLiquid)
+                    } else {
+                        substanceSection
+                        dosageSection
+                    }
                     scheduleSection
                     if !draft.isAsNeeded {
                         timesSection
@@ -134,16 +183,63 @@ struct MedFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button { save() } label: { Image(systemName: "checkmark").fontWeight(.semibold) }
                         .skinButtonStyle(.prominent)
-                        .disabled(draft.substance.isEmpty || draft.amount == nil
-                            || (draft.frequency == .specificDays && draft.selectedWeekdays.isEmpty))
+                        .disabled(!canSave)
                         .accessibilityLabel("Save")
+                }
+            }
+            .alert("Name Taken", isPresented: $showsNameTaken) {
+                Button("OK") {}
+            } message: {
+                Text("\"\(draft.product.trimmedName)\" already names a substance. Choose another name for this product.")
+            }
+            .onChange(of: draft.isProduct) {
+                // A product is most often taken as needed (a syrup, a
+                // co-codamol), so it starts there until the user picks.
+                if !draft.scheduleTouched {
+                    draft.schedule = draft.isProduct ? .asNeeded : .frequency(.daily)
+                }
+                if draft.isProduct, draft.amount == nil {
+                    draft.amount = 1
                 }
             }
             .onAppear(perform: loadItem)
         }
     }
 
+    /// A schedule that makes sense, a substance (or a complete product), and an amount.
+    private var canSave: Bool {
+        guard !(draft.frequency == .specificDays && draft.selectedWeekdays.isEmpty) else { return false }
+        if draft.isProduct {
+            return draft.product.canSave && (draft.amount ?? 0) > 0
+        }
+        return !draft.substance.isEmpty && draft.amount != nil
+    }
+
     // MARK: Sections
+
+    /// One substance or a compound of several, and solid or liquid. Anything
+    /// but a single solid substance is saved as a product.
+    private var kindSection: some View {
+        @Bindable var draft = draft
+        return Section {
+            Picker("Kind", selection: $draft.isCompounded.animation()) {
+                Text("Single compound").tag(false)
+                Text("Compounded").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            Picker("Form", selection: $draft.isLiquid.animation()) {
+                Text("Solid").tag(false)
+                Text("Liquid").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+        } footer: {
+            if draft.isProduct {
+                Text("Logged as a whole: one pick records each component.")
+            }
+        }
+    }
 
     private var substanceSection: some View {
         @Bindable var draft = draft
@@ -188,7 +284,7 @@ struct MedFormView: View {
     private var scheduleSection: some View {
         @Bindable var draft = draft
         return Section {
-            Picker("Schedule", selection: $draft.schedule) {
+            Picker("Schedule", selection: scheduleBinding) {
                 ForEach(DoseFrequency.allCases) { freq in
                     Text(freq.displayName).tag(FormSchedule.frequency(freq))
                 }
@@ -337,6 +433,17 @@ struct MedFormView: View {
 
     // MARK: Bindings & helpers
 
+    /// The schedule picker, recording that the user chose one.
+    private var scheduleBinding: Binding<FormSchedule> {
+        Binding(
+            get: { draft.schedule },
+            set: { newValue in
+                draft.schedule = newValue
+                draft.scheduleTouched = true
+            },
+        )
+    }
+
     private var quietBinding: Binding<Bool> {
         Binding(
             get: { draft.isQuiet },
@@ -435,9 +542,13 @@ struct MedFormView: View {
             draft.remind = item.remind
             draft.isQuiet = item.isQuiet
             draft.userTouchedQuiet = true
+            draft.scheduleTouched = true
             draft.productName = item.productName
 
-            if let match = SubstanceLibrary.lookup(item.substance),
+            if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
+                draft.product = MedProductDraft(product: product)
+                draft.isCompounded = (product.components?.count ?? 0) > 1
+            } else if let match = SubstanceLibrary.lookup(item.substance),
                match.name.lowercased() == item.substance.lowercased() {
                 draft.selectedSubstance = match
                 draft.availableRoutes = match.orderedRoutes
@@ -445,28 +556,55 @@ struct MedFormView: View {
         }
     }
 
-    private func save() {
-        guard let parsedAmount = draft.amount else { return }
-
-        let sortedTimes = Array(Set(draft.times.map(\.minutes))).sorted()
-        let identity = resolvedIdentity()
+    /// What the med names: a saved product (written to the custom store
+    /// here), or a substance. `nil` when the product's name is taken.
+    private func savedSubstance() -> (
+        substance: String, unit: String, route: RouteOfAdministration,
+        identity: (uid: String?, isomer: String?, release: String?, product: String?)
+    )? {
+        if draft.isProduct {
+            let store = CustomSubstanceStore.shared
+            guard !draft.product.nameIsTaken(in: store) else { return nil }
+            let entry = draft.product.makeEntry()
+            if let existing = draft.product.existing {
+                store.update(entry)
+                if existing.name != entry.name {
+                    MedProductStore.rename(existing.name, to: entry.name, in: modelContext)
+                }
+            } else {
+                store.add(entry)
+            }
+            // A product carries no catalog identity of its own: its components do.
+            return (entry.name, entry.unit, entry.defaultRoute, (nil, nil, nil, nil))
+        }
         // The field text may read as the brand the user picked ("Medikinet"); the
         // stored substance is always the canonical family (Methylphenidate), with
         // the brand kept separately in `productName`. A hand-typed custom substance
         // has no `selectedSubstance`, so its typed name is the substance.
-        let canonicalSubstance = draft.selectedSubstance?.name ?? draft.substance
+        return (draft.selectedSubstance?.name ?? draft.substance, draft.unit, draft.route, resolvedIdentity())
+    }
+
+    private func save() {
+        guard canSave, let parsedAmount = draft.amount else { return }
+        guard let saved = savedSubstance() else {
+            showsNameTaken = true
+            return
+        }
+
+        let sortedTimes = Array(Set(draft.times.map(\.minutes))).sorted()
+        let identity = saved.identity
         let target: DailyDoseItem
         if let item {
             target = item
         } else {
-            target = DailyDoseItem(substance: canonicalSubstance, amount: parsedAmount, sortOrder: existingItems.count)
+            target = DailyDoseItem(substance: saved.substance, amount: parsedAmount, sortOrder: existingItems.count)
             modelContext.insert(target)
         }
 
-        target.substance = canonicalSubstance
+        target.substance = saved.substance
         target.amount = parsedAmount
-        target.unit = draft.unit
-        target.route = draft.route
+        target.unit = saved.unit
+        target.route = saved.route
         target.frequency = draft.isAsNeeded ? .daily : draft.frequency
         target.frequencyDays = Array(draft.selectedWeekdays)
         target.frequencyIntervalDays = draft.intervalDays

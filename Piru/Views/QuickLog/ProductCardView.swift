@@ -74,7 +74,7 @@ struct ProductCardView: View, Equatable {
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Text("\(label) of \(product.resolvedDisplayName)"))
+        .accessibilityLabel(Text(verbatim: "\(label), \(product.resolvedDisplayName)"))
         .accessibilityAddTraits(isStaged ? [.isSelected] : [])
     }
 }

@@ -50,19 +50,36 @@ extension CustomSubstanceEntry {
     /// "0.5 mL" for a liquid. A word typed freely into an older product is
     /// shown as it was typed ("2 dose").
     func quantityLabel(_ amount: Double) -> String {
-        if isLiquidCombination {
+        Self.quantityLabel(amount, unitWord: unit, isLiquid: isLiquidCombination)
+    }
+
+    /// ``quantityLabel(_:)`` for a product not saved yet: its unit word and
+    /// whether it is a liquid.
+    static func quantityLabel(_ amount: Double, unitWord: String, isLiquid: Bool) -> String {
+        if isLiquid {
             return "\(amount.doseFormatted) \(CombinationComponent.volumeUnitWord)"
         }
         let count = CombinationComponent.units(for: amount)
-        if let word = ProductUnitWord(word: unit) {
+        if let word = ProductUnitWord(word: unitWord) {
             return word.quantityLabel(count)
         }
-        return "\(count) \(unit)"
+        return "\(count) \(unitWord)"
     }
 
     /// The amounts a product's quick-log card offers as chips: one and two
     /// units of a solid, half and one millilitre of a liquid.
     var quantityChips: [Double] {
         isLiquidCombination ? [0.5, 1] : [1, 2]
+    }
+}
+
+extension DailyDoseItem {
+    /// One dose of this med as the user counts it: "2 pills" or "5 mL" for a
+    /// med saved as a combination product, "20 mg" for anything else.
+    @MainActor var doseLabel: String {
+        if let product = CustomSubstanceStore.shared.combination(named: substance) {
+            return product.quantityLabel(amount)
+        }
+        return "\(amount.doseFormatted) \(unit)"
     }
 }
