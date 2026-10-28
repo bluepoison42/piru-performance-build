@@ -177,6 +177,10 @@ enum DataExportImport {
             try importLegacy(data: data, context: context)
         }
         resolveImportedDoses(in: context)
+        // A file with no color rows (or one that predates them) would leave every
+        // imported substance gray on the surfaces that read the rows, until the
+        // launch mint pass ran on the next launch.
+        SubstanceColorStore.mintMissingRows(in: context)
 
         // Last, because a changed source priority drops the substance catalog's
         // resolved caches, which the backfills above read.

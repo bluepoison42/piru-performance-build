@@ -579,7 +579,7 @@ final class DoseTrayModel {
             route: item.route,
             amount: item.amount,
             unit: item.unit,
-            tint: colorLookup[item.substance.lowercased()],
+            tint: SubstancePalette.tint(for: item.substance, tintMap: colorLookup),
             librarySubstance: SubstanceLibrary.lookup(item.substance.lowercased()),
             productName: item.productName,
             isFromDailySet: true,

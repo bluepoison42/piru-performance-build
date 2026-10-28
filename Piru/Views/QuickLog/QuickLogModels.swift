@@ -570,7 +570,7 @@ final class QuickLogContentModel {
                     route: dose.route,
                     // Color keys on the canonical name so every form of a substance
                     // shares its color — a Concerta chip takes Methylphenidate's.
-                    tint: colorLookup[dose.substance.lowercased()],
+                    tint: SubstancePalette.tint(for: dose.substance, tintMap: colorLookup),
                     // Batch-cache lookup (class/routes/doses/salts/durations) —
                     // all a card needs — instead of the heavy per-substance SQL
                     // resolve, which cold-stalled the first open. Same path the

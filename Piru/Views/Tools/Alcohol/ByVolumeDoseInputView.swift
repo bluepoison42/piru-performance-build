@@ -1,9 +1,11 @@
 import SwiftUI
 
-/// Concentration × measured-volume dose input (alcohol by %ABV in v1). Pure
-/// presentation: the parent owns `volumeText`/`abvText`/`volumeUnit` and computes
-/// `grams`; this view renders the drink presets, the volume + strength fields, and
-/// the live grams/standard-drinks readout. Preset taps are reported back so the
+/// Concentration × measured-volume dose input: alcohol by %ABV, or an injectable
+/// ester by mg/mL. Pure presentation: the parent owns `volumeText`/`abvText`/
+/// `volumeUnit` and computes the canonical amount; this view renders the drink
+/// presets, the strength + volume fields, and the live readout (grams of ethanol
+/// and standard drinks for alcohol, the ester's mass for a vial). Copy follows
+/// the capability's concentration kind. Preset taps are reported back so the
 /// parent can pre-fill the fields (converting the preset volume into the chosen
 /// display unit).
 struct ByVolumeDoseInputView: View {
@@ -12,8 +14,9 @@ struct ByVolumeDoseInputView: View {
     @Binding var abvText: String
     @Binding var volumeUnit: UnitVolume
 
-    /// Canonical grams computed by the parent from the bindings (nil until the
-    /// fields hold a usable volume + strength).
+    /// Canonical amount computed by the parent from the bindings, in
+    /// ``ByVolumeDosing/canonicalUnit`` (grams of ethanol, mg of ester); nil
+    /// until the fields hold a usable volume + strength.
     let grams: Double?
     /// Dose-level tint for the grams readout (matches the badge the manual field shows).
     let readoutColor: Color?
@@ -29,12 +32,9 @@ struct ByVolumeDoseInputView: View {
     /// converts between them; the canonical grams always works from mL internally.
     private static let offeredUnits: [UnitVolume] = [.milliliters, .fluidOunces]
 
-    private var standardDrinks: Double? {
-        grams.map { ByVolumeDosing.standardDrinks(grams: $0) }
-    }
-
     var body: some View {
-        if showsPresets {
+        // An ester has no drink presets: the row would render as an empty cell.
+        if showsPresets, !capability.drinkPresets.isEmpty {
             presetRow
         }
         strengthField
@@ -96,16 +96,21 @@ struct ByVolumeDoseInputView: View {
 
     private var strengthField: some View {
         HStack {
-            Text("Strength")
+            Text(capability.strengthFieldLabel)
                 .foregroundStyle(Theme.secondaryLabel)
             Spacer()
             TextField("0", text: $abvText)
-                .accessibilityLabel(Text("Strength"))
+                .accessibilityLabel(Text(capability.strengthFieldLabel))
                 .decimalKeyboard()
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: 90)
-            Text("% ABV")
-                .foregroundStyle(Theme.secondaryLabel)
+            if capability.isMassPerVolume {
+                Text(verbatim: capability.strengthUnitLabel)
+                    .foregroundStyle(Theme.secondaryLabel)
+            } else {
+                Text("% ABV")
+                    .foregroundStyle(Theme.secondaryLabel)
+            }
         }
     }
 
@@ -125,19 +130,36 @@ struct ByVolumeDoseInputView: View {
 
     @ViewBuilder
     private var readout: some View {
-        if let grams, let standardDrinks {
+        if let grams {
             VStack(alignment: .leading, spacing: 1) {
-                Text("\(Int(grams.rounded())) g")
-                    .font(.piru(.title2))
-                    .fontWeight(.semibold)
-                    .foregroundStyle(readoutColor ?? .primary)
-                    .contentTransition(.numericText())
-                Text("ethanol · ≈ \(standardDrinks, format: .number.precision(.fractionLength(1))) standard drinks")
-                    .captionSecondary()
+                if capability.isMassPerVolume {
+                    // The ester's own mass, in its own unit — a vial has no
+                    // standard unit to gloss it with.
+                    Text(verbatim: "\(grams.doseFormatted) \(capability.canonicalUnit)")
+                        .font(.piru(.title2))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(readoutColor ?? .primary)
+                        .contentTransition(.numericText())
+                } else {
+                    Text("\(Int(grams.rounded())) g")
+                        .font(.piru(.title2))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(readoutColor ?? .primary)
+                        .contentTransition(.numericText())
+                    let standardDrinks = ByVolumeDosing.standardDrinks(grams: grams)
+                    Text("ethanol · ≈ \(standardDrinks, format: .number.precision(.fractionLength(1))) standard drinks")
+                        .captionSecondary()
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        } else if capability.isMassPerVolume {
+            // A volume with no concentration can't become a dose — the mg on the
+            // syringe depend entirely on the vial's mg/mL.
+            Text("Enter the vial's concentration. A volume alone isn't a dose.")
+                .captionSecondary()
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        // No placeholder when empty — the volume/strength fields are right above.
+        // No placeholder for empty alcohol fields — they are right above.
     }
 }
 

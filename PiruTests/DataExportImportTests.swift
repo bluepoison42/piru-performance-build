@@ -190,10 +190,16 @@ struct DataExportImportRoundTripTests {
 
         let colors = try context.fetch(FetchDescriptor<SubstanceColor>())
         // A picked color travels, to four decimals; a class color is left for
-        // the importing device to generate.
-        #expect(colors.map(\.substance) == ["Ibuprofen"])
-        #expect(colors.first?.usesDefault == false)
-        #expect(colors.first?.tint == picked)
+        // the importing device to generate, which the import does for every
+        // substance it brings in (the meds here) and for nothing else (Aspirin).
+        let ibuprofen = try #require(colors.first { $0.substance == "Ibuprofen" })
+        #expect(ibuprofen.usesDefault == false)
+        #expect(ibuprofen.tint == picked)
+        let generated = colors.filter { $0.substance != "Ibuprofen" }
+        let generatedNames = Set(generated.map(\.substance))
+        let allDefault = generated.allSatisfy(\.usesDefault)
+        #expect(generatedNames == ["Vitamin D3", "Omega-3"])
+        #expect(allDefault)
 
         let dailyItems = try context.fetch(FetchDescriptor<DailyDoseItem>(sortBy: [SortDescriptor(\.sortOrder)]))
         #expect(dailyItems.count == 2)

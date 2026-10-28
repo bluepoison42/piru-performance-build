@@ -119,6 +119,24 @@ enum SubstanceColorStore {
     @DatabaseActor
     static func mintMissingRows(container: ModelContainer, defaults: @Sendable (String) -> P3Color) {
         let context = ModelContext(container)
+        let changed = insertMissingRows(in: context, defaults: defaults)
+        save(context, changed: changed, pass: "mint")
+    }
+
+    /// The mint pass on the main context, for an import: the doses it brings in
+    /// arrive with no color rows when the file has none (`substanceColors: 0`),
+    /// and the launch pass would only reach them on the next launch. Inserts
+    /// without saving — the import's own commit saves them with its doses.
+    @MainActor
+    static func mintMissingRows(in context: ModelContext) {
+        insertMissingRows(in: context, defaults: backgroundDefaults)
+    }
+
+    /// Inserts a default row for every logged, stocked or scheduled substance
+    /// that has none, and returns how many it inserted. Runs on the caller's
+    /// actor, with the caller's context.
+    @discardableResult
+    nonisolated private static func insertMissingRows(in context: ModelContext, defaults: (String) -> P3Color) -> Int {
         let rows = (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? []
         var known = Set(rows.map { $0.substance.lowercased() })
         // Whole rows, never `propertiesToFetch`: a narrowed fetch makes every
@@ -134,7 +152,7 @@ enum SubstanceColorStore {
             context.insert(SubstanceColor(substance: trimmed, tint: defaults(trimmed), usesDefault: true))
             changed += 1
         }
-        save(context, changed: changed, pass: "mint")
+        return changed
     }
 
     @DatabaseActor

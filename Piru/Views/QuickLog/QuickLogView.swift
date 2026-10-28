@@ -469,7 +469,7 @@ struct QuickLogView: View {
         let route = prefillRoute ?? named.esterRoute ?? substance.defaultRoute
         let unit = prefillDose?.unit ?? substance.unit(for: route, saltForm: named.saltForm)
         let productName = prefillDose?.productName ?? named.productName
-        let tint = content.cachedColorLookup[substance.name.lowercased()]
+        let tint = SubstancePalette.tint(for: substance.name, tintMap: content.cachedColorLookup)
         withAnimation(.snappy) {
             if let amount = prefillDose?.amount {
                 tray.stage(
