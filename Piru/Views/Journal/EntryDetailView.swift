@@ -264,6 +264,9 @@ struct EntryDetailView: View {
         entry.latitude = draft.location?.latitude
         entry.longitude = draft.location?.longitude
         entry.meal = draft.route == .oral ? draft.meal : nil
+        entry.injectionSite = draft.injectionSite.flatMap { site in
+            InjectionSite.Area.offered(for: draft.route).contains(site.area) ? site : nil
+        }
 
         // The session accessory & Live Activity read ActiveSessionManager's
         // snapshot, not SwiftData — sync it so they reflect the edit immediately.

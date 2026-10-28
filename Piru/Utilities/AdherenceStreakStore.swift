@@ -70,6 +70,7 @@ final class AdherenceStreakStore {
             hasher.combine(item.startDate)
             hasher.combine(item.frequency)
             hasher.combine(item.frequencyDays)
+            hasher.combine(item.frequencyIntervalDays)
             hasher.combine(item.reminderTimesMinutes.count)
         }
         return hasher.finalize()

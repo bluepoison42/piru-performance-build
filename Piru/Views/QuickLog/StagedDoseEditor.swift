@@ -85,6 +85,15 @@ struct StagedDoseEditor: View {
                     drinkTypeChip
                 }
                 StagedDoseRouteMenu(item: $item, pillHeight: pillHeight, namespace: namespace)
+                if InjectionSite.applies(to: item.route) {
+                    StagedDoseInjectionSiteMenu(
+                        site: $item.injectionSite,
+                        touched: $item.injectionSiteTouched,
+                        route: item.route,
+                        suggested: model.suggestedInjectionSite,
+                        pillHeight: pillHeight,
+                    )
+                }
                 SaltPicker(
                     forms: item.librarySubstance?.saltForms(for: item.route) ?? [],
                     selection: $item.saltForm,
@@ -127,6 +136,7 @@ struct StagedDoseEditor: View {
         }
         .sensoryFeedback(.increase, trigger: model.stepTick)
         .onAppear(perform: seedOnAppear)
+        .onChange(of: item.route) { seedInjectionSite() }
         .onChange(of: noteFocused) {
             // Fold an untouched note row back into the pill.
             if !noteFocused, item.note.isEmpty {
@@ -356,6 +366,7 @@ struct StagedDoseEditor: View {
             model.showCombinationVolume(item.volumeML)
         }
         focusAmountIfWanted()
+        seedInjectionSite()
         if profileStore.grapefruitLoggingEnabled {
             model.resolveGrapefruitSubstrate(substanceName: item.substanceName)
         }
@@ -369,6 +380,26 @@ struct StagedDoseEditor: View {
             model.drinkName = item.drinkName ?? ""
             model.drinkEmoji = item.emoji ?? ""
             syncCustomDrink()
+        }
+    }
+
+    /// Offer the rotation's next site for an injected route, and fill it in
+    /// until the user picks or clears one. A site whose area the new route
+    /// doesn't offer (the abdomen on an intramuscular dose) is dropped.
+    private func seedInjectionSite() {
+        guard InjectionSite.applies(to: item.route) else {
+            model.suggestedInjectionSite = nil
+            return
+        }
+        let suggestion = InjectionSiteHistory.suggestedNext(
+            substance: item.substanceName, route: item.route, in: modelContext,
+        )
+        model.suggestedInjectionSite = suggestion
+        if let site = item.injectionSite, !InjectionSite.Area.offered(for: item.route).contains(site.area) {
+            item.injectionSite = nil
+        }
+        if !item.injectionSiteTouched, item.injectionSite == nil {
+            item.injectionSite = suggestion
         }
     }
 

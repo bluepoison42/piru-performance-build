@@ -207,6 +207,17 @@ final class DoseEntry {
     /// lightweight migration.
     var combinationName: String?
 
+    /// Where an intramuscular or subcutaneous dose went, as
+    /// ``InjectionSite/rawValue`` (`"thigh.left"`). `nil` for every other
+    /// route and whenever no site was recorded, so the field-add stays a
+    /// lightweight migration.
+    var injectionSiteRaw: String?
+
+    var injectionSite: InjectionSite? {
+        get { injectionSiteRaw.flatMap(InjectionSite.init(rawValue:)) }
+        set { injectionSiteRaw = newValue?.rawValue }
+    }
+
     /// The dose's location as a coordinate, or `nil` unless both ``latitude`` and
     /// ``longitude`` are set. A named place may have no coordinate (e.g. a
     /// free-typed label), so a non-nil ``locationName`` does not imply this.
@@ -268,6 +279,7 @@ final class DoseEntry {
         abv: Double? = nil,
         drinkName: String? = nil,
         combinationName: String? = nil,
+        injectionSite: InjectionSite? = nil,
     ) {
         self.substance = substance
         self.amount = isUnknownDose ? 0 : max(0, amount)
@@ -294,5 +306,6 @@ final class DoseEntry {
         self.abv = abv
         self.drinkName = drinkName
         self.combinationName = combinationName
+        self.injectionSiteRaw = injectionSite?.rawValue
     }
 }

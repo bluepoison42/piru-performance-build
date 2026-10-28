@@ -180,6 +180,12 @@ struct StagedDose: Identifiable, Equatable {
     /// staged on its own. For a liquid product, ``volumeML`` is the volume
     /// taken and ``abv`` this component's amount per mL in ``unit``.
     var combinationName: String?
+    /// Where an intramuscular or subcutaneous dose goes, carried onto the
+    /// committed entry. The editor seeds it from the rotation
+    /// (``InjectionSiteHistory``) until the user picks or clears one, which
+    /// ``injectionSiteTouched`` records so a re-opened row keeps the choice.
+    var injectionSite: InjectionSite?
+    var injectionSiteTouched = false
 
     /// A component of a liquid combination, staged by volume: the editor shows
     /// the product's volume in place of a mass field, and the amount is always
@@ -187,6 +193,7 @@ struct StagedDose: Identifiable, Equatable {
     var isLiquidCombinationRow: Bool {
         combinationName != nil && volumeML != nil && abv != nil
     }
+
     /// The user opened this row to type into it (the sliders pill, a row tap),
     /// so the editor focuses the amount field on appear — even over a seeded
     /// reference dose. The editor clears it once consumed. Stays false for

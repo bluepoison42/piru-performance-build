@@ -92,15 +92,23 @@ enum AdherenceCalculator {
 
     /// Whether a prescription item is due on a given date, based on its frequency and start date.
     static func isDue(_ item: DailyDoseItem, on date: Date) -> Bool {
-        isDue(startDate: item.startDate, frequency: item.frequency, frequencyDays: item.frequencyDays, on: date)
+        isDue(
+            startDate: item.startDate, frequency: item.frequency, frequencyDays: item.frequencyDays,
+            intervalDays: item.frequencyIntervalDays, on: date,
+        )
     }
 
     /// The scheduling core over plain values, shared by the `@Model` `isDue`
     /// above and the `Sendable`-snapshot streak scan. `nonisolated` so the
     /// off-main year pass can call it. Delegates to ``MedSchedule`` (Shared/)
     /// so the Today's Meds widget computes "due today" with the same rule.
-    nonisolated static func isDue(startDate: Date, frequency: DoseFrequency, frequencyDays: [Int], on date: Date) -> Bool {
-        MedSchedule.isDue(startDate: startDate, frequency: frequency, frequencyDays: frequencyDays, on: date)
+    nonisolated static func isDue(
+        startDate: Date, frequency: DoseFrequency, frequencyDays: [Int], intervalDays: Int, on date: Date,
+    ) -> Bool {
+        MedSchedule.isDue(
+            startDate: startDate, frequency: frequency, frequencyDays: frequencyDays,
+            intervalDays: intervalDays, on: date,
+        )
     }
 
     static func adherence(
@@ -262,6 +270,8 @@ enum AdherenceCalculator {
         let startDate: Date
         let frequency: DoseFrequency
         let frequencyDays: [Int]
+        /// ``DailyDoseItem/frequencyIntervalDays``, read for `.everyNDays`.
+        var intervalDays: Int = DoseFrequency.defaultIntervalDays
     }
 
     /// Per-day adherence **status** over Sendable snapshots — all the streak
@@ -280,7 +290,10 @@ enum AdherenceCalculator {
     /// scanning the whole year's entries 366 times.
     nonisolated static func dayStatus(for date: Date, dayEntries: [EntrySnapshot], items: [DailyItemSnapshot]) -> AdherenceStatus {
         let dueItems = items.filter {
-            !$0.isAsNeeded && isDue(startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays, on: date)
+            !$0.isAsNeeded && isDue(
+                startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays,
+                intervalDays: $0.intervalDays, on: date,
+            )
         }
         guard !dueItems.isEmpty else { return .noData }
 

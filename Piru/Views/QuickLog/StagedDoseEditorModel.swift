@@ -44,6 +44,12 @@ final class StagedDoseEditorModel {
     var drinkEmoji = ""
     var volumeUnit: UnitVolume = ByVolumeDefaults.preferredVolumeUnit
 
+    // MARK: Injection site
+
+    /// The rotation's next site for this substance and route, offered at the
+    /// top of the site menu. `nil` until a site has been logged once.
+    var suggestedInjectionSite: InjectionSite?
+
     // MARK: Grapefruit
 
     /// Whether this substance is CYP3A4-heavy — gates the per-dose grapefruit

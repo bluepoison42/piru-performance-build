@@ -23,6 +23,25 @@ Not medical advice→No es consejo médico.
 """
 
 ES = {
+    "Left abdomen": "Abdomen, lado izquierdo",
+    "Right abdomen": "Abdomen, lado derecho",
+    "Left thigh": "Muslo izquierdo",
+    "Right thigh": "Muslo derecho",
+    "Left glute": "Glúteo izquierdo",
+    "Right glute": "Glúteo derecho",
+    "Left hip (ventrogluteal)": "Cadera izquierda (ventroglútea)",
+    "Right hip (ventrogluteal)": "Cadera derecha (ventroglútea)",
+    "Left arm": "Brazo izquierdo",
+    "Right arm": "Brazo derecho",
+    "Site": "Zona",
+    "Next in rotation": "Siguiente en la rotación",
+    "No Site": "Sin zona",
+    "Injection site": "Zona de inyección",
+    "Injection Site": "Zona de inyección",
+    "Injection site: %@": "Zona de inyección: %@",
+    "Time to log %@: %@. Next: %@.": "Hora de registrar %1$@: %2$@. Siguiente: %3$@.",
+    "Every few days": "Cada varios días",
+    "Every %lld days": "Cada %lld días",
     # Combination products (custom-substance editor, quick-log search, journal).
     "Type": "Tipo",
     "Compound": "Compuesto",

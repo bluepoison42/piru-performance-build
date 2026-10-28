@@ -119,6 +119,17 @@ struct EntryEditContent: View {
                     }
                 }
             }
+            if InjectionSite.applies(to: draft.route) {
+                Picker("Injection Site", selection: $draft.injectionSite) {
+                    Text("Not recorded").tag(InjectionSite?.none)
+                    ForEach(InjectionSite.Area.offered(for: draft.route), id: \.self) { area in
+                        ForEach(InjectionSite.Side.allCases, id: \.self) { side in
+                            let site = InjectionSite(area: area, side: side)
+                            Text(site.label).tag(Optional(site))
+                        }
+                    }
+                }
+            }
             Button {
                 showColorPicker = true
             } label: {

@@ -3761,6 +3761,28 @@ T = {
     "~%lld minutes": ("约 %lld 分钟", "約 %lld 分鐘"),
     "~%lld – %lld minutes": ("约 %1$lld – %2$lld 分钟", "約 %1$lld – %2$lld 分鐘"),
     # Frequencies
+    "Left abdomen": ("腹部左侧", "腹部左側"),
+    "Right abdomen": ("腹部右侧", "腹部右側"),
+    "Left thigh": ("左大腿", "左大腿"),
+    "Right thigh": ("右大腿", "右大腿"),
+    "Left glute": ("左臀", "左臀"),
+    "Right glute": ("右臀", "右臀"),
+    "Left hip (ventrogluteal)": ("左髋（臀中肌）", "左髖（臀中肌）"),
+    "Right hip (ventrogluteal)": ("右髋（臀中肌）", "右髖（臀中肌）"),
+    "Left arm": ("左臂", "左臂"),
+    "Right arm": ("右臂", "右臂"),
+    "Site": ("部位", "部位"),
+    "Next in rotation": ("下一个轮换部位", "下一個輪換部位"),
+    "No Site": ("不记录部位", "不記錄部位"),
+    "Injection site": ("注射部位", "注射部位"),
+    "Injection Site": ("注射部位", "注射部位"),
+    "Injection site: %@": ("注射部位：%@", "注射部位：%@"),
+    "Time to log %@: %@. Next: %@.": (
+        "该记录 %1$@ 了：%2$@。下一个部位：%3$@。",
+        "該記錄 %1$@ 了：%2$@。下一個部位：%3$@。",
+    ),
+    "Every few days": ("每隔几天", "每隔幾天"),
+    "Every %lld days": ("每 %lld 天", "每 %lld 天"),
     "Daily": ("每日", "每日"),
     "Every other day": ("隔日", "隔日"),
     "Weekly": ("每周", "每週"),
@@ -8790,6 +8812,35 @@ if __name__ == "__main__":
             "seconds",
             "Time since administration",
             "Endpoint: modeled “any drug effect” rating on a visual analog scale",
+        }
+    )
+    # Every-N-days schedule (2026-10-28).
+    NEW_KEYS.update(
+        {
+            "Every few days",
+            "Every %lld days",
+        }
+    )
+    # Injection-site rotation (2026-10-28).
+    NEW_KEYS.update(
+        {
+            "Left abdomen",
+            "Right abdomen",
+            "Left thigh",
+            "Right thigh",
+            "Left glute",
+            "Right glute",
+            "Left hip (ventrogluteal)",
+            "Right hip (ventrogluteal)",
+            "Left arm",
+            "Right arm",
+            "Site",
+            "Next in rotation",
+            "No Site",
+            "Injection site",
+            "Injection Site",
+            "Injection site: %@",
+            "Time to log %@: %@. Next: %@.",
         }
     )
     # Check-ins on every session (2026-10-19).

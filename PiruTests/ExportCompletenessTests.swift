@@ -36,7 +36,7 @@ private enum Fields {
         field("latitude", \.latitude), field("longitude", \.longitude), field("hadGrapefruit", \.hadGrapefruit), field("mealRaw", \.mealRaw),
         field("isApproximate", \.isApproximate), field("isUnknownDose", \.isUnknownDose),
         field("volumeML", \.volumeML), field("abv", \.abv), field("drinkName", \.drinkName),
-        field("combinationName", \.combinationName),
+        field("combinationName", \.combinationName), field("injectionSiteRaw", \.injectionSiteRaw),
     ]
 
     static let session: [FieldCheck<Session>] = [
@@ -67,6 +67,7 @@ private enum Fields {
         field("isQuiet", \.isQuiet), field("isAsNeeded", \.isAsNeeded), field("maxPerDay", \.maxPerDay),
         field("frequencyRaw", \.frequencyRaw),
         field("frequencyDaysData") { $0.frequencyDays == $1.frequencyDays },
+        field("frequencyIntervalDays", \.frequencyIntervalDays),
         field("startDate", \.startDate),
     ]
 
@@ -419,6 +420,7 @@ struct ExportRoundTripTests {
             timestamp: t0, notes: "dose notes", tags: ["a", "b"], isBackgroundMed: true,
             locationName: "Park", latitude: 51.5, longitude: -0.12, hadGrapefruit: true, meal: .light, isApproximate: true,
             volumeML: 330, abv: 5, drinkName: "IPA", combinationName: "Shandy",
+            injectionSite: InjectionSite(area: .glute, side: .left),
         )
         drink.session = session
         context.insert(drink)
@@ -437,7 +439,7 @@ struct ExportRoundTripTests {
 
         let med = DailyDoseItem(
             substance: "Sertraline", amount: 50, unit: "µg", route: .sublingual, sortOrder: 3, category: "Morning",
-            frequency: .specificDays, frequencyDays: [2, 4], startDate: t0, isBackgroundMed: true,
+            frequency: .specificDays, frequencyDays: [2, 4], frequencyIntervalDays: 9, startDate: t0, isBackgroundMed: true,
             substanceUID: "uid-sertraline", isomer: "s", releaseForm: "ER", saltForm: "HCl", productName: "Zoloft",
             reminderTimesMinutes: [480, 1200], remind: false, isQuiet: true, isAsNeeded: true, maxPerDay: 2,
         )

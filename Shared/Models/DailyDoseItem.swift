@@ -10,6 +10,11 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
     case biweekly
     case monthly
     case specificDays
+    /// Every N days, N stored in ``DailyDoseItem/frequencyIntervalDays``.
+    /// `everyOtherDay` stays its own case so rows saved before this one keep
+    /// their rawValue; an older binary reading "everyNDays" falls back to
+    /// `.daily` through ``DailyDoseItem/frequency``'s `?? .daily`.
+    case everyNDays
 
     var id: String {
         rawValue
@@ -23,8 +28,29 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         case .biweekly: "Every 2 weeks"
         case .monthly: "Monthly"
         case .specificDays: "Specific days"
+        case .everyNDays: "Every few days"
         }
     }
+
+    /// The day count between doses for the fixed-offset cadences; `nil` for
+    /// daily, monthly and specific weekdays, which are not a fixed offset.
+    /// `.everyNDays` reads the item's own count, clamped to
+    /// ``DoseFrequency/intervalRange``.
+    nonisolated func intervalDays(custom: Int) -> Int? {
+        switch self {
+        case .everyOtherDay: 2
+        case .weekly: 7
+        case .biweekly: 14
+        case .everyNDays: min(max(custom, Self.intervalRange.lowerBound), Self.intervalRange.upperBound)
+        case .daily, .monthly, .specificDays: nil
+        }
+    }
+
+    /// The day counts the "Every few days" stepper offers.
+    nonisolated static let intervalRange: ClosedRange<Int> = 2 ... 90
+
+    /// The count a new "Every few days" schedule starts at.
+    nonisolated static let defaultIntervalDays = 3
 
     var shortLabel: LocalizedStringResource {
         switch self {
@@ -34,6 +60,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         case .biweekly: "Biweekly"
         case .monthly: "Monthly"
         case .specificDays: "Custom days"
+        case .everyNDays: "Every few days"
         }
     }
 }
@@ -147,6 +174,10 @@ final class DailyDoseItem {
     var frequencyRaw: String = DoseFrequency.daily.rawValue
     /// JSON-encoded backing storage for ``frequencyDays``. Prefer reading/writing ``frequencyDays``.
     var frequencyDaysData: Data = Data()
+    /// The N of an every-N-days schedule (``DoseFrequency/everyNDays``);
+    /// read only for that cadence. Defaulted so stores written before it
+    /// existed migrate lightweight.
+    var frequencyIntervalDays: Int = DoseFrequency.defaultIntervalDays
     /// First day the schedule should be considered active.
     var startDate: Date = Date.distantPast
 
@@ -166,6 +197,17 @@ final class DailyDoseItem {
         set { frequencyDaysData = (try? JSONEncoder().encode(newValue)) ?? Data() }
     }
 
+    /// The cadence's short label with this item's own count in it
+    /// ("Every 5 days"); every other cadence reads its fixed
+    /// ``DoseFrequency/shortLabel``.
+    var frequencyShortLabel: String {
+        if frequency == .everyNDays {
+            let days = frequency.intervalDays(custom: frequencyIntervalDays) ?? frequencyIntervalDays
+            return String(localized: "Every \(days) days")
+        }
+        return String(localized: frequency.shortLabel)
+    }
+
     init(
         substance: String,
         amount: Double,
@@ -175,6 +217,7 @@ final class DailyDoseItem {
         category: String = "",
         frequency: DoseFrequency = .daily,
         frequencyDays: [Int] = [],
+        frequencyIntervalDays: Int = DoseFrequency.defaultIntervalDays,
         startDate: Date = .distantPast,
         isBackgroundMed: Bool = false,
         substanceUID: String? = nil,
@@ -196,6 +239,7 @@ final class DailyDoseItem {
         self.category = category
         self.frequencyRaw = frequency.rawValue
         self.frequencyDaysData = (try? JSONEncoder().encode(frequencyDays)) ?? Data()
+        self.frequencyIntervalDays = frequencyIntervalDays
         self.startDate = startDate
         self.isBackgroundMed = isBackgroundMed
         self.substanceUID = substanceUID

@@ -103,7 +103,7 @@ enum RoutineOccurrenceService {
         let expired = ((try? context.fetch(FetchDescriptor(predicate: expiredPredicate))) ?? []).map(\.persistentModelID)
 
         let items = ((try? context.fetch(FetchDescriptor<DailyDoseItem>())) ?? [])
-            .filter { !$0.isAsNeeded && AdherenceCalculator.isDue(startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays, on: today) }
+            .filter { !$0.isAsNeeded && AdherenceCalculator.isDue(startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays, intervalDays: $0.frequencyIntervalDays, on: today) }
             .map { item in
                 let times = item.reminderTimesMinutes.sorted()
                 return ItemSnapshot(substance: item.substance, substanceUID: item.substanceUID, route: item.route, slots: times.isEmpty ? [nil] : times)

@@ -57,6 +57,7 @@ enum AdherenceStreakFetcher {
                 substance: $0.substance, identityKey: $0.identityKey, route: $0.route,
                 expectedPerDay: max(1, $0.reminderTimesMinutes.count), isAsNeeded: $0.isAsNeeded,
                 startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays,
+                intervalDays: $0.frequencyIntervalDays,
             )
         }
         return AdherenceCalculator.currentStreak(

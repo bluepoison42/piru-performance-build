@@ -130,7 +130,7 @@ private struct StoreSnapshot {
         for item in items where !item.isAsNeeded {
             guard MedSchedule.isDue(
                 startDate: item.startDate, frequency: item.frequency,
-                frequencyDays: item.frequencyDays, on: date,
+                frequencyDays: item.frequencyDays, intervalDays: item.frequencyIntervalDays, on: date,
             ) else { continue }
 
             let times = item.reminderTimesMinutes.sorted()
