@@ -1069,6 +1069,11 @@ T = {
     "Removes the descriptor": ("移除描述词", "移除描述詞"),
     "Search effects": ("搜索效应", "搜尋效應"),
     "Matches “%@”": ("匹配“%@”", "符合「%@」"),
+    "Effect Glossary": ("效应词汇表", "效應詞彙表"),
+    "What each effect means, grouped by kind": (
+        "每种效应的含义，按类别分组",
+        "每種效應的含義，按類別分組",
+    ),
     'Shulgin & Shulgin, PiHKAL: A Chemical Love Story (1991), "The Shulgin Rating Scale".': (
         "Shulgin & Shulgin，《PiHKAL: A Chemical Love Story》(1991)，“The Shulgin Rating Scale”。",
         "Shulgin & Shulgin，《PiHKAL: A Chemical Love Story》(1991)，「The Shulgin Rating Scale」。",
@@ -8821,6 +8826,8 @@ if __name__ == "__main__":
             "Every %lld days",
         }
     )
+    # Effect glossary under Tools ▸ Education (2026-10-28).
+    NEW_KEYS.update({"Effect Glossary", "What each effect means, grouped by kind"})
     # Injection-site rotation (2026-10-28).
     NEW_KEYS.update(
         {

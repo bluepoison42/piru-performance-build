@@ -195,6 +195,7 @@ struct PushRouteView: View {
         case .steadyState: SteadyStateView()
         case .injectionLevels: InjectionLevelsView()
         case .drugClasses: DrugClassListView()
+        case .effects: EffectGlossaryView()
         case .identify: IdentifyBoxView()
         }
     }

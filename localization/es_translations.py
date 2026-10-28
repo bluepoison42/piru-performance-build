@@ -2572,6 +2572,8 @@ ES = {
     "Search Colors": "Buscar colores",
     "Search effects": "Buscar efectos",
     "Matches “%@”": "Coincide con «%@»",
+    "Effect Glossary": "Glosario de efectos",
+    "What each effect means, grouped by kind": "Qué significa cada efecto, agrupado por tipo",
     "Search entries...": "Buscar registros...",
     "Search experiences on Erowid": "Buscar experiencias en Erowid",
     "Search for a place or address": "Buscar un lugar o dirección",

@@ -47,24 +47,28 @@ struct SessionNoteEditor: View {
     var body: some View {
         NavigationStack {
             Form {
-                textSection
-                if draft.kind != .summary {
-                    if form.asksWorked { workedSection }
-                    if form.asksIntensity { shulginSection }
-                    moodEnergySection
-                    if !form.highlights.isEmpty { highlightsSection }
-                    if !form.sideEffects.isEmpty { sideEffectsSection }
-                    descriptorSection
-                }
-                timeSection
-                if draft.isEditing {
-                    Section {
-                        Button(role: .destructive) { confirmDelete = true } label: {
-                            Label("Delete Note", systemImage: "trash")
+                Group {
+                    textSection
+                    if draft.kind != .summary {
+                        if form.asksWorked { workedSection }
+                        if form.asksIntensity { shulginSection }
+                        moodEnergySection
+                        if !form.highlights.isEmpty { highlightsSection }
+                        if !form.sideEffects.isEmpty { sideEffectsSection }
+                        descriptorSection
+                    }
+                    timeSection
+                    if draft.isEditing {
+                        Section {
+                            Button(role: .destructive) { confirmDelete = true } label: {
+                                Label("Delete Note", systemImage: "trash")
+                            }
                         }
                     }
                 }
+                .listRowBackground(CardBackground())
             }
+            .themedPage()
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle(title)
             .inlineNavigationTitle()
