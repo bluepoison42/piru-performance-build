@@ -234,7 +234,8 @@ struct EntryReadHero: View {
     private var byVolumeSymbol: String {
         // A component of a liquid combination product: the volume taken of it.
         if entry.combinationName != nil { return "drop" }
-        guard let capability = substance?.byVolumeDosing else { return "wineglass" }
+        // A solution of a substance with no by-volume input of its own.
+        guard let capability = substance?.byVolumeDosing else { return "drop" }
         if capability.isMassPerVolume { return "syringe" }
         let name = entry.drinkName?.trimmingCharacters(in: .whitespaces) ?? ""
         let preset = capability.drinkPresets.first {
@@ -254,7 +255,10 @@ struct EntryReadHero: View {
             // volume keeps the dose rounding rather than one decimal.
             return "\(ml.doseFormatted) mL · \(abv.doseFormatted) \(entry.unit)/mL"
         }
-        if entry.unit == "g" {
+        // Percent by volume only for a substance whose own input is ABV
+        // (alcohol); any other solution in grams reads as g/mL.
+        let isPercentByVolume = substance.map { $0.byVolumeDosing.map { !$0.isMassPerVolume } ?? false } ?? (entry.unit == "g")
+        if isPercentByVolume {
             return ByVolumeBreadcrumb.make(name: entry.drinkName, volumeML: ml, abv: abv)
         }
         let core = "\(ByVolumeDosing.formatTrimmed(ml)) mL · \(ByVolumeDosing.formatTrimmed(abv)) \(entry.unit)/mL"

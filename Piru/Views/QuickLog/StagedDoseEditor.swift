@@ -14,10 +14,6 @@ struct StagedDoseEditor: View {
     @Binding var item: StagedDose
     let namespace: Namespace.ID
     let onCollapse: () -> Void
-    /// Sets the volume of the liquid combination this row belongs to, for
-    /// every one of its components at once (``DoseTrayModel/setVolume(_:ofCombination:)``).
-    /// Only a liquid combination's row calls it.
-    var onCombinationVolume: ((Double) -> Void)?
 
     @State private var model = StagedDoseEditorModel()
 
@@ -34,18 +30,24 @@ struct StagedDoseEditor: View {
     /// low-friction path).
     @AppStorage("alcoholEditorByDrink") private var alcoholByVolume = true
     @AppStorage("esterEditorByVolume") private var esterByVolume = false
+    /// Any other substance taken as a solution: per dose, By Mass unless the
+    /// row was staged by volume (seeded on appear), since most doses of most
+    /// substances are weighed, not drawn.
+    @State private var solutionByVolume = false
 
     /// Whether the current dose edits by volume rather than mass, reading the
     /// preference that matches this substance's concentration kind.
     private var byDrinkPreferred: Bool {
-        byVolumeCapability?.isMassPerVolume == true ? esterByVolume : alcoholByVolume
+        if isSolution { return solutionByVolume }
+        return byVolumeCapability?.isMassPerVolume == true ? esterByVolume : alcoholByVolume
     }
 
     private var byDrinkBinding: Binding<Bool> {
         Binding(
             get: { byDrinkPreferred },
             set: { newValue in
-                if byVolumeCapability?.isMassPerVolume == true { esterByVolume = newValue }
+                if isSolution { solutionByVolume = newValue }
+                else if byVolumeCapability?.isMassPerVolume == true { esterByVolume = newValue }
                 else { alcoholByVolume = newValue }
             },
         )
@@ -81,7 +83,7 @@ struct StagedDoseEditor: View {
             // isomer, note, grapefruit), and at accessibility sizes even two
             // won't share a row without truncating each other.
             FlowLayout(spacing: Spacing.md) {
-                if byVolumeCapability != nil, byDrinkPreferred {
+                if byVolumeCapability != nil, byDrinkPreferred, !isSolution {
                     drinkTypeChip
                 }
                 StagedDoseRouteMenu(item: $item, pillHeight: pillHeight, namespace: namespace)
@@ -154,11 +156,17 @@ struct StagedDoseEditor: View {
         }
         .onChange(of: byDrinkPreferred) {
             if byDrinkPreferred {
+                // A solution opens on the concentration it was last logged at:
+                // the bottle's strength is the durable fact.
+                if isSolution { model.seedSolution(item: &item, context: modelContext) }
                 // Re-derive the drink fields from the (possibly grams-edited) dose
                 // so By Volume is never blank, then re-sync the metadata.
                 model.seedByDrinkFieldsIfNeeded(from: item, capability: byVolumeCapability, force: true)
                 syncCustomDrink()
             } else {
+                // A solution weighed instead records no volume: the entry would
+                // otherwise claim a draw nobody measured.
+                if isSolution { model.clearSolution(item: &item) }
                 // Show the current grams in the weight field (the drink dials may
                 // have set item.amount without touching the text).
                 model.showAmount(item.amount)
@@ -167,22 +175,11 @@ struct StagedDoseEditor: View {
         .onChange(of: model.volumeUnit) { old, new in
             model.convertVolumeText(from: old, to: new)
         }
-        // A liquid combination: the typed volume moves every component of the
-        // product, and a volume set from a sibling row's editor shows here.
-        .onChange(of: model.volumeText) {
-            guard item.isLiquidCombinationRow, let volume = model.enteredCombinationVolumeML,
-                  volume != item.volumeML else { return }
-            onCombinationVolume?(volume)
-        }
-        .onChange(of: item.volumeML) {
-            guard item.isLiquidCombinationRow else { return }
-            model.showCombinationVolume(item.volumeML)
-        }
         // Switching a staged row's unit to the canonical by-volume unit ("g")
         // reveals the drink editor mid-edit — the `.onAppear` seeding above
         // has long since run, so re-seed here or it opens blank (0% / 0 mL).
         .onChange(of: item.unit) {
-            guard let capability = byVolumeCapability else { return }
+            guard !isSolution, let capability = byVolumeCapability else { return }
             CustomDrinkPreset.seedIfNeeded(for: item.substanceName, capability: capability, context: modelContext)
             model.seedByDrinkFieldsIfNeeded(from: item, capability: capability)
             if model.drinkName.isEmpty { model.drinkName = item.drinkName ?? "" }
@@ -198,19 +195,7 @@ struct StagedDoseEditor: View {
     /// emptied text, an "Unknown" placeholder — not a surface of its own.
     @ViewBuilder
     private var inputBlock: some View {
-        if item.isLiquidCombinationRow, let combinationName = item.combinationName, let perML = item.abv {
-            // A liquid product is measured as a whole: the volume taken, with
-            // this component's mass following from it.
-            StagedDoseCombinationVolumeBlock(
-                model: model,
-                combinationName: combinationName,
-                amount: item.totalAmount,
-                unit: item.unit,
-                perML: perML,
-                level: item.doseLevel,
-                volumeFocus: $volumeFocused,
-            )
-        } else if let capability = byVolumeCapability {
+        if let capability = byVolumeCapability {
             // The concentration+volume logger vs the plain mass stepper: one
             // label pair for a drink and a vial alike.
             let modes = ByVolumeDosing.modeLabels
@@ -275,13 +260,29 @@ struct StagedDoseEditor: View {
 
     // MARK: - Item-derived gates
 
-    /// By-volume capability for this staged substance (alcohol), gated on the
-    /// canonical "g" unit so the drink chips show only when the dose is in grams.
-    /// A liquid combination's row has none: its volume is the product's, and
-    /// its own volume block stands in.
+    /// The by-volume input for this staged dose: the substance's own (alcohol,
+    /// an injectable ester), else a plain solution in the dose's unit per mL
+    /// (``ByVolumeDosing/solution(in:)``), so any substance can be logged as a
+    /// volume × concentration. A branded pill keeps its strength picker, and
+    /// a substance whose own input is gated off here (estradiol by mouth)
+    /// stays a mass log.
     private var byVolumeCapability: ByVolumeDosing? {
-        guard !item.isLiquidCombinationRow,
-              let cap = item.librarySubstance?.byVolumeDosing,
+        if let capability = libraryVolumeCapability { return capability }
+        guard item.librarySubstance?.byVolumeDosing == nil, tabletProduct == nil,
+              ByVolumeDosing.solutionUnits.contains(item.unit) else { return nil }
+        return .solution(in: item.unit)
+    }
+
+    /// Whether this dose's by-volume input is the generic solution rather than
+    /// the substance's own.
+    private var isSolution: Bool {
+        libraryVolumeCapability == nil && byVolumeCapability != nil
+    }
+
+    /// The substance's own by-volume capability (alcohol), gated on the
+    /// canonical "g" unit so the drink chips show only when the dose is in grams.
+    private var libraryVolumeCapability: ByVolumeDosing? {
+        guard let cap = item.librarySubstance?.byVolumeDosing,
               item.unit == cap.canonicalUnit else { return nil }
         // An injectable ester's volumetric input only makes sense on an injection
         // route (a vial drawn in mL); oral/transdermal estradiol stays a plain mg
@@ -302,7 +303,7 @@ struct StagedDoseEditor: View {
     /// logged as a *pill*, rather than typed as raw milligrams. Nil for canonical
     /// logs, non-mg units, or brands with no curated strengths (→ plain mg stepper).
     private var tabletProduct: ProductStrengths? {
-        guard item.unit == "mg", byVolumeCapability == nil, !item.isLiquidCombinationRow,
+        guard item.unit == "mg", libraryVolumeCapability == nil,
               let product = item.productName, !product.isEmpty else { return nil }
         return SubstanceLibrary.productStrengths(for: product)
     }
@@ -362,8 +363,10 @@ struct StagedDoseEditor: View {
         if item.amount > 0 {
             model.showAmount(item.amount)
         }
-        if item.isLiquidCombinationRow {
-            model.showCombinationVolume(item.volumeML)
+        if isSolution {
+            // A row staged by volume reopens by volume; anything else is weighed.
+            solutionByVolume = item.volumeML != nil && item.abv != nil
+            if solutionByVolume { model.seedByDrinkFieldsIfNeeded(from: item, capability: byVolumeCapability) }
         }
         focusAmountIfWanted()
         seedInjectionSite()
@@ -373,7 +376,7 @@ struct StagedDoseEditor: View {
         // Seed the custom-drink fields from a dose already logged by volume, so
         // re-opening it shows its strength/volume/name; a fresh draft takes the
         // substance's last by-volume log instead of opening on 0 / 0.
-        if let capability = byVolumeCapability {
+        if let capability = libraryVolumeCapability {
             CustomDrinkPreset.seedIfNeeded(for: item.substanceName, capability: capability, context: modelContext)
             model.seedFromLastByVolumeLog(item: &item, capability: capability, context: modelContext)
             model.seedByDrinkFieldsIfNeeded(from: item, capability: capability)
@@ -409,17 +412,9 @@ struct StagedDoseEditor: View {
     /// strength chip) and the drink logger (presets are the primary action) — an
     /// ester in By Mass shows it and gets the focus.
     private func focusAmountIfWanted() {
-        if item.isLiquidCombinationRow {
-            // The volume is the field a liquid's row is opened to type into.
-            if item.wantsAmountFocus {
-                item.wantsAmountFocus = false
-                volumeFocused = true
-            }
-            return
-        }
         let fieldShown = tabletProduct == nil
             && (byVolumeCapability == nil || !byDrinkPreferred)
-        let wanted = item.wantsAmountFocus || (item.amount <= 0 && byVolumeCapability == nil)
+        let wanted = item.wantsAmountFocus || (item.amount <= 0 && libraryVolumeCapability == nil)
         if item.wantsAmountFocus { item.wantsAmountFocus = false }
         if fieldShown, wanted { amountFocused = true }
     }
