@@ -2397,3 +2397,15 @@ assert "let local = try #require(try context.dose(id))" in (model_tests / "DataS
 print("70010 wiring assertions passed: cold-start order, native IDs, snapshot-before-delete, both backup guards, partial retention and StageSources shim")
 
 print("Prepared 70010: piru_next_mask 0/1/2/4, UUID-first native import, required restore snapshot, complete-backup guard, retained partials and unknown PsyLog doses")
+
+# The cache baseline swaps in the pre-cache context; give it the backup read the 70010
+# readability guard compiles against (that run only reproduces the sorting baseline).
+original_context = root / "ci/perf/query-tests/ModelContext-original.swift"
+original_text = original_context.read_text(encoding="utf-8")
+assert "func readAllForBackup" not in original_text
+original_context.write_text(original_text + """
+extension ModelContext {
+    // Host baseline only: the original context predates the complete backup read.
+    func readAllForBackup() throws -> [LoadFailure] { [] }
+}
+""", encoding="utf-8")
