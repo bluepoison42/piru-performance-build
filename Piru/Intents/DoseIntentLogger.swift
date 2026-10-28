@@ -127,6 +127,8 @@ enum DoseIntentLogger {
             tags: tags,
             meal: staged.route == .oral ? request.meal : nil,
             isUnknownDose: staged.isUnknownAmount,
+            volumeML: staged.isLiquidCombinationRow ? staged.volumeML : nil,
+            abv: staged.isLiquidCombinationRow ? staged.abv : nil,
             combinationName: staged.combinationName,
         )
     }
@@ -134,11 +136,16 @@ enum DoseIntentLogger {
     /// A combination product as the tray stages it: one row per component,
     /// the request's amount counting units of the product (two co-codamol),
     /// each component on its own route and unit. A request's route and unit
-    /// name a single dose and do not apply here.
+    /// name a single dose and do not apply here. For a liquid product the
+    /// amount is the volume taken in mL (0.25 mL of a 2 g/mL solution), and
+    /// each component stages at volume × its amount per mL.
     private static func stage(_ request: Request, as combination: CustomSubstanceEntry) -> [StagedDose] {
-        let quantity = CombinationComponent.units(for: request.amount)
         let tray = DoseTrayModel()
-        tray.stage(combination: combination, quantity: quantity)
+        if combination.isLiquidCombination {
+            tray.stage(combination: combination, volumeML: CombinationComponent.volumeML(for: request.amount))
+        } else {
+            tray.stage(combination: combination, quantity: CombinationComponent.units(for: request.amount))
+        }
         let note = request.notes?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return tray.staged.map { row in
             var row = row

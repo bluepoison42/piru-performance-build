@@ -14,6 +14,10 @@ struct StagedDoseEditor: View {
     @Binding var item: StagedDose
     let namespace: Namespace.ID
     let onCollapse: () -> Void
+    /// Sets the volume of the liquid combination this row belongs to, for
+    /// every one of its components at once (``DoseTrayModel/setVolume(_:ofCombination:)``).
+    /// Only a liquid combination's row calls it.
+    var onCombinationVolume: ((Double) -> Void)?
 
     @State private var model = StagedDoseEditorModel()
 
@@ -153,6 +157,17 @@ struct StagedDoseEditor: View {
         .onChange(of: model.volumeUnit) { old, new in
             model.convertVolumeText(from: old, to: new)
         }
+        // A liquid combination: the typed volume moves every component of the
+        // product, and a volume set from a sibling row's editor shows here.
+        .onChange(of: model.volumeText) {
+            guard item.isLiquidCombinationRow, let volume = model.enteredCombinationVolumeML,
+                  volume != item.volumeML else { return }
+            onCombinationVolume?(volume)
+        }
+        .onChange(of: item.volumeML) {
+            guard item.isLiquidCombinationRow else { return }
+            model.showCombinationVolume(item.volumeML)
+        }
         // Switching a staged row's unit to the canonical by-volume unit ("g")
         // reveals the drink editor mid-edit — the `.onAppear` seeding above
         // has long since run, so re-seed here or it opens blank (0% / 0 mL).
@@ -173,7 +188,19 @@ struct StagedDoseEditor: View {
     /// emptied text, an "Unknown" placeholder — not a surface of its own.
     @ViewBuilder
     private var inputBlock: some View {
-        if let capability = byVolumeCapability {
+        if item.isLiquidCombinationRow, let combinationName = item.combinationName, let perML = item.abv {
+            // A liquid product is measured as a whole: the volume taken, with
+            // this component's mass following from it.
+            StagedDoseCombinationVolumeBlock(
+                model: model,
+                combinationName: combinationName,
+                amount: item.totalAmount,
+                unit: item.unit,
+                perML: perML,
+                level: item.doseLevel,
+                volumeFocus: $volumeFocused,
+            )
+        } else if let capability = byVolumeCapability {
             // The concentration+volume logger vs the plain mass stepper: one
             // label pair for a drink and a vial alike.
             let modes = ByVolumeDosing.modeLabels
@@ -240,8 +267,11 @@ struct StagedDoseEditor: View {
 
     /// By-volume capability for this staged substance (alcohol), gated on the
     /// canonical "g" unit so the drink chips show only when the dose is in grams.
+    /// A liquid combination's row has none: its volume is the product's, and
+    /// its own volume block stands in.
     private var byVolumeCapability: ByVolumeDosing? {
-        guard let cap = item.librarySubstance?.byVolumeDosing,
+        guard !item.isLiquidCombinationRow,
+              let cap = item.librarySubstance?.byVolumeDosing,
               item.unit == cap.canonicalUnit else { return nil }
         // An injectable ester's volumetric input only makes sense on an injection
         // route (a vial drawn in mL); oral/transdermal estradiol stays a plain mg
@@ -262,7 +292,7 @@ struct StagedDoseEditor: View {
     /// logged as a *pill*, rather than typed as raw milligrams. Nil for canonical
     /// logs, non-mg units, or brands with no curated strengths (→ plain mg stepper).
     private var tabletProduct: ProductStrengths? {
-        guard item.unit == "mg", byVolumeCapability == nil,
+        guard item.unit == "mg", byVolumeCapability == nil, !item.isLiquidCombinationRow,
               let product = item.productName, !product.isEmpty else { return nil }
         return SubstanceLibrary.productStrengths(for: product)
     }
@@ -322,6 +352,9 @@ struct StagedDoseEditor: View {
         if item.amount > 0 {
             model.showAmount(item.amount)
         }
+        if item.isLiquidCombinationRow {
+            model.showCombinationVolume(item.volumeML)
+        }
         focusAmountIfWanted()
         if profileStore.grapefruitLoggingEnabled {
             model.resolveGrapefruitSubstrate(substanceName: item.substanceName)
@@ -345,6 +378,14 @@ struct StagedDoseEditor: View {
     /// strength chip) and the drink logger (presets are the primary action) — an
     /// ester in By Mass shows it and gets the focus.
     private func focusAmountIfWanted() {
+        if item.isLiquidCombinationRow {
+            // The volume is the field a liquid's row is opened to type into.
+            if item.wantsAmountFocus {
+                item.wantsAmountFocus = false
+                volumeFocused = true
+            }
+            return
+        }
         let fieldShown = tabletProduct == nil
             && (byVolumeCapability == nil || !byDrinkPreferred)
         let wanted = item.wantsAmountFocus || (item.amount <= 0 && byVolumeCapability == nil)

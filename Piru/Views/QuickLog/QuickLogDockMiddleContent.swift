@@ -159,10 +159,13 @@ struct DockMiddleContent: View {
     }
 
     /// A combination product: one chip per component joins the tray, each
-    /// labeled with the product; picking it ends the search like any hit.
+    /// labeled with the product; picking it ends the search like any hit. A
+    /// liquid opens its first row on the volume field, since the volume is
+    /// what the user came to enter.
     private func stageCombination(_ entry: CustomSubstanceEntry) {
         withAnimation(.snappy) {
             tray.stage(combination: entry, colorLookup: content.cachedColorLookup)
+            if entry.isLiquidCombination { tray.openVolume(ofCombination: entry.name) }
         }
         onDidStage()
     }

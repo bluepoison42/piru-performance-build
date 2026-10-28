@@ -444,10 +444,18 @@ struct QuickLogView: View {
         guard let name else { return }
         if let combination = CustomSubstanceStore.shared.combination(named: name) {
             // A combination stages one row per component; the amount counts
-            // units of the product (two co-codamol), never milligrams.
-            let quantity = CombinationComponent.units(for: prefillDose?.amount)
+            // units of the product (two co-codamol), never milligrams — or,
+            // for a liquid, millilitres of it. A liquid opened with no amount
+            // lands on its volume field.
             withAnimation(.snappy) {
-                tray.stage(combination: combination, quantity: quantity, colorLookup: content.cachedColorLookup)
+                if combination.isLiquidCombination {
+                    let volume = CombinationComponent.volumeML(for: prefillDose?.amount)
+                    tray.stage(combination: combination, volumeML: volume, colorLookup: content.cachedColorLookup)
+                    if prefillDose?.amount == nil { tray.openVolume(ofCombination: combination.name) }
+                } else {
+                    let quantity = CombinationComponent.units(for: prefillDose?.amount)
+                    tray.stage(combination: combination, quantity: quantity, colorLookup: content.cachedColorLookup)
+                }
                 if let note = prefillDose?.note {
                     for index in tray.staged.indices where tray.staged[index].combinationName == combination.name {
                         tray.staged[index].note = note
@@ -604,7 +612,11 @@ struct QuickLogView: View {
                     for component in item.components {
                         curation.append(QuickLogManager.LoggedDose(
                             substance: item.substanceName, route: item.route, amount: component.amount, unit: item.unit,
-                            volumeML: item.volumeML, abv: item.abv, drinkName: item.drinkName, emoji: item.emoji,
+                            // A liquid product's volume belongs to the product,
+                            // not to a chip of one component's mass.
+                            volumeML: item.isLiquidCombinationRow ? nil : item.volumeML,
+                            abv: item.isLiquidCombinationRow ? nil : item.abv,
+                            drinkName: item.drinkName, emoji: item.emoji,
                             substanceUID: item.substanceUID, isomer: item.isomer,
                             releaseForm: item.releaseForm, saltForm: item.saltForm, productName: item.productName,
                         ))

@@ -191,7 +191,10 @@ final class DoseEntry {
     /// edit and can be shown in its natural terms. All `nil` for every dose not
     /// logged by volume, keeping the migration additive and lightweight.
     var volumeML: Double?
-    /// Strength as percent alcohol-by-volume, paired with ``volumeML``.
+    /// Strength paired with ``volumeML``: percent alcohol-by-volume for a
+    /// drink, concentration in ``unit`` per mL for an injectable ester, and for
+    /// a component of a liquid combination (``combinationName`` set) its amount
+    /// per mL in ``unit``, so `amount` = `volumeML` × `abv`.
     var abv: Double?
     /// Optional user-given drink name (e.g. "IPA"), shown in place of the bare
     /// substance where present.

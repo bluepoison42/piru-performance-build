@@ -104,6 +104,23 @@ struct CustomSubstanceEntry: Codable, Identifiable, Hashable {
         !(components ?? []).isEmpty
     }
 
+    /// Whether this combination is a liquid — its unit word is a millilitre
+    /// (``CombinationComponent/isVolumeUnitWord(_:)``), so each component's
+    /// amount is per mL and it is logged by a volume in mL, fractions
+    /// included, rather than a count of units.
+    var isLiquidCombination: Bool {
+        isCombination && CombinationComponent.isVolumeUnitWord(unit)
+    }
+
+    /// The components with what they are measured against, for a row that
+    /// lists a product away from its unit: "2 g Morphine · per mL" for a
+    /// liquid. A per-unit product keeps the bare ``componentsSummary``.
+    @MainActor var componentsListing: String? {
+        guard let summary = componentsSummary else { return nil }
+        guard isLiquidCombination else { return summary }
+        return String(localized: "\(summary) · per \(unit)")
+    }
+
     /// "500 mg Paracetamol · 30 mg Codeine" — the components in the user's
     /// names for them, for the rows that list a combination. `nil` for a
     /// single compound.

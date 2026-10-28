@@ -232,6 +232,8 @@ struct EntryReadHero: View {
     /// (a "Beer" log gets the mug), with the wineglass for a drink of the
     /// user's own naming.
     private var byVolumeSymbol: String {
+        // A component of a liquid combination product: the volume taken of it.
+        if entry.combinationName != nil { return "drop" }
         guard let capability = substance?.byVolumeDosing else { return "wineglass" }
         if capability.isMassPerVolume { return "syringe" }
         let name = entry.drinkName?.trimmingCharacters(in: .whitespaces) ?? ""
@@ -242,9 +244,16 @@ struct EntryReadHero: View {
     }
 
     /// "IPA · 568 mL · 6% ABV" for alcohol, "40 mL · 40 mg/mL" for an injectable
-    /// ester, for a dose logged by volume, else nil.
+    /// ester, "0.25 mL · 2 g/mL" for a component of a liquid combination
+    /// product (its `abv` is the amount per mL), for a dose logged by volume,
+    /// else nil.
     private var byVolumeDisplayLine: String? {
         guard let ml = entry.volumeML, let abv = entry.abv else { return nil }
+        if entry.combinationName != nil {
+            // Fractions of a millilitre are the point of a liquid, so the
+            // volume keeps the dose rounding rather than one decimal.
+            return "\(ml.doseFormatted) mL · \(abv.doseFormatted) \(entry.unit)/mL"
+        }
         if entry.unit == "g" {
             return ByVolumeBreadcrumb.make(name: entry.drinkName, volumeML: ml, abv: abv)
         }
