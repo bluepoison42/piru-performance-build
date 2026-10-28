@@ -136,7 +136,7 @@ enum SubstanceColorStore {
     /// that has none, and returns how many it inserted. Runs on the caller's
     /// actor, with the caller's context.
     @discardableResult
-    nonisolated private static func insertMissingRows(in context: ModelContext, defaults: (String) -> P3Color) -> Int {
+    private nonisolated static func insertMissingRows(in context: ModelContext, defaults: (String) -> P3Color) -> Int {
         let rows = (try? context.fetch(FetchDescriptor<SubstanceColor>())) ?? []
         var known = Set(rows.map { $0.substance.lowercased() })
         // Whole rows, never `propertiesToFetch`: a narrowed fetch makes every

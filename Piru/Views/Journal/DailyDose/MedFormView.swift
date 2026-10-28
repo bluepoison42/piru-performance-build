@@ -549,7 +549,7 @@ struct MedFormView: View {
                 draft.product = MedProductDraft(product: product)
                 draft.isCompounded = (product.components?.count ?? 0) > 1
             } else if let match = SubstanceLibrary.lookup(item.substance),
-               match.name.lowercased() == item.substance.lowercased() {
+                      match.name.lowercased() == item.substance.lowercased() {
                 draft.selectedSubstance = match
                 draft.availableRoutes = match.orderedRoutes
             }
@@ -560,7 +560,7 @@ struct MedFormView: View {
     /// here), or a substance. `nil` when the product's name is taken.
     private func savedSubstance() -> (
         substance: String, unit: String, route: RouteOfAdministration,
-        identity: (uid: String?, isomer: String?, release: String?, product: String?)
+        identity: (uid: String?, isomer: String?, release: String?, product: String?),
     )? {
         if draft.isProduct {
             let store = CustomSubstanceStore.shared
