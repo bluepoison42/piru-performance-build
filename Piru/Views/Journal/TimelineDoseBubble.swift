@@ -1,8 +1,9 @@
 import SwiftUI
 
 /// One logged dose on the vertical timeline — a Liquid Glass bubble floating
-/// over the curve lane. Full style gives the name the whole first row and
-/// puts dose + route chip on the second, with the readout trailing on that
+/// over the curve lane. Full style gives the first row to the name and, for a
+/// recent dose, how long ago it was taken, and puts dose + route chip on the
+/// second, with the readout trailing on that
 /// row; compact puts name and dose on one line, drops the chip, and trails
 /// the readout beside them. The readout is the effect's phase progress (the
 /// same bar the dose hero and the Active Now card draw) in effect mode, and
@@ -111,17 +112,22 @@ struct TimelineDoseBubble: View {
         .buttonStyle(.plain)
     }
 
-    /// Name across the whole first row; dose, route chip and the readout
-    /// share the second.
+    /// Name and elapsed time on the first row; dose, route chip and the
+    /// readout share the second.
     private var fullContent: some View {
         HStack(spacing: Spacing.md) {
             LegendDot(color: isActive ? item.color : item.color.opacity(Theme.Opacity.muted))
 
             VStack(alignment: .leading, spacing: Spacing.xxs) {
-                Text(displayName)
-                    .sectionLabel()
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(alignment: .firstTextBaseline, spacing: Spacing.xs) {
+                    Text(displayName)
+                        .sectionLabel()
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if DoseElapsedLabel.applies(to: item.timestamp, now: DebugClock.now) {
+                        DoseElapsedLabel(timestamp: item.timestamp)
+                    }
+                }
 
                 HStack(spacing: Spacing.xs) {
                     Text(verbatim: doseText)
@@ -170,6 +176,50 @@ struct TimelineDoseBubble: View {
                 if now >= state.doseTimestamp, now < end {
                     DosePhaseProgressBar(state: state, now: now, style: .compact)
                 }
+            }
+        }
+    }
+}
+
+/// How long ago the dose was taken ("12 min ago", "3 hr ago"), in the top-right
+/// corner of a full bubble. Shown for the first ``window`` after the dose:
+/// past that, the strip's own time axis says when it was, and a day-old bubble
+/// carrying "yesterday" would only repeat the day header.
+///
+/// The minute clock lives here, in the leaf, so a tick redraws this one label
+/// and never the bubble or the strip around it.
+private struct DoseElapsedLabel: View {
+    let timestamp: Date
+
+    private static let window: TimeInterval = 12 * 3600
+
+    /// Whether a bubble gets the label at all, decided once when the strip is
+    /// built, so a historical bubble never schedules a timer.
+    static func applies(to timestamp: Date, now: Date) -> Bool {
+        let elapsed = now.timeIntervalSince(timestamp)
+        return elapsed >= 0 && elapsed < window
+    }
+
+    private static let formatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.dateTimeStyle = .named
+        return formatter
+    }()
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 60)) { context in
+            let now = DebugClock.override ?? context.date
+            let elapsed = now.timeIntervalSince(timestamp)
+            if elapsed >= 0, elapsed < Self.window {
+                // Whole minutes, so the first minute reads "now" rather than
+                // counting seconds the label never redraws for.
+                let minutes = (elapsed / 60).rounded(.down)
+                Text(verbatim: Self.formatter.localizedString(for: now.addingTimeInterval(-minutes * 60), relativeTo: now))
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(Theme.secondaryLabel)
+                    .lineLimit(1)
+                    .fixedSize()
             }
         }
     }
