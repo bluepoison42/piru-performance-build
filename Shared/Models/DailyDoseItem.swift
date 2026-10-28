@@ -20,7 +20,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         rawValue
     }
 
-    var displayName: LocalizedStringResource {
+    nonisolated var displayName: LocalizedStringResource {
         switch self {
         case .daily: "Daily"
         case .everyOtherDay: "Every other day"
@@ -52,7 +52,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
     /// The count a new "Every few days" schedule starts at.
     nonisolated static let defaultIntervalDays = 3
 
-    var shortLabel: LocalizedStringResource {
+    nonisolated var shortLabel: LocalizedStringResource {
         switch self {
         case .daily: "Daily"
         case .everyOtherDay: "Every 2 days"

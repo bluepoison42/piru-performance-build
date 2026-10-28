@@ -1469,6 +1469,9 @@
         }
       }
     },
+    "Every %lld days" : {
+
+    },
     "Every 2 days" : {
       "localizations" : {
         "es" : {
@@ -1524,6 +1527,9 @@
           }
         }
       }
+    },
+    "Every few days" : {
+
     },
     "Every other day" : {
       "localizations" : {
@@ -2112,6 +2118,21 @@
           }
         }
       }
+    },
+    "Left abdomen" : {
+
+    },
+    "Left arm" : {
+
+    },
+    "Left glute" : {
+
+    },
+    "Left hip (ventrogluteal)" : {
+
+    },
+    "Left thigh" : {
+
     },
     "Less" : {
       "localizations" : {
@@ -3239,6 +3260,21 @@
           }
         }
       }
+    },
+    "Right abdomen" : {
+
+    },
+    "Right arm" : {
+
+    },
+    "Right glute" : {
+
+    },
+    "Right hip (ventrogluteal)" : {
+
+    },
+    "Right thigh" : {
+
     },
     "See how much you have left of what you track." : {
       "localizations" : {
