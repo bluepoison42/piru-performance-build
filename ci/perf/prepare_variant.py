@@ -22,7 +22,7 @@ text = project.read_text(encoding="utf-8")
 text, identities = re.subn(r"(?m)(PIRU_BUNDLE_ID = )\"?glass\.kagerou\.piru\"?;", r"\1" + new_id + ";", text)
 assert identities >= 1, "The native identity setting was not found"
 text, versions = re.subn(r"MARKETING_VERSION = [\d.]+;", "MARKETING_VERSION = 1.5.1;", text)
-text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70007;", text)
+text, builds = re.subn(r"CURRENT_PROJECT_VERSION = \d+;", "CURRENT_PROJECT_VERSION = 70008;", text)
 assert versions and builds
 project.write_text(text, encoding="utf-8")
 
@@ -53,6 +53,11 @@ for relative in ("android/tools/setup.sh", "android/tools/build-app.sh", "androi
     text = path.read_text(encoding="utf-8")
     text = text.replace('export JAVA_HOME=$(/usr/libexec/java_home -v 21)', 'export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"')
     text = text.replace('/usr/libexec/java_home -v 21 > /dev/null 2>&1 || missing+=', '[[ -x "${JAVA_HOME}/bin/java" ]] || missing+=')
+    if relative == "android/tools/setup.sh":
+        java_home = 'export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"\n'
+        assert text.count(java_home) == 1 and text.count("missing=()\n") == 1
+        text = text.replace(java_home, "").replace("missing=()\n", java_home + "missing=()\n")
+        assert text.index(java_home) < text.index('[[ -x "${JAVA_HOME}/bin/java" ]]')
     path.write_text(text, encoding="utf-8")
 plugin = root / "android/Compat/Plugins/StageSources/StageSources.swift"
 text = plugin.read_text(encoding="utf-8")
@@ -163,6 +168,8 @@ patch("Piru/Views/Journal/DailyDose/MyMedsCard.swift", [
     ("Calendar.current.startOfDay(for: .now)", "Calendar.current.medicationDayLabel(for: .now)"),
     ("calendar.startOfDay(for: .now)", "calendar.medicationDayLabel(for: .now)"),
     ("let dayStart = Calendar.current.medicationDayLabel(for: .now)", "let dayStart = Calendar.current.sessionDayStart(for: .now)"),
+    ("$0.dueDay >= today", "$0.dueDay == today"),
+    ("return time <= Self.nowMinutes", "return Calendar.medicationClockMinutes(time) <= Calendar.medicationClockMinutes(Self.nowMinutes)"),
 ])
 patch("Piru/Views/Journal/DailyDose/MyMedsModel.swift", [
     ("AdherenceCalculator.isDue(item, on: .now)", "AdherenceCalculator.isDue(item, on: Calendar.current.medicationDayLabel(for: .now))"),
@@ -187,10 +194,33 @@ patch("Piru/Utilities/AdherenceCalculator.swift", [
 ])
 patch("Piru/Utilities/AdherenceStreakStore.swift", [
     ("Calendar.current.startOfDay(for: .now)", "Calendar.current.medicationDayLabel(for: .now)"),
+    ("        let day: Date\n", "        let day: Date\n        let boundary: Int\n"),
+    ("            day: Calendar.current.medicationDayLabel(for: .now),", "            day: Calendar.current.medicationDayLabel(for: .now),\n            boundary: Calendar.sessionDayBoundaryHour,"),
 ])
 patch("Piru/Views/Insights/AdherenceModel.swift", [
     ("AdherenceCalculator.adherence(for: .now,", "AdherenceCalculator.adherence(for: calendar.medicationDayLabel(for: .now),"),
     ("calendar.startOfDay(for: entry.timestamp)", "calendar.medicationDayLabel(for: entry.timestamp)"),
+    ("$0.date <= .now", "$0.date <= calendar.medicationDayLabel(for: .now)"),
+])
+
+patch("Piru/Views/Insights/InsightsView.swift", [
+    ("        var entriesByDay: [Date: [DoseEntry]] = [:]", "        var entriesByDay: [Date: [DoseEntry]] = [:]\n        var adherenceEntriesByDay: [Date: [DoseEntry]] = [:]"),
+    ("            entriesByDay[cal.startOfDay(for: entry.timestamp), default: []].append(entry)", "            entriesByDay[cal.startOfDay(for: entry.timestamp), default: []].append(entry)\n            adherenceEntriesByDay[cal.medicationDayLabel(for: entry.timestamp), default: []].append(entry)"),
+    ("computeMonthCells(cal: cal, entriesByDay: entriesByDay,", "computeMonthCells(cal: cal, entriesByDay: adherenceEntriesByDay,"),
+    ("$0.date <= .now", "$0.date <= Calendar.current.medicationDayLabel(for: .now)"),
+    ("Calendar.current.isDateInToday(cell.date)", "cell.date == Calendar.current.medicationDayLabel(for: .now)"),
+    ("day.date > .now", "day.date > Calendar.current.medicationDayLabel(for: .now)"),
+    ("from: .now)),", "from: cal.medicationDayLabel(for: .now))),"),
+    ("Text(Date.now.formatted(.dateTime.month(.wide)))", "Text(Calendar.current.medicationDayLabel(for: .now).formatted(.dateTime.month(.wide)))"),
+    ("        hasher.combine(DoseLogService.shared.revision)", "        hasher.combine(DoseLogService.shared.revision)\n        hasher.combine(Calendar.sessionDayBoundaryHour)\n        hasher.combine(calendar.medicationDayLabel(for: .now))"),
+])
+patch("Piru/Views/Insights/AdherenceView.swift", [
+    ("@State private var displayedMonth: Date = .now", "@State private var displayedMonth: Date = Calendar.current.medicationDayLabel(for: .now)"),
+    ("calendar.isDateInToday(date)", "date == calendar.medicationDayLabel(for: .now)"),
+    ("date > .now", "date > calendar.medicationDayLabel(for: .now)"),
+    ("equalTo: .now, toGranularity: .month", "equalTo: calendar.medicationDayLabel(for: .now), toGranularity: .month"),
+    ("Text(Date.now.formatted(.dateTime.month(.wide)))", "Text(Calendar.current.medicationDayLabel(for: .now).formatted(.dateTime.month(.wide)))"),
+    ("from: Date.now)", "from: calendar.medicationDayLabel(for: .now))"),
 ])
 
 patch("Piru/Data/Services/RoutineOccurrenceService.swift", [
@@ -345,12 +375,13 @@ history_code = '''    /// A boundary change invalidates cached past-day matches,
         let today = calendar.medicationDayLabel(for: now)
         let predicate = #Predicate<RoutineOccurrence> { $0.dueDay < today }
         let rows = try context.fetch(FetchDescriptor(predicate: predicate))
+        guard !rows.isEmpty else { return 0 }
+        let entriesByDay = Dictionary(grouping: try context.fetch(FetchDescriptor<DoseEntry>())) {
+            calendar.medicationDayLabel(for: $0.timestamp)
+        }
         var changed = 0
         for (day, occurrences) in Dictionary(grouping: rows, by: \\.dueDay) {
-            let start = calendar.medicationDayStart(forLabel: day)
-            let end = calendar.sessionDayEnd(for: start)
-            let entryPredicate = #Predicate<DoseEntry> { $0.timestamp >= start && $0.timestamp < end }
-            let entries = try context.fetch(FetchDescriptor(predicate: entryPredicate))
+            let entries = entriesByDay[day] ?? []
             let snapshots = occurrences.map {
                 OccurrenceSnapshot(id: $0.persistentModelID, substance: $0.substance,
                     substanceUID: $0.substanceUID, route: $0.route, slotMinutes: $0.slotMinutes,
@@ -390,26 +421,53 @@ service.write_text(text, encoding="utf-8")
 
 importer = root / "Piru/Utilities/DataExportImport.swift"
 text = importer.read_text(encoding="utf-8")
-anchor = "        try commitImport(context: context)"
+anchor = "    static func commitImport(context: ModelContext) throws {\n"
 assert text.count(anchor) == 1
-text = text.replace(anchor, "        if fileSettings != nil {\n            try RoutineOccurrenceService.repairHistoricalDays(in: context)\n        }\n\n" + anchor)
+text = text.replace(anchor, anchor + "        try RoutineOccurrenceService.repairHistoricalDays(in: context)\n")
 importer.write_text(text, encoding="utf-8")
+
+# Settings use the existing occurrence/notification pipeline and committed-log signal.
+patch("Piru/Utilities/DoseNotificationManager.swift", [
+    ("    static func syncMedReminders(in context: ModelContext) {", '''    static func medicationDayBoundaryChanged(in context: ModelContext) throws {
+        UserDefaults.standard.removeObject(forKey: "piru.medicationHistoryBoundary.v2")
+        try RoutineOccurrenceService.repairHistoricalDays(in: context)
+        try context.save()
+        DoseLogService.shared.changed()
+        syncMedReminders(in: context)
+        UserDefaults.standard.set(Calendar.sessionDayBoundaryHour, forKey: "piru.medicationHistoryBoundary.v2")
+    }
+
+    static func syncMedReminders(in context: ModelContext) {'''),
+])
+patch("Piru/Views/Settings/JournalSettingsView.swift", [
+    ("import SwiftUI", "import SwiftData\nimport SwiftUI"),
+    ("struct JournalSettingsView: View {", "struct JournalSettingsView: View {\n    @Environment(\\.modelContext) private var modelContext"),
+    ("        .inlineNavigationTitle()", '''        .inlineNavigationTitle()
+        .onChange(of: dayBoundaryHour) {
+            do {
+                try DoseNotificationManager.medicationDayBoundaryChanged(in: modelContext)
+            } catch {
+                print("Piru: medication-day history repair failed; will retry next launch.")
+            }
+        }'''),
+])
+patch("Piru/Views/Journal/DailyDose/MyMedsModel.swift", [
+    ("        hasher.combine(DoseLogService.shared.revision)", "        hasher.combine(DoseLogService.shared.revision)\n        hasher.combine(Calendar.sessionDayBoundaryHour)\n        hasher.combine(Calendar.current.medicationDayLabel(for: .now))"),
+])
 
 launch = root / "android/app/Sources/Piru/Android/PiruAndroidApp.swift"
 text = launch.read_text(encoding="utf-8")
 anchor = "            await AppLaunch.finishLaunching(container: container)"
 assert text.count(anchor) == 1
 text = text.replace(anchor, anchor + '''
-            let historyKey = "piru.medicationHistoryBoundary.v1"
+            let historyKey = "piru.medicationHistoryBoundary.v2"
             let boundary = Calendar.sessionDayBoundaryHour
             if UserDefaults.standard.object(forKey: historyKey) as? Int != boundary {
                 do {
-                    let changed = try await RoutineOccurrenceService.repairHistoricalDays(container: container)
+                    _ = try await RoutineOccurrenceService.repairHistoricalDays(container: container)
                     UserDefaults.standard.set(boundary, forKey: historyKey)
-                    if changed > 0 {
-                        DoseLogService.shared.changed()
-                        DoseNotificationManager.syncMedReminders(in: container.mainContext)
-                    }
+                    DoseLogService.shared.changed()
+                    DoseNotificationManager.syncMedReminders(in: container.mainContext)
                 } catch {
                     print("Piru: medication-day history repair failed; will retry next launch.")
                 }
@@ -427,6 +485,7 @@ packager.write_text(text, encoding="utf-8")
 
 # Exercise the actual production planner, not a second implementation.
 def swift_member(text, anchor):
+    assert text.count(anchor) == 1, anchor
     start = text.index(anchor)
     brace = text.index("{", start)
     depth, end = 1, brace + 1
@@ -688,6 +747,16 @@ private final class UntrackedQueryCacheRow {
     init(_ rank: Int) { self.rank = CountedRank(value: rank) }
 }
 
+// Observation's onChange is Sendable but executes synchronously on the writing thread.
+private final class ReentrantQueryProbe: @unchecked Sendable {
+    let context: ModelContext
+    var values: [Int]?
+    init(_ context: ModelContext) { self.context = context }
+    func fetch() {
+        values = try? context.fetch(FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)])).map(\.rank.value)
+    }
+}
+
 @Suite(.serialized)
 struct QueryResultCacheTests {
     private func fixture(_ count: Int = 8) throws -> (ModelContainer, ModelContext, [QueryCacheRow]) {
@@ -746,6 +815,25 @@ struct QueryResultCacheTests {
         #expect(try context.fetch(query).first?.notes == "alias: \"fixture\"")
     }
 
+    @Test func synchronousWillSetFetchCannotCacheThePreAssignmentOrder() throws {
+        let (_, context, rows) = try fixture(2)
+        let query = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)])
+        #expect(!context.autosaveEnabled)
+        #expect(try context.fetch(query).map(\.rank.value) == [0, 1])
+        let probe = ReentrantQueryProbe(context)
+        withObservationTracking {
+            _ = rows[0].rank
+        } onChange: {
+            probe.fetch()
+        }
+        rows[0].rank = CountedRank(value: -1)
+        #expect(probe.values == [0, 1], "The synchronous observer must see the old values")
+        #expect(try context.fetch(query).map(\.rank.value) == [-1, 0])
+        QuerySortProbe.reset()
+        #expect(try context.fetch(query).first === rows[0])
+        #expect(QuerySortProbe.count == 0, "The corrected order should still be cached")
+    }
+
     @Test func otherContainersSavesAreVisible() throws {
         let (container, context, _) = try fixture()
         let query = FetchDescriptor<QueryCacheRow>(sortBy: [SortDescriptor(\.rank)])
@@ -799,6 +887,13 @@ struct QueryResultCacheTests {
 # rows without a bridge were already read without one. Writes still report.
 observation_file = persistence / "Observation.swift"
 observation_text = observation_file.read_text(encoding="utf-8")
+anchor = "    public func didSet<Subject: Observable>(_ subject: Subject, keyPath: KeyPath<Subject, some Any>) {\n"
+assert observation_text.count(anchor) == 1
+observation_text = observation_text.replace(anchor, anchor + '''        if let model = subject as? any PersistentModel {
+            // Discard reads made by synchronous willSet observers, after the assignment.
+            model._$backing.context?.noteMutation(of: model)
+        }
+''')
 old_access = "        slot.bridge(making: true)?.access(subject, keyPath: keyPath)\n"
 assert observation_text.count(old_access) == 1
 observation_text = observation_text.replace(old_access, "        slot.reader()?.access(subject, keyPath: keyPath)\n")
@@ -856,3 +951,406 @@ bridge_tests.write_text(bridge_text, encoding="utf-8")
     (persistence / "Observation.swift").read_text(encoding="utf-8").replace(
         "        slot.reader()?.access(subject, keyPath: keyPath)\n", old_access), encoding="utf-8")
 print("Prepared bridge-free traversal reads: sorts and filters make no JNI call per key read")
+
+# Cold-start A/B controls exist only in this isolated performance variant.
+shadow_patch = root / "android/vendor/skip-ui/0018-perftest-shadow-downsampling.patch"
+assert not shadow_patch.exists(), "The performance shadow patch already exists"
+shadow_patch.write_text(r'''The performance variant needs cold-start shadow A/B switches and activity content-capture controls; downsample only the recorded shadow while preserving patch 0006 single composition and padded blur bounds.
+
+diff --git a/Sources/SkipUI/Skip/Shadowed.kt b/Sources/SkipUI/Skip/Shadowed.kt
+--- a/Sources/SkipUI/Skip/Shadowed.kt
++++ b/Sources/SkipUI/Skip/Shadowed.kt
+@@ -5,11 +5,14 @@
+ import android.os.Build
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.draw.drawWithContent
++import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.BlurEffect
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.ColorFilter
+ import androidx.compose.ui.graphics.ColorMatrix
+ import androidx.compose.ui.graphics.TileMode
++import androidx.compose.ui.graphics.drawscope.clipRect
++import androidx.compose.ui.graphics.drawscope.scale
+ import androidx.compose.ui.graphics.drawscope.translate
+ import androidx.compose.ui.graphics.layer.drawLayer
+ import androidx.compose.ui.graphics.rememberGraphicsLayer
+@@ -18,7 +21,14 @@
+ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.IntSize
++import kotlin.jvm.JvmStatic
+ import kotlin.math.ceil
++
++// Added only by the performance variant's vendor patch; read before the first composition.
++object PiruPerfFlags {
++    @JvmStatic var shadowMode: Int = 2
++    var contentCapture: Boolean = false
++}
+ 
+ /// Compose the given content with a drop shadow on all non-transparent pixels.
+ ///
+@@ -26,28 +36,61 @@
+ /// recording through the shadow color and blur. Composing the content a second time for the shadow
+ /// would give every control inside a live twin, with its own state and its own focus target.
+ @Composable fun Shadowed(context: ComposeContext, color: Color, offsetX: Dp, offsetY: Dp, blurRadius: Dp, content: @Composable (ComposeContext) -> Unit) {
+-    val density = LocalDensity.current
+-    val offsetXPx = with(density) { offsetX.toPx() }.toInt()
+-    val offsetYPx = with(density) { offsetY.toPx() }.toInt()
+-    val blurRadiusPx = with(density) { blurRadius.toPx() }
+-    val paddingPx = ceil(blurRadiusPx).toInt()
+-    val contentLayer = rememberGraphicsLayer()
+-    val shadowLayer = rememberGraphicsLayer()
++    // Keep the same single Layout/content tree even when measuring the no-shadow ceiling.
++    val modifier = if (PiruPerfFlags.shadowMode == 1) {
++        context.modifier
++    } else {
++        val density = LocalDensity.current
++        val offsetXPx = with(density) { offsetX.toPx() }.toInt()
++        val offsetYPx = with(density) { offsetY.toPx() }.toInt()
++        val blurRadiusPx = with(density) { blurRadius.toPx() }
++        val paddingPx = ceil(blurRadiusPx).toInt()
++        val hasBlur = blurRadiusPx > 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
++        // Never downsample a sharp fallback, and keep small blurs from becoming pixelated.
++        val sampleScale = if (PiruPerfFlags.shadowMode != 2 || !hasBlur || blurRadiusPx < 2f) {
++            1f
++        } else if (blurRadiusPx < 8f) {
++            2f
++        } else {
++            4f
++        }
++        val contentLayer = rememberGraphicsLayer()
++        val shadowLayer = rememberGraphicsLayer()
+ 
+-    val modifier = context.modifier.drawWithContent {
+-        contentLayer.record { this@drawWithContent.drawContent() }
+-        // Padded by the blur radius so the blur is not clipped at the content's edges.
+-        shadowLayer.record(size = IntSize(size.width.toInt() + paddingPx * 2, size.height.toInt() + paddingPx * 2)) {
+-            translate(left = paddingPx.toFloat(), top = paddingPx.toFloat()) {
+-                drawLayer(contentLayer)
++        context.modifier.drawWithContent {
++            contentLayer.record { this@drawWithContent.drawContent() }
++            val paddedWidth = size.width.toInt() + paddingPx * 2
++            val paddedHeight = size.height.toInt() + paddingPx * 2
++            // Low-resolution bounds cover the same padded content, rounding outward only.
++            val shadowSize = IntSize(
++                ceil(paddedWidth / sampleScale).toInt(),
++                ceil(paddedHeight / sampleScale).toInt()
++            )
++            shadowLayer.record(size = shadowSize) {
++                // A source point x records at (x + paddingPx) / s (likewise for y).
++                scale(scale = 1f / sampleScale, pivot = Offset.Zero) {
++                    // Match mode 0's input bounds, including overflow from the content layer.
++                    clipRect(right = paddedWidth.toFloat(), bottom = paddedHeight.toFloat()) {
++                        translate(left = paddingPx.toFloat(), top = paddingPx.toFloat()) {
++                            drawLayer(contentLayer)
++                        }
++                    }
++                }
+             }
++            shadowLayer.colorFilter = ColorFilter.colorMatrix(shadowColorMatrix(color))
++            // RenderEffect runs in the small layer's local pixels, before its scale transform.
++            val sampledRadius = blurRadiusPx / sampleScale
++            shadowLayer.renderEffect = if (hasBlur) BlurEffect(sampledRadius, sampledRadius, TileMode.Decal) else null
++            // Use the local top-left as pivot, not the default layer center:
++            // (offset - padding) + s * ((x + padding) / s) = x + offset.
++            shadowLayer.pivotOffset = Offset.Zero
++            shadowLayer.scaleX = sampleScale
++            shadowLayer.scaleY = sampleScale
++            shadowLayer.topLeft = IntOffset(offsetXPx - paddingPx, offsetYPx - paddingPx)
++            // Like mode 0, let the filtered result extend beyond the layer's input bounds.
++            drawLayer(shadowLayer)
++            drawLayer(contentLayer)
+         }
+-        shadowLayer.colorFilter = ColorFilter.colorMatrix(shadowColorMatrix(color))
+-        // RenderEffect blur needs API 31; below it the shadow is drawn sharp.
+-        shadowLayer.renderEffect = if (blurRadiusPx > 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) BlurEffect(blurRadiusPx, blurRadiusPx, TileMode.Decal) else null
+-        shadowLayer.topLeft = IntOffset(offsetXPx - paddingPx, offsetYPx - paddingPx)
+-        drawLayer(shadowLayer)
+-        drawLayer(contentLayer)
+     }
+ 
+     Layout(modifier = modifier, content = {
+''', encoding="utf-8")
+
+activity = root / "android/app/Android/app/src/main/kotlin/Main.kt"
+text = activity.read_text(encoding="utf-8")
+anchor = "    override fun onCreate(savedInstanceState: android.os.Bundle?) {\n"
+assert text.count(anchor) == 1
+text = text.replace(anchor, "    @OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)\n" + anchor)
+anchor = '        logger.info("starting activity")\n'
+assert text.count(anchor) == 1
+text = text.replace(anchor, '''        if (intent.hasExtra("piru_shadow_mode")) {
+            skip.ui.PiruPerfFlags.shadowMode = intent.getIntExtra("piru_shadow_mode", skip.ui.PiruPerfFlags.shadowMode)
+        }
+        if (intent.hasExtra("piru_content_capture")) {
+            skip.ui.PiruPerfFlags.contentCapture = intent.getBooleanExtra("piru_content_capture", skip.ui.PiruPerfFlags.contentCapture)
+        }
+        // The platform opt-out alone need not remove Compose's existing capture session.
+        androidx.compose.ui.contentcapture.ContentCaptureManager.isEnabled = skip.ui.PiruPerfFlags.contentCapture
+        if (!skip.ui.PiruPerfFlags.contentCapture && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            getSystemService(android.view.contentcapture.ContentCaptureManager::class.java)?.setContentCaptureEnabled(false)
+        }
+''' + anchor)
+activity.write_text(text, encoding="utf-8")
+print("Prepared 70008: shadow modes 0/1/2 (default 2), platform and Compose content capture off by default")
+
+# 70008 regression fixtures below extract production members; no second matching algorithm.
+model_tests = root / "android/Compat/Tests/PiruModelTests"
+staged = model_tests / "staged-sources.txt"
+staged_text = staged.read_text(encoding="utf-8")
+for relative in ("Shared/CalendarSessionDay.swift", "Shared/MedSchedule.swift"):
+    assert relative not in staged_text
+    staged_text += "\n" + relative + "\n"
+staged.write_text(staged_text, encoding="utf-8")
+
+service_text = service.read_text(encoding="utf-8")
+# The host suite tests the synchronous database path; it has no DatabaseActor executor.
+for anchor in ("static func needsReconcile(", "static func repairHistoricalDays(container:"):
+    member = "    @DatabaseActor\n    " + swift_member(service_text, anchor)
+    assert service_text.count(member) == 1
+    service_text = service_text.replace(member, "")
+service_text = service_text.replace("import SwiftData", "import PortableData")
+calculator_text = (root / "Piru/Utilities/AdherenceCalculator.swift").read_text(encoding="utf-8")
+is_due = swift_member(calculator_text, "nonisolated static func isDue(startDate:")
+commit = swift_member(importer.read_text(encoding="utf-8"), "static func commitImport(context:")
+notification_text = (root / "Piru/Utilities/DoseNotificationManager.swift").read_text(encoding="utf-8")
+boundary_changed = swift_member(notification_text, "static func medicationDayBoundaryChanged(")
+sync_reminders = swift_member(notification_text, "static func syncMedReminders(in context:")
+card_text = (root / "Piru/Views/Journal/DailyDose/MyMedsCard.swift").read_text(encoding="utf-8")
+today_occurrences = swift_member(card_text, "private var todayOccurrences:").replace("private var", "var", 1)
+streak_key = swift_member((root / "Piru/Utilities/AdherenceStreakStore.swift").read_text(encoding="utf-8"), "private struct Key:").replace("private struct Key", "struct MedicationStreakKey", 1)
+insights_text = (root / "Piru/Views/Insights/InsightsView.swift").read_text(encoding="utf-8")
+bucket_start = "        let cal = calendar\n"
+bucket_end = "        let cells = computeMonthCells("
+assert insights_text.count(bucket_start) == insights_text.count(bucket_end) == 1
+insights_buckets = insights_text[insights_text.index(bucket_start):insights_text.index(bucket_end)]
+due_now = swift_member(card_text, "var isDueNow:")
+
+support = '''import Foundation
+import PortableData
+
+nonisolated enum AppIdentity { static let appGroup = "piru.ci.medication-tests" }
+enum AdherenceCalculator {
+''' + is_due + "\n}\n" + service_text + '''
+// Only OS/UI side effects are doubles. Reconcile, history matching, commit order and
+// calendar logic above are the production members over the actual PortableData models.
+@MainActor final class DoseLogService {
+    static let shared = DoseLogService()
+    var revision = 0
+    func changed() { revision += 1 }
+}
+@MainActor final class WidgetCenter {
+    static let shared = WidgetCenter()
+    func reloadAllTimelines() {}
+}
+@MainActor enum DataExportImport {
+''' + commit + '''
+}
+@MainActor enum DoseNotificationManager {
+    static var reminderSyncs = 0
+    private static func scheduleMedReminders(in context: ModelContext) { reminderSyncs += 1 }
+''' + boundary_changed + "\n" + sync_reminders + '''
+}
+struct MedicationCardFixture {
+    var recentOccurrences: [RoutineOccurrence]
+''' + today_occurrences + "\n}\n" + streak_key + '''
+struct InsightsBucketsFixture {
+    let calendar = Calendar.current
+    func group(_ entries: [DoseEntry]) -> (usage: [Date: [DoseEntry]], adherence: [Date: [DoseEntry]]) {
+''' + insights_buckets + '''
+        return (entriesByDay, adherenceEntriesByDay)
+    }
+}
+struct DueSlotFixture {
+    enum State { case pending, taken, skipped }
+    let state: State
+    let time: Int?
+    // Controlled clock input to the unmodified production comparison.
+    static var nowMinutes = 0
+''' + due_now + "\n}\n"
+(model_tests / "MedicationDayProduction.swift").write_text(support, encoding="utf-8")
+(model_tests / "MedicationDayTests.swift").write_text(r'''import Foundation
+import PortableData
+import Testing
+
+@MainActor
+@Suite(.serialized)
+struct MedicationDayTests {
+    private func withBoundary(_ body: (UserDefaults) throws -> Void) rethrows {
+        let defaults = UserDefaults(suiteName: AppIdentity.appGroup)!
+        let key = Calendar.dayBoundaryHourKey
+        let original = defaults.object(forKey: key)
+        let historyKey = "piru.medicationHistoryBoundary.v2"
+        let originalHistory = UserDefaults.standard.object(forKey: historyKey)
+        defer {
+            if let original { defaults.set(original, forKey: key) } else { defaults.removeObject(forKey: key) }
+            if let originalHistory { UserDefaults.standard.set(originalHistory, forKey: historyKey) }
+            else { UserDefaults.standard.removeObject(forKey: historyKey) }
+        }
+        defaults.set(4, forKey: key)
+        try body(defaults)
+    }
+
+    @Test func historyRegroupsExistingRowsAndPreservesEveryDose() throws {
+        try withBoundary { defaults in
+            let calendar = Calendar.current
+            let today = calendar.medicationDayLabel(for: .now)
+            let first = calendar.date(byAdding: .day, value: -3, to: today)!
+            let second = calendar.date(byAdding: .day, value: 1, to: first)!
+            let early = calendar.date(bySettingHour: 2, minute: 0, second: 0, of: second)!
+            let store = TestStore()
+            let context = try ModelContext(store.container())
+            let dose = DoseEntry(substance: "test-med", amount: 1.25, unit: "mg", route: .oral, timestamp: early)
+            let a = RoutineOccurrence(substance: "test-med", route: .oral, dueDay: first)
+            let b = RoutineOccurrence(substance: "test-med", route: .oral, dueDay: second)
+            let skipped = RoutineOccurrence(substance: "user-skip", route: .oral, dueDay: first)
+            let future = RoutineOccurrence(substance: "test-med", route: .oral,
+                dueDay: calendar.date(byAdding: .day, value: 1, to: today)!)
+            a.state = .missed; b.state = .missed; skipped.state = .skipped
+            context.insert(dose)
+            for row in [a, b, skipped, future] { context.insert(row) }
+            try context.save()
+            let originalDoses = try JSONSerialization.data(withJSONObject: store.rows("DoseEntry"), options: .sortedKeys)
+            let occurrenceIDs = Set(try context.fetch(FetchDescriptor<RoutineOccurrence>()).map(\.persistentModelID))
+            #expect(try RoutineOccurrenceService.repairHistoricalDays(in: context) == 1)
+            #expect(a.state == .logged && a.satisfyingEntryID == dose.id)
+            #expect(b.state == .missed)
+            #expect(try RoutineOccurrenceService.repairHistoricalDays(in: context) == 0)
+            defaults.set(0, forKey: Calendar.dayBoundaryHourKey)
+            #expect(try RoutineOccurrenceService.repairHistoricalDays(in: context) == 2)
+            #expect(a.state == .missed && a.satisfyingEntryID == nil)
+            #expect(b.state == .logged && b.satisfyingEntryID == dose.id)
+            #expect(skipped.state == .skipped && future.state == .pending)
+            try context.save()
+            #expect(try JSONSerialization.data(withJSONObject: store.rows("DoseEntry"), options: .sortedKeys) == originalDoses)
+            #expect(Set(try context.fetch(FetchDescriptor<RoutineOccurrence>()).map(\.persistentModelID)) == occurrenceIDs)
+        }
+    }
+
+    @Test func commonImportCommitRepairsHistoryWithoutSettings() throws {
+        try withBoundary { _ in
+            let calendar = Calendar.current
+            let today = calendar.medicationDayLabel(for: .now)
+            let day = calendar.date(byAdding: .day, value: -2, to: today)!
+            let store = TestStore()
+            let container = try store.container()
+            let context = ModelContext(container)
+            let missed = RoutineOccurrence(substance: "imported-med", route: .oral, dueDay: day)
+            missed.state = .missed
+            context.insert(missed)
+            try context.save()
+            let dose = DoseEntry(substance: "imported-med", amount: 2, unit: "mg", route: .oral,
+                timestamp: calendar.medicationDayMoment(minutes: 120, onLabel: day)!)
+            context.insert(dose)
+            let revision = DoseLogService.shared.revision
+            try DataExportImport.commitImport(context: context)
+            #expect(DoseLogService.shared.revision == revision + 1)
+            let reopened = ModelContext(container)
+            let stored = try #require(reopened.fetch(FetchDescriptor<RoutineOccurrence>()).first)
+            #expect(stored.state == .logged && stored.satisfyingEntryID == dose.id)
+            #expect(try reopened.fetchCount(FetchDescriptor<DoseEntry>()) == 1)
+            #expect(try RoutineOccurrenceService.repairHistoricalDays(in: context) == 0)
+        }
+    }
+
+    @Test func boundaryChangeReconcilesTodaySignalsAndReschedulesEvenWithoutHistory() throws {
+        try withBoundary { defaults in
+            let store = TestStore()
+            let context = try ModelContext(store.container())
+            let item = DailyDoseItem(substance: "today-med", amount: 1, unit: "mg", route: .oral)
+            item.startDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+            context.insert(item)
+            try context.save()
+            let revision = DoseLogService.shared.revision
+            let syncs = DoseNotificationManager.reminderSyncs
+            defaults.set(0, forKey: Calendar.dayBoundaryHourKey)
+            try DoseNotificationManager.medicationDayBoundaryChanged(in: context)
+            #expect(DoseLogService.shared.revision == revision + 1)
+            #expect(DoseNotificationManager.reminderSyncs == syncs + 1)
+            let rows = try context.fetch(FetchDescriptor<RoutineOccurrence>())
+            #expect(rows.count == 1)
+            #expect(rows.first?.dueDay == Calendar.current.medicationDayLabel(for: .now))
+            #expect(try context.fetchCount(FetchDescriptor<DoseEntry>()) == 0)
+            let day = Calendar.current.startOfDay(for: .now)
+            #expect(MedicationStreakKey(revision: 1, schedule: 1, day: day, boundary: 4)
+                != MedicationStreakKey(revision: 1, schedule: 1, day: day, boundary: 0))
+        }
+    }
+
+    @Test func todayOccurrencesExcludeBothAdjacentDays() throws {
+        try withBoundary { _ in
+            let calendar = Calendar.current
+            let today = calendar.medicationDayLabel(for: .now)
+            let yesterday = RoutineOccurrence(substance: "same-med", route: .oral,
+                dueDay: calendar.date(byAdding: .day, value: -1, to: today)!)
+            let current = RoutineOccurrence(substance: "same-med", route: .oral, dueDay: today)
+            current.state = .logged
+            let tomorrow = RoutineOccurrence(substance: "same-med", route: .oral,
+                dueDay: calendar.date(byAdding: .day, value: 1, to: today)!)
+            let rows = MedicationCardFixture(recentOccurrences: [yesterday, current, tomorrow]).todayOccurrences
+            #expect(rows.count == 1 && rows.first === current)
+        }
+    }
+
+    @Test func insightsKeepsNaturalUsageAndMedicationAdherenceBucketsSeparate() throws {
+        try withBoundary { _ in
+            let calendar = Calendar.current
+            let day = calendar.date(from: DateComponents(year: 2026, month: 5, day: 21))!
+            let next = calendar.date(byAdding: .day, value: 1, to: day)!
+            let evening = DoseEntry(substance: "test", amount: 1,
+                timestamp: calendar.date(bySettingHour: 23, minute: 0, second: 0, of: day)!)
+            let overnight = DoseEntry(substance: "test", amount: 1,
+                timestamp: calendar.date(bySettingHour: 2, minute: 0, second: 0, of: next)!)
+            let buckets = InsightsBucketsFixture().group([evening, overnight])
+            #expect(buckets.usage[day]?.count == 1 && buckets.usage[next]?.count == 1)
+            #expect(buckets.adherence[day]?.count == 2 && buckets.adherence[next] == nil)
+        }
+    }
+
+    @Test func myMedsDueOrderWrapsAtBoundaryWithoutChangingDisplayedMinutes() throws {
+        try withBoundary { _ in
+            let overnight = DueSlotFixture(state: .pending, time: 120)
+            let evening = DueSlotFixture(state: .pending, time: 1380)
+            DueSlotFixture.nowMinutes = 1380
+            #expect(!overnight.isDueNow && evening.isDueNow)
+            DueSlotFixture.nowMinutes = 60
+            #expect(!overnight.isDueNow && evening.isDueNow)
+            DueSlotFixture.nowMinutes = 120
+            #expect(overnight.isDueNow)
+            #expect(overnight.time == 120 && evening.time == 1380)
+            #expect(DueSlotFixture(state: .pending, time: nil).isDueNow)
+            #expect(!DueSlotFixture(state: .taken, time: 120).isDueNow)
+        }
+    }
+}
+''', encoding="utf-8")
+
+with (tests / "main.swift").open("a", encoding="utf-8") as test:
+    test.write('''
+// The production clock conversion governs due order; displayed minutes stay untouched.
+assert(Calendar.medicationClockMinutes(120) > Calendar.medicationClockMinutes(1380))
+assert(Calendar.medicationClockMinutes(1380) <= Calendar.medicationClockMinutes(60))
+let firstOfMonth = date("2026-06-01T01:00:00Z")
+assert(calendar.medicationDayLabel(for: firstOfMonth) == date("2026-05-31T00:00:00Z"))
+assert(date("2026-06-01T00:00:00Z") > calendar.medicationDayLabel(for: firstOfMonth))
+defaults.set(0, forKey: Calendar.dayBoundaryHourKey)
+assert(Calendar.medicationClockMinutes(120) < Calendar.medicationClockMinutes(1380))
+assert(calendar.medicationDayLabel(for: firstOfMonth) == date("2026-06-01T00:00:00Z"))
+defaults.set(4, forKey: Calendar.dayBoundaryHourKey)
+print("Medication-day ordering regression passed: overdue evening, upcoming overnight slot, month rollover and live boundary switch.")
+''')
+
+# Both public import routes must reach the same unconditional repair-before-save path.
+for relative, entry in (("Piru/Utilities/DataExportImport.swift", "static func importJSON("),
+                        ("Piru/Utilities/DataExportImport+Spreadsheet.swift", "static func importSpreadsheet(")):
+    body = swift_member((root / relative).read_text(encoding="utf-8"), entry)
+    assert "try commitImport(context: context)" in body
+assert "fileSettings" not in commit
+assert commit.index("repairHistoricalDays") < commit.index("context.save()") < commit.index("DoseLogService.shared.changed()")
+repair = swift_member(service_text, "nonisolated static func repairHistoricalDays(in context:")
+assert repair.count("context.fetch(") == 2
+assert repair.index("FetchDescriptor<DoseEntry>") < repair.index("for (day, occurrences)")
+assert "context.fetch(" not in repair[repair.index("for (day, occurrences)"):]
+assert "clipRect(left = left" not in shadow_patch.read_text(encoding="utf-8")
+print("Prepared 70008 audit regressions: willSet reentry, shared import commit, real history database, boundary-change pipeline and exact-day occurrences")
