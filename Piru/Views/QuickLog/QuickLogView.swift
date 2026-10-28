@@ -592,6 +592,7 @@ struct QuickLogView: View {
                     abv: item.isUnknownAmount ? nil : item.abv,
                     drinkName: item.isUnknownAmount ? nil : item.drinkName,
                     combinationName: item.combinationName,
+                    injectionSite: InjectionSite.applies(to: item.route) ? item.injectionSite : nil,
                 )
                 batch.append((entry, item.librarySubstance))
 

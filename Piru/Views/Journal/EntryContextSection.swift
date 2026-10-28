@@ -8,7 +8,8 @@ struct EntryContextSection: View {
 
     var body: some View {
         let notes = entry.notes ?? ""
-        if !notes.isEmpty || !entry.tags.isEmpty || entry.locationName != nil || entry.meal != nil {
+        if !notes.isEmpty || !entry.tags.isEmpty || entry.locationName != nil || entry.meal != nil
+            || entry.injectionSite != nil {
             Section("Your Notes") {
                 if !notes.isEmpty {
                     Text(notes)
@@ -18,6 +19,10 @@ struct EntryContextSection: View {
                 }
                 if let meal = entry.meal {
                     Label(meal.label, systemImage: meal.systemImage)
+                }
+                if let site = entry.injectionSite {
+                    Label(site.label, systemImage: "syringe")
+                        .accessibilityLabel(Text("Injection site: \(site.label)"))
                 }
                 if let locationName = entry.locationName {
                     if let coordinate = entry.coordinate {

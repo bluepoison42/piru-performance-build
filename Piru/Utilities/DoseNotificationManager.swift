@@ -213,7 +213,17 @@ enum DoseNotificationManager {
         let satisfied = RoutineOccurrenceService.satisfiedSlotKeys(in: context)
         let askAgainDefault = (try? context.fetch(FetchDescriptor<NotificationPreferences>()))?
             .first?.askAgainDefaultMinutes ?? [10]
-        syncMedReminders(items: items, satisfiedSlots: satisfied, askAgainDefault: askAgainDefault)
+        // The rotation's next site per injected med, read here because the
+        // scheduler below works over plain values.
+        var nextSites: [String: InjectionSite] = [:]
+        for item in items where InjectionSite.applies(to: item.route) {
+            nextSites[item.substance] = InjectionSiteHistory.suggestedNext(
+                substance: item.substance, route: item.route, in: context,
+            )
+        }
+        syncMedReminders(
+            items: items, satisfiedSlots: satisfied, askAgainDefault: askAgainDefault, nextSites: nextSites,
+        )
     }
 
     /// Mark a notification's remaining due slots skipped for today and cancel
@@ -285,6 +295,7 @@ enum DoseNotificationManager {
         items: [DailyDoseItem],
         satisfiedSlots: Set<String>,
         askAgainDefault: [Int],
+        nextSites: [String: InjectionSite],
     ) {
         // With the type disabled, the sync degrades to a sweep: clear
         // anything pending, schedule nothing. Per-med `remind` flags stay
@@ -369,7 +380,13 @@ enum DoseNotificationManager {
                     let skipTarget = "slot|\(slotKey)"
                     let deepLink = groupDeepLink(slug: MedTimeGroup.group(forMinutes: time).slug)?.absoluteString
                     let title = name
-                    let body = String(localized: "Time to log \(name): \(doseText).")
+                    // An injected med names the rotation's next site, so the
+                    // reminder answers "which side?" before the app is open.
+                    let body = if let site = nextSites[item.substance] {
+                        String(localized: "Time to log \(name): \(doseText). Next: \(site.inlineLabel).")
+                    } else {
+                        String(localized: "Time to log \(name): \(doseText).")
+                    }
                     // A question, deliberately — a follow-up re-asks, it
                     // never implies the dose was taken or scolds.
                     let followUpBody = String(localized: "Still need to log \(name)?")

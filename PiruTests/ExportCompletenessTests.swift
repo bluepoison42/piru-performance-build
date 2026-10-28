@@ -36,7 +36,7 @@ private enum Fields {
         field("latitude", \.latitude), field("longitude", \.longitude), field("hadGrapefruit", \.hadGrapefruit), field("mealRaw", \.mealRaw),
         field("isApproximate", \.isApproximate), field("isUnknownDose", \.isUnknownDose),
         field("volumeML", \.volumeML), field("abv", \.abv), field("drinkName", \.drinkName),
-        field("combinationName", \.combinationName),
+        field("combinationName", \.combinationName), field("injectionSiteRaw", \.injectionSiteRaw),
     ]
 
     static let session: [FieldCheck<Session>] = [
@@ -420,6 +420,7 @@ struct ExportRoundTripTests {
             timestamp: t0, notes: "dose notes", tags: ["a", "b"], isBackgroundMed: true,
             locationName: "Park", latitude: 51.5, longitude: -0.12, hadGrapefruit: true, meal: .light, isApproximate: true,
             volumeML: 330, abv: 5, drinkName: "IPA", combinationName: "Shandy",
+            injectionSite: InjectionSite(area: .glute, side: .left),
         )
         drink.session = session
         context.insert(drink)

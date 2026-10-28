@@ -605,6 +605,76 @@ struct StagedDoseGrapefruitPill: View {
     }
 }
 
+/// The injection-site pill and its menu, shown for intramuscular and
+/// subcutaneous doses: the rotation's suggestion first, then every site the
+/// route offers, then a way to record none. Built like the route pill — a
+/// plain pill with the `Menu` overlaid — so the tray morph sizes it.
+struct StagedDoseInjectionSiteMenu: View {
+    @Binding var site: InjectionSite?
+    @Binding var touched: Bool
+    let route: RouteOfAdministration
+    let suggested: InjectionSite?
+    let pillHeight: CGFloat
+
+    var body: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "syringe")
+                .imageScale(.small)
+            Text(site?.label ?? String(localized: "Site"))
+                .lineLimit(1)
+            Image(systemName: "chevron.down")
+                .font(.caption2.weight(.semibold))
+        }
+        .font(.footnote.weight(.semibold))
+        .fixedSize(horizontal: true, vertical: false)
+        .padding(.horizontal, 11)
+        .frame(height: pillHeight)
+        .background(Color.platformSecondarySystemFill, in: skinChipShape())
+        .foregroundStyle(site == nil ? AnyShapeStyle(Theme.secondaryLabel) : AnyShapeStyle(.primary))
+        .accessibilityHidden(true)
+        .overlay {
+            Menu {
+                if let suggested {
+                    Section("Next in rotation") {
+                        choice(suggested)
+                    }
+                }
+                ForEach(InjectionSite.Area.offered(for: route), id: \.self) { area in
+                    Section {
+                        ForEach(InjectionSite.Side.allCases, id: \.self) { side in
+                            choice(InjectionSite(area: area, side: side))
+                        }
+                    }
+                }
+                Section {
+                    Button("No Site") { pick(nil) }
+                }
+            } label: {
+                Color.clear.contentShape(Capsule())
+            }
+            .accessibilityLabel("Injection site")
+            .accessibilityValue(site?.label ?? String(localized: "Not recorded"))
+        }
+    }
+
+    private func choice(_ option: InjectionSite) -> some View {
+        Button {
+            pick(option)
+        } label: {
+            if option == site {
+                Label(option.label, systemImage: "checkmark")
+            } else {
+                Text(option.label)
+            }
+        }
+    }
+
+    private func pick(_ option: InjectionSite?) {
+        touched = true
+        site = option
+    }
+}
+
 /// The route pill and its menu.
 struct StagedDoseRouteMenu: View {
     @Binding var item: StagedDose

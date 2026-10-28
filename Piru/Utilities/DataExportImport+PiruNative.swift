@@ -233,6 +233,9 @@ nonisolated struct PiruDoseData: Codable {
     /// The combination product the dose was logged as part of. Optional on
     /// both sides: omitted for a dose logged on its own, absent from older files.
     var combinationName: String?
+    /// ``InjectionSite/rawValue`` (`"thigh.left"`); absent when no site was
+    /// recorded and from older files.
+    var injectionSite: String?
 }
 
 nonisolated struct PiruDailyDoseData: Codable {
@@ -362,7 +365,7 @@ extension DataExportImport {
                 isApproximate: e.isApproximate, isUnknownDose: e.isUnknownDose,
                 hadGrapefruit: e.hadGrapefruit, meal: e.mealRaw,
                 volumeML: e.volumeML, abv: e.abv, drinkName: e.drinkName,
-                combinationName: e.combinationName,
+                combinationName: e.combinationName, injectionSite: e.injectionSiteRaw,
             )
         }
 
@@ -518,6 +521,7 @@ extension DataExportImport {
                 isApproximate: d.isApproximate ?? false, isUnknownDose: d.isUnknownDose ?? false,
                 volumeML: d.volumeML, abv: d.abv, drinkName: d.drinkName,
                 combinationName: d.combinationName,
+                injectionSite: d.injectionSite.flatMap(InjectionSite.init(rawValue:)),
             )
             if let id = d.id, seenIDs.insert(id).inserted {
                 entry.id = id

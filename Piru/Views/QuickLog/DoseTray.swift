@@ -159,6 +159,12 @@ struct StagedDose: Identifiable, Equatable {
     /// paracetamol row), carried onto the committed entry. `nil` for a dose
     /// staged on its own.
     var combinationName: String?
+    /// Where an intramuscular or subcutaneous dose goes, carried onto the
+    /// committed entry. The editor seeds it from the rotation
+    /// (``InjectionSiteHistory``) until the user picks or clears one, which
+    /// ``injectionSiteTouched`` records so a re-opened row keeps the choice.
+    var injectionSite: InjectionSite?
+    var injectionSiteTouched = false
     /// The user opened this row to type into it (the sliders pill, a row tap),
     /// so the editor focuses the amount field on appear — even over a seeded
     /// reference dose. The editor clears it once consumed. Stays false for

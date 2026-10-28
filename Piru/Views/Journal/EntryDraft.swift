@@ -17,6 +17,8 @@ final class EntryDraft {
     var tags: [String] = []
     var location: PickedLocation?
     var meal: MealState?
+    /// Kept only for routes that take a site (``InjectionSite/applies(to:)``).
+    var injectionSite: InjectionSite?
     /// The amount is an estimate, not a measured figure — carried onto the entry
     /// and shown as a `~` prefix.
     var isApproximate = false
@@ -96,6 +98,7 @@ final class EntryDraft {
         isUnknownDose = entry.isUnknownDose
         if entry.isUnknownDose { amount = "" }
         meal = entry.meal
+        injectionSite = entry.injectionSite
         if let name = entry.locationName, let lat = entry.latitude, let lng = entry.longitude {
             location = PickedLocation(name: name, latitude: lat, longitude: lng)
         } else {
