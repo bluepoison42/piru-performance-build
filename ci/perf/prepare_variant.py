@@ -1408,3 +1408,714 @@ row = row.replace(anchor, "")
 text = text.replace(swift_member(text, "struct TrayRow: View {"), row)
 tray_views.write_text(text, encoding="utf-8")
 print("Prepared 70009 tray: moving dismiss overlay, hidden delete hit-testing off, plain edit button; swipe recognizers unchanged")
+
+# 70010: optional cold-start experiments and the five bounded data-safety fixes.
+# Keep every earlier generation step intact; this section transforms its result.
+import difflib
+
+def replace710(path, before, after):
+    source = path.read_text(encoding="utf-8")
+    assert source.count(before) == 1, f"70010 anchor changed: {path}: {before[:90]!r}"
+    path.write_text(source.replace(before, after), encoding="utf-8")
+
+text = project.read_text(encoding="utf-8")
+assert text.count("CURRENT_PROJECT_VERSION = 70009;") == builds
+project.write_text(text.replace("CURRENT_PROJECT_VERSION = 70009;", "CURRENT_PROJECT_VERSION = 70010;"), encoding="utf-8")
+
+main710 = root / "android/app/Android/app/src/main/kotlin/Main.kt"
+replace710(main710, '        if (intent.hasExtra("piru_shadow_mode")) {',
+           '        skip.ui.PiruNextPerf.mask = intent.getIntExtra("piru_next_mask", 0)\n'
+           '        if (intent.hasExtra("piru_shadow_mode")) {')
+
+# Same optional-Bool dynamic call as AndroidBackupFolder.isAccessible/pick.
+# Pinned skip-bridge 0.18.0 AnyDynamicObject.swift defines the static initializer
+# and dynamicallyCall(withArguments:) -> Bool? (not a nonoptional Bool overload).
+# No Swift Int crosses JNI: the bit test lives in Kotlin.
+canvas710 = root / "android/app/Sources/Piru/Android/SwiftUI/Canvas+Android.swift"
+replace710(canvas710, "import SwiftUI\n", '''import SwiftUI
+import SkipBridge
+
+private enum PiruNextCanvasFlags {
+    static let fixedSize: Bool = {
+        let kotlin = try? AnyDynamicObject(forStaticsOfClassName: "skip.ui.PiruNextPerf")
+        return (try? kotlin?.fixedCanvasEnabled() as Bool?) == true
+    }()
+}
+''')
+replace710(canvas710, "    private let renderer: (inout GraphicsContext, CGSize) -> Void\n", '''    private let renderer: (inout GraphicsContext, CGSize) -> Void
+    private var knownSize: CGSize? = nil
+
+    func piruKnownSize(_ size: CGSize?) -> Self {
+        var copy = self
+        copy.knownSize = size
+        return copy
+    }
+''')
+canvas_struct710 = swift_member(canvas710.read_text(encoding="utf-8"), "struct Canvas<Symbols: View>: View {")
+old_canvas_body = swift_member(canvas_struct710, "var body: some View {")
+replace710(canvas710, old_canvas_body, r'''@ViewBuilder var body: some View {
+        if PiruNextCanvasFlags.fixedSize, let knownSize {
+            recorded(size: knownSize)
+        } else {
+            GeometryReader { proxy in
+                recorded(size: proxy.size)
+            }
+        }
+    }
+
+    @ViewBuilder private func recorded(size: CGSize) -> some View {
+        let items = GraphicsContext.record(size: size, renderer)
+        ZStack(alignment: .topLeading) {
+            ForEach(0 ..< items.count, id: \.self) { index in
+                CanvasItemView(item: items[index], size: size)
+            }
+        }
+        .frame(width: size.width, height: size.height, alignment: .topLeading)
+    }''')
+molecule710 = root / "Piru/Views/Library/MoleculeView.swift"
+replace710(molecule710, "    let key: String\n", "    let key: String\n    var canvasSize: CGSize? = nil\n")
+replace710(molecule710, "        .accessibilityHidden(true)", '''        #if os(Android)
+        .piruKnownSize(canvasSize)
+        #endif
+        .accessibilityHidden(true)''')
+replace710(root / "Piru/Views/Library/LibraryBrowseView.swift",
+           "MoleculeView(key: family.molecule)",
+           "MoleculeView(key: family.molecule, canvasSize: CGSize(width: 178, height: 178))")
+
+def vendor_diff710(relative, before, after, first_line=1):
+    diff = "".join(difflib.unified_diff(
+        before.splitlines(keepends=True), after.splitlines(keepends=True),
+        fromfile="a/" + relative if before else "/dev/null", tofile="b/" + relative))
+    if before:
+        diff = re.sub(r"(?m)^@@ -(\d+)(,\d+)? \+(\d+)(,\d+)? @@",
+                      lambda m: f"@@ -{int(m[1]) + first_line - 1}{m[2] or ''} +{int(m[3]) + first_line - 1}{m[4] or ''} @@", diff)
+    return "diff --git a/{0} b/{0}\n".format(relative) + ("new file mode 100644\n" if not before else "") + diff
+
+next_patch710 = root / "android/vendor/skip-ui/0019-perftest-next-mask.patch"
+assert not next_patch710.exists()
+patch710 = "Cold-start piru_next_mask experiments: fixed Canvas flag, simple color backgrounds, and actual-tab decorator slots; default zero.\n\n"
+patch710 += vendor_diff710("Sources/SkipUI/Skip/PiruNextPerf.kt", "", '''package skip.ui
+
+object PiruNextPerf {
+    var mask: Int = 0
+
+    @JvmStatic
+    fun enabled(bit: Int): Boolean = (mask and bit) != 0
+
+    @JvmStatic
+    fun fixedCanvasEnabled(): Boolean = enabled(1)
+}
+''')
+background_before710 = '''    public func background(_ style: any ShapeStyle, in shape: any Shape, fillStyle: FillStyle = FillStyle()) -> any View {
+        return background(content: { shape.fill(style) })
+    }
+'''
+background_after710 = background_before710.replace("        return background(content:", '''        #if SKIP
+        if PiruNextPerf.enabled(2),
+           fillStyle.isAntialiased, !fillStyle.isEOFilled,
+           (shape is Rectangle || shape is RoundedRectangle || shape is Capsule),
+           let color = style as? Color {
+            return ModifiedContent(content: self, modifier: RenderModifier { context in
+                let fill = color.asColor(opacity: 1.0, animationContext: context)!
+                let outline = shape.asComposeShape(density: LocalDensity.current)
+                return context.modifier.background(fill, shape: outline)
+            })
+        }
+        #endif
+        return background(content:''')
+patch710 += vendor_diff710("Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift", background_before710, background_after710, first_line=168)
+tab_before710 = '''                            // Keep a stable SaveableStateHolder for each tab's backStack
+                            let decoratedEntrySlots = remember { arrayOfNulls<kotlin.collections.List<NavEntry<NavKey>>?>(100) }
+                            var tabIndex = 0
+                            while tabIndex < 100 {
+                                let ti = tabIndex
+                                key(ti) {
+'''
+tab_after710 = tab_before710.replace("                            var tabIndex = 0", '''                            // Retain decorators for previously committed tabs when tabs shrink.
+                            let committedDecoratorCount = remember { intArrayOf(0) }
+                            let decoratorCount = PiruNextPerf.enabled(4)
+                                ? min(100, max(tabRenderables.size, committedDecoratorCount[0]))
+                                : 100
+                            SideEffect { committedDecoratorCount[0] = decoratorCount }
+                            var tabIndex = 0''').replace("while tabIndex < 100", "while tabIndex < decoratorCount")
+patch710 += vendor_diff710("Sources/SkipUI/SkipUI/Containers/TabView.swift", tab_before710, tab_after710, first_line=534)
+next_patch710.write_text(patch710, encoding="utf-8")
+
+# B1: IDs decide identity when present; content dedup remains for older files.
+native710 = root / "Piru/Utilities/DataExportImport+PiruNative.swift"
+text = native710.read_text(encoding="utf-8")
+begin = text.index("        // Dedup doses by content against")
+end = text.index("        var seenIDs =", begin)
+replace710(native710, text[begin:end], r'''        // A stable UUID identifies one record even when its content was edited.
+        // Content dedup is only for old records that have no exported UUID.
+        let existingDoses = (try? context.fetch(FetchDescriptor<DoseEntry>())) ?? []
+        var seen = Set(existingDoses.map {
+            doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.amount, unit: $0.unit, route: $0.route)
+        })
+''')
+replace710(native710, "            guard seen.insert(key).inserted else { return nil }", '''            if let id = d.id {
+                guard seenIDs.insert(id).inserted else { return nil }
+                seen.insert(key)
+            } else {
+                guard seen.insert(key).inserted else { return nil }
+            }''')
+replace710(native710, "            if let id = d.id, seenIDs.insert(id).inserted {", "            if let id = d.id {")
+replace710(native710, '''    /// get fresh UUIDs). Not the dedup key — that stays content-based
+    /// (see ``DataExportImport/doseDedupKey``).''', '''    /// get fresh UUIDs). Present IDs take precedence over content dedup;
+    /// content keys are used only for records without an ID.''')
+
+# B2: report copy failures, but keep existing fire-and-forget callers valid.
+recovery710 = root / "Piru/Data/Persistence/StoreRecovery.swift"
+replace710(recovery710, "    static func snapshotStore(reason: String) {", '''    @discardableResult
+    static func snapshotStore(reason: String) -> Bool {''')
+snapshot710 = swift_member(recovery710.read_text(encoding="utf-8"), "static func snapshotStore(reason:")
+snapshot_new710 = snapshot710.replace("        let dir = store.deletingLastPathComponent()", '''        guard fm.fileExists(atPath: store.path) else {
+            Logger.storeRecovery.error("Snapshot failed: the live store is missing.")
+            return false
+        }
+        var succeeded = true
+        let dir = store.deletingLastPathComponent()''').replace("            } catch {", "            } catch {\n                succeeded = false").replace(
+    '        Logger.storeRecovery.notice("Snapshot taken before \\(reason, privacy: .public)")',
+    '''        if succeeded {
+            Logger.storeRecovery.notice("Snapshot taken before \\(reason, privacy: .public)")
+        }
+        return succeeded''')
+assert "return succeeded" in snapshot_new710
+replace710(recovery710, snapshot710, snapshot_new710)
+manager710 = root / "Piru/Data/Backup/BackupManager.swift"
+replace710(manager710, '            StoreRecovery.snapshotStore(reason: "prerestore")', '''            guard StoreRecovery.snapshotStore(reason: "prerestore") else {
+                throw ManagerError.snapshotFailed
+            }''')
+replace710(manager710, "        case fileTooLarge\n", "        case fileTooLarge\n        case snapshotFailed\n")
+replace710(manager710, "            case .fileTooLarge:\n", '''            case .snapshotFailed:
+                String(localized: "The safety snapshot could not be saved. Your journal was not replaced.")
+            case .fileTooLarge:
+''')
+
+# B5: check both before and after capture, including failures first discovered
+# while loading the export graph. The existing managers log the thrown error.
+complete710 = persistence / "BackupReadability.swift"
+complete710.write_text('''import Foundation
+
+extension ModelContainer {
+    public func requireCompleteBackup() throws {
+        guard loadFailures.isEmpty else {
+            throw NSError(domain: "Piru.Backup", code: 1, userInfo: [
+                NSLocalizedDescriptionKey: "Backup aborted because stored records could not be decoded. The previous backup was kept."
+            ])
+        }
+    }
+}
+''', encoding="utf-8")
+capture710 = root / "Piru/Data/Backup/BackupSnapshot.swift"
+replace710(capture710, "extension DataExportImport {\n", '''extension DataExportImport {
+    nonisolated static func checkedBackup<T>(container: ModelContainer, capture: () throws -> T) throws -> T {
+        #if canImport(PortableData)
+        try container.requireCompleteBackup()
+        #endif
+        let captured = try capture()
+        #if canImport(PortableData)
+        try container.requireCompleteBackup()
+        #endif
+        return captured
+    }
+
+''')
+replace710(capture710, "        try BackupSnapshot(file: makePiruFile(context: ModelContext(container), stores: stores))", '''        try checkedBackup(container: container) {
+            try BackupSnapshot(file: makePiruFile(context: ModelContext(container), stores: stores))
+        }''')
+manager_text710 = manager710.read_text(encoding="utf-8")
+automatic710 = swift_member(manager_text710, "func runAutomaticBackup(context:")
+replace710(manager710, automatic710, automatic710.replace(
+    "            let plaintext = try DataExportImport.exportJSON(context: context)",
+    '''            let plaintext = try DataExportImport.checkedBackup(container: context.container) {
+                try DataExportImport.exportJSON(context: context)
+            }'''))
+
+# B12: carry the unknown flag through the wire shape, export and importer.
+psy710 = root / "Piru/Utilities/DataExportImport+PsyLog.swift"
+psy_text710 = psy710.read_text(encoding="utf-8")
+ingestion710 = swift_member(psy_text710, "nonisolated struct PsyLogIngestion:")
+new_ingestion710 = ingestion710.replace("    var dose: Double?", "    var dose: Double?\n    var isUnknownDose: Bool")
+new_ingestion710 = new_ingestion710.replace("        case dose\n", "        case dose\n        case isUnknownDose\n")
+new_ingestion710 = new_ingestion710.replace("location: PsyLogLocation? = nil)", "location: PsyLogLocation? = nil, isUnknownDose: Bool = false)")
+new_ingestion710 = new_ingestion710.replace("        self.dose = dose", "        self.dose = dose\n        self.isUnknownDose = isUnknownDose")
+new_ingestion710 = new_ingestion710.replace("        dose = try c.decodeIfPresent(Double.self, forKey: .dose)",
+    "        dose = try c.decodeIfPresent(Double.self, forKey: .dose)\n        isUnknownDose = try c.decodeIfPresent(Bool.self, forKey: .isUnknownDose) ?? false")
+new_ingestion710 = new_ingestion710.replace("        try c.encode(dose, forKey: .dose)",
+    "        try c.encode(dose, forKey: .dose)\n        if isUnknownDose { try c.encode(true, forKey: .isUnknownDose) }")
+replace710(psy710, ingestion710, new_ingestion710)
+replace710(psy710, "                    units: entry.unit,\n", "                    units: entry.unit,\n                    isUnknownDose: entry.isUnknownDose,\n")
+replace710(psy710, '''                // Skip entries with missing or zero dose
+                guard let dose = ingestion.dose, dose > 0 else { continue }''', '''                // Zero is meaningful only when the file explicitly marks the dose unknown.
+                guard let dose = ingestion.dose,
+                      dose > 0 || (dose == 0 && ingestion.isUnknownDose)
+                else { continue }''')
+replace710(psy710, "                    longitude: location?.longitude,\n", "                    longitude: location?.longitude,\n                    isUnknownDose: ingestion.isUnknownDose,\n")
+
+# B15: the shared publication order is Swift so PiruModelTests can exercise the
+# real policy, with only provider IO replaced by fault-injecting test closures.
+# Kotlin keeps the SAF operations and its existing rename/copy fallback.
+publication710 = root / "android/app/Sources/Piru/Android/Backup/FolderBackupPublication.swift"
+publication710.write_text('''import Foundation
+
+nonisolated enum FolderBackupPublication {
+    static func write(
+        name: String,
+        stage: (String) throws -> String?,
+        publish: (String) throws -> String?
+    ) rethrows -> String? {
+        // A previous attempt may have lost its final name but left a complete
+        // partial. Never truncate or discard that recovery copy on a retry.
+        let partial = name + "." + UUID().uuidString + ".partial"
+        if let failure = try stage(partial) { return failure }
+        return try publish(partial)
+    }
+}
+''', encoding="utf-8")
+replace710(backup, "            return try kotlin.write(tree, name, source.path) as String?", '''            return try FolderBackupPublication.write(name: name) { partial in
+                try kotlin.stage(tree, partial, source.path) as String?
+            } publish: { partial in
+                try kotlin.publish(tree, name, partial, source.path) as String?
+            }''')
+folder_kt710 = root / "android/app/Sources/Piru/Skip/AndroidBackupFolder.kt"
+replace710(folder_kt710, '        private const val PARTIAL_SUFFIX = ".partial"\n', "")
+folder_text710 = folder_kt710.read_text(encoding="utf-8")
+folder_begin710 = folder_text710.index("        /// Writes the file at `sourcePath`")
+folder_end710 = folder_text710.index("        private fun picked(", folder_begin710)
+replace710(folder_kt710, folder_text710[folder_begin710:folder_end710], '''        /// Writes a fresh, uniquely named partial. No earlier backup is removed here.
+        @JvmStatic
+        fun stage(tree: String, partialName: String, sourcePath: String): String? {
+            val context = context ?: return "unavailable"
+            return try {
+                val partial = DocumentsContract.createDocument(
+                    context.contentResolver, folder(Uri.parse(tree)), MIME_TYPE, partialName
+                ) ?: throw IllegalStateException("The folder refused a new file.")
+                copy(context, File(sourcePath), partial)
+                null
+            } catch (error: Exception) {
+                error.localizedMessage ?: error.toString()
+            }
+        }
+
+        /// Called only after stage completed and closed the stream. A failed publish
+        /// leaves its complete partial intact, including when the final name was lost.
+        @JvmStatic
+        fun publish(tree: String, name: String, partialName: String, sourcePath: String): String? {
+            val context = context ?: return "unavailable"
+            val resolver = context.contentResolver
+            return try {
+                val treeUri = Uri.parse(tree)
+                val partial = child(context, treeUri, partialName)
+                    ?: throw IllegalStateException("The completed partial backup is missing.")
+                val existing = child(context, treeUri, name)
+                val renamed = try {
+                    existing?.let {
+                        if (!DocumentsContract.deleteDocument(resolver, it)) {
+                            throw IllegalStateException("The previous backup could not be replaced.")
+                        }
+                    }
+                    DocumentsContract.renameDocument(resolver, partial, name) != null
+                } catch (error: Exception) {
+                    false
+                }
+                if (!renamed) {
+                    val target = child(context, treeUri, name)
+                        ?: DocumentsContract.createDocument(resolver, folder(treeUri), MIME_TYPE, name)
+                        ?: throw IllegalStateException("The folder refused a new file.")
+                    copy(context, File(sourcePath), target)
+                    // A successful close is required before discarding this attempt's
+                    // recovery copy. Earlier partials are deliberately left alone.
+                    DocumentsContract.deleteDocument(resolver, partial)
+                }
+                null
+            } catch (error: Exception) {
+                error.localizedMessage ?: error.toString()
+            }
+        }
+
+''')
+
+# Regression fixtures use exact production members/blocks, as MedicationDayProduction
+# does. Only OS services and unrelated import sections are doubles; dedup, decoding,
+# model writes, snapshot copying and the backup guard are never reimplemented.
+native_text710 = native710.read_text(encoding="utf-8")
+native_import710 = swift_member(native_text710, "static func importPiruNative(")
+native_begin710 = native_import710.index("        let existingDoses =")
+native_end710 = native_import710.index("        // Colors —")
+native_block710 = native_import710[native_begin710:native_end710]
+psy_text710 = psy710.read_text(encoding="utf-8")
+psy_types710 = psy_text710[psy_text710.index("nonisolated struct PsyLogFile:"):psy_text710.index("extension DataExportImport {")]
+psy_export710 = swift_member(psy_text710, "static func makePsyLogFile(")
+export_begin710 = psy_export710.index('                var noteText = entry.notes ?? ""')
+export_end710 = psy_export710.index("            }\n", export_begin710)
+# The first closing block belongs to the tags conditional; use the constructor's end.
+export_end710 = psy_export710.index("                )\n", export_begin710) + len("                )\n")
+export_ingestion710 = psy_export710[export_begin710:export_end710]
+apply710 = swift_member(manager710.read_text(encoding="utf-8"), "func apply(plaintext:")
+restore_strategy710 = swift_member(manager710.read_text(encoding="utf-8"), "enum RestoreStrategy {")
+manager_error710 = swift_member(manager710.read_text(encoding="utf-8"), "enum ManagerError:")
+
+support710 = '''import Foundation
+import PortableData
+import os
+
+// MedicationDayProduction supplies AppIdentity and UserDefaults.androidAppGroup.
+// Keep that shim in the same test target: StageSources rewrites production suiteName.
+extension Logger {
+    static let storeRecovery = Logger(subsystem: "piru.test", category: "recovery")
+    static let backupManager = Logger(subsystem: "piru.test", category: "backup")
+}
+''' + swift_member(importer.read_text(encoding="utf-8"), "extension Date {") + "\n"
+for anchor in ("nonisolated struct PiruDoseData:", "nonisolated struct PiruSessionData:", "nonisolated struct PiruSessionNoteData:"):
+    support710 += swift_member(native_text710, anchor) + "\n"
+support710 += '''
+nonisolated struct NativeDoseFile: Codable {
+    var sessions: [PiruSessionData]
+    var orphanDoses: [PiruDoseData]
+}
+// These tests never import custom definitions or cosmetic palette rows.
+nonisolated struct PiruCustomSubstanceData: Codable {}
+final class CustomSubstanceStore {
+    static let shared = CustomSubstanceStore()
+    func resetAfterDeletion() {}
+}
+enum SubstanceColorStore {
+    static func ensureRow(for name: String, existing: [SubstanceColor], in context: ModelContext) -> SubstanceColor? { nil }
+}
+enum SessionNoteService {
+    static func ensureSummaryNote(for session: Session) {}
+}
+''' + psy_types710 + "\n" + swift_member(psy_text710, "private extension RouteOfAdministration {") + "\n"
+support710 += (root / "Piru/Utilities/TagExtractor.swift").read_text(encoding="utf-8")
+support710 += "\nextension DataExportImport {\n"
+support710 += swift_member(importer.read_text(encoding="utf-8"), "static func doseDedupKey(") + "\n"
+support710 += swift_member(native_text710, "static func importNotes(") + "\n"
+support710 += '''    static func importNativeDoseFile(_ data: Data, context: ModelContext) throws {
+        let file = try JSONDecoder().decode(NativeDoseFile.self, from: data)
+''' + native_block710 + "    }\n"
+support710 += swift_member(psy_text710, "static func importPsyLog(") + "\n"
+support710 += '''    static func exportPsyLogIngestion(_ entry: DoseEntry) -> PsyLogIngestion {
+''' + export_ingestion710 + "    }\n"
+support710 += swift_member(capture710.read_text(encoding="utf-8"), "nonisolated static func checkedBackup<T>(") + "\n"
+support710 += '''    static func importCustomSubstances(_ values: [PiruCustomSubstanceData], into store: CustomSubstanceStore) {}
+    enum ImportMode { case merge, replace }
+    static func validate(_ data: Data) throws { _ = try JSONDecoder().decode(NativeDoseFile.self, from: data) }
+    static func importJSON(data: Data, context: ModelContext, mode: ImportMode = .merge) throws {
+        try importNativeDoseFile(data, context: context)
+        try commitImport(context: context)
+    }
+''' + swift_member(importer.read_text(encoding="utf-8"), "static func deleteAll(context:") + "\n}\n"
+support710 += '''enum StoreRecovery {
+    static var testStoreURL = URL(fileURLWithPath: "/unconfigured-piru-test")
+    static func canonicalStoreURL() -> URL { testStoreURL }
+    static let storeSuffixes = ["", "-shm", "-wal"]
+    @discardableResult
+''' + swift_member(recovery710.read_text(encoding="utf-8"), "static func snapshotStore(reason:") + "\n}\n"
+support710 += "final class BackupManager {\n" + restore_strategy710 + "\n" + manager_error710 + "\n" + apply710 + "\n}\n"
+(model_tests / "DataSafetyProduction.swift").write_text(support710, encoding="utf-8")
+
+# Stage the platform-independent publication policy verbatim, like the shared models.
+staged_text710 = staged.read_text(encoding="utf-8")
+publication_relative710 = publication710.relative_to(root).as_posix()
+assert publication_relative710 not in staged_text710
+staged.write_text(staged_text710 + "\n" + publication_relative710 + "\n", encoding="utf-8")
+
+(model_tests / "DataSafetyTests.swift").write_text(r'''import Foundation
+import PortableData
+import Testing
+
+@MainActor
+@Suite(.serialized)
+struct DataSafetyTests {
+    private func dose(_ id: UUID? = nil, amount: Double = 10, note: String = "note") -> [String: Any] {
+        var row: [String: Any] = [
+            "substance": "caffeine", "amount": amount, "unit": "mg", "route": RouteOfAdministration.oral.rawValue,
+            "timestamp": Int64(1_790_000_000_000), "notes": note, "tags": ["kept"], "isBackgroundMed": false
+        ]
+        if let id { row["id"] = id.uuidString }
+        return row
+    }
+
+    private func native(_ doses: [[String: Any]], sessions: [[String: Any]] = []) throws -> Data {
+        try JSONSerialization.data(withJSONObject: ["orphanDoses": doses, "sessions": sessions])
+    }
+
+    @Test func nativeDistinctIDsKeepIdenticalDosesAndSeparateSessions() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let first = UUID(), second = UUID(), sessionA = UUID(), sessionB = UUID()
+        let file = try native([], sessions: [
+            ["id": sessionA.uuidString, "startDate": Int64(1_790_000_000_000), "doses": [dose(first, note: "first")]],
+            ["id": sessionB.uuidString, "startDate": Int64(1_790_000_000_000), "doses": [dose(second, note: "second")]]
+        ])
+        try DataExportImport.importNativeDoseFile(file, context: context)
+        try context.save()
+        let reopened = ModelContext(container)
+        #expect(try reopened.doses().count == 2)
+        #expect(try reopened.dose(first)?.notes == "first")
+        #expect(try reopened.dose(second)?.notes == "second")
+        #expect(try reopened.dose(first)?.session?.id == sessionA)
+        #expect(try reopened.dose(second)?.session?.id == sessionB)
+        try DataExportImport.importNativeDoseFile(file, context: reopened)
+        try reopened.save()
+        #expect(try ModelContext(container).doses().count == 2)
+    }
+
+    @Test func nativeMergeKeepsLocallyEditedUUIDAndDoesNotCopyOldDose() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let id = UUID()
+        try DataExportImport.importNativeDoseFile(native([dose(id)]), context: context)
+        let local = try #require(context.dose(id))
+        local.amount = 20
+        local.notes = "local edit"
+        try context.save()
+        try DataExportImport.importNativeDoseFile(native([dose(id), dose(id, amount: 30)]), context: context)
+        try context.save()
+        let rows = try ModelContext(container).doses()
+        #expect(rows.count == 1)
+        #expect(rows.first?.id == id && rows.first?.amount == 20 && rows.first?.notes == "local edit")
+    }
+
+    @Test func nativeMissingIDStillDeduplicatesButNewIDOverridesContentMatch() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let file = try native([dose(), dose(note: "duplicate legacy")])
+        try DataExportImport.importNativeDoseFile(file, context: context)
+        try DataExportImport.importNativeDoseFile(file, context: context)
+        #expect(try context.doses().count == 1)
+        let differentID = UUID()
+        try DataExportImport.importNativeDoseFile(native([dose(differentID)]), context: context)
+        try context.save()
+        #expect(try context.doses().count == 2)
+        #expect(try context.dose(differentID) != nil)
+    }
+
+    @Test func snapshotCopiesEveryExistingSiblingAndReportsCopyFailure() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let previous = StoreRecovery.testStoreURL
+        defer { StoreRecovery.testStoreURL = previous }
+        StoreRecovery.testStoreURL = directory.appending(path: "journal.store")
+        for suffix in StoreRecovery.storeSuffixes {
+            try Data(("complete" + suffix).utf8).write(to: directory.appending(path: "journal.store" + suffix))
+        }
+        #expect(StoreRecovery.snapshotStore(reason: "good"))
+        let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        let snapshots = files.filter { $0.lastPathComponent.hasPrefix("journal.store.good-") }
+        #expect(snapshots.count == 3)
+        for file in snapshots {
+            let suffix = file.lastPathComponent.hasSuffix("-wal") ? "-wal" : file.lastPathComponent.hasSuffix("-shm") ? "-shm" : ""
+            #expect(try Data(contentsOf: file) == Data(("complete" + suffix).utf8))
+        }
+        #expect(!StoreRecovery.snapshotStore(reason: "missing/parent"))
+        #expect(try Data(contentsOf: StoreRecovery.testStoreURL) == Data("complete".utf8))
+    }
+
+    @Test func replaceAbortsBeforeDeleteWhenProductionSnapshotCannotCopy() throws {
+        let store = TestStore()
+        let seeded = try seedJournal(store)
+        let container = try store.container()
+        let context = ModelContext(container)
+        let previous = StoreRecovery.testStoreURL
+        defer { StoreRecovery.testStoreURL = previous }
+        StoreRecovery.testStoreURL = store.url
+        // Block the snapshot destination across clock ticks, without altering live SQLite files.
+        let now = Int(Date().timeIntervalSince1970)
+        for stamp in (now - 1) ... (now + 120) {
+            let destination = store.url.deletingLastPathComponent()
+                .appending(path: "journal.store.prerestore-\(stamp)")
+            try Data("existing recovery evidence".utf8).write(to: destination)
+        }
+        do {
+            try BackupManager().apply(plaintext: native([dose(UUID())]), strategy: .replace, context: context)
+            Issue.record("Replace proceeded after a failed snapshot")
+        } catch BackupManager.ManagerError.snapshotFailed {
+            // Expected: the production guard throws before deleteAll commits anything.
+        }
+        let reopened = ModelContext(container)
+        #expect(Set(try reopened.doses().map(\.id)) == Set(seeded.doses))
+        #expect(try reopened.sessions().first?.id == seeded.session)
+    }
+
+    @Test func loadFailuresDiscoveredDuringCaptureKeepThePreviousBackup() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        try store.execute("INSERT INTO portable_models (entity, pk, data) VALUES ('DoseEntry', 'broken', CAST('{bad' AS BLOB))")
+        let container = try store.container()
+        #expect(container.loadFailures.isEmpty)
+        let backup = store.url.deletingLastPathComponent().appending(path: "existing-backup")
+        let original = Data("complete previous backup".utf8)
+        try original.write(to: backup)
+        var rejected = false
+        do {
+            let data = try DataExportImport.checkedBackup(container: container) {
+                _ = try ModelContext(container).doses()
+                return Data("incomplete export".utf8)
+            }
+            try data.write(to: backup)
+        } catch { rejected = true }
+        #expect(rejected && !container.loadFailures.isEmpty)
+        #expect(try Data(contentsOf: backup) == original)
+        var capturedAgain = false
+        rejected = false
+        do {
+            _ = try DataExportImport.checkedBackup(container: container) {
+                capturedAgain = true
+                return Data()
+            }
+        } catch { rejected = true }
+        #expect(rejected && !capturedAgain)
+        #expect(try store.count("DoseEntry") == 4)
+    }
+
+    @Test func readableBackupStillCapturesNormally() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let container = try store.container()
+        let count = try DataExportImport.checkedBackup(container: container) { try ModelContext(container).doses().count }
+        #expect(count == 3 && container.loadFailures.isEmpty)
+    }
+
+    @Test func failedPartialWriteNeverPublishesOrTouchesTheOldBackup() throws {
+        let old = Data("old complete".utf8)
+        var files = ["backup": old]
+        var published = false
+        let error = FolderBackupPublication.write(name: "backup") { partial in
+            #expect(files["backup"] == old)
+            #expect(partial.hasSuffix(".partial"))
+            files[partial] = Data("truncated".utf8)
+            return "write failed"
+        } publish: { _ in
+            published = true
+            return nil
+        }
+        #expect(error == "write failed" && !published && files["backup"] == old)
+    }
+
+    @Test func retryPreservesTheOnlyCompletePartialAfterFailedPromotion() throws {
+        var files = ["backup": Data("old complete".utf8)]
+        let complete = Data("new complete".utf8)
+        var recoveryName = ""
+        let error = FolderBackupPublication.write(name: "backup") { partial in
+            #expect(files["backup"] != nil)
+            files[partial] = complete
+            recoveryName = partial
+            return nil
+        } publish: { partial in
+            #expect(files[partial] == complete)
+            // Provider fault: old final deleted, rename failed, fallback copy cut short.
+            files["backup"] = Data("truncated".utf8)
+            return "publish failed"
+        }
+        #expect(error == "publish failed")
+        var publishedAgain = false
+        let retry = FolderBackupPublication.write(name: "backup") { partial in
+            #expect(partial != recoveryName)
+            files[partial] = Data()
+            return "new file failed"
+        } publish: { _ in
+            publishedAgain = true
+            return nil
+        }
+        #expect(retry == "new file failed" && !publishedAgain)
+        #expect(files[recoveryName] == complete)
+    }
+
+    @Test func completedPartialIsPublishedAfterStageSucceeds() throws {
+        var order: [String] = []
+        var stagedName = ""
+        let error = FolderBackupPublication.write(name: "backup") { partial in
+            stagedName = partial
+            order.append("stage closed")
+            return nil
+        } publish: { partial in
+            #expect(partial == stagedName)
+            order.append("publish")
+            return nil
+        }
+        #expect(error == nil && order == ["stage closed", "publish"])
+    }
+
+    @Test func psyLogUnknownDoseSurvivesProductionExportEncodingAndImport() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let original = DoseEntry(substance: "unknown-med", amount: 42, unit: "mg", route: .sublingual,
+            timestamp: Date(ms: 1_790_000_000_000), notes: "unknown amount #kept", isUnknownDose: true)
+        let ingestion = DataExportImport.exportPsyLogIngestion(original)
+        #expect(ingestion.dose == 0 && ingestion.isUnknownDose)
+        let encoded = try JSONEncoder().encode(ingestion)
+        let row = try JSONSerialization.jsonObject(with: encoded)
+        let data = try JSONSerialization.data(withJSONObject: [
+            "experiences": [["title": "Unknown dose session", "ingestions": [row]]]
+        ])
+        try DataExportImport.importPsyLog(data: data, context: context, customStore: .shared)
+        try context.save()
+        let reopened = ModelContext(container)
+        let rows = try reopened.doses()
+        #expect(rows.count == 1)
+        let restored = try #require(rows.first)
+        #expect(restored.amount == 0 && restored.isUnknownDose)
+        #expect(restored.route == .sublingual && restored.timestamp == original.timestamp)
+        #expect(restored.notes == original.notes && restored.tags == ["kept"])
+        #expect(restored.session?.title == "Unknown dose session")
+        try DataExportImport.importPsyLog(data: data, context: reopened, customStore: .shared)
+        #expect(try reopened.doses().count == 1)
+    }
+
+    @Test func psyLogUnmarkedZeroMissingAndNegativeDosesStillSkip() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let rows: [[String: Any]] = [
+            ["substanceName": "zero", "dose": 0, "time": Int64(1_790_000_000_000)],
+            ["substanceName": "missing", "isUnknownDose": true, "time": Int64(1_790_000_000_000)],
+            ["substanceName": "negative", "dose": -1, "isUnknownDose": true, "time": Int64(1_790_000_000_000)],
+            ["substanceName": "known", "dose": 5, "time": Int64(1_790_000_000_000)]
+        ]
+        let data = try JSONSerialization.data(withJSONObject: ["experiences": [["ingestions": rows]]])
+        try DataExportImport.importPsyLog(data: data, context: context, customStore: .shared)
+        let doses = try context.doses()
+        #expect(doses.count == 1 && doses.first?.substance == "known" && doses.first?.isUnknownDose == false)
+    }
+}
+''', encoding="utf-8")
+
+# Check the production wiring as well as extracting its regression fixtures.
+main_text710 = main710.read_text(encoding="utf-8")
+on_create710 = main_text710[main_text710.index("    override fun onCreate(savedInstanceState:"):]
+assert on_create710.index("if (!isTaskRoot)") < on_create710.index('getIntExtra("piru_next_mask", 0)') < on_create710.index("setContent {")
+assert main_text710.count('getIntExtra("piru_next_mask", 0)') == 1
+for forbidden710 in ("PIRU_AB_PACK_PADDING", "PIRU_AB_HOIST_PLAIN", "PIRU_AB_DECORATIVE_CANVAS"):
+    assert forbidden710 not in (root / "android/app/Package.swift").read_text(encoding="utf-8")
+assert "var mask: Int = 0" in patch710
+assert "while tabIndex < decoratorCount" in patch710 and "rememberSkipTabViewBackStacks" not in patch710
+assert 'as Bool?' in canvas710.read_text(encoding="utf-8")
+assert 'enabled(1) as Bool' not in canvas710.read_text(encoding="utf-8")
+native_make710 = swift_member(native710.read_text(encoding="utf-8"), "func makeDose(")
+assert native_make710.index("guard seenIDs.insert(id).inserted") < native_make710.index("guard seen.insert(key).inserted")
+assert "if let id = d.id, seenIDs.insert" not in native_make710
+assert apply710.index("guard StoreRecovery.snapshotStore") < apply710.index("try DataExportImport.deleteAll")
+snapshot_final710 = swift_member(recovery710.read_text(encoding="utf-8"), "static func snapshotStore(reason:")
+assert "succeeded = false" in snapshot_final710 and snapshot_final710.rstrip().endswith("return succeeded\n    }")
+automatic_final710 = swift_member(manager710.read_text(encoding="utf-8"), "func runAutomaticBackup(context:")
+assert automatic_final710.index("checkedBackup") < automatic_final710.index("exportJSON") < automatic_final710.index("writeICloud")
+assert "Logger.backupManager.error" in automatic_final710
+capture_final710 = swift_member(capture710.read_text(encoding="utf-8"), "private static func captureBackup(container:")
+assert capture_final710.index("checkedBackup") < capture_final710.index("makePiruFile")
+assert "captureBackup(container: container)" in backup.read_text(encoding="utf-8")
+assert "Logger.backupManager.error" in backup.read_text(encoding="utf-8")
+stage_kt710 = swift_member(folder_kt710.read_text(encoding="utf-8"), "fun stage(")
+publish_kt710 = swift_member(folder_kt710.read_text(encoding="utf-8"), "fun publish(")
+assert "deleteDocument" not in stage_kt710 and "copy(context, File(sourcePath), partial)" in stage_kt710
+assert publish_kt710.index("copy(context, File(sourcePath), target)") < publish_kt710.index("deleteDocument(resolver, partial)")
+assert 'partialName)?.let { DocumentsContract.deleteDocument' not in folder_kt710.read_text(encoding="utf-8")
+assert "static var androidAppGroup: UserDefaults?" in (model_tests / "MedicationDayProduction.swift").read_text(encoding="utf-8")
+assert "MedicationDayProduction.swift" not in staged.read_text(encoding="utf-8"), "Do not rewrite the shim itself into recursion"
+assert (model_tests / "DataSafetyTests.swift").read_text(encoding="utf-8").count("@Test func ") == 12
+print("70010 wiring assertions passed: cold-start order, native IDs, snapshot-before-delete, both backup guards, partial retention and StageSources shim")
+
+print("Prepared 70010: piru_next_mask 0/1/2/4, UUID-first native import, required restore snapshot, complete-backup guard, retained partials and unknown PsyLog doses")
