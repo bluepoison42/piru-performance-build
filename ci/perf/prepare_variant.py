@@ -1996,6 +1996,7 @@ assert publication_relative710 not in staged_text710
 staged.write_text(staged_text710 + "\n" + publication_relative710 + "\n", encoding="utf-8")
 
 (model_tests / "DataSafetyTests.swift").write_text(r'''import Foundation
+import GRDB
 import PortableData
 import Testing
 
