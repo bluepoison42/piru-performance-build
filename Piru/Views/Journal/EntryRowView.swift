@@ -35,6 +35,18 @@ struct DayEntryCore: Equatable {
     /// The combination product the dose was logged as part of ("Co-codamol"
     /// under a paracetamol row). `nil` for a dose logged on its own.
     let combinationName: String?
+    /// The volume taken of a liquid combination product, in mL ("Part of
+    /// Oramorph · 2.5 mL"). `nil` for a per-unit product or a lone dose.
+    let combinationVolumeML: Double?
+
+    /// The "Part of …" line under a combination component's name.
+    var combinationLine: String? {
+        guard let combinationName else { return nil }
+        if let combinationVolumeML {
+            return String(localized: "Part of \(combinationName) · \(combinationVolumeML.doseFormatted) mL")
+        }
+        return String(localized: "Part of \(combinationName)")
+    }
 
     /// Resolve each dose row's substance facts once: title, dose level, and the
     /// rail's window.
@@ -77,6 +89,7 @@ struct DayEntryCore: Equatable {
                 isUnknownDose: entry.isUnknownDose,
                 category: resolved?.category,
                 combinationName: entry.combinationName,
+                combinationVolumeML: entry.combinationName == nil ? nil : entry.volumeML,
             )
         }
     }
@@ -216,8 +229,8 @@ struct EntryRowView: View {
                 Text(display.core.displayName)
                     .font(.body.weight(.semibold))
                     .lineLimit(nameLineLimit)
-                if let combination = display.core.combinationName {
-                    Text("Part of \(combination)")
+                if let combinationLine = display.core.combinationLine {
+                    Text(combinationLine)
                         .captionSecondary()
                         .lineLimit(1)
                 }

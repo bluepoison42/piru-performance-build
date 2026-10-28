@@ -102,6 +102,10 @@ private final class CustomSubstanceDraft {
     var isCombination: Bool
     /// What one unit of the combination is called — "tablet", "capsule".
     var unitWord: String
+    /// The combination is a liquid: each component's amount is per mL and the
+    /// quick log takes a volume. Saved as the unit word "mL"
+    /// (``CombinationComponent/volumeUnitWord``), which is what makes it one.
+    var isLiquid: Bool
     var components: [ComponentDraft]
 
     init(existing: CustomSubstanceEntry?, initialName: String?, personalizing: Substance?) {
@@ -116,7 +120,8 @@ private final class CustomSubstanceDraft {
         defaultRoute = existing?.defaultRoute ?? personalizing?.defaultRoute ?? .oral
         isCombination = existing?.isCombination ?? false
         unit = (existing?.isCombination == true ? nil : existing?.unit) ?? baseRoute?.unit ?? "mg"
-        unitWord = (existing?.isCombination == true ? existing?.unit : nil) ?? "dose"
+        isLiquid = existing?.isLiquidCombination ?? false
+        unitWord = (existing?.isCombination == true && existing?.isLiquidCombination == false ? existing?.unit : nil) ?? "dose"
         components = (existing?.components ?? []).map(ComponentDraft.init(component:))
         notes = existing?.notes ?? ""
 
@@ -168,6 +173,13 @@ private final class CustomSubstanceDraft {
 
     var trimmedUnitWord: String {
         unitWord.trimmingCharacters(in: .whitespaces)
+    }
+
+    /// The word the combination is saved under and its amounts are "per": the
+    /// millilitre for a liquid, else the typed unit word ("dose" when blank).
+    var savedUnitWord: String {
+        if isLiquid { return CombinationComponent.volumeUnitWord }
+        return trimmedUnitWord.isEmpty ? "dose" : trimmedUnitWord
     }
 
     /// A name, and in combination mode at least one component — every one of
@@ -243,7 +255,7 @@ private final class CustomSubstanceDraft {
         if isCombination {
             let components = buildComponents()
             entry.components = components
-            entry.unit = trimmedUnitWord.isEmpty ? "dose" : trimmedUnitWord
+            entry.unit = savedUnitWord
             entry.defaultRoute = components?.first?.route ?? defaultRoute
             entry.doses = nil
             entry.duration = nil
@@ -435,18 +447,29 @@ struct CustomSubstanceFormView: View {
     @ViewBuilder
     private var combinationSections: some View {
         Section {
-            TextField("Unit (e.g. tablet, capsule)", text: $draft.unitWord)
-                .autocorrectionDisabled()
-                .neverAutocapitalize()
+            Picker("Measured", selection: $draft.isLiquid.animation()) {
+                Text("Per unit").tag(false)
+                Text("Per mL").tag(true)
+            }
+            .pickerStyle(.segmented)
+            if !draft.isLiquid {
+                TextField("Unit (e.g. tablet, capsule)", text: $draft.unitWord)
+                    .autocorrectionDisabled()
+                    .neverAutocapitalize()
+            }
         } header: {
             Text("Unit")
         } footer: {
-            Text("What one of these is called. Each component's amount is per unit.")
+            if draft.isLiquid {
+                Text("A liquid. Each component's amount is per mL, and logging it asks for the volume you took.")
+            } else {
+                Text("What one of these is called. Each component's amount is per unit.")
+            }
         }
 
         Section {
             ForEach($draft.components) { $component in
-                CombinationComponentRow(component: $component, unitWord: draft.trimmedUnitWord.isEmpty ? "dose" : draft.trimmedUnitWord)
+                CombinationComponentRow(component: $component, unitWord: draft.savedUnitWord)
             }
             .onDelete { offsets in
                 withAnimation(.snappy) { draft.components.remove(atOffsets: offsets) }

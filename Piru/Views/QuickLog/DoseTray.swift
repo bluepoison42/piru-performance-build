@@ -177,8 +177,16 @@ struct StagedDose: Identifiable, Equatable {
     var emoji: String?
     /// The combination product this row was staged from ("Co-codamol" on its
     /// paracetamol row), carried onto the committed entry. `nil` for a dose
-    /// staged on its own.
+    /// staged on its own. For a liquid product, ``volumeML`` is the volume
+    /// taken and ``abv`` this component's amount per mL in ``unit``.
     var combinationName: String?
+
+    /// A component of a liquid combination, staged by volume: the editor shows
+    /// the product's volume in place of a mass field, and the amount is always
+    /// volume × amount per mL.
+    var isLiquidCombinationRow: Bool {
+        combinationName != nil && volumeML != nil && abv != nil
+    }
     /// The user opened this row to type into it (the sliders pill, a row tap),
     /// so the editor focuses the amount field on appear — even over a seeded
     /// reference dose. The editor clears it once consumed. Stays false for
@@ -738,7 +746,16 @@ final class DoseTrayModel {
     /// other chip, so picking the product again adds another unit to each. A
     /// component whose substance the library no longer knows stages under its
     /// raw name, as a custom substance does.
+    ///
+    /// A liquid product (``CustomSubstanceEntry/isLiquidCombination``) stages
+    /// by volume instead: `quantity` is ignored and it takes
+    /// ``CombinationComponent/defaultVolumeML``; see
+    /// ``stage(combination:volumeML:colorLookup:)``.
     func stage(combination: CustomSubstanceEntry, quantity: Int = 1, colorLookup: [String: P3Color] = [:]) {
+        if combination.isLiquidCombination {
+            stage(combination: combination, volumeML: CombinationComponent.defaultVolumeML, colorLookup: colorLookup)
+            return
+        }
         guard quantity > 0 else { return }
         for component in combination.components ?? [] {
             let library = SubstanceLibrary.lookup(component.substance)
@@ -754,6 +771,86 @@ final class DoseTrayModel {
                 combinationName: combination.name,
             )
         }
+    }
+
+    /// Stage `volumeML` of a liquid combination product: one row per
+    /// component, each at volume × its amount per mL in its own unit (0.25 mL
+    /// of 2 g/mL morphine is 0.5 g). Each row records the volume and the
+    /// per-mL amount (``StagedDose/volumeML`` / ``StagedDose/abv``), which the
+    /// committed entries keep and the editor's volume field rescales from.
+    /// Picking the product again adds its volume to each row. A row that merges
+    /// into a dose staged some other way carries no volume, since the volume
+    /// no longer describes its total.
+    func stage(combination: CustomSubstanceEntry, volumeML: Double, colorLookup: [String: P3Color] = [:]) {
+        guard volumeML.isFinite, volumeML > 0 else { return }
+        let volume = min(volumeML, CombinationComponent.maximumVolumeML)
+        for component in combination.components ?? [] {
+            let library = SubstanceLibrary.lookup(component.substance)
+            let name = library?.name ?? component.substance
+            let amount = component.amount(inVolumeML: volume)
+            let identity = Self.stagedIdentity(substance: name, productName: nil, librarySubstance: library, route: component.route)
+            let existing = stagedIndex(identity: identity, route: component.route, unit: component.unit)
+            let previous = existing.map { (volumeML: staged[$0].volumeML, perML: staged[$0].abv) }
+            stage(
+                substance: name,
+                route: component.route,
+                amount: amount,
+                unit: component.unit,
+                tint: colorLookup[name.lowercased()],
+                librarySubstance: library,
+                combinationName: combination.name,
+            )
+            guard let index = existing ?? staged.indices.last else { continue }
+            let recordsVolume = Self.recordsCombinationVolume(component: component, library: library)
+            if let previous {
+                // Merged into a row already here: the volumes add only when that
+                // row is this same liquid at the same strength.
+                if recordsVolume, let previousML = previous.volumeML, let perML = previous.perML,
+                   staged[index].combinationName == combination.name,
+                   Self.sameAmount(perML, component.amountPerUnit) {
+                    staged[index].volumeML = previousML + volume
+                } else {
+                    staged[index].volumeML = nil
+                    staged[index].abv = nil
+                }
+            } else if recordsVolume {
+                staged[index].volumeML = volume
+                staged[index].abv = component.amountPerUnit
+            }
+        }
+    }
+
+    /// Set the volume of a liquid combination already in the tray: every row
+    /// staged from `combinationName` that records a volume is re-derived as
+    /// `volumeML` × its amount per mL. The editor's volume field calls this,
+    /// so one volume moves every component of the product together.
+    func setVolume(_ volumeML: Double, ofCombination combinationName: String) {
+        guard volumeML.isFinite, volumeML > 0 else { return }
+        let volume = min(volumeML, CombinationComponent.maximumVolumeML)
+        for index in staged.indices where staged[index].combinationName == combinationName {
+            guard staged[index].isLiquidCombinationRow, let perML = staged[index].abv else { continue }
+            staged[index].components = [.init(amount: ByVolumeDosing.mass(volumeML: volume, concentrationPerML: perML))]
+            staged[index].volumeML = volume
+            staged[index].isUnknownAmount = false
+        }
+    }
+
+    /// Open the first row of a liquid combination for editing, so its volume
+    /// field is on screen the moment the product is picked: a liquid is staged
+    /// at a placeholder 1 mL that the user is about to change.
+    func openVolume(ofCombination combinationName: String) {
+        guard let row = staged.first(where: { $0.combinationName == combinationName && $0.isLiquidCombinationRow }) else { return }
+        openForEditing(row.id)
+    }
+
+    /// Whether a liquid component's row may carry the volume on the by-volume
+    /// fields. Those fields already mean something for a substance with its
+    /// own by-volume input: alcohol reads `abv` as percent, so it never takes
+    /// one, and an injectable ester reads it as concentration in its own unit,
+    /// so it takes one only when the component is measured in that unit.
+    static func recordsCombinationVolume(component: CombinationComponent, library: Substance?) -> Bool {
+        guard let capability = library?.byVolumeDosing else { return true }
+        return capability.isMassPerVolume && component.unit == capability.canonicalUnit
     }
 
     /// The isomer a staged dose should open on: the one its product names, else

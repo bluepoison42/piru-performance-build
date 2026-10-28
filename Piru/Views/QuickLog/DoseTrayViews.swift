@@ -34,9 +34,17 @@ struct TrayStagedListCard: View {
                         // doesn't fight the morph because no pair spans it.
                         Group {
                             if model.expandedItemIDs.contains(item.id) {
-                                StagedDoseEditor(item: $item, namespace: morphNamespace) {
-                                    withAnimation(.snappy) { _ = model.expandedItemIDs.remove(item.id) }
-                                }
+                                StagedDoseEditor(
+                                    item: $item,
+                                    namespace: morphNamespace,
+                                    onCollapse: {
+                                        withAnimation(.snappy) { _ = model.expandedItemIDs.remove(item.id) }
+                                    },
+                                    onCombinationVolume: { volume in
+                                        guard let name = item.combinationName else { return }
+                                        model.setVolume(volume, ofCombination: name)
+                                    },
+                                )
                                 .padding(.vertical, Spacing.md)
                             } else {
                                 // Long-press only on the collapsed row: the open

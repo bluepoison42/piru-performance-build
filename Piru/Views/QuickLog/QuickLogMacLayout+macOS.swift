@@ -103,6 +103,7 @@ struct QuickLogMacLayout: View {
             pendingCombination = nil
             withAnimation(.snappy) {
                 tray.stage(combination: combination, colorLookup: content.cachedColorLookup)
+                if combination.isLiquidCombination { tray.openVolume(ofCombination: combination.name) }
                 searchText = ""
             }
             return

@@ -322,6 +322,52 @@ final class StagedDoseEditorModel {
         }
     }
 
+    // MARK: - Liquid combination
+
+    /// The volume typed into a liquid combination's row, in mL. Always mL: the
+    /// product's amounts are per mL, so the field takes no other unit. `nil`
+    /// until the text is a positive number.
+    var enteredCombinationVolumeML: Double? {
+        let trimmed = volumeText.trimmingCharacters(in: .whitespaces)
+        guard let value = Double(trimmed.replacingOccurrences(of: ",", with: "."))
+            ?? (try? Double(trimmed, format: .number)),
+            value.isFinite, value > 0
+        else { return nil }
+        return value
+    }
+
+    /// Show a liquid combination's staged volume in the field, unless the
+    /// field already reads that volume — so a value the user is mid-way
+    /// through typing ("0." on the way to "0.25") is never rewritten.
+    func showCombinationVolume(_ volumeML: Double?) {
+        guard let volumeML, volumeML > 0 else { return }
+        if let entered = enteredCombinationVolumeML, abs(entered - volumeML) < 0.0001 { return }
+        volumeText = volumeML.doseFormatted
+    }
+
+    /// The −/+ step for a liquid's volume: tenths of a millilitre under 2 mL
+    /// (a dropper or an oral syringe), halves up to 10 mL, whole millilitres
+    /// above.
+    static func combinationVolumeStep(at volumeML: Double) -> Double {
+        if volumeML < 2 { return 0.1 }
+        if volumeML < 10 { return 0.5 }
+        return 1
+    }
+
+    /// Bump a liquid's volume by one step, snapped to the step's grid and kept
+    /// at or above the smallest step. The view's change handler hands the new
+    /// volume to the tray, which rescales every component of the product.
+    func adjustCombinationVolume(_ direction: Double) {
+        let current = enteredCombinationVolumeML ?? 0
+        // Stepping down from a boundary uses the finer step below it, so 2 mL
+        // goes to 1.9, not 1.5.
+        let step = Self.combinationVolumeStep(at: direction < 0 ? max(current - 0.0001, 0) : current)
+        let snapped = ((current + direction * step) / step).rounded() * step
+        let next = min(max(snapped, Self.combinationVolumeStep(at: 0)), CombinationComponent.maximumVolumeML)
+        volumeText = next.doseFormatted
+        stepTick += 1
+    }
+
     // MARK: - Grapefruit
 
     func resolveGrapefruitSubstrate(substanceName: String) {

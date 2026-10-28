@@ -3387,6 +3387,20 @@ T = {
     "per %@": ("每%@", "每%@"),
     "%@ · per %@": ("%@ · 每%@", "%@ · 每%@"),
     "Part of %@": ("%@ 的一部分", "%@ 的一部分"),
+    # Liquid combination products, logged by volume (2026-10-28).
+    "Measured": ("计量方式", "計量方式"),
+    "Per unit": ("按单位", "按單位"),
+    "Per mL": ("按毫升", "按毫升"),
+    "A liquid. Each component's amount is per mL, and logging it asks for the volume you took.": (
+        "液体。每种成分的含量按每毫升计，记录时会请你填写服用的容量。",
+        "液體。每種成分的含量按每毫升計，記錄時會請你填寫服用的容量。",
+    ),
+    "Volume of %@": ("%@ 的容量", "%@ 的容量"),
+    "Part of %@ · %@ mL": ("%@ 的一部分 · %@ mL", "%@ 的一部分 · %@ mL"),
+    "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken, or the volume in mL for a liquid.": (
+        "留空则以用量未知记录这份剂量。对于复方制剂，填写服用的单位数；液体则填写毫升数。",
+        "留空則以用量未知記錄這份劑量。對於複方製劑，填寫服用的單位數；液體則填寫毫升數。",
+    ),
     "Find a Place…": ("查找地点…", "尋找地點…"),
     "Location access is off": ("定位权限已关闭", "定位權限已關閉"),
     "Turn on location access in Settings to use your current location.": (
@@ -8745,7 +8759,6 @@ if __name__ == "__main__":
             "Start Dose Log",
             "Saves a dose to the journal without opening Piru.",
             "Opens Piru with a dose staged in the quick log, ready to review and save.",
-            "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken.",
             "Leave empty to open the dose editor on the usual dose.",
             "The substance's usual unit for the route when empty.",
             "The substance's usual route when empty.",
@@ -8806,6 +8819,18 @@ if __name__ == "__main__":
             "per %@",
             "%@ · per %@",
             "Part of %@",
+        }
+    )
+    # Liquid combination products, logged by volume (2026-10-28).
+    NEW_KEYS.update(
+        {
+            "Measured",
+            "Per unit",
+            "Per mL",
+            "A liquid. Each component's amount is per mL, and logging it asks for the volume you took.",
+            "Volume of %@",
+            "Part of %@ · %@ mL",
+            "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken, or the volume in mL for a liquid.",
         }
     )
     # Spreadsheet (CSV/TSV) import and export (2026-10-23).

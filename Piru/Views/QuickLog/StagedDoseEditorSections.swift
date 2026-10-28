@@ -324,6 +324,57 @@ struct StagedDoseByDrinkBlock: View {
     }
 }
 
+/// A liquid combination's input: the volume of the product taken, in mL,
+/// with this component's mass beneath it as volume × its amount per mL. The
+/// volume row is the by-volume logger's own stepper row; the field is shared by
+/// every component, so typing it in one row moves them all.
+struct StagedDoseCombinationVolumeBlock: View {
+    @Bindable var model: StagedDoseEditorModel
+    let combinationName: String
+    /// This component's staged mass, in ``unit``.
+    let amount: Double
+    let unit: String
+    /// This component's amount per mL of the product, in ``unit``.
+    let perML: Double
+    let level: DoseLevel?
+    var volumeFocus: FocusState<Bool>.Binding
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
+            StagedDoseByDrinkRow(
+                label: Text("Volume of \(combinationName)"),
+                text: $model.volumeText,
+                focus: volumeFocus,
+                trailing: Text(verbatim: CombinationComponent.volumeUnitWord)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Theme.secondaryLabel),
+                onDec: { model.adjustCombinationVolume(-1) },
+                onInc: { model.adjustCombinationVolume(1) },
+                decLabel: "Lower volume",
+                incLabel: "Raise volume",
+            )
+            HStack(spacing: Spacing.sm) {
+                Text(verbatim: "\(amount.doseFormatted) \(unit)")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(level?.labelColor ?? .primary)
+                    .contentTransition(.numericText())
+                Middot().foregroundStyle(.tertiary)
+                Text(verbatim: "\(perML.doseFormatted) \(unit)/\(CombinationComponent.volumeUnitWord)")
+                    .foregroundStyle(Theme.secondaryLabel)
+                if let level {
+                    Middot().foregroundStyle(.tertiary)
+                    Text(level.displayName)
+                        .textCase(.lowercase)
+                        .foregroundStyle(level.labelColor)
+                }
+            }
+            .font(.subheadline.weight(.medium))
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .combine)
+        }
+    }
+}
+
 /// One stepper row in the grams-picker shape: the number is centered in the
 /// capsule itself; the unit is a trailing overlay so it never shifts the number
 /// off-center (mirrors the amount field).

@@ -59,10 +59,10 @@ nonisolated struct SubstanceEntity: AppEntity, Hashable {
     }
 
     /// A custom substance, or a combination product (logged as one dose per
-    /// component, its amount counting units of the product).
+    /// component, its amount counting units of the product, or mL of a liquid).
     @MainActor
     static func custom(_ entry: CustomSubstanceEntry) -> SubstanceEntity {
-        let subtitle: String? = if let summary = entry.componentsSummary {
+        let subtitle: String? = if let summary = entry.componentsListing {
             summary
         } else if entry.displayName == nil {
             String(localized: "Custom substance")

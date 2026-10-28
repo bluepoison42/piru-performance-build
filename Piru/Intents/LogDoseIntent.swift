@@ -18,7 +18,7 @@ struct LogDoseIntent: AppIntent {
     @Parameter(title: "Substance")
     var substance: SubstanceEntity
 
-    @Parameter(title: "Amount", description: "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken.")
+    @Parameter(title: "Amount", description: "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken, or the volume in mL for a liquid.")
     var amount: Double?
 
     @Parameter(title: "Unit", description: "The substance's usual unit for the route when empty.")

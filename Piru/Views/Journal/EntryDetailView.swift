@@ -226,6 +226,12 @@ struct EntryDetailView: View {
         let previousTimestamp = entry.timestamp
         let previousSubstanceName = entry.substance
         let previousMeal = entry.meal
+        // A component of a liquid combination keeps its recorded volume while
+        // its amount and unit stand; once either changes, the volume no longer
+        // describes the dose.
+        let keepsCombinationVolume = entry.combinationName != nil && entry.volumeML != nil
+            && !draft.isUnknownDose && storedAmount == entry.amount && storedUnit == entry.unit
+        let combinationVolume = (volumeML: entry.volumeML, perML: entry.abv)
 
         entry.amount = storedAmount
         entry.unit = storedUnit
@@ -245,9 +251,14 @@ struct EntryDetailView: View {
         // By-volume metadata, set when logged as a drink, cleared otherwise — and
         // cleared for an unknown dose, whose volume and strength are the unknowns.
         let keepsVolume = draft.byVolumeMode && !draft.isUnknownDose
-        entry.volumeML = keepsVolume ? draft.enteredVolumeML : nil
-        entry.abv = keepsVolume ? draft.enteredABV : nil
-        entry.drinkName = keepsVolume ? draft.trimmedDrinkName : nil
+        if keepsCombinationVolume {
+            entry.volumeML = combinationVolume.volumeML
+            entry.abv = combinationVolume.perML
+        } else {
+            entry.volumeML = keepsVolume ? draft.enteredVolumeML : nil
+            entry.abv = keepsVolume ? draft.enteredABV : nil
+            entry.drinkName = keepsVolume ? draft.trimmedDrinkName : nil
+        }
         entry.tags = Array(Set(draft.tags + TagExtractor.extractTags(from: draft.notes)))
         entry.locationName = draft.location?.name
         entry.latitude = draft.location?.latitude

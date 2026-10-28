@@ -138,7 +138,7 @@ struct QuickLogSearchResults: View {
                 name: entry.resolvedDisplayName,
                 source: String(localized: "Combination"),
                 tint: entry.category.color,
-                detail: entry.componentsSummary,
+                detail: entry.componentsListing,
             )
         }
     }
