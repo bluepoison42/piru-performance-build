@@ -121,6 +121,9 @@ struct EntryDetailView: View {
         #endif
             .animation(.snappy(duration: 0.28), value: isEditing)
             .toolbar { toolbarContent }
+            // Editing owns the leading slot: its Cancel (an X) is the way out, so a
+            // pushed screen's Back beside it would be a second, unsaved exit.
+            .navigationBarBackButtonHidden(isEditing)
             .confirmationDialog(
                 "Delete this entry?",
                 isPresented: $showingDeleteConfirmation,

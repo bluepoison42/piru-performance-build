@@ -283,13 +283,7 @@ struct StagedDoseEditor: View {
         guard !item.isLiquidCombinationRow,
               let cap = item.librarySubstance?.byVolumeDosing,
               item.unit == cap.canonicalUnit else { return nil }
-        // An injectable ester's volumetric input only makes sense on an injection
-        // route (a vial drawn in mL); oral/transdermal estradiol stays a plain mg
-        // log. Alcohol (percent-by-volume) has no route gate.
-        if cap.isMassPerVolume {
-            guard item.route == .intramuscular || item.route == .subcutaneous else { return nil }
-        }
-        return cap
+        return cap.offersVolumeInput(on: item.route) ? cap : nil
     }
 
     private var customDrinkGrams: Double? {

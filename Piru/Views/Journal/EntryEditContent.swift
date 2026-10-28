@@ -96,6 +96,9 @@ struct EntryEditContent: View {
                 if let sub = substance {
                     draft.unit = sub.unit(for: draft.route, saltForm: draft.saltForm, isomer: draft.isomer)
                 }
+                // A route without the volume input (an ester moved to oral)
+                // edits by mass; the hidden vial fields must not commit.
+                if byVolumeCapability == nil { draft.byVolumeMode = false }
             }
             SaltPicker(forms: draftSaltForms, selection: $draft.saltForm, style: .formRow)
                 .onChange(of: draft.saltForm) {
@@ -216,8 +219,12 @@ struct EntryEditContent: View {
 
     // MARK: - Derived
 
+    /// The by-volume capability on the draft's route — an ester's vial input
+    /// only on an injection route (``ByVolumeDosing/offersVolumeInput(on:)``).
     private var byVolumeCapability: ByVolumeDosing? {
-        substance?.byVolumeDosing
+        guard let capability = substance?.byVolumeDosing,
+              capability.offersVolumeInput(on: draft.route) else { return nil }
+        return capability
     }
 
     /// The draft's amount in the unit it is written in, aliases included.

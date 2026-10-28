@@ -115,7 +115,7 @@ struct QuickLogMacLayout: View {
                 substance: prefill.substance,
                 route: prefill.route,
                 unit: prefill.unit,
-                tint: content.cachedColorLookup[prefill.substance.lowercased()],
+                tint: SubstancePalette.tint(for: prefill.substance, tintMap: content.cachedColorLookup),
                 librarySubstance: SubstanceLibrary.lookup(prefill.substance.lowercased()),
             )
             searchText = ""

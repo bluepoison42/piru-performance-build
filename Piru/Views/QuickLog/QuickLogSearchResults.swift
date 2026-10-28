@@ -250,6 +250,14 @@ struct QuickLogSearchResults: View {
         case let .recent(card):
             let group = card.routes.first
             let chip = group?.doses.first
+            let productName = group?.stageProductName
+            // The card's ester rides on saltForm — an "Estradiol Enanthate" card
+            // re-stages Enanthate. A dose logged under a name that states the ester
+            // ("Estradiol Enanthate" as its product or its substance, as imported
+            // logs carry it) holds it only in the name, so read it off the name.
+            let saltForm = group?.saltForm ?? card.saltForm
+                ?? productName.flatMap { SubstanceLibrary.saltForm(for: $0) }
+                ?? SubstanceLibrary.saltForm(for: card.substanceName)
             return QuickLogStagePayload(
                 substance: card.substanceName,
                 route: group?.route ?? .oral,
@@ -257,7 +265,8 @@ struct QuickLogSearchResults: View {
                 amount: chip?.amount ?? 0,
                 tint: card.tint,
                 librarySubstance: group?.librarySubstance,
-                productName: group?.stageProductName,
+                productName: productName,
+                saltForm: saltForm,
                 volumeML: chip?.volumeML,
                 abv: chip?.abv,
                 drinkName: chip?.drinkName,

@@ -568,10 +568,11 @@ struct ExportRoundTripTests {
     // MARK: Comparison
 
     private func compare<M: PersistentModel>(
-        _ type: M.Type, _ checks: [FieldCheck<M>], source: Side, target: Side, key: (M) -> String,
+        _ type: M.Type, _ checks: [FieldCheck<M>], source: Side, target: Side,
+        where predicate: Predicate<M>? = nil, key: (M) -> String,
     ) throws {
-        let before = try source.context.fetch(FetchDescriptor<M>())
-        let after = try target.context.fetch(FetchDescriptor<M>())
+        let before = try source.context.fetch(FetchDescriptor<M>(predicate: predicate))
+        let after = try target.context.fetch(FetchDescriptor<M>(predicate: predicate))
         let name = "\(type)"
         #expect(!before.isEmpty, "\(name) was not seeded")
         #expect(before.count == after.count, "\(name): \(before.count) rows exported, \(after.count) restored")
@@ -630,7 +631,12 @@ struct ExportRoundTripTests {
         try compare(NotificationPreferences.self, Fields.notificationPreferences, source: source, target: target) { _ in "prefs" }
         try compare(RoutineOccurrence.self, Fields.routineOccurrence, source: source, target: target) { $0.substance }
         try compare(LabMeasurement.self, Fields.labMeasurement, source: source, target: target) { $0.id.uuidString }
-        try compare(SubstanceColor.self, Fields.substanceColor, source: source, target: target) { $0.substance }
+        // Picked colors only: the import mints a class-color row for every
+        // substance it brings in that has none, and those are generated here.
+        try compare(
+            SubstanceColor.self, Fields.substanceColor, source: source, target: target,
+            where: #Predicate { $0.usesDefault == false },
+        ) { $0.substance }
 
         for setting in ExportedSettings.all {
             let before = source.settings.defaults(setting.domain).object(forKey: setting.key)
