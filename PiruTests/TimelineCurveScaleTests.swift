@@ -113,17 +113,17 @@ struct TimelineCurveScaleTests {
     }
 
     @Test
-    func `Two full doses an hour apart stack to the lane's edge with their shape kept`() {
+    func `Two full doses an hour apart stack to the lane's edge with their shape kept`() throws {
         let states = [dose(daysIn: 0, magnitude: 1), dose(daysIn: 1.0 / 24, magnitude: 1)]
         let ends = states.map(TimelineStripBuilder.drawMinutes(for:))
         let divisors = TimelineStripBuilder.stackDivisors(states: states, weights: [1, 1], ends: ends)
         #expect(divisors.allSatisfy { $0 > 1 })
         let raw = stackedSamples(states, weights: [1, 1])
         let scaled = stackedSamples(states, weights: zip([1.0, 1.0], divisors).map { $0 / $1 })
-        #expect(raw.max()! > 1.2)
+        #expect(try #require(raw.max()) > 1.2)
         // Crest sampling can miss the true top by a hair; the clamp takes that.
-        #expect(scaled.max()! <= 1.02)
-        #expect(scaled.max()! > 0.9)
+        #expect(try #require(scaled.max()) <= 1.02)
+        #expect(try #require(scaled.max()) > 0.9)
         // Scaled, not clipped: no long run of samples pinned at the edge.
         let pinned = scaled.count(where: { $0 > 0.99 })
         #expect(pinned < raw.count(where: { $0 > 1 }))

@@ -18,23 +18,23 @@ struct MedScheduleIntervalTests {
         )
     }
 
-    @Test("Every 5 days is due on multiples of 5 from the start", arguments: [0, 5, 10, 35])
-    func everyFiveDue(offset: Int) {
+    @Test(arguments: [0, 5, 10, 35])
+    func `Every 5 days is due on multiples of 5 from the start`(offset: Int) {
         #expect(isDue(.everyNDays, interval: 5, on: offset))
     }
 
-    @Test("Every 5 days is not due between doses", arguments: [1, 2, 3, 4, 6, 9, 11])
-    func everyFiveNotDue(offset: Int) {
+    @Test(arguments: [1, 2, 3, 4, 6, 9, 11])
+    func `Every 5 days is not due between doses`(offset: Int) {
         #expect(!isDue(.everyNDays, interval: 5, on: offset))
     }
 
-    @Test("Not due before the start date")
-    func beforeStart() {
+    @Test
+    func `Not due before the start date`() {
         #expect(!isDue(.everyNDays, interval: 5, on: -5))
     }
 
-    @Test("The interval clamps to the offered range")
-    func clamps() {
+    @Test
+    func `The interval clamps to the offered range`() {
         // 1 (or less) clamps to 2, never collapsing into a daily schedule.
         #expect(isDue(.everyNDays, interval: 1, on: 2))
         #expect(!isDue(.everyNDays, interval: 0, on: 1))
@@ -43,8 +43,8 @@ struct MedScheduleIntervalTests {
         #expect(!isDue(.everyNDays, interval: 500, on: 100))
     }
 
-    @Test("The fixed cadences ignore the item's interval")
-    func fixedCadencesIgnoreInterval() {
+    @Test
+    func `The fixed cadences ignore the item's interval`() {
         #expect(isDue(.everyOtherDay, interval: 9, on: 2))
         #expect(!isDue(.everyOtherDay, interval: 9, on: 9))
         #expect(isDue(.weekly, interval: 3, on: 7))
@@ -54,8 +54,8 @@ struct MedScheduleIntervalTests {
         #expect(isDue(.daily, interval: 5, on: 1))
     }
 
-    @Test("A stored item carries its interval through the adherence entry point")
-    func storedItem() {
+    @Test
+    func `A stored item carries its interval through the adherence entry point`() {
         let item = DailyDoseItem(
             substance: "Testosterone cypionate", amount: 50, unit: "mg", route: .intramuscular,
             frequency: .everyNDays, frequencyIntervalDays: 5, startDate: start,
@@ -65,8 +65,8 @@ struct MedScheduleIntervalTests {
         #expect(item.frequencyShortLabel == String(localized: "Every \(5) days"))
     }
 
-    @Test("An unknown stored cadence reads as daily")
-    func unknownRawValue() {
+    @Test
+    func `An unknown stored cadence reads as daily`() {
         let item = DailyDoseItem(substance: "X", amount: 1)
         item.frequencyRaw = "everyFortnightOnTuesdays"
         #expect(item.frequency == .daily)

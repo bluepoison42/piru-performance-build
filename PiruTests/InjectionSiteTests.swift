@@ -5,37 +5,37 @@ import Testing
 
 @Suite("Injection site rotation")
 struct InjectionSiteTests {
-    @Test("The next site is the other side of the last area")
-    func alternatesSides() {
+    @Test
+    func `The next site is the other side of the last area`() {
         let left = InjectionSite(area: .thigh, side: .left)
         #expect(InjectionSite.suggestedNext(after: left, route: .intramuscular) == InjectionSite(area: .thigh, side: .right))
         let right = InjectionSite(area: .abdomen, side: .right)
         #expect(InjectionSite.suggestedNext(after: right, route: .subcutaneous) == InjectionSite(area: .abdomen, side: .left))
     }
 
-    @Test("Nothing is suggested before a site has been logged")
-    func noHistory() {
+    @Test
+    func `Nothing is suggested before a site has been logged`() {
         #expect(InjectionSite.suggestedNext(after: nil, route: .intramuscular) == nil)
     }
 
-    @Test("An area the route doesn't offer suggests nothing")
-    func areaNotOffered() {
+    @Test
+    func `An area the route doesn't offer suggests nothing`() {
         let abdomen = InjectionSite(area: .abdomen, side: .left)
         #expect(InjectionSite.suggestedNext(after: abdomen, route: .intramuscular) == nil)
         let hip = InjectionSite(area: .ventrogluteal, side: .right)
         #expect(InjectionSite.suggestedNext(after: hip, route: .subcutaneous) == nil)
     }
 
-    @Test("Only intramuscular and subcutaneous doses take a site")
-    func appliesToRoutes() {
+    @Test
+    func `Only intramuscular and subcutaneous doses take a site`() {
         #expect(InjectionSite.applies(to: .intramuscular))
         #expect(InjectionSite.applies(to: .subcutaneous))
         #expect(!InjectionSite.applies(to: .intravenous))
         #expect(!InjectionSite.applies(to: .oral))
     }
 
-    @Test("The raw value round-trips and an unknown one reads as nil")
-    func rawValue() {
+    @Test
+    func `The raw value round-trips and an unknown one reads as nil`() {
         for area in InjectionSite.Area.allCases {
             for side in InjectionSite.Side.allCases {
                 let site = InjectionSite(area: area, side: side)
@@ -51,8 +51,8 @@ struct InjectionSiteTests {
     }
 
     @MainActor
-    @Test("History suggests from the newest dose of the same substance that has a site")
-    func historySuggestion() throws {
+    @Test
+    func `History suggests from the newest dose of the same substance that has a site`() throws {
         let container = try ModelContainer(
             for: Schema(PiruSchema.models),
             configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none),
