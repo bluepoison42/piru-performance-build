@@ -19,9 +19,10 @@ struct DescriptorPickerView: View {
             if query.trimmingCharacters(in: .whitespaces).isEmpty {
                 ForEach(ontology.rollups) { rollup in
                     rollupSection(rollup)
+                        .listRowBackground(CardBackground())
                 }
             } else {
-                let groups = hitGroups(for: query)
+                let groups = ontology.searchGrouped(query)
                 if groups.isEmpty {
                     ContentUnavailableView.search(text: query)
                 } else {
@@ -37,11 +38,13 @@ struct DescriptorPickerView: View {
                         } header: {
                             Text(verbatim: group.title.capitalizedFirst)
                         }
+                        .listRowBackground(CardBackground())
                     }
                 }
             }
         }
         .insetGroupedListStyle()
+        .themedPage()
         .searchable(text: $query, placement: .automatic, prompt: Text("Search effects"))
         .navigationTitle("Descriptors")
         .inlineNavigationTitle()
@@ -126,26 +129,6 @@ struct DescriptorPickerView: View {
         .accessibilityHint(concept.definition.map { Text(verbatim: $0) } ?? Text(""))
     }
 
-    // MARK: - Search hits
-
-    /// Search hits grouped under their rollup, so the group's name is printed
-    /// once as a section header. Groups keep the rank order of their best hit.
-    private func hitGroups(for query: String) -> [DescriptorHitGroup] {
-        var groups: [DescriptorHitGroup] = []
-        var indexByKey: [String: Int] = [:]
-        for hit in ontology.search(query) {
-            let parent = ontology.rollup(of: hit.concept)
-            let key = parent?.id ?? hit.concept.domain
-            if let index = indexByKey[key] {
-                groups[index].hits.append(hit)
-            } else {
-                indexByKey[key] = groups.count
-                groups.append(DescriptorHitGroup(id: key, title: parent?.name ?? hit.concept.domain, hits: [hit]))
-            }
-        }
-        return groups
-    }
-
     private func toggle(_ id: String) {
         if let index = selection.firstIndex(of: id) {
             selection.remove(at: index)
@@ -155,15 +138,9 @@ struct DescriptorPickerView: View {
     }
 }
 
-private struct DescriptorHitGroup: Identifiable {
-    let id: String
-    let title: String
-    var hits: [SubjectiveEffectHit]
-}
-
-/// One search hit: the effect's name, its definition on up to two lines, and
-/// the alias that matched when the match came through one.
-private struct DescriptorHitRow: View {
+/// One search hit with a selection mark: ``DescriptorHitLabel`` and a
+/// trailing check that toggles the effect in or out of the note.
+struct DescriptorHitRow: View {
     let hit: SubjectiveEffectHit
     let isOn: Bool
     let toggle: () -> Void
@@ -171,23 +148,7 @@ private struct DescriptorHitRow: View {
     var body: some View {
         Button(action: toggle) {
             HStack(spacing: Spacing.lg) {
-                VStack(alignment: .leading, spacing: Spacing.xxs) {
-                    Text(verbatim: hit.concept.name)
-                        .foregroundStyle(.primary)
-                    if let definition = hit.concept.definition, !definition.isEmpty {
-                        Text(verbatim: definition)
-                            .font(.footnote)
-                            .foregroundStyle(Theme.secondaryLabel)
-                            .lineLimit(2)
-                            .truncationMode(.tail)
-                    }
-                    if let alias = hit.matchedAlias {
-                        Text("Matches “\(alias)”")
-                            .font(.caption)
-                            .foregroundStyle(Theme.tertiaryLabel)
-                            .lineLimit(1)
-                    }
-                }
+                DescriptorHitLabel(hit: hit, definitionLineLimit: 2)
                 Spacer()
                 Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(isOn ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.tertiary))
@@ -200,7 +161,39 @@ private struct DescriptorHitRow: View {
     }
 }
 
-private extension String {
+/// An effect's name, its definition, and the alias that matched when the
+/// match came through one. The picker clips the definition to two lines; the
+/// glossary passes `nil` and shows it whole.
+struct DescriptorHitLabel: View {
+    let hit: SubjectiveEffectHit
+    var definitionLineLimit: Int?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xxs) {
+            Text(verbatim: hit.concept.name)
+                .foregroundStyle(.primary)
+            if let definition = hit.concept.definition, !definition.isEmpty {
+                Text(verbatim: definition)
+                    .font(.footnote)
+                    .foregroundStyle(Theme.secondaryLabel)
+                    .lineLimit(definitionLineLimit)
+                    .truncationMode(.tail)
+                    .fixedSize(horizontal: false, vertical: definitionLineLimit == nil)
+            }
+            if let alias = hit.matchedAlias {
+                Text("Matches “\(alias)”")
+                    .font(.caption)
+                    .foregroundStyle(Theme.tertiaryLabel)
+                    .lineLimit(1)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+extension String {
+    /// The string with its first character uppercased: the vocabulary stores
+    /// names in lowercase ("body load").
     var capitalizedFirst: String {
         guard let first else { return self }
         return first.uppercased() + dropFirst()

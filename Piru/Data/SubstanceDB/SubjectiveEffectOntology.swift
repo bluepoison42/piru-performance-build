@@ -25,6 +25,15 @@ nonisolated struct SubjectiveEffectHit: Identifiable, Hashable, Sendable {
     }
 }
 
+/// Search hits that share a rollup, so the rollup's name is printed once as a
+/// section header. `id` is the rollup's id, or the domain for a concept with
+/// no rollup.
+nonisolated struct SubjectiveEffectHitGroup: Identifiable, Hashable, Sendable {
+    let id: String
+    let title: String
+    var hits: [SubjectiveEffectHit]
+}
+
 /// The session-note descriptor vocabulary, loaded once from the bundled DB and
 /// held in memory: 21 rollups, their atomic concepts, and the alias index the
 /// chip search runs over. ~500 concepts + ~1,200 aliases, so the whole thing is
@@ -126,6 +135,24 @@ final class SubjectiveEffectOntology {
             }
             .prefix(limit)
             .map(\.0)
+    }
+
+    /// ``search(_:limit:)`` grouped under each hit's rollup. Groups keep the
+    /// rank order of their best hit, and hits keep their rank within a group.
+    func searchGrouped(_ query: String, limit: Int = 30) -> [SubjectiveEffectHitGroup] {
+        var groups: [SubjectiveEffectHitGroup] = []
+        var indexByKey: [String: Int] = [:]
+        for hit in search(query, limit: limit) {
+            let parent = rollup(of: hit.concept)
+            let key = parent?.id ?? hit.concept.domain
+            if let index = indexByKey[key] {
+                groups[index].hits.append(hit)
+            } else {
+                indexByKey[key] = groups.count
+                groups.append(SubjectiveEffectHitGroup(id: key, title: parent?.name ?? hit.concept.domain, hits: [hit]))
+            }
+        }
+        return groups
     }
 
     /// The release's label normalization (`subfxonex-normalization-v1`): NFKD,

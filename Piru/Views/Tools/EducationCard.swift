@@ -19,6 +19,7 @@ struct EducationCard: View {
         Item(tool: .toleranceInfo),
         Item(tool: .recovery),
         Item(tool: .drugClasses),
+        Item(tool: .effects),
     ]
 
     var body: some View {

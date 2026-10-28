@@ -57,7 +57,7 @@ nonisolated enum PinnedScreen: Hashable {
         let tools: [Tool] = [
             .interactions, .inventory, .identify, .calculator, .steadyState, .injectionLevels,
             .volumetric, .pharma, .benzoEquivalence, .opioidEquivalence, .ceiling,
-            .toleranceInfo, .recovery, .drugClasses,
+            .toleranceInfo, .recovery, .drugClasses, .effects,
         ]
         let insights: [Insight] = [
             .adherence, .usage, .tolerance, .receptorLoad, .hormoneLevels, .patterns, .feltPatterns, .reports,

@@ -18,6 +18,8 @@ nonisolated enum Tool: String, Hashable, Codable, CaseIterable, Identifiable {
     case steadyState
     case injectionLevels
     case drugClasses
+    /// Every subjective effect a note can name, grouped by rollup and defined.
+    case effects
     /// The box scanner as a reference: point the camera at any medication box
     /// and open what the library knows about what is inside.
     case identify
@@ -42,6 +44,7 @@ nonisolated enum Tool: String, Hashable, Codable, CaseIterable, Identifiable {
         case .steadyState: "Steady State"
         case .injectionLevels: "Injection Levels"
         case .drugClasses: "Drug Classes"
+        case .effects: "Effect Glossary"
         case .identify: "Identify a Box"
         }
     }
@@ -62,6 +65,7 @@ nonisolated enum Tool: String, Hashable, Codable, CaseIterable, Identifiable {
         case .steadyState: "Where a repeated dose settles, and when"
         case .injectionLevels: "Project hormone levels from injectable esters"
         case .drugClasses: "What the members of a family share"
+        case .effects: "What each effect means, grouped by kind"
         case .identify: "Point at any medication box to see what's inside it"
         }
     }
@@ -81,6 +85,7 @@ nonisolated enum Tool: String, Hashable, Codable, CaseIterable, Identifiable {
         case .steadyState: "chart.line.flattrend.xyaxis"
         case .injectionLevels: "syringe"
         case .drugClasses: "square.stack.3d.up"
+        case .effects: "text.book.closed"
         case .identify: "barcode.viewfinder"
         }
     }
