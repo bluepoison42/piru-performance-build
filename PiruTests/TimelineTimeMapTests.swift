@@ -45,6 +45,86 @@ struct TimelineTimeMapTests {
     }
 
     @Test
+    func `A curve still running past now keeps the uniform scale into the future`() {
+        // Dosed an hour ago, a twelve-hour curve: the eleven hours ahead of
+        // now are active and cost their uniform height, far past the future
+        // cap; only the margin after the curve is the live edge's own run.
+        let dose = now.addingTimeInterval(-minutes(60))
+        let curveEnd = dose.addingTimeInterval(minutes(720))
+        let start = dose.addingTimeInterval(-minutes(5))
+        let end = curveEnd.addingTimeInterval(minutes(30))
+        let map = TimelineTimeMap(
+            start: start,
+            end: end,
+            now: now,
+            slices: [.init(bottomTime: start, topTime: end, breakAbove: false, minimumHeight: 0)],
+            anchors: [dose],
+            activeIntervals: [DateInterval(start: dose, end: curveEnd)],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(abs(map.height(from: now, to: curveEnd) - 660 * ppm) < 0.5)
+        #expect(660 * ppm > TimelineTimeMap.futureCap(pointsPerMinute: ppm))
+        // The same hour reads the same height either side of now.
+        let hourBefore = map.height(from: now.addingTimeInterval(-minutes(60)), to: now)
+        let hourAfter = map.height(from: now, to: now.addingTimeInterval(minutes(60)))
+        #expect(abs(hourBefore - hourAfter) < 0.5)
+        // The empty margin past the curve keeps the live edge's floor.
+        #expect(map.height(from: curveEnd, to: end) >= TimelineTimeMap.liveEdgeMinimumHeight - 0.01)
+    }
+
+    @Test
+    func `Empty future time stays capped and floored`() {
+        let dose = now.addingTimeInterval(-minutes(600))
+        let start = dose.addingTimeInterval(-minutes(5))
+        let longEnd = now.addingTimeInterval(minutes(1_000))
+        let longMap = TimelineTimeMap(
+            start: start,
+            end: longEnd,
+            now: now,
+            slices: [.init(bottomTime: start, topTime: longEnd, breakAbove: false, minimumHeight: 0)],
+            anchors: [dose],
+            activeIntervals: [DateInterval(start: dose, duration: minutes(120))],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(longMap.height(from: now, to: longEnd) <= TimelineTimeMap.futureCap(pointsPerMinute: ppm) + 0.5)
+
+        let shortEnd = now.addingTimeInterval(minutes(10))
+        let shortMap = TimelineTimeMap(
+            start: start,
+            end: shortEnd,
+            now: now,
+            slices: [.init(bottomTime: start, topTime: shortEnd, breakAbove: false, minimumHeight: 0)],
+            anchors: [dose],
+            activeIntervals: [],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(abs(shortMap.height(from: now, to: shortEnd) - TimelineTimeMap.liveEdgeMinimumHeight) < 0.01)
+    }
+
+    @Test
+    func `A curve running to the strip's edge still leaves the live edge its floor`() {
+        // Active from before now to the very edge, ten minutes ahead: no empty
+        // future segment exists, and the floor still holds.
+        let dose = now.addingTimeInterval(-minutes(60))
+        let start = dose.addingTimeInterval(-minutes(5))
+        let end = now.addingTimeInterval(minutes(10))
+        let map = TimelineTimeMap(
+            start: start,
+            end: end,
+            now: now,
+            slices: [.init(bottomTime: start, topTime: end, breakAbove: false, minimumHeight: 0)],
+            anchors: [dose],
+            activeIntervals: [DateInterval(start: dose, end: end)],
+            pointsPerMinute: ppm,
+            compressGaps: true,
+        )
+        #expect(map.height(from: now, to: end) >= TimelineTimeMap.liveEdgeMinimumHeight - 0.01)
+    }
+
+    @Test
     func `A dose with no curve still compresses the time after it`() {
         let dose = now.addingTimeInterval(-3 * 86_400)
         let start = dose.addingTimeInterval(-minutes(5))

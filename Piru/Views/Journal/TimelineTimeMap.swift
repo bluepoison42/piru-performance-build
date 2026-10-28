@@ -18,8 +18,10 @@ import Foundation
 /// - **Skipped whole days** between two dosed days collapse to one fixed
 ///   ``breakHeight`` run that draws no axis — a visible break, not a ruler.
 ///
-/// The segment past now carries the active curves' tails and has its own,
-/// far roomier cap, so the live edge stays near the top of the strip.
+/// Past now, active time keeps the uniform scale the same way, so a running
+/// curve's decay reads at the scale it rose at. Only the empty future beyond
+/// the last active end has its own, far roomier cap (and a point floor), so
+/// the live edge stays near the top of the strip.
 nonisolated struct TimelineTimeMap {
     /// One day slice's span on the strip, plus the room its cards need.
     struct Slice {
@@ -44,7 +46,7 @@ nonisolated struct TimelineTimeMap {
 
     /// The empty run standing in for skipped days.
     static let breakHeight: CGFloat = 24
-    /// Point floor for the segment past now, at any zoom: keeps the "Now"
+    /// Point floor for an empty segment past now, at any zoom: keeps the "Now"
     /// tag below the day tag in the gutter and clear of the axis arrowhead.
     static let liveEdgeMinimumHeight: CGFloat = 52
     /// Point floor for any past segment, so two breakpoints never coincide.
@@ -55,7 +57,7 @@ nonisolated struct TimelineTimeMap {
         max(90, 45 * ppm)
     }
 
-    /// Cap on the segment past now.
+    /// Cap on an empty segment past now — future time no curve is active in.
     static func futureCap(pointsPerMinute ppm: CGFloat) -> CGFloat {
         max(240, 240 * ppm)
     }
@@ -132,18 +134,30 @@ nonisolated struct TimelineTimeMap {
                 continue
             }
             let minutes = CGFloat(segmentEnd.timeIntervalSince(segmentStart) / 60)
-            if segmentStart >= now {
-                heights.append(max(min(minutes * ppm, futureCap), Self.liveEdgeMinimumHeight))
-                continue
-            }
             // Advance past intervals that ended before this segment; the
             // merged list is sorted and disjoint, so the walk is one pass.
             while activeIndex < active.count, active[activeIndex].end <= segmentStart {
                 activeIndex += 1
             }
             let isActive = activeIndex < active.count && active[activeIndex].start < segmentEnd
-            let cap = isActive ? .infinity : gapCap
-            heights.append(max(min(minutes * ppm, cap), Self.pastMinimumHeight))
+            // Active time keeps the uniform scale on both sides of now: a cap
+            // inside a running curve would shear its decay flat at the Now line.
+            if isActive {
+                heights.append(max(minutes * ppm, Self.pastMinimumHeight))
+            } else if segmentStart >= now {
+                heights.append(max(min(minutes * ppm, futureCap), Self.liveEdgeMinimumHeight))
+            } else {
+                heights.append(max(min(minutes * ppm, gapCap), Self.pastMinimumHeight))
+            }
+        }
+
+        // The live-edge floor holds for the whole future too: when active
+        // time runs to the strip's edge there is no empty segment to carry it.
+        if let firstFuture = times.firstIndex(where: { $0 >= now }), firstFuture < heights.count {
+            let futureHeight = heights[firstFuture...].reduce(0, +)
+            if futureHeight < Self.liveEdgeMinimumHeight {
+                heights[heights.count - 1] += Self.liveEdgeMinimumHeight - futureHeight
+            }
         }
 
         // Slice floors: stretch the largest segment inside an undersized

@@ -22,6 +22,14 @@ struct TimelineStripBuilder {
     /// ``statesBySubstance``. Empty under ``TimelineCurveScale/doseStrength``,
     /// where the curve reads ``ActiveSubstanceState/doseIntensity`` as is.
     private let relativeWeightsBySubstance: [String: [Double]]
+    /// Effect mode: per substance, the weight each state's curve is drawn
+    /// with, parallel to ``statesBySubstance`` — the scale's weight divided by
+    /// its ``stackDivisors(states:weights:ends:)`` divisor, so a stack of doses
+    /// keeps its shape at the lane's edge instead of being clipped flat there.
+    private let effectWeightsBySubstance: [String: [Double]]
+    /// Effect mode: per substance, the minutes after each dose its curve is
+    /// drawn to (``drawMinutes(for:)``), parallel to ``statesBySubstance``.
+    private let curveEndsBySubstance: [String: [Double]]
     /// Raw entries per substance (lowercased name, ascending) — the PK mode's
     /// input.
     private let entriesBySubstance: [String: [DoseEntry]]
@@ -133,11 +141,20 @@ struct TimelineStripBuilder {
         let grouped = Dictionary(grouping: states) { $0.substanceName.lowercased() }
             .mapValues { $0.sorted { $0.doseTimestamp < $1.doseTimestamp } }
         statesBySubstance = grouped
-        relativeWeightsBySubstance = if let lookback = curveScale.lookback, !style.pkMode {
+        let relative: [String: [Double]] = if let lookback = curveScale.lookback, !style.pkMode {
             grouped.mapValues { Self.relativeWeights(states: $0, lookback: lookback) }
         } else {
             [:]
         }
+        relativeWeightsBySubstance = relative
+        let curveEnds = grouped.mapValues { $0.map(Self.drawMinutes(for:)) }
+        curveEndsBySubstance = curveEnds
+        effectWeightsBySubstance = style.pkMode ? [:] : Dictionary(uniqueKeysWithValues: grouped.map { key, substanceStates in
+            let base = relative[key] ?? substanceStates.map(\.doseIntensity)
+            let ends = curveEnds[key] ?? substanceStates.map(Self.drawMinutes(for:))
+            let divisors = Self.stackDivisors(states: substanceStates, weights: base, ends: ends)
+            return (key, zip(base, divisors).map { $0 / $1 })
+        })
         var bySubstance = Dictionary(grouping: entries) { $0.substance.lowercased() }
         for k in bySubstance.keys {
             bySubstance[k]?.sort { $0.timestamp < $1.timestamp }
@@ -195,7 +212,7 @@ struct TimelineStripBuilder {
         let currentTime = now
         let modeledCurves: [DateInterval] = style.pkMode
             ? TimelineActivity.pkActivityIntervals(entries: entries)
-            : states.map { DateInterval(start: $0.doseTimestamp, duration: max(0, $0.totalMinutes * 60)) }
+            : states.map { DateInterval(start: $0.doseTimestamp, duration: max(0, Self.drawMinutes(for: $0) * 60)) }
         let globalEnd = Self.stripEnd(
             now: currentTime,
             modeledCurves: modeledCurves,
@@ -816,14 +833,16 @@ struct TimelineStripBuilder {
     private mutating func effectSeries(slice: Slice, grid: [(t: Date, y: CGFloat)]) -> [TimelineDayLayout.CurveSeries] {
         var result: [TimelineDayLayout.CurveSeries] = []
         for (key, states) in statesBySubstance {
-            // Only states whose effect window overlaps this slice contribute.
+            let ends = curveEndsBySubstance[key] ?? states.map(Self.drawMinutes(for:))
+            // Only states whose drawn curve overlaps this slice contribute.
             let indices = states.indices.filter { i in
-                let end = states[i].doseTimestamp.addingTimeInterval(states[i].totalMinutes * 60)
+                let end = states[i].doseTimestamp.addingTimeInterval(ends[i] * 60)
                 return states[i].doseTimestamp <= slice.topTime && end >= slice.bottomTime
             }
             guard !indices.isEmpty else { continue }
             let relevant = indices.map { states[$0] }
-            let weights = relativeWeightsBySubstance[key].map { all in indices.map { all[$0] } }
+            let relevantEnds = indices.map { ends[$0] }
+            let weights = effectWeightsBySubstance[key].map { all in indices.map { all[$0] } }
                 ?? relevant.map(\.doseIntensity)
 
             var values: [Double] = []
@@ -832,9 +851,9 @@ struct TimelineStripBuilder {
             phases.reserveCapacity(grid.count)
             var sliceMax = 0.0
             for sample in grid {
-                let v = Self.effectValue(at: sample.t, states: relevant, weights: weights)
+                let v = Self.effectValue(at: sample.t, states: relevant, weights: weights, ends: relevantEnds)
                 values.append(v)
-                phases.append(TimelineCurvePhase.phase(at: sample.t, states: relevant))
+                phases.append(Self.drawnPhase(at: sample.t, states: relevant, ends: relevantEnds))
                 sliceMax = max(sliceMax, v)
             }
 
@@ -845,6 +864,8 @@ struct TimelineStripBuilder {
             let isUnscaled = relativeWeightsBySubstance[key] == nil && states.allSatisfy(\.doseIsUnscaled)
 
             let color = SubstancePalette.color(for: relevant[0].substanceName, colorMap: colorMap)
+            // The weights already bring every stack within the lane; the clamp
+            // only absorbs the residue of sampling the stack at its crests.
             let points = Self.trimmed(zip(grid, zip(values, phases)).map {
                 TimelineDayLayout.CurvePoint(y: $0.y, v: min($1.0, 1), phase: $1.1)
             })
@@ -948,16 +969,96 @@ struct TimelineStripBuilder {
 
     /// Stacked effect intensity for one substance at `t` — each dose's
     /// phase-curve shape scaled by its weight (`weights[i]` for `states[i]`),
-    /// summed. Unit weight would send every dose to the lane cap and flatten
-    /// the peaks.
-    private static func effectValue(at t: Date, states: [ActiveSubstanceState], weights: [Double]) -> Double {
+    /// summed, each drawn up to `ends[i]` minutes past its dose. Unit weight
+    /// would send every dose to the lane cap and flatten the peaks.
+    nonisolated static func effectValue(at t: Date, states: [ActiveSubstanceState], weights: [Double], ends: [Double]) -> Double {
         var total = 0.0
-        for (state, weight) in zip(states, weights) {
-            let minutes = t.timeIntervalSince(state.doseTimestamp) / 60
-            guard minutes >= 0, minutes <= state.totalMinutes else { continue }
-            total += weight * TimelineCurveModel.intensity(at: minutes, for: state)
+        for i in states.indices where i < weights.count && i < ends.count {
+            let minutes = t.timeIntervalSince(states[i].doseTimestamp) / 60
+            guard minutes >= 0, minutes <= ends[i] else { continue }
+            total += weights[i] * TimelineCurveModel.intensity(at: minutes, for: states[i])
         }
         return total
+    }
+
+    /// The stroke phase at `t`: ``TimelineCurvePhase/phase(at:states:)``, and
+    /// on a drawn tail past a dose's modeled total (`ends[i]`, see
+    /// ``drawMinutes(for:)``) the phase that total ended in, so the tail keeps
+    /// its color instead of reverting to the substance's own.
+    nonisolated static func drawnPhase(at t: Date, states: [ActiveSubstanceState], ends: [Double]) -> TimelineCurvePhase? {
+        if let phase = TimelineCurvePhase.phase(at: t, states: states) { return phase }
+        var newest: (start: Date, phase: TimelineCurvePhase)?
+        for (state, end) in zip(states, ends) {
+            let minutes = t.timeIntervalSince(state.doseTimestamp) / 60
+            guard minutes > state.totalMinutes, minutes <= end,
+                  let phase = TimelineCurvePhase.phase(minutes: state.totalMinutes, of: state) else { continue }
+            if newest.map({ state.doseTimestamp > $0.start }) ?? true {
+                newest = (state.doseTimestamp, phase)
+            }
+        }
+        return newest?.phase
+    }
+
+    /// Minutes after the dose its curve is drawn to: the effect window, or
+    /// further while the shape is still above baseline at the window's end,
+    /// out to where it has settled onto the axis
+    /// (``TimelineCurveModel/curveExtent(for:)``, about 1.5 % of the crest).
+    /// A profile's `totalMinutes` can fall where the shape still stands at a
+    /// seventh of its crest (kratom); ending there would draw a vertical cut.
+    nonisolated static func drawMinutes(for state: ActiveSubstanceState) -> Double {
+        max(state.totalMinutes, TimelineCurveModel.curveExtent(for: state))
+    }
+
+    /// Per-dose divisors that keep one substance's stacked curve within the
+    /// lane, for `states` in ascending time order with their `weights` and
+    /// drawn `ends` (minutes).
+    ///
+    /// Each weight caps its own dose at the lane's edge, but a redose stacks
+    /// on a curve still running, and the sum can pass it. A dose is divided by
+    /// the tallest stacked value its own drawn curve passes through — sampled
+    /// at the come-up end, crest and peak end of every dose overlapping it —
+    /// and never by less than 1. Every dose running at a moment is divided by
+    /// at least the stack there, so the sum stays at or under the edge; a dose
+    /// that overlaps no other keeps exactly its weight, so a lone dose draws as
+    /// it always has. Dividing per dose, not per moment, keeps the curve
+    /// continuous where the divisor changes.
+    nonisolated static func stackDivisors(states: [ActiveSubstanceState], weights: [Double], ends: [Double]) -> [Double] {
+        guard weights.count == states.count, ends.count == states.count else {
+            return Array(repeating: 1, count: states.count)
+        }
+        let longest = ends.max() ?? 0
+        return states.indices.map { i in
+            let start = states[i].doseTimestamp
+            let end = start.addingTimeInterval(ends[i] * 60)
+            // Sorted by dose time: an overlapping dose started at most one
+            // longest curve earlier, and no later than this curve's end.
+            let earliest = start.addingTimeInterval(-longest * 60)
+            var lo = i
+            while lo > 0, states[lo - 1].doseTimestamp >= earliest {
+                lo -= 1
+            }
+            var hi = i
+            while hi + 1 < states.count, states[hi + 1].doseTimestamp <= end {
+                hi += 1
+            }
+            let peers = (lo ... hi).filter { j in
+                states[j].doseTimestamp.addingTimeInterval(ends[j] * 60) >= start
+            }
+            guard peers.count > 1 else { return 1 }
+            let peerStates = peers.map { states[$0] }
+            let peerWeights = peers.map { weights[$0] }
+            let peerEnds = peers.map { ends[$0] }
+            var tallest = 0.0
+            for peer in peerStates {
+                let crest = (peer.comeupEndMinutes + peer.peakEndMinutes) / 2
+                for minutes in [peer.comeupEndMinutes, crest, peer.peakEndMinutes] {
+                    let t = peer.doseTimestamp.addingTimeInterval(minutes * 60)
+                    guard t >= start, t <= end else { continue }
+                    tallest = max(tallest, effectValue(at: t, states: peerStates, weights: peerWeights, ends: peerEnds))
+                }
+            }
+            return max(1, tallest)
+        }
     }
 
     /// One substance's per-dose curve weights under a relative
@@ -978,7 +1079,8 @@ struct TimelineStripBuilder {
         // dose must not put every other dose of the substance on its raw number.
         let usesAmount = states.allSatisfy(\.doseIsUnscaled)
         let raw = states.map { usesAmount ? $0.amount : $0.doseMagnitude }
-        let longest = states.map(\.totalMinutes).max() ?? 0
+        let ends = states.map(drawMinutes(for:))
+        let longest = ends.max() ?? 0
 
         let crests = states.indices.map { j in
             let state = states[j]
@@ -996,7 +1098,7 @@ struct TimelineStripBuilder {
             while hi + 1 < states.count, states[hi + 1].doseTimestamp <= crest {
                 hi += 1
             }
-            return effectValue(at: crest, states: Array(states[lo ... hi]), weights: Array(raw[lo ... hi]))
+            return effectValue(at: crest, states: Array(states[lo ... hi]), weights: Array(raw[lo ... hi]), ends: Array(ends[lo ... hi]))
         }
 
         if lookback.isInfinite {
