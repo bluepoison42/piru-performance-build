@@ -2410,3 +2410,770 @@ extension ModelContext {
     func readAllForBackup() throws -> [LoadFailure] { [] }
 }
 """, encoding="utf-8")
+
+# 70011: explicit, reversible skips. Earlier generation steps remain intact.
+def replace711(path, before, after):
+    source = path.read_text(encoding="utf-8")
+    assert source.count(before) == 1, f"70011 anchor changed: {path}: {before[:100]!r}"
+    path.write_text(source.replace(before, after), encoding="utf-8")
+
+text = project.read_text(encoding="utf-8")
+assert text.count("CURRENT_PROJECT_VERSION = 70010;") == builds
+project.write_text(text.replace("CURRENT_PROJECT_VERSION = 70010;", "CURRENT_PROJECT_VERSION = 70011;"), encoding="utf-8")
+
+service711 = root / "Piru/Data/Services/RoutineOccurrenceService.swift"
+replace711(service711, "import SwiftData\n", "import SwiftData\nimport WidgetKit\n")
+old_skip711 = swift_member(service711.read_text(encoding="utf-8"), "static func skipToday(")
+replace711(service711, old_skip711, '''@discardableResult
+    static func skipToday(slotKeys: Set<String>, in context: ModelContext, now: Date = .now) -> Bool {
+        reconcile(in: context, now: now)
+        let today = Calendar.current.medicationDayLabel(for: now)
+        let rows = todaysOccurrences(today, in: context).filter {
+            $0.state == .pending && slotKeys.contains(slotKey(for: $0))
+        }
+        guard !rows.isEmpty else { return false }
+        for occurrence in rows { occurrence.state = .skipped }
+        do { try context.save() } catch {
+            for occurrence in rows { occurrence.state = .pending }
+            return false
+        }
+        DoseLogService.shared.changed()
+        DoseNotificationManager.syncMedReminders(in: context)
+        WidgetCenter.shared.reloadAllTimelines()
+        return true
+    }
+
+    /// Undo only today's explicit skips; logged and past-day occurrences stay intact.
+    @discardableResult
+    static func unskipToday(slotKeys: Set<String>, in context: ModelContext, now: Date = .now) -> Bool {
+        reconcile(in: context, now: now)
+        let today = Calendar.current.medicationDayLabel(for: now)
+        let rows = todaysOccurrences(today, in: context).filter {
+            $0.state == .skipped && slotKeys.contains(slotKey(for: $0))
+        }
+        guard !rows.isEmpty else { return false }
+        for occurrence in rows { occurrence.state = .pending }
+        do { try context.save() } catch {
+            for occurrence in rows { occurrence.state = .skipped }
+            return false
+        }
+        DoseLogService.shared.changed()
+        DoseNotificationManager.syncMedReminders(in: context)
+        WidgetCenter.shared.reloadAllTimelines()
+        return true
+    }
+
+    /// One tray row represents one dose. Stay within its source group and
+    /// choose one pending slot nearest in medication-day order, never all slots.
+    static func pendingTraySlotKey(
+        slotKeys: Set<String>, stagedDay: Date?, occurrences: [RoutineOccurrence], now: Date = .now
+    ) -> String? {
+        let today = Calendar.current.medicationDayLabel(for: now)
+        guard stagedDay == today, !slotKeys.isEmpty else { return nil }
+        let candidates = occurrences.filter {
+            $0.dueDay == today && $0.state == .pending && slotKeys.contains(slotKey(for: $0))
+        }
+        return candidates.sorted {
+            let left = distance(minutesOfDay(now), toSlotAt: $0.slotMinutes)
+            let right = distance(minutesOfDay(now), toSlotAt: $1.slotMinutes)
+            if left != right { return left < right }
+            return slotKey(for: $0) < slotKey(for: $1)
+        }.first.map { slotKey(for: $0) }
+    }''')
+replace711(service711, "    /// later reconciles). The caller resyncs reminders so the remaining\n    /// follow-ups cancel.",
+           "    /// later reconciles). Both directions save, signal, reschedule\n    /// reminders and refresh widgets through the same post-save sequence.")
+notification711 = root / "Piru/Utilities/DoseNotificationManager.swift"
+notification_skip711 = swift_member(notification711.read_text(encoding="utf-8"), "static func skipMedsToday(")
+replace711(notification711, notification_skip711, notification_skip711.replace("        syncMedReminders(in: context)\n", ""))
+
+snapshot711 = root / "Piru/Domain/DailyMedSnapshot.swift"
+replace711(snapshot711, "    let identityKey: String\n", """    let identityKey: String
+    let substanceUID: String?
+    let reminderTimesMinutes: [Int]
+    let isAsNeeded: Bool
+""")
+replace711(snapshot711, "        identityKey = item.identityKey\n", """        identityKey = item.identityKey
+        substanceUID = item.substanceUID
+        reminderTimesMinutes = item.reminderTimesMinutes
+        isAsNeeded = item.isAsNeeded
+""")
+replace711(snapshot711, '    /// The name a med row, pill or the dock label titles this med by.', '''    /// Preserve schedule identity, including custom meds without a library UID.
+    func routineSlotKeys(in group: MedTimeGroup?) -> Set<String> {
+        guard !isAsNeeded else { return [] }
+        let slots: [Int?] = reminderTimesMinutes.isEmpty ? [nil] : reminderTimesMinutes.map { Optional($0) }
+        return Set(slots.filter { time in
+            guard let group else { return true }
+            return time.map { MedTimeGroup.group(forMinutes: $0) == group } ?? (group == .anytime)
+        }.map { time in
+            RoutineOccurrenceService.slotKey(substance: substance, substanceUID: substanceUID,
+                route: route, slotMinutes: time)
+        })
+    }
+
+    /// The name a med row, pill or the dock label titles this med by.''')
+
+tray711 = root / "Piru/Views/QuickLog/DoseTray.swift"
+replace711(tray711, "    var isFromDailySet = false\n", """    var isFromDailySet = false
+    /// Only an unmixed routine row can skip, and only on its staging day.
+    var routineSlotKeys: Set<String> = []
+    var routineDay: Date?
+""")
+replace711(tray711, "func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color]) {",
+           "func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color], group: MedTimeGroup? = nil) {")
+replace711(tray711, "            isFromDailySet: true,\n", "            isFromDailySet: true,\n            routineSlotKeys: item.routineSlotKeys(in: group),\n")
+replace711(tray711, "            stage(dailyMed: med, colorLookup: colorLookup)\n",
+           "            stage(dailyMed: med, colorLookup: colorLookup, group: MedTimeGroup(slug: pillID))\n")
+stage711 = swift_member(tray711.read_text(encoding="utf-8"), "func stage(\n")
+new_stage711 = stage711.replace("        isFromDailySet: Bool = false,\n", "        isFromDailySet: Bool = false,\n        routineSlotKeys: Set<String> = [],\n")
+new_stage711 = new_stage711.replace("            incrementTick += 1", """            // A merged row no longer identifies one routine dose.
+            staged[index].routineSlotKeys = []
+            staged[index].routineDay = nil
+            incrementTick += 1""")
+new_stage711 = new_stage711.replace("            dose.components =", """            dose.routineSlotKeys = routineSlotKeys
+            dose.routineDay = isFromDailySet ? Calendar.current.medicationDayLabel(for: .now) : nil
+            dose.components =""")
+assert new_stage711 != stage711 and "routineSlotKeys: Set<String> = []" in new_stage711
+replace711(tray711, stage711, new_stage711)
+replace711(tray711, "    func remove(_ item: StagedDose) {", '''    /// Revalidate the exact menu target; a stale menu must not skip another slot.
+    @discardableResult
+    func skipToday(_ item: StagedDose, slotKey: String, in context: ModelContext, now: Date = .now) -> Bool {
+        guard let live = staged.first(where: { $0.id == item.id }),
+              live.routineDay == Calendar.current.medicationDayLabel(for: now),
+              live.routineSlotKeys.contains(slotKey),
+              RoutineOccurrenceService.skipToday(slotKeys: [slotKey], in: context, now: now)
+        else { return false }
+        remove(live)
+        return true
+    }
+
+    func remove(_ item: StagedDose) {''')
+quick711 = root / "Piru/Views/QuickLog/QuickLogView.swift"
+routine711 = swift_member(quick711.read_text(encoding="utf-8"), "private func stageRoutine(named")
+replace711(quick711, routine711, routine711.replace("                stageDailyItem(item)",
+    "                tray.stage(dailyMed: DailyMedSnapshot(item), colorLookup: content.cachedColorLookup, group: MedTimeGroup(slug: name))"))
+
+tray_views711 = root / "Piru/Views/QuickLog/DoseTrayViews.swift"
+swipe_before711 = swift_member(tray_views711.read_text(encoding="utf-8"), "struct TraySwipeRow<")
+replace711(tray_views711, '''                                    .contextMenu {
+                                        TrayRowContextMenu(model: model, item: item)
+                                    }''', '''                                    .modifier(TrayRowActions(model: model, item: item))''')
+replace711(tray_views711, "struct TrayRowContextMenu: View {", '''private struct TrayRowActions: ViewModifier {
+    let model: DoseTrayModel
+    let item: StagedDose
+    @Environment(\\.modelContext) private var modelContext
+    @Query(filter: #Predicate<RoutineOccurrence> { $0.stateRaw == "pending" }) private var pending: [RoutineOccurrence]
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        let key = RoutineOccurrenceService.pendingTraySlotKey(
+            slotKeys: item.routineSlotKeys, stagedDay: item.routineDay, occurrences: pending)
+        let row = accessibleRow(content: content, key: key).contextMenu {
+            TrayRowContextMenu(model: model, item: item)
+            if let key {
+                Button { skip(key) } label: {
+                    Label("Skip Today", systemImage: "minus.circle")
+                }
+            }
+        }
+        Group {
+            if let key {
+                row.accessibilityAction(named: Text("Skip Today")) { skip(key) }
+            } else {
+                row
+            }
+        }
+        .task(id: Calendar.current.medicationDayLabel(for: .now)) {
+            RoutineOccurrenceService.reconcile(in: modelContext)
+        }
+    }
+
+    @ViewBuilder
+    private func accessibleRow(content: Content, key: String?) -> some View {
+        #if os(Android)
+            HStack(spacing: Spacing.sm) {
+                content
+                if let key {
+                    Menu {
+                        Button("Skip Today") { skip(key) }
+                    } label: {
+                        Image(systemName: "ellipsis").minimumHitTarget()
+                    }
+                    .accessibilityLabel(Text("Skip Today"))
+                }
+            }
+        #else
+            content
+        #endif
+    }
+
+    private func skip(_ key: String) {
+        withAnimation(.snappy) { _ = model.skipToday(item, slotKey: key, in: modelContext) }
+    }
+}
+
+struct TrayRowContextMenu: View {''')
+
+card711 = root / "Piru/Views/Journal/DailyDose/MyMedsCard.swift"
+replace711(card711, "    private func slotRow(_ slot: MedSlot, indented: Bool) -> some View {\n        SlotRowView(",
+           "    @ViewBuilder\n    private func slotRow(_ slot: MedSlot, indented: Bool) -> some View {\n        let row = SlotRowView(")
+replace711(card711, '''    private func supplementsRow(quietSlots: [MedSlot]) -> some View {''', '''    private func setSkipped(_ skipped: Bool, for slot: MedSlot) {
+        guard let item = liveItem(for: slot) else { return }
+        let key = RoutineOccurrenceService.slotKey(substance: item.substance,
+            substanceUID: item.substanceUID, route: item.route, slotMinutes: slot.time)
+        if skipped {
+            RoutineOccurrenceService.skipToday(slotKeys: [key], in: modelContext)
+        } else {
+            RoutineOccurrenceService.unskipToday(slotKeys: [key], in: modelContext)
+        }
+    }
+
+    private func supplementsRow(quietSlots: [MedSlot]) -> some View {''')
+row711 = swift_member(card711.read_text(encoding="utf-8"), "private func slotRow(")
+assert row711.endswith("        )\n    }")
+replace711(card711, row711, row711[:-5] + '''        switch slot.state {
+        case .pending:
+            HStack(spacing: Spacing.sm) {
+                row
+                #if os(Android)
+                    Menu {
+                        Button("Skip Today") { setSkipped(true, for: slot) }
+                    } label: {
+                        Image(systemName: "ellipsis").minimumHitTarget()
+                    }
+                    .accessibilityLabel(Text("Skip Today"))
+                #endif
+            }.contextMenu {
+                Button { setSkipped(true, for: slot) } label: {
+                    Label("Skip Today", systemImage: "minus.circle")
+                }
+            }
+            .accessibilityAction(named: Text("Skip Today")) { setSkipped(true, for: slot) }
+        case .skipped:
+            HStack(spacing: Spacing.sm) {
+                row
+                #if os(Android)
+                    Menu {
+                        Button("Undo Skip") { setSkipped(false, for: slot) }
+                    } label: {
+                        Image(systemName: "ellipsis").minimumHitTarget()
+                    }
+                    .accessibilityLabel(Text("Undo Skip"))
+                #endif
+            }.contextMenu {
+                Button { setSkipped(false, for: slot) } label: {
+                    Label("Undo Skip", systemImage: "arrow.uturn.backward")
+                }
+            }
+            .accessibilityAction(named: Text("Undo Skip")) { setSkipped(false, for: slot) }
+        case .taken:
+            row
+        }
+    }''')
+replace711(card711, "quietSlots.filter { !$0.taken }", "quietSlots.filter { $0.state == .pending }")
+replace711(card711, "            total: quietSlots.count,\n", "            total: quietSlots.count,\n            pendingCount: quietSlots.count { $0.state == .pending },\n")
+supplements711 = swift_member(card711.read_text(encoding="utf-8"), "private struct SupplementsRowView:")
+replace711(card711, supplements711, supplements711.replace("    let total: Int\n", "    let total: Int\n    let pendingCount: Int\n").replace("if takenCount < total {", "if pendingCount > 0 {"))
+
+# Skips remove expectations, not create fake doses. All-skipped days are noData;
+# an unskipped pending slot still counts as missed. Both calendar and streak read it.
+calculator711 = root / "Piru/Utilities/AdherenceCalculator.swift"
+replace711(calculator711, "enum AdherenceCalculator {", '''enum AdherenceCalculator {
+    nonisolated struct SkippedSlotSnapshot: Sendable {
+        let substance: String
+        let substanceUID: String?
+        let route: RouteOfAdministration
+        let dueDay: Date
+        let slotMinutes: Int?
+    }
+
+    static func skippedSnapshots(_ occurrences: [RoutineOccurrence]) -> [SkippedSlotSnapshot] {
+        occurrences.filter { $0.state == .skipped }.map {
+            SkippedSlotSnapshot(substance: $0.substance, substanceUID: $0.substanceUID,
+                route: $0.route, dueDay: $0.dueDay, slotMinutes: $0.slotMinutes)
+        }
+    }
+
+    nonisolated static func skippedSlots(
+        on date: Date, substance: String, substanceUID: String?, route: RouteOfAdministration,
+        skipped: [SkippedSlotSnapshot]
+    ) -> Set<Int?> {
+        Set(skipped.filter {
+            $0.dueDay == date && $0.route == route && MedSchedule.identityMatches(
+                keyA: $0.substanceUID, nameA: $0.substance, keyB: substanceUID, nameB: substance)
+        }.map(\\.slotMinutes))
+    }
+''')
+replace711(calculator711, "        dailyItems: [DailyDoseItem],\n", "        dailyItems: [DailyDoseItem],\n        skipped: [SkippedSlotSnapshot] = [],\n")
+replace711(calculator711, "            let itemExpected = max(1, item.reminderTimesMinutes.count)", '''            let excluded = skippedSlots(on: date, substance: item.substance,
+                substanceUID: item.substanceUID, route: item.route, skipped: skipped)
+            let times = item.reminderTimesMinutes.filter { !excluded.contains($0) }
+            let itemExpected = item.reminderTimesMinutes.isEmpty
+                ? (excluded.contains(nil) ? 0 : 1) : times.count
+            guard itemExpected > 0 else { continue }''')
+replace711(calculator711, "            let times = item.reminderTimesMinutes\n            guard !times.isEmpty", "            guard !times.isEmpty")
+replace711(calculator711, "        let status: AdherenceStatus = if matched == expected {", "        let status: AdherenceStatus = if expected == 0 {\n            .noData\n        } else if matched == expected {")
+replace711(calculator711, "        let expectedPerDay: Int\n", "        let expectedPerDay: Int\n        var substanceUID: String? = nil\n        var reminderTimesMinutes: [Int] = []\n")
+for signature711 in (
+    "nonisolated static func dayStatus(for date: Date, entries: [EntrySnapshot], items: [DailyItemSnapshot])",
+    "nonisolated static func dayStatus(for date: Date, dayEntries: [EntrySnapshot], items: [DailyItemSnapshot])",
+):
+    replace711(calculator711, signature711, signature711[:-1] + ", skipped: [SkippedSlotSnapshot] = [])")
+replace711(calculator711, "return dayStatus(for: date, dayEntries: dayEntries, items: items)",
+           "return dayStatus(for: date, dayEntries: dayEntries, items: items, skipped: skipped)")
+replace711(calculator711, "            let itemExpected = max(1, item.expectedPerDay)", '''            let excluded = skippedSlots(on: date, substance: item.substance,
+                substanceUID: item.substanceUID, route: item.route, skipped: skipped)
+            let skippedCount = item.reminderTimesMinutes.isEmpty
+                ? (excluded.contains(nil) ? 1 : 0)
+                : item.reminderTimesMinutes.filter { excluded.contains($0) }.count
+            let itemExpected = max(0, max(1, item.expectedPerDay) - skippedCount)''')
+replace711(calculator711, "        if matched == expected { return .complete }", "        if expected == 0 { return .noData }\n        if matched == expected { return .complete }")
+replace711(calculator711, "        items: [DailyItemSnapshot],\n", "        items: [DailyItemSnapshot],\n        skipped: [SkippedSlotSnapshot] = [],\n")
+replace711(calculator711, "        let entriesByDay = Dictionary(grouping: entries) { calendar.medicationDayLabel(for: $0.timestamp) }",
+           "        let entriesByDay = Dictionary(grouping: entries) { calendar.medicationDayLabel(for: $0.timestamp) }\n        let skippedByDay = Dictionary(grouping: skipped, by: \\.dueDay)")
+replace711(calculator711, "dayStatus(for: day, dayEntries: dayEntries, items: items)",
+           "dayStatus(for: day, dayEntries: dayEntries, items: items, skipped: skippedByDay[day] ?? [])")
+
+adherence_model711 = root / "Piru/Views/Insights/AdherenceModel.swift"
+for method711 in ("recompute", "recomputeMonth"):
+    replace711(adherence_model711, f"func {method711}(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date)",
+        f"func {method711}(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date, skipped: [AdherenceCalculator.SkippedSlotSnapshot])")
+replace711(adherence_model711, "recomputeMonth(entries: entries, dailyItems: dailyItems, month: month)",
+           "recomputeMonth(entries: entries, dailyItems: dailyItems, month: month, skipped: skipped)")
+replace711(adherence_model711, "entries: entries, dailyItems: dailyItems)", "entries: entries, dailyItems: dailyItems, skipped: skipped)")
+replace711(adherence_model711, "entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems)",
+           "entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems, skipped: skippedByDay[date] ?? [])")
+replace711(adherence_model711, "        var entriesByDay: [Date: [DoseEntry]] = [:]", "        let skippedByDay = Dictionary(grouping: skipped, by: \\.dueDay)\n        var entriesByDay: [Date: [DoseEntry]] = [:]")
+adherence_view711 = root / "Piru/Views/Insights/AdherenceView.swift"
+replace711(adherence_view711, "    @State private var model = AdherenceModel()", '''    @Query(filter: #Predicate<RoutineOccurrence> { $0.stateRaw == "skipped" }) private var skippedOccurrences: [RoutineOccurrence]
+
+    @State private var model = AdherenceModel()''')
+for method711 in ("recompute", "recomputeMonth"):
+    replace711(adherence_view711, f"model.{method711}(entries: allEntries, dailyItems: dailyItems, month: displayedMonth)",
+        f"model.{method711}(entries: allEntries, dailyItems: dailyItems, month: displayedMonth, skipped: AdherenceCalculator.skippedSnapshots(skippedOccurrences))")
+
+insights711 = root / "Piru/Views/Insights/InsightsView.swift"
+replace711(insights711, "        dailyItems: [DailyDoseItem],\n", "        dailyItems: [DailyDoseItem],\n        skipped: [AdherenceCalculator.SkippedSlotSnapshot],\n")
+replace711(insights711, "entriesByDay: adherenceEntriesByDay, dailyItems: dailyItems)", "entriesByDay: adherenceEntriesByDay, dailyItems: dailyItems, skipped: skipped)")
+replace711(insights711, "private func computeMonthCells(cal: Calendar, entriesByDay: [Date: [DoseEntry]], dailyItems: [DailyDoseItem])",
+           "private func computeMonthCells(cal: Calendar, entriesByDay: [Date: [DoseEntry]], dailyItems: [DailyDoseItem], skipped: [AdherenceCalculator.SkippedSlotSnapshot])")
+replace711(insights711, "        let firstWeekday =", "        let skippedByDay = Dictionary(grouping: skipped, by: \\.dueDay)\n        let firstWeekday =")
+replace711(insights711, "entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems)",
+           "entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems, skipped: skippedByDay[date] ?? [])")
+replace711(insights711, "    @Query private var substanceColors: [SubstanceColor]", '''    @Query private var substanceColors: [SubstanceColor]
+    @Query(filter: #Predicate<RoutineOccurrence> { $0.stateRaw == "skipped" }) private var skippedOccurrences: [RoutineOccurrence]''')
+replace711(insights711, "                dailyItems: dailyItems,\n", "                dailyItems: dailyItems,\n                skipped: AdherenceCalculator.skippedSnapshots(skippedOccurrences),\n")
+
+database711 = root / "Piru/Data/Persistence/DatabaseActor.swift"
+fetcher711 = swift_member(database711.read_text(encoding="utf-8"), "enum AdherenceStreakFetcher {")
+new_fetcher711 = fetcher711.replace("        let entrySnaps =", '''        let skippedRows = (try? context.fetch(FetchDescriptor<RoutineOccurrence>(
+            predicate: #Predicate { $0.dueDay >= cutoff && $0.stateRaw == "skipped" }
+        ))) ?? []
+        let skipped = skippedRows.map {
+            AdherenceCalculator.SkippedSlotSnapshot(substance: $0.substance, substanceUID: $0.substanceUID,
+                route: $0.route, dueDay: $0.dueDay, slotMinutes: $0.slotMinutes)
+        }
+        let entrySnaps =''').replace("isAsNeeded: $0.isAsNeeded,", "substanceUID: $0.substanceUID,\n                reminderTimesMinutes: $0.reminderTimesMinutes, isAsNeeded: $0.isAsNeeded,")
+new_fetcher711 = new_fetcher711.replace("entries: entrySnaps, items: itemSnaps,", "entries: entrySnaps, items: itemSnaps, skipped: skipped,")
+replace711(database711, fetcher711, new_fetcher711)
+
+# Keep existing catalog formatting/translations; insert only the new entry.
+catalog711 = root / "Piru/Localizable.xcstrings"
+catalog_text711 = catalog711.read_text(encoding="utf-8")
+catalog_data711 = json.loads(catalog_text711)
+assert catalog_data711["sourceLanguage"] == "en"
+for key711, zh711 in (("Skip Today", "今天跳过"), ("Skipped", "已跳过")):
+    assert catalog_data711["strings"][key711]["localizations"]["zh-Hans"]["stringUnit"]["value"] == zh711
+assert "Undo Skip" not in catalog_data711["strings"]
+undo_entry711 = {"extractionState": "manual", "localizations": {
+    "en": {"stringUnit": {"state": "translated", "value": "Undo Skip"}},
+    "zh-Hans": {"stringUnit": {"state": "translated", "value": "撤销跳过"}},
+}}
+catalog_text711 = catalog_text711.replace('  "strings" : {', '  "strings" : {\n    "Undo Skip" : ' + json.dumps(undo_entry711, ensure_ascii=False, indent=2).replace("\n", "\n    ") + ",", 1)
+assert json.loads(catalog_text711)["strings"]["Undo Skip"] == undo_entry711
+catalog711.write_text(catalog_text711, encoding="utf-8")
+
+# Refresh the existing fixture from final production, retaining only OS doubles.
+production711 = model_tests / "MedicationDayProduction.swift"
+support711 = production711.read_text(encoding="utf-8")
+new_service711 = service711.read_text(encoding="utf-8")
+for anchor711 in ("static func needsReconcile(", "static func repairHistoricalDays(container:"):
+    member711 = "    @DatabaseActor\n    " + swift_member(new_service711, anchor711)
+    assert new_service711.count(member711) == 1
+    new_service711 = new_service711.replace(member711, "")
+support711 = support711.replace(swift_member(support711, "enum RoutineOccurrenceService {"),
+    swift_member(new_service711, "enum RoutineOccurrenceService {"))
+support711 = support711.replace(swift_member(support711, "enum AdherenceCalculator {"), calculator711.read_text(encoding="utf-8"))
+assert support711.count("func reloadAllTimelines() {}") == 1
+support711 = support711.replace("    func reloadAllTimelines() {}", "    var reloads = 0\n    func reloadAllTimelines() { reloads += 1 }")
+production711.write_text(support711, encoding="utf-8")
+
+# Repair the existing nested throwing macro at generation time, without altering 70008.
+replace711(model_tests / "MedicationDayTests.swift",
+    "try #require(reopened.fetch(FetchDescriptor<RoutineOccurrence>()).first)",
+    "try #require(try reopened.fetch(FetchDescriptor<RoutineOccurrence>()).first)")
+
+# View values are minimal fixtures. All slot selection, source mapping, skip,
+# unskip, removal, historical repair and adherence logic is extracted production.
+snapshot_source711 = swift_member(snapshot711.read_text(encoding="utf-8"), "struct DailyMedSnapshot:")
+snapshot_source711 = snapshot_source711.replace(swift_member(snapshot_source711, "var displayName:"), "")
+snapshot_source711 = "\n".join(line.rstrip() for line in snapshot_source711.splitlines())
+group_source711 = (root / "Piru/Views/Journal/DailyDose/MyMedsHubView.swift").read_text(encoding="utf-8")
+tray_source711 = tray711.read_text(encoding="utf-8")
+skip_support711 = '''import Foundation
+import PortableData
+
+enum MedTimeGroup: Int, CaseIterable {
+    case morning, afternoon, evening, night, anytime, asNeeded
+''' + "\n".join("    " + swift_member(group_source711, anchor) for anchor in (
+    "static func group(forMinutes", "var slug:", "init?(slug:")) + "\n}\n" + snapshot_source711 + '''
+
+// UI-only row storage. The behavior below is copied verbatim from DoseTrayModel.
+struct StagedDose {
+    let id = UUID()
+    var routineSlotKeys: Set<String> = []
+    var routineDay: Date?
+}
+@MainActor final class DoseTrayModel {
+    var staged: [StagedDose] = []
+    var expandedItemIDs: Set<UUID> = []
+    private(set) var isEmpty = true
+''' + "\n".join("    " + swift_member(tray_source711, anchor) for anchor in (
+    "func skipToday(_ item:", "func remove(_ item:", "private func syncEmptiness()")) + "\n}\n"
+(model_tests / "RoutineSkipProduction.swift").write_text(skip_support711, encoding="utf-8")
+
+(model_tests / "RoutineSkipTests.swift").write_text(r'''import Foundation
+import GRDB
+import PortableData
+import Testing
+
+@MainActor
+@Suite(.serialized)
+struct RoutineSkipTests {
+    private func med(_ name: String = "scheduled", times: [Int] = [480, 1380]) -> DailyDoseItem {
+        let item = DailyDoseItem(substance: name, amount: 1, unit: "mg", route: .oral)
+        item.startDate = Calendar.current.date(byAdding: .day, value: -7, to: .now)!
+        item.reminderTimesMinutes = times
+        return item
+    }
+
+    private func key(_ item: DailyDoseItem, _ time: Int?) -> String {
+        RoutineOccurrenceService.slotKey(substance: item.substance, substanceUID: item.substanceUID,
+            route: item.route, slotMinutes: time)
+    }
+
+    private func snapshots(_ item: DailyDoseItem) -> [AdherenceCalculator.DailyItemSnapshot] {
+        [AdherenceCalculator.DailyItemSnapshot(substance: item.substance, identityKey: item.identityKey,
+            route: item.route, expectedPerDay: max(1, item.reminderTimesMinutes.count),
+            substanceUID: item.substanceUID, reminderTimesMinutes: item.reminderTimesMinutes,
+            isAsNeeded: item.isAsNeeded, startDate: item.startDate, frequency: item.frequency,
+            frequencyDays: item.frequencyDays)]
+    }
+
+    @Test func skipUnskipRoundTripPersistsAndRefreshesBothDirections() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let item = med()
+        context.insert(item)
+        try context.save()
+        let target = key(item, 1380)
+        let revision = DoseLogService.shared.revision
+        let syncs = DoseNotificationManager.reminderSyncs
+        let widgets = WidgetCenter.shared.reloads
+        #expect(RoutineOccurrenceService.skipToday(slotKeys: [target], in: context))
+        let reopened = ModelContext(container)
+        let rows = try reopened.fetch(FetchDescriptor<RoutineOccurrence>())
+        #expect(rows.first { $0.slotMinutes == 1380 }?.state == .skipped)
+        #expect(rows.first { $0.slotMinutes == 480 }?.state == .pending)
+        #expect(RoutineOccurrenceService.satisfiedSlotKeys(in: reopened) == [target])
+        #expect(DoseLogService.shared.revision == revision + 1)
+        #expect(DoseNotificationManager.reminderSyncs == syncs + 1)
+        #expect(WidgetCenter.shared.reloads == widgets + 1)
+        #expect(!RoutineOccurrenceService.skipToday(slotKeys: [target], in: reopened))
+        #expect(RoutineOccurrenceService.unskipToday(slotKeys: [target], in: reopened))
+        #expect(!RoutineOccurrenceService.unskipToday(slotKeys: [target], in: reopened))
+        let restored = try ModelContext(container).fetch(FetchDescriptor<RoutineOccurrence>())
+        #expect(restored.allSatisfy { $0.state == .pending && $0.satisfyingEntryID == nil })
+        #expect(RoutineOccurrenceService.satisfiedSlotKeys(in: reopened).isEmpty)
+        #expect(DoseLogService.shared.revision == revision + 2)
+        #expect(DoseNotificationManager.reminderSyncs == syncs + 2)
+        #expect(WidgetCenter.shared.reloads == widgets + 2)
+        #expect(try reopened.fetchCount(FetchDescriptor<DoseEntry>()) == 0)
+    }
+
+    @Test func traySkipRemovesOnlyItsRowAndChangesOnlyItsSlot() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let item = med()
+        let other = med("other")
+        context.insert(item)
+        context.insert(other)
+        try context.save()
+        RoutineOccurrenceService.reconcile(in: context)
+        let now = Date.now
+        let day = Calendar.current.medicationDayLabel(for: now)
+        let source = DailyMedSnapshot(item).routineSlotKeys(in: .night)
+        let rows = try context.fetch(FetchDescriptor<RoutineOccurrence>())
+        let selected = try #require(RoutineOccurrenceService.pendingTraySlotKey(
+            slotKeys: source, stagedDay: day, occurrences: rows, now: now))
+        #expect(selected == key(item, 1380))
+        let row = StagedDose(routineSlotKeys: source, routineDay: day)
+        let otherRow = StagedDose()
+        let tray = DoseTrayModel()
+        tray.staged = [row, otherRow]
+        tray.expandedItemIDs.insert(row.id)
+        #expect(tray.skipToday(row, slotKey: selected, in: context, now: now))
+        #expect(tray.staged.map { $0.id } == [otherRow.id])
+        #expect(!tray.expandedItemIDs.contains(row.id) && !tray.isEmpty)
+        let stored = try ModelContext(container).fetch(FetchDescriptor<RoutineOccurrence>())
+        #expect(stored.count == 4 && stored.filter { $0.state == .skipped }.count == 1)
+        #expect(stored.first { RoutineOccurrenceService.slotKey(for: $0) == selected }?.state == .skipped)
+        #expect(try context.fetchCount(FetchDescriptor<DoseEntry>()) == 0)
+    }
+
+    @Test func staleTrayActionDoesNotFallThroughToAnotherSlot() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let item = med()
+        context.insert(item)
+        try context.save()
+        let target = key(item, 1380)
+        let row = StagedDose(routineSlotKeys: DailyMedSnapshot(item).routineSlotKeys(in: nil),
+            routineDay: Calendar.current.medicationDayLabel(for: .now))
+        let tray = DoseTrayModel()
+        tray.staged = [row]
+        #expect(RoutineOccurrenceService.skipToday(slotKeys: [target], in: context))
+        #expect(!tray.skipToday(row, slotKey: target, in: context))
+        #expect(tray.staged.count == 1)
+        #expect(try context.fetch(FetchDescriptor<RoutineOccurrence>()).first { $0.slotMinutes == 480 }?.state == .pending)
+    }
+
+    @Test func sourceMappingKeepsUIDRouteGroupAnytimeAndPRN() {
+        let item = med()
+        item.substanceUID = "custom-uid"
+        let snapshot = DailyMedSnapshot(item)
+        #expect(snapshot.routineSlotKeys(in: .night) == [key(item, 1380)])
+        #expect(snapshot.routineSlotKeys(in: .morning) == [key(item, 480)])
+        #expect(snapshot.routineSlotKeys(in: .afternoon).isEmpty)
+        item.reminderTimesMinutes = []
+        #expect(DailyMedSnapshot(item).routineSlotKeys(in: .anytime) == [key(item, nil)])
+        #expect(DailyMedSnapshot(item).routineSlotKeys(in: .night).isEmpty)
+        item.substanceUID = nil
+        #expect(DailyMedSnapshot(item).routineSlotKeys(in: nil) == [key(item, nil)])
+        item.isAsNeeded = true
+        #expect(DailyMedSnapshot(item).routineSlotKeys(in: nil).isEmpty)
+    }
+
+    @Test func noSourceWrongDayWrongRouteAndSettledSlotsHaveNoTrayAction() {
+        let now = Date.now
+        let day = Calendar.current.medicationDayLabel(for: now)
+        let row = RoutineOccurrence(substance: "scheduled", route: .oral, dueDay: day, slotMinutes: 480)
+        let target = RoutineOccurrenceService.slotKey(for: row)
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: [], stagedDay: day, occurrences: [row]) == nil)
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: [target], stagedDay: nil, occurrences: [row]) == nil)
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day)!
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: [target], stagedDay: yesterday, occurrences: [row]) == nil)
+        let otherRoute = RoutineOccurrenceService.slotKey(substance: row.substance, substanceUID: nil, route: .sublingual, slotMinutes: 480)
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: [otherRoute], stagedDay: day, occurrences: [row]) == nil)
+        row.state = .skipped
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: [target], stagedDay: day, occurrences: [row]) == nil)
+        row.state = .logged
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: [target], stagedDay: day, occurrences: [row]) == nil)
+    }
+
+    @Test func nearestPendingSlotUsesTheMedicationDayAcrossMidnight() {
+        let defaults = UserDefaults.androidAppGroup!
+        let original = defaults.object(forKey: Calendar.dayBoundaryHourKey)
+        defer {
+            if let original { defaults.set(original, forKey: Calendar.dayBoundaryHourKey) }
+            else { defaults.removeObject(forKey: Calendar.dayBoundaryHourKey) }
+        }
+        defaults.set(4, forKey: Calendar.dayBoundaryHourKey)
+        let calendar = Calendar.current
+        let day = calendar.medicationDayLabel(for: .now)
+        let now = calendar.medicationDayMoment(minutes: 60, onLabel: day)!
+        let evening = RoutineOccurrence(substance: "scheduled", route: .oral, dueDay: day, slotMinutes: 1380)
+        let overnight = RoutineOccurrence(substance: "scheduled", route: .oral, dueDay: day, slotMinutes: 120)
+        let keys = Set([evening, overnight].map { RoutineOccurrenceService.slotKey(for: $0) })
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: keys, stagedDay: day,
+            occurrences: [evening, overnight], now: now) == RoutineOccurrenceService.slotKey(for: overnight))
+        overnight.state = .skipped
+        #expect(RoutineOccurrenceService.pendingTraySlotKey(slotKeys: keys, stagedDay: day,
+            occurrences: [evening, overnight], now: now) == RoutineOccurrenceService.slotKey(for: evening))
+    }
+
+    @Test func skippedStaysNonMissedAfterRolloverAndHistoricalRepair() throws {
+        let store = TestStore()
+        let container = try store.container()
+        let context = ModelContext(container)
+        let item = med()
+        context.insert(item)
+        try context.save()
+        let today = Calendar.current.medicationDayLabel(for: .now)
+        #expect(RoutineOccurrenceService.skipToday(slotKeys: [key(item, 1380)], in: context))
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let next = Calendar.current.medicationDayMoment(minutes: 720, onLabel: tomorrow)!
+        RoutineOccurrenceService.reconcile(in: context, now: next)
+        _ = try RoutineOccurrenceService.repairHistoricalDays(in: context, now: next)
+        try context.save()
+        let rows = try ModelContext(container).fetch(FetchDescriptor<RoutineOccurrence>())
+        let past = rows.filter { $0.dueDay == today }
+        #expect(past.first { $0.slotMinutes == 1380 }?.state == .skipped)
+        #expect(past.first { $0.slotMinutes == 480 }?.state == .missed)
+        #expect(rows.filter { $0.dueDay == tomorrow }.allSatisfy { $0.state == .pending })
+        #expect(!RoutineOccurrenceService.unskipToday(slotKeys: [key(item, 1380)], in: context, now: next))
+    }
+
+    @Test func calendarAndStreakExcludeSkipsAndUndoRestoresExpectation() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let item = med(times: [])
+        context.insert(item)
+        try context.save()
+        let day = Calendar.current.medicationDayLabel(for: .now)
+        #expect(RoutineOccurrenceService.skipToday(slotKeys: [key(item, nil)], in: context))
+        let skipped = AdherenceCalculator.skippedSnapshots(try context.fetch(FetchDescriptor<RoutineOccurrence>()))
+        let summary = AdherenceCalculator.adherence(for: day, entries: [], dailyItems: [item], skipped: skipped)
+        #expect(summary.status == .noData && summary.totalCount == 0 && summary.takenCount == 0)
+        #expect(AdherenceCalculator.dayStatus(for: day, entries: [], items: snapshots(item), skipped: skipped) == .noData)
+        #expect(RoutineOccurrenceService.unskipToday(slotKeys: [key(item, nil)], in: context))
+        let undone = AdherenceCalculator.skippedSnapshots(try context.fetch(FetchDescriptor<RoutineOccurrence>()))
+        #expect(undone.isEmpty)
+        #expect(AdherenceCalculator.adherence(for: day, entries: [], dailyItems: [item], skipped: undone).status == .missed)
+        #expect(AdherenceCalculator.dayStatus(for: day, entries: [], items: snapshots(item), skipped: undone) == .missed)
+    }
+
+    @Test func mixedLoggedAndSkippedCountsOnlyRealDosesAndPendingStillMisses() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let item = med()
+        context.insert(item)
+        let day = Calendar.current.medicationDayLabel(for: .now)
+        let dose = DoseEntry(substance: item.substance, amount: 1, unit: "mg", route: .oral,
+            timestamp: Calendar.current.medicationDayMoment(minutes: 480, onLabel: day)!)
+        context.insert(dose)
+        try context.save()
+        #expect(RoutineOccurrenceService.skipToday(slotKeys: [key(item, 1380)], in: context))
+        let skipped = AdherenceCalculator.skippedSnapshots(try context.fetch(FetchDescriptor<RoutineOccurrence>()))
+        let result = AdherenceCalculator.adherence(for: day, entries: [dose], dailyItems: [item], skipped: skipped)
+        #expect(result.status == .complete && result.takenCount == 1 && result.totalCount == 1)
+        #expect(AdherenceCalculator.adherence(for: day, entries: [], dailyItems: [item], skipped: skipped).status == .missed)
+        let entries = [AdherenceCalculator.EntrySnapshot(substance: dose.substance, identityKey: dose.identityKey,
+            route: dose.route, timestamp: dose.timestamp)]
+        #expect(AdherenceCalculator.dayStatus(for: day, entries: entries, items: snapshots(item), skipped: skipped) == .complete)
+        #expect(AdherenceCalculator.dayStatus(for: day, entries: [], items: snapshots(item), skipped: skipped) == .missed)
+    }
+
+    @Test func repeatedAndLoggedActionsAreNoOpsAndKeepDoseLinks() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let item = med(times: [])
+        context.insert(item)
+        let dose = DoseEntry(substance: item.substance, amount: 1, unit: "mg", route: .oral, timestamp: .now)
+        context.insert(dose)
+        try context.save()
+        RoutineOccurrenceService.reconcile(in: context)
+        let revision = DoseLogService.shared.revision
+        let syncs = DoseNotificationManager.reminderSyncs
+        let reloads = WidgetCenter.shared.reloads
+        #expect(!RoutineOccurrenceService.skipToday(slotKeys: [key(item, nil)], in: context))
+        #expect(!RoutineOccurrenceService.unskipToday(slotKeys: [key(item, nil)], in: context))
+        let row = try #require(try context.fetch(FetchDescriptor<RoutineOccurrence>()).first)
+        #expect(row.state == .logged && row.satisfyingEntryID == dose.id)
+        #expect(DoseLogService.shared.revision == revision)
+        #expect(DoseNotificationManager.reminderSyncs == syncs && WidgetCenter.shared.reloads == reloads)
+    }
+
+    @Test func failedSaveKeepsTrayRowPendingAndDoesNotPublish() throws {
+        let store = TestStore()
+        let context = try ModelContext(store.container())
+        let item = med(times: [])
+        context.insert(item)
+        try context.save()
+        RoutineOccurrenceService.reconcile(in: context)
+        let readOnly = try ModelContext(store.container(allowsSave: false))
+        let tray = DoseTrayModel()
+        let target = key(item, nil)
+        let row = StagedDose(routineSlotKeys: [target], routineDay: Calendar.current.medicationDayLabel(for: .now))
+        tray.staged = [row]
+        let revision = DoseLogService.shared.revision
+        #expect(!tray.skipToday(row, slotKey: target, in: readOnly))
+        #expect(tray.staged.count == 1 && DoseLogService.shared.revision == revision)
+        #expect(try readOnly.fetch(FetchDescriptor<RoutineOccurrence>()).first?.state == .pending)
+        #expect(try ModelContext(store.container()).fetch(FetchDescriptor<RoutineOccurrence>()).first?.state == .pending)
+        #expect(RoutineOccurrenceService.skipToday(slotKeys: [target], in: context))
+        let skippedReadOnly = try ModelContext(store.container(allowsSave: false))
+        let afterSkip = DoseLogService.shared.revision
+        #expect(!RoutineOccurrenceService.unskipToday(slotKeys: [target], in: skippedReadOnly))
+        #expect(try skippedReadOnly.fetch(FetchDescriptor<RoutineOccurrence>()).first?.state == .skipped)
+        #expect(DoseLogService.shared.revision == afterSkip)
+    }
+
+    @Test func skippedDayDoesNotBreakTheProductionStreakWalk() {
+        let calendar = Calendar.current
+        let today = calendar.medicationDayLabel(for: .now)
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+        let first = calendar.date(byAdding: .day, value: -2, to: today)!
+        let item = med(times: [])
+        item.startDate = first
+        let entries = [first, today].map {
+            AdherenceCalculator.EntrySnapshot(substance: item.substance, identityKey: item.identityKey,
+                route: item.route, timestamp: calendar.medicationDayMoment(minutes: 720, onLabel: $0)!)
+        }
+        let skipped = [AdherenceCalculator.SkippedSlotSnapshot(substance: item.substance,
+            substanceUID: nil, route: item.route, dueDay: yesterday, slotMinutes: nil)]
+        #expect(AdherenceCalculator.currentStreak(spanningDays: 2, endingAt: .now,
+            entries: entries, items: snapshots(item), skipped: skipped) == 2)
+        #expect(AdherenceCalculator.currentStreak(spanningDays: 2, endingAt: .now,
+            entries: entries, items: snapshots(item)) == 1)
+    }
+
+    @Test func skippedCountsRespectDayRouteAndSlotWithoutDoubleCounting() {
+        let calendar = Calendar.current
+        let day = calendar.medicationDayLabel(for: .now)
+        let item = med(times: [480, 600, 1380])
+        let skip = AdherenceCalculator.SkippedSlotSnapshot(substance: item.substance,
+            substanceUID: nil, route: .oral, dueDay: day, slotMinutes: 480)
+        let wrongRoute = AdherenceCalculator.SkippedSlotSnapshot(substance: item.substance,
+            substanceUID: nil, route: .sublingual, dueDay: day, slotMinutes: 600)
+        let wrongDay = AdherenceCalculator.SkippedSlotSnapshot(substance: item.substance,
+            substanceUID: nil, route: .oral, dueDay: calendar.date(byAdding: .day, value: -1, to: day)!, slotMinutes: 1380)
+        let skipped = [skip, skip, wrongRoute, wrongDay]
+        let entries = [600, 1380].map {
+            DoseEntry(substance: item.substance, amount: 1, unit: "mg", route: .oral,
+                timestamp: calendar.medicationDayMoment(minutes: $0, onLabel: day)!)
+        }
+        let result = AdherenceCalculator.adherence(for: day, entries: entries, dailyItems: [item], skipped: skipped)
+        #expect(result.status == .complete && result.takenCount == 2 && result.totalCount == 2)
+        #expect(result.halves?.morningTotal == 1 && result.halves?.eveningTotal == 1)
+    }
+}
+''', encoding="utf-8")
+
+assert "static var androidAppGroup: UserDefaults?" in support711
+assert "RoutineSkipProduction.swift" not in staged.read_text(encoding="utf-8")
+assert "MedicationDayProduction.swift" not in staged.read_text(encoding="utf-8")
+assert (model_tests / "RoutineSkipTests.swift").read_text(encoding="utf-8").count("@Test func ") == 13
+for anchor711 in ("static func skipToday(", "static func unskipToday("):
+    body711 = swift_member(new_service711, anchor711)
+    assert body711.index("try context.save()") < body711.index("DoseLogService.shared.changed()") < body711.index("syncMedReminders") < body711.index("reloadAllTimelines")
+    assert "catch" in body711 and "return false" in body711
+    assert body711 in support711
+assert 'slotKeys: [slotKey]' in swift_member(tray_source711, "func skipToday(_ item:")
+assert 'routineSlotKeys = []' in new_stage711 and 'routineDay = nil' in new_stage711
+assert '.accessibilityAction(named: Text("Skip Today"))' in tray_views711.read_text(encoding="utf-8")
+assert '.accessibilityAction(named: Text("Undo Skip"))' in card711.read_text(encoding="utf-8")
+assert swift_member(tray_views711.read_text(encoding="utf-8"), "struct TraySwipeRow<") == swipe_before711
+assert 'quietSlots.filter { $0.state == .pending }' in card711.read_text(encoding="utf-8")
+for path711 in (adherence_model711, insights711):
+    calls711 = re.findall(r"AdherenceCalculator\.adherence\([^\n]+", path711.read_text(encoding="utf-8"))
+    assert calls711 and all("skipped:" in call for call in calls711)
+assert "items: itemSnaps, skipped: skipped" in database711.read_text(encoding="utf-8")
+for path711 in (production711, model_tests / "RoutineSkipProduction.swift", model_tests / "RoutineSkipTests.swift"):
+    assert "import WidgetKit" not in path711.read_text(encoding="utf-8")
+assert 'import GRDB' in (model_tests / "RoutineSkipTests.swift").read_text(encoding="utf-8")
+# No new ModelContext API: the existing baseline replacement remains sufficient.
+assert "func readAllForBackup" in original_context.read_text(encoding="utf-8")
+print("70011 wiring assertions passed: exact-slot tray skip, undo, post-save signals/reminders/widgets, skipped adherence, catalog and host fixtures")
+print("Prepared 70011: Skip Today / Undo Skip, 13 production regression tests")
