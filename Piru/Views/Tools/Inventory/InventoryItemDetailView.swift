@@ -174,9 +174,7 @@ struct InventoryItemDetailView: View {
     private func rowView(_ row: HistoryRow) -> some View {
         switch row {
         case let .dose(dose):
-            NavigationLink {
-                EntryDetailView(entry: dose)
-            } label: {
+            NavigationLink(value: PushRoute.entry(timestamp: dose.timestamp, id: dose.id)) {
                 HistoryRowLabel(
                     glyph: "pills",
                     tint: Theme.secondaryLabel,
