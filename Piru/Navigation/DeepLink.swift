@@ -437,7 +437,8 @@ nonisolated enum DeepLink {
              .drugClassGroup,
              .insightGroup,
              .myMeds,
-             .medDetail:
+             .medDetail,
+             .inventoryItem:
             return nil
         }
         return components.url

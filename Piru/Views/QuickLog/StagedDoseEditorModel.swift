@@ -56,21 +56,22 @@ final class StagedDoseEditorModel {
     // MARK: - Derived values
 
     var enteredVolumeML: Double? {
-        guard let v = Double(volumeText.replacingOccurrences(of: ",", with: ".")), v > 0 else { return nil }
+        guard let v = Double(volumeText.replacingOccurrences(of: ",", with: ".")), v.isFinite, v > 0 else { return nil }
         return Measurement(value: v, unit: volumeUnit).converted(to: .milliliters).value
     }
 
     var enteredABV: Double? {
-        guard let a = Double(abvText.replacingOccurrences(of: ",", with: ".")), a > 0 else { return nil }
+        guard let a = Double(abvText.replacingOccurrences(of: ",", with: ".")), a.isFinite, a > 0 else { return nil }
         return a
     }
 
     /// Grams of ethanol implied by the dialed strength + volume, or `nil` until
-    /// both are usable.
+    /// both are usable. A product past ``StagedDose/maximumAmount`` is `nil`
+    /// too, so an absurd volume × concentration never reaches the tray.
     func customDrinkGrams(capability: ByVolumeDosing?) -> Double? {
         guard let cap = capability, let ml = enteredVolumeML, let abv = enteredABV else { return nil }
         let g = cap.canonicalAmount(volumeML: ml, strength: abv)
-        return g > 0 ? g : nil
+        return g.isFinite && g > 0 && g <= StagedDose.maximumAmount ? g : nil
     }
 
     /// Volume-stepper step in the displayed unit. Kind- and unit-aware: an injectable
@@ -119,9 +120,10 @@ final class StagedDoseEditorModel {
         // Typing a digit back takes the row out of that state.
         let trimmed = amountText.trimmingCharacters(in: .whitespaces)
         item.isUnknownAmount = trimmed.isEmpty
-        item.amount = Double(trimmed.replacingOccurrences(of: ",", with: "."))
+        let parsed = Double(trimmed.replacingOccurrences(of: ",", with: "."))
             ?? (try? Double(trimmed, format: .number))
             ?? 0
+        item.amount = StagedDose.sanitizedAmount(parsed)
     }
 
     /// Show `amount` in the field without letting the sync write it back.
@@ -306,7 +308,7 @@ final class StagedDoseEditorModel {
         for strength in product.strengths.sorted(by: >) where strength > 0 {
             let ratio = item.amount / strength
             let rounded = ratio.rounded()
-            if rounded >= 1, abs(ratio - rounded) < 0.001 {
+            if rounded >= 1, rounded <= Double(CombinationComponent.maximumUnits), abs(ratio - rounded) < 0.001 {
                 pillStrength = strength
                 pillCount = Int(rounded)
                 return

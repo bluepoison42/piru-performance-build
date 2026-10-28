@@ -144,6 +144,13 @@ struct PushRouteView: View {
 
         case let .substanceData(name, section):
             SubstanceDataPageView(name: name, section: section)
+
+        case let .inventoryItem(id):
+            // A deleted item renders nothing; the stack pops the dead route on
+            // next interaction.
+            if let item = lookupInventoryItem(id: id) {
+                InventoryItemDetailView(item: item)
+            }
         }
     }
 
@@ -200,6 +207,12 @@ struct PushRouteView: View {
         let items = (try? modelContext.fetch(FetchDescriptor<DailyDoseItem>())) ?? []
         return items.first { $0.identityKey == identityKey && $0.sortOrder == sortOrder }
             ?? items.first { $0.identityKey == identityKey }
+    }
+
+    private func lookupInventoryItem(id: UUID) -> InventoryItem? {
+        var descriptor = FetchDescriptor<InventoryItem>(predicate: #Predicate { $0.id == id })
+        descriptor.fetchLimit = 1
+        return try? modelContext.fetch(descriptor).first
     }
 
     private func lookupSession(id: UUID) -> Session? {

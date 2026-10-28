@@ -277,15 +277,27 @@ struct InventoryStepperRow: View {
     /// The number and its unit share a baseline so "50,000 mg" reads as one
     /// figure; the pair is centered between the step buttons. The whole field is
     /// tappable to type an exact amount.
+    ///
+    /// A hidden `Text` of the formatted amount sets the field's width, because a
+    /// fixed-size `TextField` takes its ideal width from the "0" placeholder and
+    /// truncates "20" to "2…". While focused it holds one digit of slack, so the
+    /// digit being typed has room before the binding catches up.
     private var amountField: some View {
         HStack(alignment: .firstTextBaseline, spacing: 5) {
-            TextField("0", value: $value, format: .number)
-                .decimalKeyboard()
-                .multilineTextAlignment(.trailing)
-                .fixedSize()
+            Text(verbatim: amountSizingText)
                 .font(.piru(.title2, weight: .semibold))
                 .monospacedDigit()
-                .focused($focused)
+                .lineLimit(1)
+                .fixedSize()
+                .hidden()
+                .overlay(alignment: .trailing) {
+                    TextField("0", value: $value, format: .number)
+                        .decimalKeyboard()
+                        .multilineTextAlignment(.trailing)
+                        .font(.piru(.title2, weight: .semibold))
+                        .monospacedDigit()
+                        .focused($focused)
+                }
             unitView
         }
         .frame(maxWidth: .infinity)
@@ -293,6 +305,13 @@ struct InventoryStepperRow: View {
         .contentShape(Rectangle())
         .accessibilityAddTraits(.isButton)
         .onTapGesture { focused = true }
+    }
+
+    /// The widest string the amount field must show: the amount as the
+    /// field's `.number` format renders it, plus a digit while typing.
+    private var amountSizingText: String {
+        let shown = value.formatted(.number)
+        return focused ? shown + "0" : shown
     }
 
     @ViewBuilder

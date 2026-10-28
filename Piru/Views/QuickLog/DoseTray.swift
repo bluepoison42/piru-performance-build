@@ -99,6 +99,26 @@ struct StagedDose: Identifiable, Equatable {
         let id = UUID()
         var amount: Double
         var count: Int = 1
+
+        /// Every staged amount enters through here, so a typed, derived or
+        /// automated value is held to ``StagedDose/sanitizedAmount(_:)``.
+        init(amount: Double, count: Int = 1) {
+            self.amount = StagedDose.sanitizedAmount(amount)
+            self.count = max(1, count)
+        }
+    }
+
+    /// The largest amount one staged component may carry, in any unit: a
+    /// billion µg is a kilogram, past anything a person logs, and well inside
+    /// the range the tray's integer chip keys and the PK engines handle.
+    static let maximumAmount: Double = 1_000_000_000
+
+    /// `value` as a stageable amount: zero when it is not finite or negative
+    /// (a URL, a Shortcut or the amount field can hand over `inf` or `nan`),
+    /// otherwise at most ``maximumAmount``.
+    static func sanitizedAmount(_ value: Double) -> Double {
+        guard value.isFinite, value > 0 else { return 0 }
+        return min(value, maximumAmount)
     }
 
     let id = UUID()
@@ -518,10 +538,16 @@ final class DoseTrayModel {
     }
 
     /// Integer key at `doseFormatted`'s rounding for this magnitude.
+    ///
+    /// Total over every `Double`: a non-finite value keys as 0, and the scaled
+    /// value is clamped into a range `Int` holds before converting, because
+    /// `Int(_:)` traps past `Int.max`. Amounts that large are all one chip.
     fileprivate static func displayKey(_ value: Double) -> Int {
+        guard value.isFinite else { return 0 }
         let magnitude = Swift.abs(value)
         let scale: Double = magnitude >= 100 ? 1 : magnitude >= 10 ? 10 : 100
-        return Int((value * scale).rounded())
+        let limit = 1e15
+        return Int(min(max((value * scale).rounded(), -limit), limit))
     }
 
     /// Stage a daily-set med as a chip, carrying its product so a Concerta med

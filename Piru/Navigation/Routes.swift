@@ -235,6 +235,11 @@ nonisolated enum PushRoute: Hashable, Codable {
     /// `identityKey` plus `sortOrder` to disambiguate two schedules of the
     /// same substance (e.g. oral + injected MPH).
     case medDetail(identityKey: String, sortOrder: Int)
+    /// One inventory item's detail screen (`InventoryItemDetailView`), by its
+    /// stable `InventoryItem.id`. Pushed by value like every other route: a
+    /// view-based `NavigationLink` in this path-driven stack is rebuilt on top
+    /// of whatever the detail pushes next (its Substance Info row).
+    case inventoryItem(id: UUID)
     /// A deep-data page for a substance — the redesigned detail view's "Show
     /// all" destination. One route parameterized by `section` so Mechanism's
     /// "Show all", the per-section links, and the single "For the curious"

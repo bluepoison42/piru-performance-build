@@ -235,9 +235,7 @@ struct InventoryListView: View {
     }
 
     private func row(_ item: InventoryItem) -> some View {
-        NavigationLink {
-            InventoryItemDetailView(item: item)
-        } label: {
+        NavigationLink(value: PushRoute.inventoryItem(id: item.id)) {
             InventoryRow(item: item, colorMap: colorMap)
         }
         .listRowBackground(CardBackground())
