@@ -572,8 +572,18 @@ final class DoseTrayModel {
         stage(dailyMed: DailyMedSnapshot(item), colorLookup: colorLookup)
     }
 
-    /// Stage a daily-set med from the My Meds pills' value snapshot.
+    /// Stage a daily-set med from the My Meds pills' value snapshot. A med
+    /// saved as a combination product stages the product: its amount is a
+    /// count of units, or a volume in mL for a liquid.
     func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color]) {
+        if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
+            stage(product: product, amount: item.amount, colorLookup: colorLookup)
+            for index in staged.indices where staged[index].combinationName == product.name {
+                staged[index].isFromDailySet = true
+                staged[index].isBackgroundMed = item.isBackgroundMed
+            }
+            return
+        }
         stage(
             substance: item.substance,
             route: item.route,
@@ -614,10 +624,12 @@ final class DoseTrayModel {
     func stagePill(_ pillID: String, meds: [DailyMedSnapshot], colorLookup: [String: P3Color]) {
         var contribution = presentContribution(of: pillID)
         for med in meds {
-            let unit = Self.chipUnit(for: med)
-            guard stagedCount(of: unit) == 0 else { continue }
+            let units = Self.chipUnits(for: med)
+            guard !units.keys.allSatisfy({ stagedCount(of: $0) > 0 }) else { continue }
             stage(dailyMed: med, colorLookup: colorLookup)
-            contribution[unit, default: 0] += 1
+            for (unit, count) in units {
+                contribution[unit, default: 0] += count
+            }
         }
         pillContributions[pillID] = contribution.isEmpty ? nil : contribution
     }
@@ -672,17 +684,37 @@ final class DoseTrayModel {
         dose.identityKey == identity && dose.route == chip.route && dose.unit == chip.unit
     }
 
-    /// The chip ``stage(dailyMed:colorLookup:)`` files a med under: the
-    /// resolved identity staged rows merge on, and the med's route, unit and
-    /// amount.
-    static func chipUnit(for med: DailyMedSnapshot) -> StagedChipUnit {
-        let identity = stagedIdentity(
-            substance: med.substance,
-            productName: med.productName,
-            librarySubstance: SubstanceLibrary.lookup(med.substance.lowercased()),
-            route: med.route,
-        )
-        return StagedChipUnit(identity: identity, chip: StagedChipKey(route: med.route, unit: med.unit, amountKey: displayKey(med.amount)))
+    /// The chips ``stage(dailyMed:colorLookup:)`` files a med under, with how
+    /// many units of each: one chip for a med of one substance (its resolved
+    /// identity, route, unit and amount), one per component for a combination
+    /// product — a count of its amount per unit for a solid, one chip of
+    /// volume × amount per mL for a liquid.
+    static func chipUnits(for med: DailyMedSnapshot) -> [StagedChipUnit: Int] {
+        guard let product = CustomSubstanceStore.shared.combination(named: med.substance) else {
+            let identity = stagedIdentity(
+                substance: med.substance,
+                productName: med.productName,
+                librarySubstance: SubstanceLibrary.lookup(med.substance.lowercased()),
+                route: med.route,
+            )
+            let chip = StagedChipKey(route: med.route, unit: med.unit, amountKey: displayKey(med.amount))
+            return [StagedChipUnit(identity: identity, chip: chip): 1]
+        }
+        let isLiquid = product.isLiquidCombination
+        let volume = CombinationComponent.volumeML(for: med.amount)
+        let count = isLiquid ? 1 : CombinationComponent.units(for: med.amount)
+        var units: [StagedChipUnit: Int] = [:]
+        for component in product.components ?? [] {
+            let library = SubstanceLibrary.lookup(component.substance)
+            let identity = stagedIdentity(
+                substance: library?.name ?? component.substance, productName: nil,
+                librarySubstance: library, route: component.route,
+            )
+            let amount = isLiquid ? component.amount(inVolumeML: volume) : component.amountPerUnit
+            let chip = StagedChipKey(route: component.route, unit: component.unit, amountKey: displayKey(amount))
+            units[StagedChipUnit(identity: identity, chip: chip), default: 0] += count
+        }
+        return units
     }
 
     /// Stage a chip. Same substance + route + unit merges into the existing
@@ -842,12 +874,82 @@ final class DoseTrayModel {
         }
     }
 
-    /// Open the first row of a liquid combination for editing, so its volume
+    /// Open a liquid combination's product row for editing, so its volume
     /// field is on screen the moment the product is picked: a liquid is staged
-    /// at a placeholder 1 mL that the user is about to change.
+    /// at a placeholder 1 mL that the user is about to change. The tray draws
+    /// the whole product on its lead row (``leadRowID(ofCombination:)``).
     func openVolume(ofCombination combinationName: String) {
-        guard let row = staged.first(where: { $0.combinationName == combinationName && $0.isLiquidCombinationRow }) else { return }
-        openForEditing(row.id)
+        guard let lead = leadRowID(ofCombination: combinationName) else { return }
+        openForEditing(lead)
+    }
+
+    // MARK: Combination products
+
+    /// Stage `amount` of a combination product: a count of units for a solid
+    /// product, a volume in mL for a liquid one.
+    func stage(product: CustomSubstanceEntry, amount: Double, colorLookup: [String: P3Color] = [:]) {
+        if product.isLiquidCombination {
+            stage(combination: product, volumeML: CombinationComponent.volumeML(for: amount), colorLookup: colorLookup)
+        } else {
+            stage(combination: product, quantity: CombinationComponent.units(for: amount), colorLookup: colorLookup)
+        }
+    }
+
+    /// The first row staged from `combinationName`. The tray draws the whole
+    /// product, every component beneath one quantity control, on this row and
+    /// skips the product's other rows.
+    func leadRowID(ofCombination combinationName: String) -> UUID? {
+        staged.first { $0.combinationName == combinationName }?.id
+    }
+
+    /// How much of a product is staged: units for a solid, read off the lead
+    /// component's count at its amount per unit; mL for a liquid. `nil` when
+    /// nothing of it is staged or its rows no longer say.
+    func stagedQuantity(of product: CustomSubstanceEntry) -> Double? {
+        guard let lead = staged.first(where: { $0.combinationName == product.name }) else { return nil }
+        if product.isLiquidCombination { return lead.volumeML }
+        guard let component = product.components?.first(where: {
+            Self.stagedName(of: $0) == lead.substanceName && $0.unit == lead.unit
+        }),
+            let units = lead.components.first(where: { Self.sameAmount($0.amount, component.amountPerUnit) })?.count
+        else { return nil }
+        return Double(units)
+    }
+
+    /// Set how many units of a solid product are staged: each component's
+    /// share of its row becomes `count` × its amount per unit, so one control
+    /// moves every component together. Anything else merged into a row (the
+    /// same compound staged on its own) stays as it is.
+    func setUnits(_ count: Int, of product: CustomSubstanceEntry) {
+        let units = min(max(count, 1), CombinationComponent.maximumUnits)
+        for component in product.components ?? [] {
+            let name = Self.stagedName(of: component)
+            for index in staged.indices where staged[index].combinationName == product.name
+                && staged[index].substanceName == name && staged[index].unit == component.unit {
+                if let share = staged[index].components.firstIndex(where: { Self.sameAmount($0.amount, component.amountPerUnit) }) {
+                    staged[index].components[share].count = units
+                } else {
+                    staged[index].components.append(.init(amount: component.amountPerUnit, count: units))
+                }
+                staged[index].isUnknownAmount = false
+            }
+        }
+        incrementTick += 1
+    }
+
+    /// Take a whole product out of the tray: every row staged from it.
+    func removeCombination(_ combinationName: String) {
+        let ids = Set(staged.filter { $0.combinationName == combinationName }.map(\.id))
+        guard !ids.isEmpty else { return }
+        staged.removeAll { ids.contains($0.id) }
+        expandedItemIDs.subtract(ids)
+        syncEmptiness()
+    }
+
+    /// The name a component stages under: the library's canonical name, or the
+    /// raw name of a substance the library doesn't carry.
+    static func stagedName(of component: CombinationComponent) -> String {
+        SubstanceLibrary.lookup(component.substance)?.name ?? component.substance
     }
 
     /// Whether a liquid component's row may carry the volume on the by-volume

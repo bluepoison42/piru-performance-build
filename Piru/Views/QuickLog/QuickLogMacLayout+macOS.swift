@@ -22,9 +22,6 @@ struct QuickLogMacLayout: View {
 
     @State private var confirmingDiscard = false
     @State private var pendingCustomPrefill: EntryPrefillPayload?
-    /// A combination saved from the create sheet, staged whole once the sheet
-    /// is down — one chip per component, where a compound stages a draft.
-    @State private var pendingCombination: CustomSubstanceEntry?
 
     var body: some View {
         HStack(spacing: 0) {
@@ -67,15 +64,11 @@ struct QuickLogMacLayout: View {
         }
         .sheet(isPresented: $showCustomForm, onDismiss: onCustomFormDismiss) {
             CustomSubstanceFormView(initialName: searchText.trimmingCharacters(in: .whitespaces)) { saved in
-                if saved.isCombination {
-                    pendingCombination = saved
-                } else {
-                    pendingCustomPrefill = EntryPrefillPayload(
-                        substance: saved.name,
-                        route: saved.defaultRoute,
-                        unit: saved.unit,
-                    )
-                }
+                pendingCustomPrefill = EntryPrefillPayload(
+                    substance: saved.name,
+                    route: saved.defaultRoute,
+                    unit: saved.unit,
+                )
             }
             .macSheetSize()
         }
@@ -99,15 +92,6 @@ struct QuickLogMacLayout: View {
     }
 
     private func onCustomFormDismiss() {
-        if let combination = pendingCombination {
-            pendingCombination = nil
-            withAnimation(.snappy) {
-                tray.stage(combination: combination, colorLookup: content.cachedColorLookup)
-                if combination.isLiquidCombination { tray.openVolume(ofCombination: combination.name) }
-                searchText = ""
-            }
-            return
-        }
         guard let prefill = pendingCustomPrefill else { return }
         pendingCustomPrefill = nil
         withAnimation(.snappy) {

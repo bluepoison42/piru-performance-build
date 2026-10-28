@@ -69,11 +69,30 @@ enum AdherenceCalculator {
     /// adherence credit. Identity joins by ``DoseEntry/identityKey`` with a
     /// lowercased-name fallback, so a PSID-resolved item still credits a
     /// legacy name-only dose (and vice versa) exactly as the old name join did.
+    ///
+    /// A med saved as a combination product is satisfied by the product: one
+    /// pick logs an entry per component, all carrying its name, so only the
+    /// lead component's entry counts, and taking the product twice reads as
+    /// two doses rather than two per component.
     static func entryMatches(entry: DoseEntry, item: DailyDoseItem) -> Bool {
-        matches(
+        if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
+            return productEntryMatches(
+                entrySubstance: entry.substance, entryCombination: entry.combinationName, product: product,
+            )
+        }
+        return matches(
             entryKey: entry.identityKey, entryName: entry.substance, entryRoute: entry.route,
             itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route,
         )
+    }
+
+    /// Whether an entry is the lead component's entry of `product`: it was
+    /// logged from the product, and it is the first component's substance (a
+    /// product whose components are gone counts any entry of it).
+    static func productEntryMatches(entrySubstance: String, entryCombination: String?, product: CustomSubstanceEntry) -> Bool {
+        guard let entryCombination, entryCombination.caseInsensitiveCompare(product.name) == .orderedSame else { return false }
+        guard let lead = product.components?.first else { return true }
+        return DoseTrayModel.stagedName(of: lead).caseInsensitiveCompare(entrySubstance) == .orderedSame
     }
 
     /// The matching core over plain values, shared by the `@Model`
