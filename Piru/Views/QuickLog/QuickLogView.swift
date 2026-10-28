@@ -608,15 +608,14 @@ struct QuickLogView: View {
                 // the curated list floats the chips the user actually tapped,
                 // without minting a chip for every sum. Daily routine items keep
                 // their own surface and don't mint quick-log chips; an unknown
-                // amount tapped no chip and mints none.
-                if !item.isFromDailySet, !item.isUnknownAmount {
+                // amount tapped no chip and mints none. A combination product's
+                // components mint none either: the product has its own card.
+                if !item.isFromDailySet, !item.isUnknownAmount, item.combinationName == nil {
                     for component in item.components {
                         curation.append(QuickLogManager.LoggedDose(
                             substance: item.substanceName, route: item.route, amount: component.amount, unit: item.unit,
-                            // A liquid product's volume belongs to the product,
-                            // not to a chip of one component's mass.
-                            volumeML: item.isLiquidCombinationRow ? nil : item.volumeML,
-                            abv: item.isLiquidCombinationRow ? nil : item.abv,
+                            volumeML: item.volumeML,
+                            abv: item.abv,
                             drinkName: item.drinkName, emoji: item.emoji,
                             substanceUID: item.substanceUID, isomer: item.isomer,
                             releaseForm: item.releaseForm, saltForm: item.saltForm, productName: item.productName,

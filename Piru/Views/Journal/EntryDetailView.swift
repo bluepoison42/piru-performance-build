@@ -229,10 +229,11 @@ struct EntryDetailView: View {
         let previousTimestamp = entry.timestamp
         let previousSubstanceName = entry.substance
         let previousMeal = entry.meal
-        // A component of a liquid combination keeps its recorded volume while
-        // its amount and unit stand; once either changes, the volume no longer
+        // A component of a liquid combination, or a solution of a substance
+        // with no by-volume editor here, keeps its recorded volume while its
+        // amount and unit stand; once either changes, the volume no longer
         // describes the dose.
-        let keepsCombinationVolume = entry.combinationName != nil && entry.volumeML != nil
+        let keepsCombinationVolume = (entry.combinationName != nil || byVolumeCapability == nil) && entry.volumeML != nil
             && !draft.isUnknownDose && storedAmount == entry.amount && storedUnit == entry.unit
         let combinationVolume = (volumeML: entry.volumeML, perML: entry.abv)
 

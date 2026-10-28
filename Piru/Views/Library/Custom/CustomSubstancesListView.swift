@@ -77,7 +77,12 @@ struct CustomSubstancesListView: View {
             CustomSubstanceFormView()
         }
         .sheet(item: $editingSubstance) { substance in
-            CustomSubstanceFormView(existing: substance)
+            // A combination product is made and edited as a med's product.
+            if substance.isCombination {
+                MedProductEditSheet(product: substance)
+            } else {
+                CustomSubstanceFormView(existing: substance)
+            }
         }
     }
 }

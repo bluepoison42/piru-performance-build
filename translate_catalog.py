@@ -3406,6 +3406,47 @@ T = {
         "留空则以用量未知记录这份剂量。对于复方制剂，填写服用的单位数；液体则填写毫升数。",
         "留空則以用量未知記錄這份劑量。對於複方製劑，填寫服用的單位數；液體則填寫毫升數。",
     ),
+    # Products made in Add a Med: compounded or liquid (2026-10-28).
+    "Pills": ("药片", "藥片"),
+    "Tablets": ("片剂", "錠劑"),
+    "Capsules": ("胶囊", "膠囊"),
+    "%lld pill": ("%lld 片", "%lld 片"),
+    "%lld pills": ("%lld 片", "%lld 片"),
+    "%lld tablet": ("%lld 片", "%lld 錠"),
+    "%lld tablets": ("%lld 片", "%lld 錠"),
+    "%lld capsule": ("%lld 粒", "%lld 粒"),
+    "%lld capsules": ("%lld 粒", "%lld 粒"),
+    "Product": ("制剂", "製劑"),
+    "Each component's amount is per mL, and logging it asks for the volume you took.": (
+        "每种成分的含量按每毫升计，记录时会请你填写服用的容量。",
+        "每種成分的含量按每毫升計，記錄時會請你填寫服用的容量。",
+    ),
+    "Each component's amount is per unit.": (
+        "每种成分的含量按每单位计。",
+        "每種成分的含量按每單位計。",
+    ),
+    "Choose Substance": ("选择物质", "選擇物質"),
+    "%@ solution": ("%@ 溶液", "%@ 溶液"),
+    "Checked off by logging this product.": ("记录这个制剂即算完成。", "記錄這個製劑即算完成。"),
+    "Edit Product": ("编辑制剂", "編輯製劑"),
+    "Name Taken": ("名称已被使用", "名稱已被使用"),
+    '"%@" already names a substance. Choose another name for this product.': (
+        "“%@”已是一种物质的名称。请为这个制剂另取一个名字。",
+        "「%@」已是一種物質的名稱。請為這個製劑另取一個名字。",
+    ),
+    "Single compound": ("单一成分", "單一成分"),
+    "Compounded": ("复方", "複方"),
+    "Solid": ("固体", "固體"),
+    "Logged as a whole: one pick records each component.": (
+        "整体记录：选一次即记录每种成分。",
+        "整體記錄：選一次即記錄每種成分。",
+    ),
+    "Your Products": ("你的制剂", "你的製劑"),
+    "Products you made, ready to add as a med.": (
+        "你创建的制剂，可添加为用药。",
+        "你建立的製劑，可加入為用藥。",
+    ),
+    "Adds it to My Meds": ("将其添加到我的用药", "將其加入我的用藥"),
     "Find a Place…": ("查找地点…", "尋找地點…"),
     "Location access is off": ("定位权限已关闭", "定位權限已關閉"),
     "Turn on location access in Settings to use your current location.": (
@@ -8889,6 +8930,36 @@ if __name__ == "__main__":
             "Volume of %@",
             "Part of %@ · %@ mL",
             "Leave empty to log the dose with its amount unknown. For a combination product, the number of units taken, or the volume in mL for a liquid.",
+        }
+    )
+    # Products made in Add a Med: compounded or liquid (2026-10-28).
+    NEW_KEYS.update(
+        {
+            "Pills",
+            "Tablets",
+            "Capsules",
+            "%lld pill",
+            "%lld pills",
+            "%lld tablet",
+            "%lld tablets",
+            "%lld capsule",
+            "%lld capsules",
+            "Product",
+            "Each component's amount is per mL, and logging it asks for the volume you took.",
+            "Each component's amount is per unit.",
+            "Choose Substance",
+            "%@ solution",
+            "Checked off by logging this product.",
+            "Edit Product",
+            "Name Taken",
+            '"%@" already names a substance. Choose another name for this product.',
+            "Single compound",
+            "Compounded",
+            "Solid",
+            "Logged as a whole: one pick records each component.",
+            "Your Products",
+            "Products you made, ready to add as a med.",
+            "Adds it to My Meds",
         }
     )
     # Spreadsheet (CSV/TSV) import and export (2026-10-23).

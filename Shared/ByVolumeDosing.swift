@@ -201,6 +201,23 @@ extension ByVolumeDosing {
         return false
     }
 
+    /// The units a dose can be logged as a solution in: a mass, or IU, per mL.
+    static let solutionUnits: Set<String> = ["µg", "mg", "g", "IU"]
+
+    /// A dissolved substance at a concentration in `unit` per mL, for any
+    /// substance that has no by-volume input of its own: the staged editor's
+    /// By Volume mode for a solution or a syrup. No presets and no standard
+    /// unit, since the concentration is the bottle's, entered by the user.
+    static func solution(in unit: String) -> ByVolumeDosing {
+        ByVolumeDosing(
+            concentration: .massPerVolume,
+            canonicalUnit: unit,
+            standardUnitMass: 0,
+            standardUnitLabel: "",
+            drinkPresets: [],
+        )
+    }
+
     /// Title for the strength field: "Concentration" for an ester, "Strength" for
     /// alcohol.
     var strengthFieldLabel: LocalizedStringResource {

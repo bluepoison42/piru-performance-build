@@ -104,6 +104,8 @@ struct MyMedsHubView: View {
     @Query(sort: \DailyDoseItem.sortOrder) private var items: [DailyDoseItem]
 
     @State private var showingAddMed = false
+    /// A saved product no med names yet, opened in the add form to become one.
+    @State private var adoptingProduct: CustomSubstanceEntry?
 
     private var groups: [(group: MedTimeGroup, items: [DailyDoseItem])] {
         MedTimeGroup.allCases.compactMap { group in
@@ -153,6 +155,10 @@ struct MyMedsHubView: View {
                 }
                 .listRowBackground(CardBackground())
             }
+
+            UnlistedProductsSection(items: items) { product in
+                adoptingProduct = product
+            }
         }
         .themedPage()
         .navigationTitle("My Meds")
@@ -171,6 +177,9 @@ struct MyMedsHubView: View {
             }
             .sheet(isPresented: $showingAddMed) {
                 MedFormView()
+            }
+            .sheet(item: $adoptingProduct) { product in
+                MedFormView(product: product)
             }
     }
 
@@ -196,6 +205,61 @@ struct MyMedsHubView: View {
 
     private func belongs(_ item: DailyDoseItem, to group: MedTimeGroup) -> Bool {
         MedTimeGroup.belongs(item, to: group)
+    }
+}
+
+// MARK: - Unlisted products
+
+/// The combination products no med names, such as one whose med was deleted.
+/// Tapping one opens the add form on it, so it becomes an As needed med with
+/// its own pill.
+private struct UnlistedProductsSection: View {
+    let items: [DailyDoseItem]
+    let onAdopt: (CustomSubstanceEntry) -> Void
+
+    @State private var store = CustomSubstanceStore.shared
+
+    private var unlisted: [CustomSubstanceEntry] {
+        let named = Set(items.map { $0.substance.lowercased() })
+        return store.all.filter { $0.isCombination && !named.contains($0.name.lowercased()) }
+    }
+
+    var body: some View {
+        let products = unlisted
+        if !products.isEmpty {
+            Section {
+                ForEach(products) { product in
+                    Button {
+                        onAdopt(product)
+                    } label: {
+                        HStack(spacing: Spacing.xl) {
+                            VStack(alignment: .leading, spacing: Spacing.xxs) {
+                                Text(product.resolvedDisplayName)
+                                    .foregroundStyle(.primary)
+                                if let listing = product.componentsListing {
+                                    Text(listing)
+                                        .font(.subheadline)
+                                        .foregroundStyle(Theme.secondaryLabel)
+                                        .lineLimit(2)
+                                }
+                            }
+                            Spacer()
+                            Image(systemName: "plus.circle")
+                                .foregroundStyle(Theme.accent)
+                                .accessibilityHidden(true)
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityHint("Adds it to My Meds")
+                }
+            } header: {
+                Text("Your Products")
+            } footer: {
+                Text("Products you made, ready to add as a med.")
+            }
+            .listRowBackground(CardBackground())
+        }
     }
 }
 
@@ -250,7 +314,7 @@ private struct MedRow: View {
     }
 
     private var subtitle: String {
-        let dose = "\(item.amount.doseFormatted) \(item.unit)"
+        let dose = item.doseLabel
         if item.isAsNeeded {
             if let limit = item.maxPerDay {
                 return "\(dose) · \(String(localized: "up to \(limit)× daily"))"

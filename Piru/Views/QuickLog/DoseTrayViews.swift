@@ -19,11 +19,20 @@ struct TrayStagedListCard: View {
     @Namespace private var morphNamespace
 
     var body: some View {
-        let lastVisibleID = model.staged.last(where: { !hiddenItemIDs.contains($0.id) })?.id
+        let products = productLayout()
+        let lastVisibleID = model.staged.last(where: { !hiddenItemIDs.contains($0.id) && !products.folded.contains($0.id) })?.id
         VStack(spacing: 0) {
             ForEach($model.staged) { $item in
-                if !hiddenItemIDs.contains(item.id) {
-                    TraySwipeRow(onDelete: { withAnimation(.snappy) { model.remove(item) } }) {
+                if !hiddenItemIDs.contains(item.id), !products.folded.contains(item.id) {
+                    TraySwipeRow(onDelete: {
+                        withAnimation(.snappy) {
+                            if let product = products.leads[item.id] {
+                                model.removeCombination(product.name)
+                            } else {
+                                model.remove(item)
+                            }
+                        }
+                    }) {
                         // The horizontal inset is applied OUTSIDE the swap, not
                         // inside each branch. Padding that changes across a
                         // matched-geometry morph moves the container's edges on
@@ -33,16 +42,14 @@ struct TrayStagedListCard: View {
                         // its own business and stays on its branch — that one
                         // doesn't fight the morph because no pair spans it.
                         Group {
-                            if model.expandedItemIDs.contains(item.id) {
+                            if let product = products.leads[item.id] {
+                                TrayProductCell(product: product, leadID: item.id, model: model, namespace: morphNamespace)
+                            } else if model.expandedItemIDs.contains(item.id) {
                                 StagedDoseEditor(
                                     item: $item,
                                     namespace: morphNamespace,
                                     onCollapse: {
                                         withAnimation(.snappy) { _ = model.expandedItemIDs.remove(item.id) }
-                                    },
-                                    onCombinationVolume: { volume in
-                                        guard let name = item.combinationName else { return }
-                                        model.setVolume(volume, ofCombination: name)
                                     },
                                 )
                                 .padding(.vertical, Spacing.md)
@@ -69,6 +76,26 @@ struct TrayStagedListCard: View {
             Color.platformSecondarySystemGroupedBackground,
             in: RoundedRectangle(cornerRadius: DoseTrayMetrics.cardCornerRadius, style: .continuous),
         )
+    }
+
+    /// The combination products in the tray: each one's lead row (the first
+    /// staged from it), which draws the whole product, and the rest of its
+    /// rows, which the card folds under it. A row whose product is no longer
+    /// defined stays a row of its own.
+    private func productLayout() -> (leads: [UUID: CustomSubstanceEntry], folded: Set<UUID>) {
+        var leads: [UUID: CustomSubstanceEntry] = [:]
+        var folded: Set<UUID> = []
+        var seen: Set<String> = []
+        for row in model.staged {
+            guard let name = row.combinationName,
+                  let product = CustomSubstanceStore.shared.combination(named: name) else { continue }
+            if seen.insert(name).inserted {
+                leads[row.id] = product
+            } else {
+                folded.insert(row.id)
+            }
+        }
+        return (leads, folded)
     }
 }
 

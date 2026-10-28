@@ -31,63 +31,6 @@ private final class CustomSubstanceDraft {
         var offsetMax: Double?
     }
 
-    /// One compound of a combination draft: the picked substance and how much
-    /// of it one unit of the product carries.
-    struct ComponentDraft: Identifiable {
-        let id = UUID()
-        /// Canonical library name, or the raw name of a substance the library
-        /// doesn't know.
-        var substance: String
-        /// What the row shows — the brand the user picked, else the display title.
-        var displayName: String
-        var amount: Double?
-        var unit: String
-        var route: RouteOfAdministration
-        var availableRoutes: [RouteOfAdministration]
-        var availableUnits: [String]
-
-        static let defaultUnits = ["mg", "g", "µg", "mL", "IU"]
-
-        /// A row for a library substance, opening on its default route and
-        /// that route's unit, with the amount left for the label's strength.
-        init(substance: Substance, displayName: String?) {
-            self.substance = substance.name
-            self.displayName = displayName ?? substance.displayTitle
-            amount = nil
-            route = substance.defaultRoute
-            let defaultUnit = substance.unit(for: substance.defaultRoute)
-            unit = defaultUnit
-            availableRoutes = substance.orderedRoutes
-            let others = Set(substance.routes.map(\.unit) + Self.defaultUnits).subtracting([defaultUnit])
-            availableUnits = [defaultUnit] + others.sorted()
-        }
-
-        /// A row for a name the library doesn't carry.
-        init(rawName: String) {
-            substance = rawName
-            displayName = rawName
-            amount = nil
-            unit = "mg"
-            route = .oral
-            availableRoutes = RouteOfAdministration.allCases
-            availableUnits = Self.defaultUnits
-        }
-
-        /// A row restored from a saved component.
-        init(component: CombinationComponent) {
-            if let library = SubstanceLibrary.lookup(component.substance) {
-                self.init(substance: library, displayName: CustomSubstanceStore.shared.displayName(for: library.name))
-            } else {
-                self.init(rawName: component.substance)
-            }
-            amount = component.amountPerUnit
-            unit = component.unit
-            route = component.route
-            if !availableUnits.contains(component.unit) { availableUnits.insert(component.unit, at: 0) }
-            if !availableRoutes.contains(component.route) { availableRoutes.append(component.route) }
-        }
-    }
-
     var name: String
     var displayName: String
     var category: SubstanceCategory
@@ -97,16 +40,6 @@ private final class CustomSubstanceDraft {
     var doses = DoseTierFields()
     var halfLifeMinutes: Double?
     var duration = DurationFields()
-    /// Combination mode: the entry is a product of several compounds, logged
-    /// as one dose per component. Chosen once for a new entry; editing keeps it.
-    var isCombination: Bool
-    /// What one unit of the combination is called — "tablet", "capsule".
-    var unitWord: String
-    /// The combination is a liquid: each component's amount is per mL and the
-    /// quick log takes a volume. Saved as the unit word "mL"
-    /// (``CombinationComponent/volumeUnitWord``), which is what makes it one.
-    var isLiquid: Bool
-    var components: [ComponentDraft]
 
     init(existing: CustomSubstanceEntry?, initialName: String?, personalizing: Substance?) {
         // Shipped route to seed personalize defaults from.
@@ -118,11 +51,7 @@ private final class CustomSubstanceDraft {
         displayName = existing?.displayName ?? ""
         category = existing?.category ?? personalizing?.category ?? .other
         defaultRoute = existing?.defaultRoute ?? personalizing?.defaultRoute ?? .oral
-        isCombination = existing?.isCombination ?? false
-        unit = (existing?.isCombination == true ? nil : existing?.unit) ?? baseRoute?.unit ?? "mg"
-        isLiquid = existing?.isLiquidCombination ?? false
-        unitWord = (existing?.isCombination == true && existing?.isLiquidCombination == false ? existing?.unit : nil) ?? "dose"
-        components = (existing?.components ?? []).map(ComponentDraft.init(component:))
+        unit = existing?.unit ?? baseRoute?.unit ?? "mg"
         notes = existing?.notes ?? ""
 
         let seedDoses = existing?.doses ?? (existing == nil ? baseRoute?.doses : nil)
@@ -171,24 +100,8 @@ private final class CustomSubstanceDraft {
         displayName.trimmingCharacters(in: .whitespaces)
     }
 
-    var trimmedUnitWord: String {
-        unitWord.trimmingCharacters(in: .whitespaces)
-    }
-
-    /// The word the combination is saved under and its amounts are "per": the
-    /// millilitre for a liquid, else the typed unit word ("dose" when blank).
-    var savedUnitWord: String {
-        if isLiquid { return CombinationComponent.volumeUnitWord }
-        return trimmedUnitWord.isEmpty ? "dose" : trimmedUnitWord
-    }
-
-    /// A name, and in combination mode at least one component — every one of
-    /// them with an amount, since a row left blank is a strength nobody typed,
-    /// not a zero.
     var canSave: Bool {
-        guard !trimmedName.isEmpty else { return false }
-        guard isCombination else { return true }
-        return !components.isEmpty && components.allSatisfy { ($0.amount ?? 0) > 0 }
+        !trimmedName.isEmpty
     }
 
     // MARK: - Builders
@@ -235,39 +148,19 @@ private final class CustomSubstanceDraft {
         return v
     }
 
-    func buildComponents() -> [CombinationComponent]? {
-        guard isCombination else { return nil }
-        let built = components.compactMap { row -> CombinationComponent? in
-            guard let amount = row.amount, amount > 0 else { return nil }
-            return CombinationComponent(substance: row.substance, amountPerUnit: amount, unit: row.unit, route: row.route)
-        }
-        return built.isEmpty ? nil : built
-    }
-
     /// Write every draft field onto an entry — the one assignment block all
-    /// three save modes share. A combination carries its unit word and its
-    /// components and no pharmacology of its own; a compound the reverse.
+    /// three save modes share.
     func apply(to entry: inout CustomSubstanceEntry) {
         entry.name = trimmedName
         entry.displayName = trimmedDisplayName.isEmpty ? nil : trimmedDisplayName
         entry.category = category
         entry.notes = notes
-        if isCombination {
-            let components = buildComponents()
-            entry.components = components
-            entry.unit = savedUnitWord
-            entry.defaultRoute = components?.first?.route ?? defaultRoute
-            entry.doses = nil
-            entry.duration = nil
-            entry.halfLifeMinutes = nil
-        } else {
-            entry.components = nil
-            entry.unit = unit
-            entry.defaultRoute = defaultRoute
-            entry.doses = buildDoses()
-            entry.duration = buildDuration()
-            entry.halfLifeMinutes = buildHalfLife()
-        }
+        entry.components = nil
+        entry.unit = unit
+        entry.defaultRoute = defaultRoute
+        entry.doses = buildDoses()
+        entry.duration = buildDuration()
+        entry.halfLifeMinutes = buildHalfLife()
     }
 }
 
@@ -293,7 +186,6 @@ struct CustomSubstanceFormView: View {
 
     @State private var draft: CustomSubstanceDraft
     @State private var showDuplicateAlert = false
-    @State private var showComponentPicker = false
 
     private var isEditing: Bool {
         existing != nil
@@ -365,18 +257,7 @@ struct CustomSubstanceFormView: View {
                     }
                 } else {
                     Section("Name") {
-                        // The kind is chosen once: a saved entry keeps it, since a
-                        // compound's dose history and a combination's components
-                        // mean different things.
-                        if !isEditing {
-                            Picker("Type", selection: $draft.isCombination.animation()) {
-                                Text("Compound").tag(false)
-                                Text("Combination").tag(true)
-                            }
-                            .pickerStyle(.segmented)
-                            .labelsHidden()
-                        }
-                        TextField(draft.isCombination ? "Product name (e.g. Co-codamol)" : "Substance name", text: $draft.name)
+                        TextField("Substance name", text: $draft.name)
                             .autocorrectionDisabled()
                     }
                 }
@@ -389,11 +270,7 @@ struct CustomSubstanceFormView: View {
                     }
                 }
 
-                if draft.isCombination {
-                    combinationSections
-                } else {
-                    compoundSections
-                }
+                compoundSections
 
                 Section {
                     TextField("Notes", text: $draft.notes, axis: .vertical)
@@ -432,57 +309,6 @@ struct CustomSubstanceFormView: View {
             } message: {
                 Text("A custom substance named \"\(draft.trimmedName)\" already exists.")
             }
-            .sheet(isPresented: $showComponentPicker) {
-                CombinationComponentPicker { picked in
-                    withAnimation(.snappy) { draft.components.append(picked) }
-                }
-            }
-        }
-    }
-
-    // MARK: - Combination sections
-
-    /// The unit word and the components list — what a combination is made of,
-    /// in place of a compound's dose tiers, half-life and duration.
-    @ViewBuilder
-    private var combinationSections: some View {
-        Section {
-            Picker("Measured", selection: $draft.isLiquid.animation()) {
-                Text("Per unit").tag(false)
-                Text("Per mL").tag(true)
-            }
-            .pickerStyle(.segmented)
-            if !draft.isLiquid {
-                TextField("Unit (e.g. tablet, capsule)", text: $draft.unitWord)
-                    .autocorrectionDisabled()
-                    .neverAutocapitalize()
-            }
-        } header: {
-            Text("Unit")
-        } footer: {
-            if draft.isLiquid {
-                Text("A liquid. Each component's amount is per mL, and logging it asks for the volume you took.")
-            } else {
-                Text("What one of these is called. Each component's amount is per unit.")
-            }
-        }
-
-        Section {
-            ForEach($draft.components) { $component in
-                CombinationComponentRow(component: $component, unitWord: draft.savedUnitWord)
-            }
-            .onDelete { offsets in
-                withAnimation(.snappy) { draft.components.remove(atOffsets: offsets) }
-            }
-            Button {
-                showComponentPicker = true
-            } label: {
-                Label("Add Component", systemImage: "plus.circle.fill")
-            }
-        } header: {
-            Text("Components")
-        } footer: {
-            Text("Picking this in the quick log stages one dose per component.")
         }
     }
 
@@ -549,7 +375,6 @@ struct CustomSubstanceFormView: View {
 
     private var navTitle: LocalizedStringResource {
         if isPersonalizing { return "Personalize" }
-        if draft.isCombination { return isEditing ? "Edit Combination" : "New Combination" }
         return isEditing ? "Edit Substance" : "New Custom Substance"
     }
 
@@ -590,83 +415,5 @@ struct CustomSubstanceFormView: View {
 
         onSaved?(saved)
         dismiss()
-    }
-}
-
-// MARK: - Component row
-
-/// One compound of a combination: its name, then the amount per unit with its
-/// unit, then the route it is taken by.
-private struct CombinationComponentRow: View {
-    @Binding var component: CustomSubstanceDraft.ComponentDraft
-    let unitWord: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text(component.displayName)
-                .font(.body.weight(.medium))
-            HStack {
-                TextField("amount", value: $component.amount, format: .number)
-                    .accessibilityLabel(Text("Amount per \(unitWord)"))
-                    .decimalKeyboard()
-                Picker("Unit", selection: $component.unit) {
-                    ForEach(component.availableUnits, id: \.self) { Text($0) }
-                }
-                .labelsHidden()
-                Text("per \(unitWord)")
-                    .foregroundStyle(Theme.secondaryLabel)
-            }
-            Picker("Route", selection: $component.route) {
-                ForEach(component.availableRoutes) { route in
-                    Text(route.localizedName).tag(route)
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Component picker
-
-/// The My Meds substance picker, hosted in a sheet: the search field over the
-/// library, with a "Use …" row for a name the library doesn't carry. One pick
-/// appends a component and closes the sheet.
-private struct CombinationComponentPicker: View {
-    let onPick: (CustomSubstanceDraft.ComponentDraft) -> Void
-
-    @Environment(\.dismiss) private var dismiss
-    @State private var query = ""
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Component") {
-                    SubstanceSearchField(text: $query, keepsMatchedName: true) { substance, matched in
-                        // The brand the query matched names the row; the canonical
-                        // name stays the component's identity.
-                        let brand = matched?.trimmingCharacters(in: .whitespaces)
-                        onPick(.init(substance: substance, displayName: brand?.isEmpty == false ? brand : nil))
-                        dismiss()
-                    } onCustom: {
-                        let name = query.trimmingCharacters(in: .whitespaces)
-                        guard !name.isEmpty else { return }
-                        onPick(.init(rawName: name))
-                        dismiss()
-                    }
-                }
-                .listRowBackground(CardBackground())
-            }
-            .themedPage()
-            .navigationTitle("Add Component")
-            .inlineNavigationTitle()
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button { dismiss() } label: { Image(systemName: "xmark") }
-                        .accessibilityLabel("Cancel")
-                }
-            }
-        }
-        #if os(macOS)
-        .frame(minWidth: 420, idealWidth: 460, minHeight: 360, idealHeight: 420)
-        #endif
     }
 }

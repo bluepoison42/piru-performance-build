@@ -47,9 +47,6 @@ struct DockSheetHost: View {
     @State private var detents: Set<PresentationDetent> = QuickLogDockMetrics.emptyDetents
 
     @State private var pendingCustomPrefill: EntryPrefillPayload?
-    /// A combination saved from the create sheet, staged whole once the sheet
-    /// is down — one chip per component, where a compound stages a draft.
-    @State private var pendingCombination: CustomSubstanceEntry?
 
     var body: some View {
         QuickLogDock(
@@ -66,15 +63,11 @@ struct DockSheetHost: View {
         )
         .sheet(isPresented: $showCustomForm, onDismiss: onCustomFormDismiss) {
             CustomSubstanceFormView(initialName: searchText.trimmingCharacters(in: .whitespaces)) { saved in
-                if saved.isCombination {
-                    pendingCombination = saved
-                } else {
-                    pendingCustomPrefill = EntryPrefillPayload(
-                        substance: saved.name,
-                        route: saved.defaultRoute,
-                        unit: saved.unit,
-                    )
-                }
+                pendingCustomPrefill = EntryPrefillPayload(
+                    substance: saved.name,
+                    route: saved.defaultRoute,
+                    unit: saved.unit,
+                )
             }
         }
         .sheet(isPresented: $showEditSheet) {
@@ -128,16 +121,6 @@ struct DockSheetHost: View {
     }
 
     private func onCustomFormDismiss() {
-        if let combination = pendingCombination {
-            pendingCombination = nil
-            withAnimation(.snappy) {
-                tray.stage(combination: combination, colorLookup: content.cachedColorLookup)
-                if combination.isLiquidCombination { tray.openVolume(ofCombination: combination.name) }
-                searchActive = false
-                searchText = ""
-            }
-            return
-        }
         guard let prefill = pendingCustomPrefill else { return }
         pendingCustomPrefill = nil
         withAnimation(.snappy) {
@@ -203,6 +186,20 @@ struct QuickLogCardList: View {
     /// Folds the Routines & Prescriptions section down to its header — for
     /// people who don't use the feature. Persisted across launches.
     @AppStorage("quickLogRoutinesCollapsed") private var routinesCollapsed = false
+    /// The combination products, each listed as a card of its own.
+    @State private var customSubstanceStore = CustomSubstanceStore.shared
+
+    /// The amount each product's med is saved at, by lowercased product name,
+    /// so its card offers that amount as a chip too.
+    private var medAmounts: [String: Double] {
+        var amounts: [String: Double] = [:]
+        for group in content.cachedDailyGroups {
+            for med in group.items {
+                amounts[med.substance.lowercased()] = med.amount
+            }
+        }
+        return amounts
+    }
 
     var body: some View {
         // Snapshot staged counts once per staging change; each card takes only
@@ -243,7 +240,9 @@ struct QuickLogCardList: View {
         // meds above them.
         dailySection()
 
-        if content.cachedCards.isEmpty, content.cachedDailyGroups.isEmpty {
+        let products = customSubstanceStore.all.filter(\.isCombination)
+
+        if content.cachedCards.isEmpty, content.cachedDailyGroups.isEmpty, products.isEmpty {
             ContentUnavailableView(
                 "No Previous Substances",
                 systemImage: "magnifyingglass",
@@ -255,8 +254,20 @@ struct QuickLogCardList: View {
         // recents filling behind. Two headers ("Favorites" / "Recent") made
         // three competing lists on one screen; the split is still visible
         // through the star, without costing a second decision.
-        if !content.cachedCards.isEmpty || !content.cachedFavoriteLibrarySubstances.isEmpty {
+        if !content.cachedCards.isEmpty || !content.cachedFavoriteLibrarySubstances.isEmpty || !products.isEmpty {
             sectionHeader("Your Substances")
+            // A combination product is one card of its own, whatever its
+            // components' cards show: it is what the user takes.
+            ForEach(products) { product in
+                ProductCardView(
+                    product: product,
+                    stagedQuantity: tray.stagedQuantity(of: product),
+                    medAmount: medAmounts[product.name.lowercased()],
+                    tray: tray,
+                    colorLookup: content.cachedColorLookup,
+                )
+                .equatable()
+            }
             ForEach(content.cachedFavoriteCards) { card in
                 cardView(card, isFavorite: true, staged: staged)
                     .id("\(card.id)_fav")

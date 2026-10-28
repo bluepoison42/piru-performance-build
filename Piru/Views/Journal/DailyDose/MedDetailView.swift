@@ -73,7 +73,11 @@ struct MedDetailView: View {
     var body: some View {
         List {
             headerSection
-            dosageSection
+            if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
+                MedProductDetailSection(item: item, product: product)
+            } else {
+                dosageSection
+            }
             scheduleSection
 
             if !item.isAsNeeded {
@@ -428,7 +432,7 @@ struct MedDetailView: View {
     }
 
     private var scheduleSummary: String {
-        let dose = "\(item.amount.doseFormatted) \(item.unit) · \(String(localized: item.route.localizedName))"
+        let dose = "\(item.doseLabel) · \(String(localized: item.route.localizedName))"
         if item.isAsNeeded {
             if let limit = item.maxPerDay {
                 return "\(dose) · \(String(localized: "up to \(limit)× daily"))"
