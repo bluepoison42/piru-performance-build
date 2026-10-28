@@ -40,7 +40,7 @@ ES = {
     "Injection Site": "Zona de inyección",
     "Injection site: %@": "Zona de inyección: %@",
     "Time to log %@: %@. Next: %@.": "Hora de registrar %1$@: %2$@. Siguiente: %3$@.",
-    "Every few days": "Cada varios días",
+    "Custom interval": "Intervalo personalizado",
     "Every %lld days": "Cada %lld días",
     # Combination products (custom-substance editor, quick-log search, journal).
     "Type": "Tipo",

@@ -3786,7 +3786,7 @@ T = {
         "该记录 %1$@ 了：%2$@。下一个部位：%3$@。",
         "該記錄 %1$@ 了：%2$@。下一個部位：%3$@。",
     ),
-    "Every few days": ("每隔几天", "每隔幾天"),
+    "Custom interval": ("自定义间隔", "自訂間隔"),
     "Every %lld days": ("每 %lld 天", "每 %lld 天"),
     "Daily": ("每日", "每日"),
     "Every other day": ("隔日", "隔日"),
@@ -8822,7 +8822,7 @@ if __name__ == "__main__":
     # Every-N-days schedule (2026-10-28).
     NEW_KEYS.update(
         {
-            "Every few days",
+            "Custom interval",
             "Every %lld days",
         }
     )

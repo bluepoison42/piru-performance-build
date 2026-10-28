@@ -611,7 +611,7 @@ private extension View {
         /// One control footprint for the leading glyph and the "+", shrunk when
         /// folded so the idle CTA keeps its label + glyph rather than collapsing.
         private var controlSide: CGFloat {
-            compact ? 34 : 44
+            compact ? 34 : IconSize.touchTarget
         }
 
         @State private var preferences = DockPreferences.shared
