@@ -76,17 +76,18 @@ struct CombinationProductTests {
         #expect(tray.stagedQuantity(of: tablet) == 1)
     }
 
-    /// A dose of a component staged on its own keeps its share when the
-    /// product's count changes.
+    /// A dose of a component staged on its own stays its own row, untouched
+    /// when the product's count changes.
     @Test
-    func `Setting the units leaves a merged lone dose alone`() {
+    func `Setting the units leaves a lone dose of a component alone`() {
         let tray = DoseTrayModel()
         tray.stage(substance: "ZZParaAlpha", route: .oral, amount: 250, unit: "mg", tint: nil, librarySubstance: nil)
         tray.stage(product: tablet, amount: 1)
         tray.setUnits(2, of: tablet)
 
-        let alpha = tray.staged.first { $0.substanceName == "ZZParaAlpha" }
-        #expect(alpha?.totalAmount == 1250)
+        let alphas = tray.staged.filter { $0.substanceName == "ZZParaAlpha" }
+        #expect(alphas.first { $0.combinationName == nil }?.totalAmount == 250)
+        #expect(alphas.first { $0.combinationName != nil }?.totalAmount == 1000)
     }
 
     @Test
