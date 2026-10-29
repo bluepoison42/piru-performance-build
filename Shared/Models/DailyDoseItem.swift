@@ -6,7 +6,7 @@ import SwiftData
 /// Declaration order is the schedule pickers' order (`allCases`): the
 /// day-based cadences, then weeks, then months. Persistence goes through
 /// `rawValue`, so reordering cases is safe.
-enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
+nonisolated enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
     case daily
     case everyOtherDay
     /// Every N days, N stored in ``DailyDoseItem/frequencyIntervalDays``.
@@ -23,7 +23,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
         rawValue
     }
 
-    nonisolated var displayName: LocalizedStringResource {
+    var displayName: LocalizedStringResource {
         switch self {
         case .daily: "Daily"
         case .everyOtherDay: "Every other day"
@@ -39,7 +39,7 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
     /// daily, monthly and specific weekdays, which are not a fixed offset.
     /// `.everyNDays` reads the item's own count, clamped to
     /// ``DoseFrequency/intervalRange``.
-    nonisolated func intervalDays(custom: Int) -> Int? {
+    func intervalDays(custom: Int) -> Int? {
         switch self {
         case .everyOtherDay: 2
         case .weekly: 7
@@ -50,12 +50,12 @@ enum DoseFrequency: String, Codable, CaseIterable, Identifiable {
     }
 
     /// The day counts the custom-interval stepper offers.
-    nonisolated static let intervalRange: ClosedRange<Int> = 2 ... 90
+    static let intervalRange: ClosedRange<Int> = 2 ... 90
 
     /// The count a new custom-interval schedule starts at.
-    nonisolated static let defaultIntervalDays = 3
+    static let defaultIntervalDays = 3
 
-    nonisolated var shortLabel: LocalizedStringResource {
+    var shortLabel: LocalizedStringResource {
         switch self {
         case .daily: "Daily"
         case .everyOtherDay: "Every 2 days"

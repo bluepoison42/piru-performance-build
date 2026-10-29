@@ -129,13 +129,35 @@ struct CombinationProductTests {
     // MARK: Adherence
 
     /// One pick logs an entry per component; only the lead one checks the
-    /// med off, so a pick counts once.
+    /// med off, so a pick counts once. An entry under the product's own name
+    /// (the widget's Take button) counts too.
     @Test
     func `Only the lead component's entry checks a product med off`() {
-        #expect(AdherenceCalculator.productEntryMatches(entrySubstance: "ZZParaAlpha", entryCombination: "ZZCodamol", product: tablet))
-        #expect(!AdherenceCalculator.productEntryMatches(entrySubstance: "ZZCodeBeta", entryCombination: "ZZCodamol", product: tablet))
-        #expect(!AdherenceCalculator.productEntryMatches(entrySubstance: "ZZParaAlpha", entryCombination: nil, product: tablet))
-        #expect(!AdherenceCalculator.productEntryMatches(entrySubstance: "ZZParaAlpha", entryCombination: "Other", product: tablet))
+        let product = MedSchedule.ProductMed(name: "ZZCodamol", lead: "ZZParaAlpha")
+        #expect(MedSchedule.productMatches(entryName: "ZZParaAlpha", entryCombination: "ZZCodamol", product: product))
+        #expect(!MedSchedule.productMatches(entryName: "ZZCodeBeta", entryCombination: "ZZCodamol", product: product))
+        #expect(!MedSchedule.productMatches(entryName: "ZZParaAlpha", entryCombination: nil, product: product))
+        #expect(!MedSchedule.productMatches(entryName: "ZZParaAlpha", entryCombination: "Other", product: product))
+        #expect(MedSchedule.productMatches(entryName: "zzcodamol", entryCombination: nil, product: product))
+    }
+
+    /// The streak scan runs off snapshots; a product med's day is complete
+    /// once its lead entry is in, by any route.
+    @Test
+    func `The streak scan credits a product med by its lead entry`() {
+        let day = Calendar.current.startOfDay(for: .now).addingTimeInterval(9 * 3600)
+        let item = AdherenceCalculator.DailyItemSnapshot(
+            substance: "ZZCodamol", identityKey: "zzcodamol", route: .oral, expectedPerDay: 1, isAsNeeded: false,
+            startDate: .distantPast, frequency: .daily, frequencyDays: [],
+            product: MedSchedule.ProductMed(name: "ZZCodamol", lead: "ZZParaAlpha"),
+        )
+        let entries = ["ZZParaAlpha", "ZZCodeBeta"].map {
+            AdherenceCalculator.EntrySnapshot(
+                substance: $0, identityKey: $0.lowercased(), route: .oral, timestamp: day, combinationName: "ZZCodamol",
+            )
+        }
+        #expect(AdherenceCalculator.dayStatus(for: day, entries: entries, items: [item]) == .complete)
+        #expect(AdherenceCalculator.dayStatus(for: day, entries: [entries[1]], items: [item]) == .missed)
     }
 
     // MARK: Add a Med

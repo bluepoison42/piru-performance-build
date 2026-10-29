@@ -14,10 +14,13 @@ struct ProductCardView: View, Equatable {
     let medAmount: Double?
     /// Kept for staging on tap only; the body reads nothing from it.
     let tray: DoseTrayModel
+    /// The tints a tap stages the components with. Part of `==`, so a color
+    /// change hands the chips a fresh lookup.
     let colorLookup: [String: P3Color]
 
     static func == (lhs: ProductCardView, rhs: ProductCardView) -> Bool {
         lhs.product == rhs.product && lhs.stagedQuantity == rhs.stagedQuantity && lhs.medAmount == rhs.medAmount
+            && lhs.colorLookup == rhs.colorLookup
     }
 
     private var chips: [Double] {

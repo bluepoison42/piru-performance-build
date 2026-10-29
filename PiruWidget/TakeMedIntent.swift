@@ -86,6 +86,7 @@ enum MedIntentLogger {
             FetchDescriptor<DoseEntry>(predicate: #Predicate { $0.timestamp >= dayStart }),
         )) ?? []
 
+        let products = MedSchedule.productMeds()
         var loggedAny = false
         for item in items where !item.isAsNeeded && include(item) {
             guard MedSchedule.isDue(
@@ -96,8 +97,9 @@ enum MedIntentLogger {
             let expected = max(1, item.reminderTimesMinutes.count)
             let matched = todayEntries.count { entry in
                 MedSchedule.matches(
-                    entryKey: entry.identityKey, entryName: entry.substance, entryRoute: entry.route,
-                    itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route,
+                    entryKey: entry.identityKey, entryName: entry.substance, entryCombination: entry.combinationName,
+                    entryRoute: entry.route,
+                    itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route, products: products,
                 )
             }
             guard matched < expected else { continue }

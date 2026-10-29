@@ -127,6 +127,7 @@ private struct StoreSnapshot {
         )) ?? []
 
         var slots: [(name: String, doseText: String, timeMinutes: Int?, taken: Bool)] = []
+        let products = MedSchedule.productMeds()
         for item in items where !item.isAsNeeded {
             guard MedSchedule.isDue(
                 startDate: item.startDate, frequency: item.frequency,
@@ -137,8 +138,9 @@ private struct StoreSnapshot {
             let expected = max(1, times.count)
             let matched = todayEntries.count { entry in
                 MedSchedule.matches(
-                    entryKey: entry.identityKey, entryName: entry.substance, entryRoute: entry.route,
-                    itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route,
+                    entryKey: entry.identityKey, entryName: entry.substance, entryCombination: entry.combinationName,
+                    entryRoute: entry.route,
+                    itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route, products: products,
                 )
             }
             let name = item.productName

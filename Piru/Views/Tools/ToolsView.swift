@@ -270,7 +270,7 @@ private struct MyMedsToolCard: View {
             let dayText = offset < 7
                 ? day.formatted(.dateTime.weekday(.wide))
                 : day.formatted(.dateTime.month(.abbreviated).day())
-            return "\(displayName(for: DailyMedSnapshot(item))), \(dayText)"
+            return String(localized: "\(displayName(for: DailyMedSnapshot(item))), \(dayText)")
         }
         return nil
     }

@@ -69,7 +69,7 @@ nonisolated enum PDFReportGenerator {
         var amountDisplay: String {
             isUnknownDose ? "?" : amount.doseFormatted
         }
-        /// Adherence-join fields mirroring ``AdherenceCalculator/matches`` —
+        /// Adherence-join fields mirroring ``MedSchedule`` —
         /// the PSID identity key plus the raw route, so the PDF's adherence
         /// table credits exactly what the in-app screen credits.
         var identityKey: String = ""
@@ -81,6 +81,8 @@ nonisolated enum PDFReportGenerator {
         /// Elimination half-life, resolved on the main actor alongside the id. The PK chart section
         /// needs it and this renderer cannot reach the store — same reason `substanceID` rides here.
         var halfLifeMinutes: Double?
+        /// ``DoseEntry/combinationName``, for crediting a product med.
+        var combinationName: String?
     }
 
     struct DailyDoseSnapshot {
@@ -92,6 +94,9 @@ nonisolated enum PDFReportGenerator {
         /// See ``EntrySnapshot/identityKey``.
         var identityKey: String = ""
         var routeRaw: String = ""
+        /// The combination product this med names, credited by
+        /// ``MedSchedule/productMatches(entryName:entryCombination:product:)``.
+        var product: MedSchedule.ProductMed?
     }
 
     struct InteractionSnapshot {
@@ -432,13 +437,19 @@ nonisolated enum PDFReportGenerator {
             drawRowBackground(&cursor, rowIndex: idx, height: Layout.rowHeight)
 
             // The same predicate as the in-app Adherence screen
-            // (`AdherenceCalculator.matches`): route gate AND (identity key
-            // OR lowercased-name fallback) — a dose by another route is a
-            // journal entry, not adherence credit.
+            // (`MedSchedule.matches`): a product med by its lead component,
+            // anything else by route gate AND (identity key OR lowercased-name
+            // fallback) — a dose by another route is a journal entry, not
+            // adherence credit.
             let daysTaken = Set(
                 entries
                     .filter { entry in
-                        entry.routeRaw == dose.routeRaw
+                        if let product = dose.product {
+                            return MedSchedule.productMatches(
+                                entryName: entry.substance, entryCombination: entry.combinationName, product: product,
+                            )
+                        }
+                        return entry.routeRaw == dose.routeRaw
                             && (
                                 (!entry.identityKey.isEmpty && entry.identityKey == dose.identityKey)
                                     || entry.substance.lowercased() == dose.substance.lowercased()

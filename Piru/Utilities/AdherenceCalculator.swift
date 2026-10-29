@@ -74,38 +74,17 @@ enum AdherenceCalculator {
     /// pick logs an entry per component, all carrying its name, so only the
     /// lead component's entry counts, and taking the product twice reads as
     /// two doses rather than two per component.
-    static func entryMatches(entry: DoseEntry, item: DailyDoseItem) -> Bool {
-        if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
-            return productEntryMatches(
-                entrySubstance: entry.substance, entryCombination: entry.combinationName, product: product,
-            )
-        }
-        return matches(
-            entryKey: entry.identityKey, entryName: entry.substance, entryRoute: entry.route,
-            itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route,
-        )
-    }
-
-    /// Whether an entry is the lead component's entry of `product`: it was
-    /// logged from the product, and it is the first component's substance (a
-    /// product whose components are gone counts any entry of it).
-    static func productEntryMatches(entrySubstance: String, entryCombination: String?, product: CustomSubstanceEntry) -> Bool {
-        guard let entryCombination, entryCombination.caseInsensitiveCompare(product.name) == .orderedSame else { return false }
-        guard let lead = product.components?.first else { return true }
-        return DoseTrayModel.stagedName(of: lead).caseInsensitiveCompare(entrySubstance) == .orderedSame
-    }
-
-    /// The matching core over plain values, shared by the `@Model`
-    /// ``entryMatches(entry:item:)`` and the `Sendable`-snapshot streak scan.
-    /// Delegates to ``MedSchedule`` (Shared/) so the Today's Meds widget joins
-    /// doses to meds with the exact same rule.
-    nonisolated static func matches(
-        entryKey: String, entryName: String, entryRoute: RouteOfAdministration,
-        itemKey: String, itemName: String, itemRoute: RouteOfAdministration,
+    ///
+    /// `products` is ``CustomSubstanceStore/productMeds``; a loop over many
+    /// entries reads it once and passes it in.
+    static func entryMatches(
+        entry: DoseEntry, item: DailyDoseItem,
+        products: [String: MedSchedule.ProductMed] = CustomSubstanceStore.shared.productMeds,
     ) -> Bool {
         MedSchedule.matches(
-            entryKey: entryKey, entryName: entryName, entryRoute: entryRoute,
-            itemKey: itemKey, itemName: itemName, itemRoute: itemRoute,
+            entryKey: entry.identityKey, entryName: entry.substance, entryCombination: entry.combinationName,
+            entryRoute: entry.route,
+            itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route, products: products,
         )
     }
 
@@ -158,10 +137,11 @@ enum AdherenceCalculator {
         // headline count.
         var morningTaken = 0, morningTotal = 0, eveningTaken = 0, eveningTotal = 0
         var splittable = true
+        let products = CustomSubstanceStore.shared.productMeds
         for item in dueItems {
             // A multi-time med expects one dose slot per reminder time.
             let itemExpected = max(1, item.reminderTimesMinutes.count)
-            let hits = dayEntries.count { entryMatches(entry: $0, item: item) }
+            let hits = dayEntries.count { entryMatches(entry: $0, item: item, products: products) }
             let itemTaken = min(hits, itemExpected)
             itemResults.append(ItemAdherence(item: item, takenCount: itemTaken, totalCount: itemExpected))
             matched += itemTaken
@@ -171,7 +151,7 @@ enum AdherenceCalculator {
             guard !times.isEmpty else { splittable = false; continue }
             let morningSlots = times.count { $0 < noonMinutes }
             let eveningSlots = times.count - morningSlots
-            let itemDoses = dayEntries.filter { entryMatches(entry: $0, item: item) }
+            let itemDoses = dayEntries.filter { entryMatches(entry: $0, item: item, products: products) }
             let morningHits = itemDoses.count { minutesOfDay($0.timestamp, calendar: calendar) < noonMinutes }
             morningTotal += morningSlots
             eveningTotal += eveningSlots
@@ -276,6 +256,8 @@ enum AdherenceCalculator {
         let identityKey: String
         let route: RouteOfAdministration
         let timestamp: Date
+        /// ``DoseEntry/combinationName``: the product this dose was one component of.
+        var combinationName: String?
     }
 
     /// Sendable snapshot of a daily item's scheduling/matching fields.
@@ -291,6 +273,9 @@ enum AdherenceCalculator {
         let frequencyDays: [Int]
         /// ``DailyDoseItem/frequencyIntervalDays``, read for `.everyNDays`.
         var intervalDays: Int = DoseFrequency.defaultIntervalDays
+        /// The combination product this med names, resolved when the snapshot
+        /// is taken (``MedSchedule/productMeds(in:)``).
+        var product: MedSchedule.ProductMed?
     }
 
     /// Per-day adherence **status** over Sendable snapshots — all the streak
@@ -319,9 +304,14 @@ enum AdherenceCalculator {
         var matched = 0
         var expected = 0
         for item in dueItems {
-            let hits = dayEntries.count {
-                matches(
-                    entryKey: $0.identityKey, entryName: $0.substance, entryRoute: $0.route,
+            let hits = dayEntries.count { entry in
+                if let product = item.product {
+                    return MedSchedule.productMatches(
+                        entryName: entry.substance, entryCombination: entry.combinationName, product: product,
+                    )
+                }
+                return MedSchedule.matches(
+                    entryKey: entry.identityKey, entryName: entry.substance, entryRoute: entry.route,
                     itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route,
                 )
             }

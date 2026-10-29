@@ -42,7 +42,7 @@ nonisolated struct ExportedSetting: Sendable {
 ///
 /// Not exported, by design:
 /// - caches and derived mirrors (`doseLogStoreGeneration`,
-///   `piru.substanceDisplayNames.v1`, the `notification*` mirrors of
+///   `piru.substanceDisplayNames.v1`, `piru.productMeds.v1`, the `notification*` mirrors of
 ///   ``NotificationPreferences``, `quickLogManifest`, `watchDosePayload`);
 /// - migration and launch-pass bookkeeping (`psid.*`, `ester.*`,
 ///   `medsRoutineFoldDone`, `didResplitOverlongSessionsV1`,

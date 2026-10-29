@@ -434,6 +434,30 @@ final class CustomSubstanceStore {
     /// stored name per call. Built beside ``byCanonicalKey``; same lifetime.
     private var lowercasedNameIndex: [String: CustomSubstanceEntry]?
 
+    @ObservationIgnored private var productMedCache: (revision: Int, map: [String: MedSchedule.ProductMed])?
+
+    /// The combination products as meds, keyed by lowercased name and label,
+    /// for the dose↔med join (``MedSchedule/matches(entryKey:entryName:entryCombination:entryRoute:itemKey:itemName:itemRoute:products:)``).
+    /// Built once per ``revision`` and mirrored into the app group then
+    /// (``MedSchedule/productMedMapKey``) for the widgets and the off-main
+    /// scans. Lazy for the same reason as ``byCanonicalKey``: the lead's staged
+    /// name reads the substance catalog, which is cold while this store loads.
+    var productMeds: [String: MedSchedule.ProductMed] {
+        if let productMedCache, productMedCache.revision == revision { return productMedCache.map }
+        var map: [String: MedSchedule.ProductMed] = [:]
+        for entry in all {
+            guard let lead = entry.components?.first else { continue }
+            let med = MedSchedule.ProductMed(name: entry.name, lead: DoseTrayModel.stagedName(of: lead))
+            map[entry.name.lowercased()] = map[entry.name.lowercased()] ?? med
+            if let label = entry.displayName?.trimmingCharacters(in: .whitespaces).lowercased(), !label.isEmpty {
+                map[label] = map[label] ?? med
+            }
+        }
+        productMedCache = (revision, map)
+        mirrorDefaults.set(map.mapValues { [$0.name, $0.lead] }, forKey: MedSchedule.productMedMapKey)
+        return map
+    }
+
     private var byLowercasedName: [String: CustomSubstanceEntry] {
         if let lowercasedNameIndex { return lowercasedNameIndex }
         let built = Dictionary(

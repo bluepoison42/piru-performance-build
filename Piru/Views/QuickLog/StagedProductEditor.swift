@@ -148,7 +148,9 @@ private struct StagedProductEditor: View {
         .sensoryFeedback(.increase, trigger: volume.stepTick)
         .onAppear(perform: seed)
         .onChange(of: volume.text) {
-            guard let entered = volume.enteredML, entered != quantity else { return }
+            // Compared as shown, so seeding the field with a rounded volume
+            // (0.125 mL reads "0.13") never writes the rounding back.
+            guard let entered = volume.enteredML, entered.doseFormatted != quantity?.doseFormatted else { return }
             model.setVolume(entered, ofCombination: product.name)
         }
         .onChange(of: quantity) {
@@ -249,7 +251,7 @@ final class StagedProductVolumeModel {
         text = volumeML.doseFormatted
     }
 
-    /// The −/+ step: tenths of a millilitre under 2 mL (a dropper or an oral
+    /// The −/+ step: tenths of a milliliter under 2 mL (a dropper or an oral
     /// syringe), halves up to 10 mL, whole millilitres above.
     static func step(at volumeML: Double) -> Double {
         if volumeML < 2 { return 0.1 }

@@ -285,13 +285,13 @@ private struct ProductComponentRow: View {
                 .font(.body.weight(.medium))
             HStack {
                 TextField("amount", value: $component.amount, format: .number)
-                    .accessibilityLabel(Text("Amount per \(unitWord)"))
+                    .accessibilityLabel(ProductUnitWord.amountPerUnitLabel(unitWord))
                     .decimalKeyboard()
                 Picker("Unit", selection: $component.unit) {
                     ForEach(component.availableUnits, id: \.self) { Text($0) }
                 }
                 .labelsHidden()
-                Text("per \(unitWord)")
+                Text(verbatim: ProductUnitWord.perUnitLabel(unitWord))
                     .foregroundStyle(Theme.secondaryLabel)
             }
             Picker("Route", selection: $component.route) {

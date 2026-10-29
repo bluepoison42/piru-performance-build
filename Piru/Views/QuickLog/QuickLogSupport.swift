@@ -192,10 +192,12 @@ struct QuickLogCardList: View {
     /// The amount each product's med is saved at, by lowercased product name,
     /// so its card offers that amount as a chip too.
     private var medAmounts: [String: Double] {
+        let products = customSubstanceStore.productMeds
         var amounts: [String: Double] = [:]
         for group in content.cachedDailyGroups {
             for med in group.items {
-                amounts[med.substance.lowercased()] = med.amount
+                guard let product = products[med.substance.lowercased()] else { continue }
+                amounts[product.name.lowercased()] = med.amount
             }
         }
         return amounts

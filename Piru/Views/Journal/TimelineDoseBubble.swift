@@ -13,9 +13,6 @@ struct TimelineDoseBubble: View {
     let style: TimelineBubbleStyle
     /// Body-load mode: the trailing readout is what remains in the body.
     let pkMode: Bool
-    /// Whether the bubble carries its long-press menu and swipe; `false` for
-    /// the menu's own preview of it.
-    var actionable = true
     let onTap: () -> Void
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.rendersTimelineFlat) private var rendersFlat
@@ -69,21 +66,16 @@ struct TimelineDoseBubble: View {
     }
 
     var body: some View {
-        if actionable {
-            Menu {
-                TimelineDoseMenu(item: item)
-            } label: {
-                bubbleLabel
-            } primaryAction: {
-                onTap()
-            }
-            .menuStyle(.button)
-            .buttonStyle(.plain)
-            .timelineDoseSwipe(item, bubbleWidth: Self.width(for: style))
-        } else {
-            Button(action: onTap) { bubbleLabel }
-                .buttonStyle(.plain)
+        Menu {
+            TimelineDoseMenu(item: item)
+        } label: {
+            bubbleLabel
+        } primaryAction: {
+            onTap()
         }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .timelineDoseSwipe(item, bubbleWidth: Self.width(for: style))
     }
 
     private var bubbleLabel: some View {
@@ -194,8 +186,8 @@ private struct DoseElapsedLabel: View {
 
     private static let window: TimeInterval = 12 * 3600
 
-    /// Whether a bubble gets the label at all, decided once when the strip is
-    /// built, so a historical bubble never schedules a timer.
+    /// Whether a bubble gets the label at all, decided on each bubble render,
+    /// so a historical bubble never schedules a timer.
     static func applies(to timestamp: Date, now: Date) -> Bool {
         let elapsed = now.timeIntervalSince(timestamp)
         return elapsed >= 0 && elapsed < window

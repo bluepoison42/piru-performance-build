@@ -49,15 +49,16 @@ enum AdherenceStreakFetcher {
         let entrySnaps = entries.map {
             AdherenceCalculator.EntrySnapshot(
                 substance: $0.substance, identityKey: $0.identityKey,
-                route: $0.route, timestamp: $0.timestamp,
+                route: $0.route, timestamp: $0.timestamp, combinationName: $0.combinationName,
             )
         }
+        let products = MedSchedule.productMeds()
         let itemSnaps = items.map {
             AdherenceCalculator.DailyItemSnapshot(
                 substance: $0.substance, identityKey: $0.identityKey, route: $0.route,
                 expectedPerDay: max(1, $0.reminderTimesMinutes.count), isAsNeeded: $0.isAsNeeded,
                 startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays,
-                intervalDays: $0.frequencyIntervalDays,
+                intervalDays: $0.frequencyIntervalDays, product: products[$0.substance.lowercased()],
             )
         }
         return AdherenceCalculator.currentStreak(

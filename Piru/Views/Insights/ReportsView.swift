@@ -297,9 +297,11 @@ struct ReportsView: View {
                     routeRaw: entry.route.rawValue,
                     substanceID: SubstanceStore.shared.substanceID(forNameOrAlias: entry.substance),
                     halfLifeMinutes: SubstanceLibrary.lookup(entry.substance)?.halfLifeMinutes,
+                    combinationName: entry.combinationName,
                 )
             }
 
+            let products = CustomSubstanceStore.shared.productMeds
             let doseSnapshots = dailyItems.map { item in
                 PDFReportGenerator.DailyDoseSnapshot(
                     substance: item.substance,
@@ -309,6 +311,7 @@ struct ReportsView: View {
                     sortOrder: item.sortOrder,
                     identityKey: item.identityKey,
                     routeRaw: item.route.rawValue,
+                    product: products[item.substance.lowercased()],
                 )
             }
 

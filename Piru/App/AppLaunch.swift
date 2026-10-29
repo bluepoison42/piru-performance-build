@@ -99,6 +99,9 @@ enum AppLaunch {
         // synchronously on the main actor.
         _ = SubstanceStore.shared.count
         await SubstanceStore.shared.ensureAllLoaded()
+        // Building the product-med map publishes its mirror, which the widgets
+        // and the off-main adherence scans read.
+        _ = CustomSubstanceStore.shared.productMeds
         // Publish every substance's class color, bring the stored default rows
         // in line with it, and mint rows for substances logged where there was
         // no catalog (watch, widget intent).

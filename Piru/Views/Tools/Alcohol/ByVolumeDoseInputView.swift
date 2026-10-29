@@ -1,10 +1,11 @@
 import SwiftUI
 
-/// Concentration × measured-volume dose input: alcohol by %ABV, or an injectable
-/// ester by mg/mL. Pure presentation: the parent owns `volumeText`/`abvText`/
+/// Concentration × measured-volume dose input: alcohol by %ABV, or anything
+/// else by mass per mL (an injectable ester's vial, any substance logged By
+/// Volume). Pure presentation: the parent owns `volumeText`/`abvText`/
 /// `volumeUnit` and computes the canonical amount; this view renders the drink
 /// presets, the strength + volume fields, and the live readout (grams of ethanol
-/// and standard drinks for alcohol, the ester's mass for a vial). Copy follows
+/// and standard drinks for alcohol, the mass for a solution). Copy follows
 /// the capability's concentration kind. Preset taps are reported back so the
 /// parent can pre-fill the fields (converting the preset volume into the chosen
 /// display unit).
@@ -153,9 +154,9 @@ struct ByVolumeDoseInputView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         } else if capability.isMassPerVolume {
-            // A volume with no concentration can't become a dose — the mg on the
-            // syringe depend entirely on the vial's mg/mL.
-            Text("Enter the vial's concentration. A volume alone isn't a dose.")
+            // A volume with no concentration can't become a dose: the mg in a
+            // syringe or a spoonful depend entirely on the mg/mL.
+            Text("Enter the concentration. A volume alone isn't a dose.")
                 .captionSecondary()
                 .frame(maxWidth: .infinity, alignment: .leading)
         }

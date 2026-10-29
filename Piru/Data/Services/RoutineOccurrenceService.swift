@@ -26,7 +26,7 @@ enum RoutineOccurrenceService {
     /// context untouched, so no `@Query` re-evaluates for nothing.
     static func reconcile(in context: ModelContext, now: Date = .now) {
         let today = Calendar.current.startOfDay(for: now)
-        let plan = plan(from: context, today: today)
+        let plan = plan(from: context, today: today, products: CustomSubstanceStore.shared.productMeds)
         guard !plan.isEmpty else { return }
         apply(plan, in: context, today: today)
         try? context.save()
@@ -39,7 +39,7 @@ enum RoutineOccurrenceService {
     static func needsReconcile(container: ModelContainer, now: Date = .now) -> Bool {
         let context = ModelContext(container)
         let today = Calendar.current.startOfDay(for: now)
-        return !plan(from: context, today: today).isEmpty
+        return !plan(from: context, today: today, products: MedSchedule.productMeds()).isEmpty
     }
 
     // MARK: - Snapshots
@@ -70,6 +70,8 @@ enum RoutineOccurrenceService {
         let substanceUID: String?
         let route: RouteOfAdministration
         let timestamp: Date
+        /// ``DoseEntry/combinationName``: the product this dose was one component of.
+        var combinationName: String?
     }
 
     /// What one reconcile has to write. Empty on an unchanged day.
@@ -97,7 +99,9 @@ enum RoutineOccurrenceService {
     }
 
     /// Read today's inputs from `context` and plan the reconcile.
-    private nonisolated static func plan(from context: ModelContext, today: Date) -> Plan {
+    private nonisolated static func plan(
+        from context: ModelContext, today: Date, products: [String: MedSchedule.ProductMed],
+    ) -> Plan {
         let pendingRaw = RoutineOccurrence.State.pending.rawValue
         let expiredPredicate = #Predicate<RoutineOccurrence> { $0.dueDay < today && $0.stateRaw == pendingRaw }
         let expired = ((try? context.fetch(FetchDescriptor(predicate: expiredPredicate))) ?? []).map(\.persistentModelID)
@@ -120,9 +124,17 @@ enum RoutineOccurrenceService {
         let dayEnd = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today.addingTimeInterval(86_400)
         let entryPredicate = #Predicate<DoseEntry> { $0.timestamp >= today && $0.timestamp < dayEnd }
         let entries = ((try? context.fetch(FetchDescriptor(predicate: entryPredicate))) ?? [])
-            .map { EntrySnapshot(id: $0.id, substance: $0.substance, substanceUID: $0.substanceUID, route: $0.route, timestamp: $0.timestamp) }
+            .map {
+                EntrySnapshot(
+                    id: $0.id, substance: $0.substance, substanceUID: $0.substanceUID, route: $0.route,
+                    timestamp: $0.timestamp, combinationName: $0.combinationName,
+                )
+            }
 
-        return plan(dueItems: items, occurrences: occurrences, expired: expired, entries: entries)
+        return plan(
+            dueItems: items, occurrences: occurrences, expired: expired, entries: entries,
+            products: products,
+        )
     }
 
     /// The pure reconcile: which occurrences to create, drop, expire, and
@@ -136,6 +148,7 @@ enum RoutineOccurrenceService {
         occurrences: [OccurrenceSnapshot],
         expired: [PersistentIdentifier],
         entries: [EntrySnapshot],
+        products: [String: MedSchedule.ProductMed] = [:],
     ) -> Plan {
         var plan = Plan()
         plan.expire = expired
@@ -179,7 +192,7 @@ enum RoutineOccurrenceService {
         for entry in entries.sorted(by: { $0.timestamp < $1.timestamp }) {
             let entryMinutes = minutesOfDay(entry.timestamp)
             let best = live.indices
-                .filter { live[$0].state != .skipped && !claimed.contains($0) && matches(entry: entry, occurrence: live[$0]) }
+                .filter { live[$0].state != .skipped && !claimed.contains($0) && matches(entry: entry, occurrence: live[$0], products: products) }
                 .min { distance(entryMinutes, toSlotAt: live[$0].slotMinutes) < distance(entryMinutes, toSlotAt: live[$1].slotMinutes) }
             guard let best else { continue }
             claimed.insert(best)
@@ -302,9 +315,18 @@ enum RoutineOccurrenceService {
     /// Entry ↔ occurrence match: identity and route (spec §D). Identity runs
     /// through ``MedSchedule/identityMatches(keyA:nameA:keyB:nameB:)``, the
     /// same join the quick-log chips and the adherence calendar use, so the
-    /// checklist and the Log sheet agree on what has been taken today.
-    private nonisolated static func matches(entry: EntrySnapshot, occurrence: some LiveOccurrence) -> Bool {
-        entry.route == occurrence.route
+    /// checklist and the Log sheet agree on what has been taken today. An
+    /// occurrence of a combination product is claimed by the product's lead
+    /// component entry (``MedSchedule/productMatches(entryName:entryCombination:product:)``).
+    private nonisolated static func matches(
+        entry: EntrySnapshot, occurrence: some LiveOccurrence, products: [String: MedSchedule.ProductMed],
+    ) -> Bool {
+        if let product = products[occurrence.substance.lowercased()] {
+            return MedSchedule.productMatches(
+                entryName: entry.substance, entryCombination: entry.combinationName, product: product,
+            )
+        }
+        return entry.route == occurrence.route
             && MedSchedule.identityMatches(
                 keyA: entry.substanceUID, nameA: entry.substance,
                 keyB: occurrence.substanceUID, nameB: occurrence.substance,

@@ -35,6 +35,29 @@ enum ProductUnitWord: String, CaseIterable, Identifiable {
         }
     }
 
+    /// "per pill", beside a component's amount, for a product saved under
+    /// `word`: a known word or mL in the app language, any other word as typed.
+    static func perUnitLabel(_ word: String) -> String {
+        if word == CombinationComponent.volumeUnitWord { return String(localized: "per mL") }
+        switch Self(word: word) {
+        case .pill: return String(localized: "per pill")
+        case .tablet: return String(localized: "per tablet")
+        case .capsule: return String(localized: "per capsule")
+        case nil: return String(localized: "per \(word)")
+        }
+    }
+
+    /// The component amount field's spoken label: "Amount per pill".
+    static func amountPerUnitLabel(_ word: String) -> String {
+        if word == CombinationComponent.volumeUnitWord { return String(localized: "Amount per mL") }
+        switch Self(word: word) {
+        case .pill: return String(localized: "Amount per pill")
+        case .tablet: return String(localized: "Amount per tablet")
+        case .capsule: return String(localized: "Amount per capsule")
+        case nil: return String(localized: "Amount per \(word)")
+        }
+    }
+
     /// "1 pill", "2 pills".
     func quantityLabel(_ count: Int) -> String {
         switch self {

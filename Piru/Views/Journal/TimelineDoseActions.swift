@@ -47,28 +47,31 @@ enum TimelineDoseDeletion {
 
 extension View {
     /// On iOS, swipe-left-to-delete on a timeline dose bubble.
+    @ViewBuilder
     func timelineDoseSwipe(_ item: TimelineDayLayout.CardItem, bubbleWidth: CGFloat) -> some View {
-        modifier(TimelineDoseSwipeModifier(item: item, bubbleWidth: bubbleWidth))
-    }
-}
-
-private struct TimelineDoseSwipeModifier: ViewModifier {
-    let item: TimelineDayLayout.CardItem
-    let bubbleWidth: CGFloat
-
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.sessionEditingService) private var editing
-
-    func body(content: Content) -> some View {
         #if os(iOS)
-            content.modifier(TimelineBubbleSwipe(width: bubbleWidth) {
-                TimelineDoseDeletion.delete(item, in: modelContext, editing: editing)
-            })
+            modifier(TimelineDoseSwipeModifier(item: item, bubbleWidth: bubbleWidth))
         #else
-            content
+            self
         #endif
     }
 }
+
+#if os(iOS)
+    private struct TimelineDoseSwipeModifier: ViewModifier {
+        let item: TimelineDayLayout.CardItem
+        let bubbleWidth: CGFloat
+
+        @Environment(\.modelContext) private var modelContext
+        @Environment(\.sessionEditingService) private var editing
+
+        func body(content: Content) -> some View {
+            content.modifier(TimelineBubbleSwipe(width: bubbleWidth) {
+                TimelineDoseDeletion.delete(item, in: modelContext, editing: editing)
+            })
+        }
+    }
+#endif
 
 #if os(iOS)
     /// Swipe a bubble left to uncover a Delete button in the space it leaves;

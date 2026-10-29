@@ -815,7 +815,7 @@ final class DoseTrayModel {
                 route: component.route,
                 amount: component.amountPerUnit,
                 unit: component.unit,
-                tint: colorLookup[name.lowercased()],
+                tint: SubstancePalette.tint(for: name, tintMap: colorLookup),
                 librarySubstance: library,
                 count: quantity,
                 combinationName: combination.name,
@@ -846,7 +846,7 @@ final class DoseTrayModel {
                 route: component.route,
                 amount: amount,
                 unit: component.unit,
-                tint: colorLookup[name.lowercased()],
+                tint: SubstancePalette.tint(for: name, tintMap: colorLookup),
                 librarySubstance: library,
                 combinationName: combination.name,
             )

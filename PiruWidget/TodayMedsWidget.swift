@@ -212,6 +212,7 @@ struct TodayMedsProvider: TimelineProvider {
         let dayEntries = entries.filter { $0.timestamp >= dayStart && $0.timestamp < dayEnd }
 
         var slots: [(slot: TodayMedSlot, order: Int)] = []
+        let products = MedSchedule.productMeds()
         for item in items where !item.isAsNeeded {
             guard MedSchedule.isDue(
                 startDate: item.startDate, frequency: item.frequency,
@@ -222,8 +223,9 @@ struct TodayMedsProvider: TimelineProvider {
             let expected = max(1, times.count)
             let matched = dayEntries.count { entry in
                 MedSchedule.matches(
-                    entryKey: entry.identityKey, entryName: entry.substance, entryRoute: entry.route,
-                    itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route,
+                    entryKey: entry.identityKey, entryName: entry.substance, entryCombination: entry.combinationName,
+                    entryRoute: entry.route,
+                    itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route, products: products,
                 )
             }
             let name = item.productName

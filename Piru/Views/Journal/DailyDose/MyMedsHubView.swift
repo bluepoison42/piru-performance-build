@@ -220,8 +220,9 @@ private struct UnlistedProductsSection: View {
     @State private var store = CustomSubstanceStore.shared
 
     private var unlisted: [CustomSubstanceEntry] {
-        let named = Set(items.map { $0.substance.lowercased() })
-        return store.all.filter { $0.isCombination && !named.contains($0.name.lowercased()) }
+        let products = store.productMeds
+        let named = Set(items.compactMap { products[$0.substance.lowercased()]?.name })
+        return store.all.filter { $0.isCombination && !named.contains($0.name) }
     }
 
     var body: some View {
