@@ -432,6 +432,9 @@ struct StagedChipKey: Hashable {
 struct StagedChipUnit: Hashable {
     let identity: String
     let chip: StagedChipKey
+    /// The combination product the chip's row was staged from, `nil` for a
+    /// dose staged on its own: a product's component is a row of its own.
+    var combinationName: String?
 }
 
 /// A value snapshot of one substance's staged chip counts. Passed to
@@ -515,6 +518,7 @@ final class DoseTrayModel {
         let nameOnly = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: nil, route: route)
         guard let index = staged.firstIndex(where: {
             ($0.identityKey == resolved || $0.identityKey == nameOnly) && $0.route == route && $0.unit == unit
+                && $0.combinationName == nil
         }) else { return 0 }
         return staged[index].components.first { Self.sameAmount($0.amount, amount) }?.count ?? 0
     }
@@ -528,8 +532,10 @@ final class DoseTrayModel {
     func stagedCountsBySubstance() -> [String: StagedChipCounts] {
         // Bucketed by substance *identity* (== a card's `id`), so a Concerta chip's
         // staged count shows on the Concerta card, not a plain Methylphenidate one.
+        // A product's component counts on the product's card, never on its
+        // substance's: that substance's chip stages a row of its own.
         var byIdentity: [String: [StagedChipKey: Int]] = [:]
-        for dose in staged {
+        for dose in staged where dose.combinationName == nil {
             let identity = dose.identityKey
             var keyed = byIdentity[identity] ?? [:]
             for component in dose.components {
@@ -552,7 +558,11 @@ final class DoseTrayModel {
         displayKey(lhs) == displayKey(rhs)
     }
 
-    /// Integer key at `doseFormatted`'s rounding for this magnitude.
+    /// The amount in hundredths, rounded at `doseFormatted`'s resolution for
+    /// its magnitude. The rounded value is put back into hundredths at every
+    /// magnitude, so the key is the amount itself: keyed as a bare
+    /// `value × scale`, 4, 40 and 400 would all be 400 and a 400 mg chip
+    /// would count as one more 40.
     ///
     /// Total over every `Double`: a non-finite value keys as 0, and the scaled
     /// value is clamped into a range `Int` holds before converting, because
@@ -562,7 +572,8 @@ final class DoseTrayModel {
         let magnitude = Swift.abs(value)
         let scale: Double = magnitude >= 100 ? 1 : magnitude >= 10 ? 10 : 100
         let limit = 1e15
-        return Int(min(max((value * scale).rounded(), -limit), limit))
+        let rounded = min(max((value * scale).rounded(), -limit), limit)
+        return Int(rounded * (100 / scale))
     }
 
     /// Stage a daily-set med as a chip, carrying its product so a Concerta med
@@ -641,7 +652,7 @@ final class DoseTrayModel {
         guard let contribution = pillContributions.removeValue(forKey: pillID) else { return }
         var removedAny = false
         for (unit, count) in contribution {
-            guard let rowIndex = staged.firstIndex(where: { Self.matches($0, unit.identity, unit.chip) }),
+            guard let rowIndex = staged.firstIndex(where: { Self.matches($0, unit) }),
                   let componentIndex = staged[rowIndex].components.firstIndex(where: { Self.displayKey($0.amount) == unit.chip.amountKey })
             else { continue }
             let available = staged[rowIndex].components[componentIndex].count
@@ -674,14 +685,15 @@ final class DoseTrayModel {
     /// Units staged on one chip, across every row carrying its identity.
     private func stagedCount(of unit: StagedChipUnit) -> Int {
         staged
-            .filter { Self.matches($0, unit.identity, unit.chip) }
+            .filter { Self.matches($0, unit) }
             .flatMap(\.components)
             .filter { Self.displayKey($0.amount) == unit.chip.amountKey }
             .reduce(0) { $0 + $1.count }
     }
 
-    private static func matches(_ dose: StagedDose, _ identity: String, _ chip: StagedChipKey) -> Bool {
-        dose.identityKey == identity && dose.route == chip.route && dose.unit == chip.unit
+    private static func matches(_ dose: StagedDose, _ unit: StagedChipUnit) -> Bool {
+        dose.identityKey == unit.identity && dose.route == unit.chip.route && dose.unit == unit.chip.unit
+            && dose.combinationName == unit.combinationName
     }
 
     /// The chips ``stage(dailyMed:colorLookup:)`` files a med under, with how
@@ -712,18 +724,20 @@ final class DoseTrayModel {
             )
             let amount = isLiquid ? component.amount(inVolumeML: volume) : component.amountPerUnit
             let chip = StagedChipKey(route: component.route, unit: component.unit, amountKey: displayKey(amount))
-            units[StagedChipUnit(identity: identity, chip: chip), default: 0] += count
+            units[StagedChipUnit(identity: identity, chip: chip, combinationName: product.name), default: 0] += count
         }
         return units
     }
 
-    /// Stage a chip. Same substance + route + unit merges into the existing
-    /// row: re-staging the same amount increments its count ("took two
-    /// pills"), a different amount joins as a new component ("a 150 and a
+    /// Stage a chip. Same substance + route + unit + product merges into the
+    /// existing row: re-staging the same amount increments its count ("took
+    /// two pills"), a different amount joins as a new component ("a 150 and a
     /// 182") — always one entry of the summed total at commit, never two.
     /// `count` stages that many of the chip at once (two tablets of a
-    /// combination); `combinationName` labels the row with the product it
-    /// came from.
+    /// combination). `combinationName` labels the row with the product it
+    /// came from and is part of the merge key: a component never merges into
+    /// another product's row or into a dose staged on its own, so each product
+    /// keeps its own rows, quantity and logged entries.
     func stage(
         substance: String,
         route: RouteOfAdministration,
@@ -743,14 +757,11 @@ final class DoseTrayModel {
         combinationName: String? = nil,
     ) {
         let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm)
-        if let index = stagedIndex(identity: identity, route: route, unit: unit) {
+        if let index = stagedIndex(identity: identity, route: route, unit: unit, combinationName: combinationName) {
             if let componentIndex = staged[index].components.firstIndex(where: { Self.sameAmount($0.amount, amount) }) {
                 staged[index].components[componentIndex].count += count
             } else {
                 staged[index].components.append(.init(amount: amount, count: count))
-            }
-            if staged[index].combinationName == nil {
-                staged[index].combinationName = combinationName
             }
             incrementTick += 1
         } else {
@@ -817,9 +828,9 @@ final class DoseTrayModel {
     /// of 2 g/mL morphine is 0.5 g). Each row records the volume and the
     /// per-mL amount (``StagedDose/volumeML`` / ``StagedDose/abv``), which the
     /// committed entries keep and the editor's volume field rescales from.
-    /// Picking the product again adds its volume to each row. A row that merges
-    /// into a dose staged some other way carries no volume, since the volume
-    /// no longer describes its total.
+    /// Picking the product again adds its volume to each row. Rows merge only
+    /// with this product's own rows, so a component that another product or a
+    /// lone dose shares stays a row of its own.
     func stage(combination: CustomSubstanceEntry, volumeML: Double, colorLookup: [String: P3Color] = [:]) {
         guard volumeML.isFinite, volumeML > 0 else { return }
         let volume = min(volumeML, CombinationComponent.maximumVolumeML)
@@ -828,7 +839,7 @@ final class DoseTrayModel {
             let name = library?.name ?? component.substance
             let amount = component.amount(inVolumeML: volume)
             let identity = Self.stagedIdentity(substance: name, productName: nil, librarySubstance: library, route: component.route)
-            let existing = stagedIndex(identity: identity, route: component.route, unit: component.unit)
+            let existing = stagedIndex(identity: identity, route: component.route, unit: component.unit, combinationName: combination.name)
             let previous = existing.map { (volumeML: staged[$0].volumeML, perML: staged[$0].abv) }
             stage(
                 substance: name,
@@ -842,10 +853,9 @@ final class DoseTrayModel {
             guard let index = existing ?? staged.indices.last else { continue }
             let recordsVolume = Self.recordsCombinationVolume(component: component, library: library)
             if let previous {
-                // Merged into a row already here: the volumes add only when that
-                // row is this same liquid at the same strength.
+                // Merged into this product's row: the volumes add only while
+                // that row still records one at the same strength.
                 if recordsVolume, let previousML = previous.volumeML, let perML = previous.perML,
-                   staged[index].combinationName == combination.name,
                    Self.sameAmount(perML, component.amountPerUnit) {
                     staged[index].volumeML = previousML + volume
                 } else {
@@ -918,8 +928,7 @@ final class DoseTrayModel {
 
     /// Set how many units of a solid product are staged: each component's
     /// share of its row becomes `count` × its amount per unit, so one control
-    /// moves every component together. Anything else merged into a row (the
-    /// same compound staged on its own) stays as it is.
+    /// moves every component together. Only this product's rows change.
     func setUnits(_ count: Int, of product: CustomSubstanceEntry) {
         let units = min(max(count, 1), CombinationComponent.maximumUnits)
         for component in product.components ?? [] {
@@ -1039,7 +1048,7 @@ final class DoseTrayModel {
         // whole volumetric logger.
         let unit = librarySubstance?.byVolumeDosing?.canonicalUnit ?? unit
         let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm)
-        if let index = stagedIndex(identity: identity, route: route, unit: unit) {
+        if let index = stagedIndex(identity: identity, route: route, unit: unit, combinationName: nil) {
             openForEditing(staged[index].id, focusesAmount: focusesAmount)
             return
         }
@@ -1075,7 +1084,7 @@ final class DoseTrayModel {
         syncEmptiness()
     }
 
-    /// Staged rows merge on form *identity* + route + unit; the distinct amounts
+    /// Staged rows merge on form *identity* + route + unit + product; the distinct amounts
     /// inside match on their *display* form — the user-perceived identity of
     /// a chip. Exact-double matching breaks when the editor round-trips an
     /// amount through its text field (31.700000000000003 → "31.7" → 31.7).
@@ -1083,11 +1092,12 @@ final class DoseTrayModel {
     /// Keying on ``StagedDose/identityKey`` — not the bare name — is what keeps a
     /// Concerta (Methylphenidate·XR) and a plain Methylphenidate row from merging
     /// and summing into one doubled dose.
-    private func stagedIndex(identity: String, route: RouteOfAdministration, unit: String) -> Int? {
+    private func stagedIndex(identity: String, route: RouteOfAdministration, unit: String, combinationName: String?) -> Int? {
         staged.firstIndex {
             $0.identityKey == identity
                 && $0.route == route
                 && $0.unit == unit
+                && $0.combinationName == combinationName
         }
     }
 }

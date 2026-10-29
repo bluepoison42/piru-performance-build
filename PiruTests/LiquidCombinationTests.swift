@@ -118,20 +118,119 @@ struct LiquidCombinationTests {
         #expect(tray.staged.map(\.totalAmount) == [3, 7.5])
     }
 
-    /// A component merged into a dose staged on its own keeps the summed mass
-    /// but no volume, since the volume no longer describes its total.
+    /// A component whose substance is already staged on its own gets a row
+    /// of its own: the lone dose keeps its mass, the product's row its volume.
     @Test
-    func `A component merged into a lone dose carries no volume`() {
+    func `A component never merges into a lone dose`() {
         let tray = DoseTrayModel()
         tray.stage(substance: "ZZLiquidBeta", route: .oral, amount: 10, unit: "mg", tint: nil, librarySubstance: nil)
         tray.stage(combination: solution, volumeML: 1)
 
-        let beta = tray.staged.first { $0.substanceName == "ZZLiquidBeta" }
-        #expect(beta?.totalAmount == 15)
-        #expect(beta?.volumeML == nil)
-        #expect(beta?.isLiquidCombinationRow == false)
-        let alpha = tray.staged.first { $0.substanceName == "ZZLiquidAlpha" }
-        #expect(alpha?.volumeML == 1)
+        let betas = tray.staged.filter { $0.substanceName == "ZZLiquidBeta" }
+        #expect(betas.count == 2)
+        let lone = betas.first { $0.combinationName == nil }
+        #expect(lone?.totalAmount == 10)
+        #expect(lone?.volumeML == nil)
+        let component = betas.first { $0.combinationName == "Test solution" }
+        #expect(component?.totalAmount == 5)
+        #expect(component?.volumeML == 1)
+        #expect(component?.isLiquidCombinationRow == true)
+    }
+
+    // MARK: Two products sharing a component
+
+    /// 400 mg + 20 mg per pill.
+    private var compound: CustomSubstanceEntry {
+        CustomSubstanceEntry(
+            name: "ZZCompound", unit: "pill",
+            components: [
+                CombinationComponent(substance: "ZZSharedPara", amountPerUnit: 400, unit: "mg", route: .oral),
+                CombinationComponent(substance: "ZZOxyOnly", amountPerUnit: 20, unit: "mg", route: .oral),
+            ],
+        )
+    }
+
+    /// 40 mg + 10 mg per mL.
+    private var liquidCombo: CustomSubstanceEntry {
+        CustomSubstanceEntry(
+            name: "ZZLiquid Combo", unit: "mL",
+            components: [
+                CombinationComponent(substance: "ZZSharedPara", amountPerUnit: 40, unit: "mg", route: .oral),
+                CombinationComponent(substance: "ZZMorphOnly", amountPerUnit: 10, unit: "mg", route: .oral),
+            ],
+        )
+    }
+
+    private func row(_ tray: DoseTrayModel, _ substance: String, of product: String) -> [StagedDose] {
+        tray.staged.filter { $0.substanceName == substance && $0.combinationName == product }
+    }
+
+    /// Two products that share a substance each keep their own row of it,
+    /// in whichever order they are picked.
+    @Test(arguments: [true, false])
+    func `A shared component stays in its own product`(liquidFirst: Bool) {
+        let tray = DoseTrayModel()
+        if liquidFirst {
+            tray.stage(product: liquidCombo, amount: 1)
+            tray.stage(product: compound, amount: 1)
+        } else {
+            tray.stage(product: compound, amount: 1)
+            tray.stage(product: liquidCombo, amount: 1)
+        }
+
+        #expect(tray.staged.count == 4)
+        let liquidPara = row(tray, "ZZSharedPara", of: "ZZLiquid Combo")
+        let solidPara = row(tray, "ZZSharedPara", of: "ZZCompound")
+        #expect(liquidPara.count == 1)
+        #expect(solidPara.count == 1)
+        #expect(liquidPara.first?.totalAmount == 40)
+        #expect(liquidPara.first?.volumeML == 1)
+        #expect(liquidPara.first?.abv == 40)
+        #expect(solidPara.first?.totalAmount == 400)
+        #expect(solidPara.first?.volumeML == nil)
+        #expect(row(tray, "ZZMorphOnly", of: "ZZLiquid Combo").first?.totalAmount == 10)
+        #expect(row(tray, "ZZOxyOnly", of: "ZZCompound").first?.totalAmount == 20)
+
+        #expect(tray.stagedQuantity(of: liquidCombo) == 1)
+        #expect(tray.stagedQuantity(of: compound) == 1)
+        let leadsDiffer = tray.leadRowID(ofCombination: "ZZCompound") != tray.leadRowID(ofCombination: "ZZLiquid Combo")
+        #expect(leadsDiffer)
+    }
+
+    /// Changing one product's quantity moves only that product's rows.
+    @Test
+    func `Rescaling one product leaves the other alone`() {
+        let tray = DoseTrayModel()
+        tray.stage(product: liquidCombo, amount: 1)
+        tray.stage(product: compound, amount: 1)
+
+        tray.setVolume(2.5, ofCombination: "ZZLiquid Combo")
+        #expect(row(tray, "ZZSharedPara", of: "ZZLiquid Combo").first?.totalAmount == 100)
+        #expect(row(tray, "ZZMorphOnly", of: "ZZLiquid Combo").first?.totalAmount == 25)
+        #expect(row(tray, "ZZSharedPara", of: "ZZCompound").first?.totalAmount == 400)
+        #expect(row(tray, "ZZOxyOnly", of: "ZZCompound").first?.totalAmount == 20)
+
+        tray.setUnits(3, of: compound)
+        #expect(row(tray, "ZZSharedPara", of: "ZZCompound").first?.totalAmount == 1200)
+        #expect(row(tray, "ZZOxyOnly", of: "ZZCompound").first?.totalAmount == 60)
+        #expect(row(tray, "ZZSharedPara", of: "ZZLiquid Combo").first?.totalAmount == 100)
+        #expect(tray.stagedQuantity(of: liquidCombo) == 2.5)
+        #expect(tray.stagedQuantity(of: compound) == 3)
+    }
+
+    /// Amounts a power of ten apart are different chips: 400 mg staged onto
+    /// a 40 mg row is a second component, never a second 40.
+    @Test
+    func `Amounts a power of ten apart never count as one chip`() {
+        let tray = DoseTrayModel()
+        for amount in [4.0, 40, 400] {
+            tray.stage(substance: "ZZTenfold", route: .oral, amount: amount, unit: "mg", tint: nil, librarySubstance: nil)
+        }
+
+        #expect(tray.staged.count == 1)
+        #expect(tray.staged[0].components.count == 3)
+        #expect(tray.staged[0].totalAmount == 444)
+        #expect(tray.quantity(substance: "ZZTenfold", route: .oral, amount: 40, unit: "mg") == 1)
     }
 
     /// A per-unit product stages exactly as it always has, with no volume.
