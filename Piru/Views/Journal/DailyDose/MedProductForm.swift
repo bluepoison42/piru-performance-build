@@ -202,7 +202,7 @@ struct MedProductComponentsSection: View {
                 ProductComponentRow(component: $component, unitWord: draft.savedUnitWord)
             }
             .onDelete { offsets in
-                withAnimation(.snappy) { draft.components.remove(atOffsets: offsets) }
+                withAnimation(.snappy) { draft.components.remove(inRangeOffsets: offsets) }
             }
             if allowsSeveral || draft.components.isEmpty {
                 Button(action: onAdd) {

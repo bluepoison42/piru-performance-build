@@ -62,7 +62,7 @@ struct DoseTimeSettingsView: View {
     private func delete(at offsets: IndexSet) {
         // Keep at least one preset so the menu never empties out.
         guard choices.count - offsets.count >= 1 else { return }
-        choices.remove(atOffsets: offsets)
+        choices.remove(inRangeOffsets: offsets)
     }
 
     private func move(from source: IndexSet, to destination: Int) {

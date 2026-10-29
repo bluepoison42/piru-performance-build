@@ -71,14 +71,23 @@ nonisolated enum MedSchedule {
     }
 
     /// The App Group defaults key of the product-med map the app mirrors for
-    /// its widgets and off-main scans: `[lowercased med name: [name, lead]]`,
-    /// keyed by the product's name and its label.
+    /// its widgets and off-main scans: JSON of `[lowercased med name: [name,
+    /// lead]]`, keyed by the product's name and its label. A JSON string
+    /// because Android's `UserDefaults` stores no dictionaries.
     static let productMedMapKey = "piru.productMeds.v1"
+
+    /// The product-med map as the mirror stores it.
+    static func encodeProductMeds(_ map: [String: ProductMed]) -> String? {
+        guard let data = try? JSONEncoder().encode(map.mapValues { [$0.name, $0.lead] }) else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
 
     /// The mirrored product meds, keyed by lowercased name. Read once per
     /// scan or timeline, never per entry.
     static func productMeds(in defaults: UserDefaults? = UserDefaults(suiteName: AppIdentity.appGroup)) -> [String: ProductMed] {
-        guard let raw = defaults?.dictionary(forKey: productMedMapKey) as? [String: [String]] else { return [:] }
+        guard let json = defaults?.string(forKey: productMedMapKey),
+              let raw = try? JSONDecoder().decode([String: [String]].self, from: Data(json.utf8))
+        else { return [:] }
         return raw.compactMapValues { pair in
             pair.count == 2 ? ProductMed(name: pair[0], lead: pair[1]) : nil
         }

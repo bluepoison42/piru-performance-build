@@ -174,7 +174,7 @@ struct TimelineDoseBubble: View {
     }
 }
 
-/// How long ago the dose was taken ("12 min ago", "3 hr ago"), in the top-right
+/// How long ago the dose was taken ("12m ago", "3h ago"), in the top-right
 /// corner of a full bubble. Shown for the first ``window`` after the dose:
 /// past that, the strip's own time axis says when it was, and a day-old bubble
 /// carrying "yesterday" would only repeat the day header.
@@ -193,22 +193,21 @@ private struct DoseElapsedLabel: View {
         return elapsed >= 0 && elapsed < window
     }
 
-    private static let formatter: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated
-        formatter.dateTimeStyle = .named
-        return formatter
-    }()
+    /// "Just now", "12m ago", "3h ago". Built from the app's own strings, which
+    /// Android's Foundation can show; it has no `RelativeDateTimeFormatter`.
+    static func label(elapsed: TimeInterval) -> String {
+        let minutes = Int(elapsed / 60)
+        if minutes < 1 { return String(localized: "Just now") }
+        if minutes < 60 { return String(localized: "\(minutes)m ago") }
+        return String(localized: "\(minutes / 60)h ago")
+    }
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 60)) { context in
             let now = DebugClock.override ?? context.date
             let elapsed = now.timeIntervalSince(timestamp)
             if elapsed >= 0, elapsed < Self.window {
-                // Whole minutes, so the first minute reads "now" rather than
-                // counting seconds the label never redraws for.
-                let minutes = (elapsed / 60).rounded(.down)
-                Text(verbatim: Self.formatter.localizedString(for: now.addingTimeInterval(-minutes * 60), relativeTo: now))
+                Text(verbatim: Self.label(elapsed: elapsed))
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(Theme.secondaryLabel)
                     .lineLimit(1)

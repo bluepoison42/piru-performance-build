@@ -170,7 +170,7 @@ final class TabLayoutStore {
 
     func remove(atOffsets offsets: IndexSet) {
         guard layout.tabs.count - offsets.count >= 1 else { return }
-        layout.tabs.remove(atOffsets: offsets)
+        layout.tabs.remove(inRangeOffsets: offsets)
     }
 
     func move(fromOffsets source: IndexSet, toOffset destination: Int) {

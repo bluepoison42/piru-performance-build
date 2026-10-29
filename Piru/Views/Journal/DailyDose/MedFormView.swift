@@ -348,9 +348,13 @@ struct MedFormView: View {
                         MedTimeConsequenceLine(consequence: consequence, minutesOfDay: time.minutes)
                     }
                 }
-            }
-            .onDelete { offsets in
-                withAnimation(.snappy) { draft.times.remove(atOffsets: offsets) }
+                // Deletes by identity, never an offset; see MedDetailView's times.
+                .swipeActions(edge: .trailing) {
+                    Button("Delete", role: .destructive) {
+                        let id = time.id
+                        withAnimation(.snappy) { draft.times.removeAll { $0.id == id } }
+                    }
+                }
             }
 
             Button {

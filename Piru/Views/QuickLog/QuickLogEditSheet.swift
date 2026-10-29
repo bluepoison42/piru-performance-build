@@ -351,7 +351,7 @@ struct QuickLogEditSheet: View {
     private func deleteDoseTimes(at offsets: IndexSet) {
         // Keep at least one preset so the "Now" menu never empties out.
         guard doseTimeChoices.count - offsets.count >= 1 else { return }
-        doseTimeChoices.remove(atOffsets: offsets)
+        doseTimeChoices.remove(inRangeOffsets: offsets)
     }
 
     private func moveDoseTimes(from source: IndexSet, to destination: Int) {

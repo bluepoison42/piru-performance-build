@@ -141,6 +141,16 @@ struct CombinationProductTests {
         #expect(MedSchedule.productMatches(entryName: "zzcodamol", entryCombination: nil, product: product))
     }
 
+    /// The widgets and off-main scans read the map back from the mirror.
+    @Test
+    func `The product-med mirror round-trips through defaults`() throws {
+        let defaults = try #require(UserDefaults(suiteName: "piru.tests.productMeds"))
+        defer { defaults.removePersistentDomain(forName: "piru.tests.productMeds") }
+        let map = ["zzcodamol": MedSchedule.ProductMed(name: "ZZCodamol", lead: "ZZParaAlpha")]
+        defaults.set(MedSchedule.encodeProductMeds(map), forKey: MedSchedule.productMedMapKey)
+        #expect(MedSchedule.productMeds(in: defaults) == map)
+    }
+
     /// The streak scan runs off snapshots; a product med's day is complete
     /// once its lead entry is in, by any route.
     @Test

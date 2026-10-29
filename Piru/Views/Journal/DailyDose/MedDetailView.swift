@@ -216,18 +216,22 @@ struct MedDetailView: View {
     private var timesSection: some View {
         Section {
             ForEach(item.reminderTimesMinutes.indices, id: \.self) { index in
+                let minutes = item.reminderTimesMinutes[index]
                 DatePicker(
                     selection: timeBinding(at: index),
                     displayedComponents: .hourAndMinute,
                 ) {
-                    Text(MedTimeGroup.group(forMinutes: item.reminderTimesMinutes[index]).label)
+                    Text(MedTimeGroup.group(forMinutes: minutes).label)
                         .foregroundStyle(Theme.secondaryLabel)
                 }
-            }
-            .onDelete { offsets in
-                var times = item.reminderTimesMinutes
-                times.remove(atOffsets: offsets)
-                withAnimation(.snappy) { item.reminderTimesMinutes = times }
+                // Deletes the row's own time, never an offset: on Android the
+                // swipe can report a delete twice, and a second offset into
+                // the shortened list removes the next time or traps.
+                .swipeActions(edge: .trailing) {
+                    Button("Delete", role: .destructive) {
+                        withAnimation(.snappy) { item.reminderTimesMinutes.removeAll { $0 == minutes } }
+                    }
+                }
             }
 
             Button {

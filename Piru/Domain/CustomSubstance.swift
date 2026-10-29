@@ -454,7 +454,7 @@ final class CustomSubstanceStore {
             }
         }
         productMedCache = (revision, map)
-        mirrorDefaults.set(map.mapValues { [$0.name, $0.lead] }, forKey: MedSchedule.productMedMapKey)
+        mirrorDefaults.set(MedSchedule.encodeProductMeds(map), forKey: MedSchedule.productMedMapKey)
         return map
     }
 

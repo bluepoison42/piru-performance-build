@@ -33,7 +33,7 @@ struct DockShortcutsSection: View {
                 preferences.shortcuts.move(fromOffsets: source, toOffset: destination)
             }
             .onDelete { offsets in
-                preferences.shortcuts.remove(atOffsets: offsets)
+                preferences.shortcuts.remove(inRangeOffsets: offsets)
             }
 
             if preferences.canAddShortcut {
@@ -79,7 +79,7 @@ struct DockLabelsSection: View {
                 preferences.labels.move(fromOffsets: source, toOffset: destination)
             }
             .onDelete { offsets in
-                preferences.labels.remove(atOffsets: offsets)
+                preferences.labels.remove(inRangeOffsets: offsets)
             }
 
             Button {
