@@ -102,6 +102,7 @@ struct MedFormView: View {
 
     @State private var draft: MedFormDraft
     @State private var showsNameTaken = false
+    @State private var showsComponentPicker = false
 
     /// `product` opens the form on a saved product no med names yet, so
     /// saving makes it one: an As needed med of one unit (or mL) by default.
@@ -158,7 +159,9 @@ struct MedFormView: View {
                     if draft.isProduct {
                         MedProductNameSection(draft: draft.product)
                         MedProductUnitSection(draft: draft.product)
-                        MedProductComponentsSection(draft: draft.product, allowsSeveral: draft.isCompounded)
+                        MedProductComponentsSection(draft: draft.product, allowsSeveral: draft.isCompounded) {
+                            showsComponentPicker = true
+                        }
                         MedProductDoseSection(amount: $draft.amount, unitWord: draft.product.unitWord, isLiquid: draft.isLiquid)
                     } else {
                         substanceSection
@@ -172,6 +175,11 @@ struct MedFormView: View {
                 }
                 .listRowBackground(CardBackground())
             }
+            .productComponentPicker(
+                isPresented: $showsComponentPicker,
+                draft: draft.product,
+                allowsSeveral: draft.isCompounded,
+            )
             .themedPage()
             .navigationTitle(isEditing ? "Edit Med" : "Add a Med")
             .inlineNavigationTitle()
