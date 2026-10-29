@@ -1,47 +1,20 @@
 import SwiftData
 import SwiftUI
 
-/// What a timeline dose bubble offers beyond its tap: a long-press menu
-/// (Edit, Substance Info, Delete) and, on iOS, swipe-left-to-delete — the
-/// dose-level actions the entry detail's ⋯ menu holds, reachable from the
-/// Journal without opening the dose.
-///
-/// `preview` is what the long press lifts: the bubble alone, drawn flat,
-/// since the lifted copy has no backdrop for glass to sample. The menu
-/// resolves to the bubble only while its glass is its own platform view, so
-/// the bubbles must never share a `GlassEffectContainer`: inside one, every
-/// bubble's menu opens the first bubble's dose and lifts the whole stack.
-extension View {
-    func timelineDoseActions(
-        _ item: TimelineDayLayout.CardItem,
-        bubbleWidth: CGFloat,
-        @ViewBuilder preview: @escaping () -> some View,
-    ) -> some View {
-        modifier(TimelineDoseActionsModifier(item: item, bubbleWidth: bubbleWidth, preview: preview))
-    }
-}
-
-private struct TimelineDoseActionsModifier<Preview: View>: ViewModifier {
+/// The long-press menu of a timeline dose bubble (Edit, Substance Info,
+/// Delete): the dose-level actions the entry detail's ⋯ menu holds, reachable
+/// from the Journal without opening the dose. The bubble presents it as a
+/// `Menu` with the tap as its primary action. Never as `.contextMenu`: in the
+/// Journal's Timeline `List`, a row's context menu belongs to its cell, so
+/// every bubble in a day would open the day's first dose and lift the whole row.
+struct TimelineDoseMenu: View {
     let item: TimelineDayLayout.CardItem
-    let bubbleWidth: CGFloat
-    let preview: () -> Preview
 
     @Environment(\.appNavigator) private var navigator
     @Environment(\.modelContext) private var modelContext
     @Environment(\.sessionEditingService) private var editing
 
-    func body(content: Content) -> some View {
-        let menued = content
-            .contextMenu { menu } preview: { preview() }
-        #if os(iOS)
-            menued.modifier(TimelineBubbleSwipe(width: bubbleWidth, onDelete: delete))
-        #else
-            menued
-        #endif
-    }
-
-    @ViewBuilder
-    private var menu: some View {
+    var body: some View {
         Button {
             editing.pendingEditEntryID = item.id
             navigator.push(.entry(timestamp: item.timestamp, id: item.id))
@@ -54,17 +27,46 @@ private struct TimelineDoseActionsModifier<Preview: View>: ViewModifier {
             Label("Substance Info", systemImage: "info.circle")
         }
         Divider()
-        Button(role: .destructive, action: delete) {
+        Button(role: .destructive) {
+            TimelineDoseDeletion.delete(item, in: modelContext, editing: editing)
+        } label: {
             Label("Delete", systemImage: "trash")
         }
     }
+}
 
-    private func delete() {
+enum TimelineDoseDeletion {
+    static func delete(_ item: TimelineDayLayout.CardItem, in modelContext: ModelContext, editing: SessionEditingService) {
         let id = item.id
         var descriptor = FetchDescriptor<DoseEntry>(predicate: #Predicate { $0.id == id })
         descriptor.fetchLimit = 1
         guard let entry = try? modelContext.fetch(descriptor).first else { return }
         editing.delete(entry, in: modelContext)
+    }
+}
+
+extension View {
+    /// On iOS, swipe-left-to-delete on a timeline dose bubble.
+    func timelineDoseSwipe(_ item: TimelineDayLayout.CardItem, bubbleWidth: CGFloat) -> some View {
+        modifier(TimelineDoseSwipeModifier(item: item, bubbleWidth: bubbleWidth))
+    }
+}
+
+private struct TimelineDoseSwipeModifier: ViewModifier {
+    let item: TimelineDayLayout.CardItem
+    let bubbleWidth: CGFloat
+
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.sessionEditingService) private var editing
+
+    func body(content: Content) -> some View {
+        #if os(iOS)
+            content.modifier(TimelineBubbleSwipe(width: bubbleWidth) {
+                TimelineDoseDeletion.delete(item, in: modelContext, editing: editing)
+            })
+        #else
+            content
+        #endif
     }
 }
 

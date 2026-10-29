@@ -70,46 +70,47 @@ struct TimelineDoseBubble: View {
 
     var body: some View {
         if actionable {
-            bubble.timelineDoseActions(item, bubbleWidth: Self.width(for: style)) {
-                // The actionless bubble, flat: the preview renders outside the
-                // strip, with no backdrop for glass to sample.
-                TimelineDoseBubble(item: item, style: style, pkMode: pkMode, actionable: false) {}
-                    .frame(width: Self.width(for: style))
-                    .environment(\.rendersTimelineFlat, true)
+            Menu {
+                TimelineDoseMenu(item: item)
+            } label: {
+                bubbleLabel
+            } primaryAction: {
+                onTap()
             }
+            .menuStyle(.button)
+            .buttonStyle(.plain)
+            .timelineDoseSwipe(item, bubbleWidth: Self.width(for: style))
         } else {
-            bubble
+            Button(action: onTap) { bubbleLabel }
+                .buttonStyle(.plain)
         }
     }
 
-    private var bubble: some View {
-        Button(action: onTap) {
-            HStack(spacing: Spacing.md) {
-                switch style {
-                case .full:
-                    fullContent
-                case .compact:
-                    compactLeading
-                    Spacer(minLength: 4)
-                    trailingReadout
-                }
+    private var bubbleLabel: some View {
+        HStack(spacing: Spacing.md) {
+            switch style {
+            case .full:
+                fullContent
+            case .compact:
+                compactLeading
+                Spacer(minLength: 4)
+                trailingReadout
+            }
 
-                Image(systemName: "chevron.right")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Theme.tertiaryLabel)
-                    .accessibilityHidden(true)
-            }
-            .padding(.horizontal, Spacing.lg)
-            .frame(height: Self.height(for: style))
-            .contentShape(.rect)
-            .modifier(BubbleSurface(tint: item.color, flat: rendersFlat))
-            .overlay {
-                RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
-                    .strokeBorder(TimelineGlass.edgeHighlight(colorScheme: colorScheme), lineWidth: 0.5)
-            }
-            .shadow(color: .black.opacity(TimelineGlass.shadowOpacity(colorScheme: colorScheme)), radius: 10, y: 4)
+            Image(systemName: "chevron.right")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.tertiaryLabel)
+                .accessibilityHidden(true)
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, Spacing.lg)
+        .frame(height: Self.height(for: style))
+        .contentShape(.rect)
+        .modifier(BubbleSurface(tint: item.color, flat: rendersFlat))
+        .overlay {
+            RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
+                .strokeBorder(TimelineGlass.edgeHighlight(colorScheme: colorScheme), lineWidth: 0.5)
+        }
+        .shadow(color: .black.opacity(TimelineGlass.shadowOpacity(colorScheme: colorScheme)), radius: 10, y: 4)
     }
 
     /// Name and elapsed time on the first row; dose, route chip and the
