@@ -21,6 +21,7 @@ struct MedDetailView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var showingDeleteConfirmation = false
+    @State private var showingProductEditor = false
 
     private let defaultUnits = ["mg", "g", "µg", "mL", "IU", "drops", "puffs"]
 
@@ -74,7 +75,9 @@ struct MedDetailView: View {
         List {
             headerSection
             if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
-                MedProductDetailSection(item: item, product: product)
+                MedProductDetailSection(item: item, product: product) {
+                    showingProductEditor = true
+                }
             } else {
                 dosageSection
             }
@@ -109,6 +112,11 @@ struct MedDetailView: View {
                 }
             }
             .listRowBackground(CardBackground())
+        }
+        .sheet(isPresented: $showingProductEditor) {
+            if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
+                MedProductEditSheet(product: product)
+            }
         }
         .themedPage()
         // Titled as the editor it is: every row below writes straight to the

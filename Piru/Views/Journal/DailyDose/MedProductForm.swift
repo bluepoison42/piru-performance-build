@@ -188,13 +188,13 @@ struct MedProductUnitSection: View {
 }
 
 /// The product's components, each with its amount per unit (or per mL), and
-/// the picker that adds one. A single compound taken as a liquid holds one.
+/// the button that adds one. A single compound taken as a liquid holds one.
+/// The form root presents the picker, through `productComponentPicker`.
 struct MedProductComponentsSection: View {
     @Bindable var draft: MedProductDraft
     /// Whether more than one component may be added: a compounded product.
     let allowsSeveral: Bool
-
-    @State private var showsPicker = false
+    let onAdd: () -> Void
 
     var body: some View {
         Section {
@@ -205,16 +205,23 @@ struct MedProductComponentsSection: View {
                 withAnimation(.snappy) { draft.components.remove(atOffsets: offsets) }
             }
             if allowsSeveral || draft.components.isEmpty {
-                Button {
-                    showsPicker = true
-                } label: {
+                Button(action: onAdd) {
                     Label(allowsSeveral ? "Add Component" : "Choose Substance", systemImage: "plus.circle.fill")
                 }
             }
         } header: {
             Text(allowsSeveral ? "Components" : "Substance")
         }
-        .sheet(isPresented: $showsPicker) {
+    }
+}
+
+extension View {
+    /// Presents the component picker that appends to `draft`. Attach it to the
+    /// form's root, never to a `Section` or a row: a List spreads a section's
+    /// modifiers over its rows and rebuilds them as the form changes, which
+    /// tears the presenter down and dismisses the sheet as it appears.
+    func productComponentPicker(isPresented: Binding<Bool>, draft: MedProductDraft, allowsSeveral: Bool) -> some View {
+        sheet(isPresented: isPresented) {
             ProductComponentPicker { picked in
                 withAnimation(.snappy) { draft.components.append(picked) }
                 // A single compound's liquid is named after it until the user
@@ -354,6 +361,7 @@ struct MedProductEditSheet: View {
 
     @State private var draft: MedProductDraft
     @State private var showsNameTaken = false
+    @State private var showsComponentPicker = false
 
     init(product: CustomSubstanceEntry) {
         _draft = State(initialValue: MedProductDraft(product: product))
@@ -365,10 +373,13 @@ struct MedProductEditSheet: View {
                 Group {
                     MedProductNameSection(draft: draft)
                     MedProductUnitSection(draft: draft)
-                    MedProductComponentsSection(draft: draft, allowsSeveral: true)
+                    MedProductComponentsSection(draft: draft, allowsSeveral: true) {
+                        showsComponentPicker = true
+                    }
                 }
                 .listRowBackground(CardBackground())
             }
+            .productComponentPicker(isPresented: $showsComponentPicker, draft: draft, allowsSeveral: true)
             .themedPage()
             .navigationTitle("Edit Product")
             .inlineNavigationTitle()
@@ -411,11 +422,12 @@ struct MedProductEditSheet: View {
 
 /// The dose of a med saved as a product, on its detail screen: how many units
 /// (or mL) one dose is, what the product holds, and the way to edit it.
+/// The screen's root presents the editor (`onEdit`), for the reason given on
+/// `productComponentPicker`.
 struct MedProductDetailSection: View {
     @Bindable var item: DailyDoseItem
     let product: CustomSubstanceEntry
-
-    @State private var showsEditor = false
+    let onEdit: () -> Void
 
     var body: some View {
         Section {
@@ -437,18 +449,13 @@ struct MedProductDetailSection: View {
                     .font(.subheadline)
                     .foregroundStyle(Theme.secondaryLabel)
             }
-            Button("Edit Product") {
-                showsEditor = true
-            }
+            Button("Edit Product", action: onEdit)
         } header: {
             Text("Dose")
         } footer: {
             Text("Checked off by logging this product.")
         }
         .listRowBackground(CardBackground())
-        .sheet(isPresented: $showsEditor) {
-            MedProductEditSheet(product: product)
-        }
     }
 
     private var units: Binding<Int> {
