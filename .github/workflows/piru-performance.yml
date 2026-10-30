@@ -37,7 +37,7 @@ jobs:
           retention-days: 7
   android:
     if: ${{ !inputs.cache_only }}
-    runs-on: macos-26-intel
+    runs-on: macos-26
     timeout-minutes: 180
     env:
       PIRU_CONFIG: release
