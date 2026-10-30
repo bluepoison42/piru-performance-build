@@ -211,7 +211,7 @@ extension DockLabelContext {
         guard !scheduled.isEmpty else { return context }
 
         let calendar = Calendar.current
-        let dayStart = calendar.startOfDay(for: now)
+        let dayStart = calendar.sessionDayStart(for: now)
         let descriptor = FetchDescriptor<DoseEntry>(predicate: #Predicate { $0.timestamp >= dayStart })
         let todays = (try? modelContext.fetch(descriptor)) ?? []
 
@@ -234,32 +234,22 @@ extension DockLabelContext {
     /// The earliest untaken timed slot still ahead today; failing that, the
     /// earliest slot of any med due tomorrow.
     private static func nextMed(items: [DailyDoseItem], todayEntries: [DoseEntry], now: Date, calendar: Calendar) -> DockMedRef? {
-        let nowMinutes = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
-        var today: [(item: DailyDoseItem, minutes: Int)] = []
-        for item in items where AdherenceCalculator.isDue(item, on: now) {
-            let taken = todayEntries.count { AdherenceCalculator.entryMatches(entry: $0, item: item) }
-            let times = item.reminderTimesMinutes.sorted()
-            guard taken < times.count else { continue }
-            if let slot = times[taken...].first(where: { $0 > nowMinutes }) {
-                today.append((item, slot))
+        let today = calendar.medicationDayLabel(for: now)
+        var candidates: [(item: DailyDoseItem, at: Date)] = []
+        for offset in 0 ... 1 {
+            guard let label = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
+            for item in items where AdherenceCalculator.isDue(item, on: label) {
+                let taken = offset == 0 ? todayEntries.count { AdherenceCalculator.entryMatches(entry: $0, item: item) } : 0
+                let times = item.reminderTimesMinutes.sorted { Calendar.medicationClockMinutes($0) < Calendar.medicationClockMinutes($1) }
+                for minutes in times.dropFirst(taken) {
+                    if let at = calendar.medicationDayMoment(minutes: minutes, onLabel: label), at > now {
+                        candidates.append((item, at))
+                    }
+                }
             }
         }
-        if let soonest = today.min(by: { $0.minutes < $1.minutes }),
-           let at = date(minutes: soonest.minutes, of: now, calendar: calendar) {
-            return DockMedRef(name: displayName(for: soonest.item), at: at)
-        }
-
-        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: now) else { return nil }
-        let first = items
-            .filter { AdherenceCalculator.isDue($0, on: tomorrow) }
-            .compactMap { item in item.reminderTimesMinutes.min().map { (item: item, minutes: $0) } }
-            .min { $0.minutes < $1.minutes }
-        guard let first, let at = date(minutes: first.minutes, of: tomorrow, calendar: calendar) else { return nil }
-        return DockMedRef(name: displayName(for: first.item), at: at)
-    }
-
-    private static func date(minutes: Int, of day: Date, calendar: Calendar) -> Date? {
-        calendar.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: day)
+        guard let next = candidates.min(by: { $0.at < $1.at }) else { return nil }
+        return DockMedRef(name: displayName(for: next.item), at: next.at)
     }
 
     private static func displayName(for item: DailyDoseItem) -> String {

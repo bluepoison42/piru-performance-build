@@ -8,9 +8,24 @@
 // renderer with an estimate from the characters.
 
 import SwiftUI
+import SkipBridge
+
+private enum PiruNextCanvasFlags {
+    static let fixedSize: Bool = {
+        let kotlin = try? AnyDynamicObject(forStaticsOfClassName: "skip.ui.PiruNextPerf")
+        return (try? kotlin?.fixedCanvasEnabled() as Bool?) == true
+    }()
+}
 
 struct Canvas<Symbols: View>: View {
     private let renderer: (inout GraphicsContext, CGSize) -> Void
+    private var knownSize: CGSize? = nil
+
+    func piruKnownSize(_ size: CGSize?) -> Self {
+        var copy = self
+        copy.knownSize = size
+        return copy
+    }
 
     init(
         opaque _: Bool = false,
@@ -20,16 +35,24 @@ struct Canvas<Symbols: View>: View {
         self.renderer = renderer
     }
 
-    var body: some View {
-        GeometryReader { proxy in
-            let items = GraphicsContext.record(size: proxy.size, renderer)
-            ZStack(alignment: .topLeading) {
-                ForEach(0 ..< items.count, id: \.self) { index in
-                    CanvasItemView(item: items[index], size: proxy.size)
-                }
+    @ViewBuilder var body: some View {
+        if PiruNextCanvasFlags.fixedSize, let knownSize {
+            recorded(size: knownSize)
+        } else {
+            GeometryReader { proxy in
+                recorded(size: proxy.size)
             }
-            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
         }
+    }
+
+    @ViewBuilder private func recorded(size: CGSize) -> some View {
+        let items = GraphicsContext.record(size: size, renderer)
+        ZStack(alignment: .topLeading) {
+            ForEach(0 ..< items.count, id: \.self) { index in
+                CanvasItemView(item: items[index], size: size)
+            }
+        }
+        .frame(width: size.width, height: size.height, alignment: .topLeading)
     }
 }
 

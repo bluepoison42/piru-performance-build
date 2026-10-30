@@ -286,8 +286,8 @@ nonisolated enum StoreRecovery {
             let dir = URL(fileURLWithPath: dirPath)
             guard let entries = try? fm.contentsOfDirectory(atPath: dirPath) else { continue }
             for name in entries {
-                // Sidecar main files only (skip their -shm/-wal): default.store.<tag>-<ts>
-                guard name.hasPrefix(storeName + "."), !name.hasSuffix("-shm"), !name.hasSuffix("-wal")
+                // Accept both legacy seconds and unique millisecond_UUID snapshots.
+                guard name.hasPrefix(storeName + "."), !name.hasSuffix("-shm"), !name.hasSuffix("-wal"), sidecarTimestamp(name) != nil
                 else { continue }
                 if !includeIntentional, let reason = sidecarReason(name), intentionalReasons.contains(reason) {
                     continue
@@ -354,12 +354,18 @@ nonisolated enum StoreRecovery {
     /// Copy (not move) the canonical store and its siblings to a timestamped
     /// sidecar, leaving the live store in place. Used before a destructive but
     /// intentional action (Settings → Delete All) so it's always recoverable.
-    static func snapshotStore(reason: String) {
+    @discardableResult
+    static func snapshotStore(reason: String) -> Bool {
         let fm = FileManager.default
         let store = canonicalStoreURL()
+        guard fm.fileExists(atPath: store.path) else {
+            Logger.storeRecovery.error("Snapshot failed: the live store is missing.")
+            return false
+        }
+        var succeeded = true
         let dir = store.deletingLastPathComponent()
         let base = store.lastPathComponent
-        let stamp = Int(Date().timeIntervalSince1970)
+        let stamp = "\(Int64(Date().timeIntervalSince1970 * 1000))_\(UUID().uuidString.prefix(8))"
         for suffix in storeSuffixes {
             let src = dir.appendingPathComponent(base + suffix)
             guard fm.fileExists(atPath: src.path) else { continue }
@@ -367,10 +373,14 @@ nonisolated enum StoreRecovery {
             do {
                 try fm.copyItem(at: src, to: dst)
             } catch {
+                succeeded = false
                 Logger.storeRecovery.error("Snapshot of \(src.lastPathComponent, privacy: .public) failed: \(error.localizedDescription, privacy: .public)")
             }
         }
-        Logger.storeRecovery.notice("Snapshot taken before \(reason, privacy: .public)")
+        if succeeded {
+            Logger.storeRecovery.notice("Snapshot taken before \(reason, privacy: .public)")
+        }
+        return succeeded
     }
 
     // MARK: - Helpers
@@ -559,7 +569,7 @@ nonisolated enum StoreRecovery {
         Logger.storeRecovery.notice("Manually restored canonical store from \(sidecar.lastPathComponent, privacy: .public)")
     }
 
-    /// Parse the trailing `-<unix-seconds>` timestamp from a sidecar filename.
+    /// Parse legacy seconds or unique `<unix-milliseconds>_<UUID>` snapshot stamps.
     static func sidecarTimestamp(_ fileName: String) -> Date? {
         var tag = fileName
         for suffix in ["-shm", "-wal"] where tag.hasSuffix(suffix) {
@@ -567,7 +577,9 @@ nonisolated enum StoreRecovery {
         }
         guard let dash = tag.lastIndex(of: "-") else { return nil }
         let stamp = tag[tag.index(after: dash)...]
-        guard let seconds = TimeInterval(stamp) else { return nil }
+        let parts = stamp.split(separator: "_", maxSplits: 1)
+        guard let value = parts.first, let number = TimeInterval(value) else { return nil }
+        let seconds = parts.count == 2 ? number / 1000 : number
         return Date(timeIntervalSince1970: seconds)
     }
 }

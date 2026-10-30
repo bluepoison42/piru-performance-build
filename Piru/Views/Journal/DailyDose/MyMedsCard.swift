@@ -46,25 +46,25 @@ struct MyMedsCard: View {
     }
 
     private var todayEntries: [DoseEntry] {
-        let dayStart = Calendar.current.startOfDay(for: .now)
+        let dayStart = Calendar.current.sessionDayStart(for: .now)
         return recentEntries.filter { $0.timestamp >= dayStart }
     }
 
     private static var yesterdayStart: Date {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: .now)
+        let today = calendar.medicationDayLabel(for: .now)
         return calendar.date(byAdding: .day, value: -1, to: today) ?? today
     }
 
     private var todayOccurrences: [RoutineOccurrence] {
-        let today = Calendar.current.startOfDay(for: .now)
-        return recentOccurrences.filter { $0.dueDay >= today }
+        let today = Calendar.current.medicationDayLabel(for: .now)
+        return recentOccurrences.filter { $0.dueDay == today }
     }
 
     /// Yesterday's slots that ended the day unlogged (`missed` is written by
     /// `RoutineOccurrenceService.reconcile`, never inferred here).
     private var yesterdayMissed: [RoutineOccurrence] {
-        let today = Calendar.current.startOfDay(for: .now)
+        let today = Calendar.current.medicationDayLabel(for: .now)
         return recentOccurrences.filter { $0.dueDay < today && $0.state == .missed }
     }
 
@@ -103,7 +103,7 @@ struct MyMedsCard: View {
         var isDueNow: Bool {
             guard state == .pending else { return false }
             guard let time else { return true }
-            return time <= Self.nowMinutes
+            return Calendar.medicationClockMinutes(time) <= Calendar.medicationClockMinutes(Self.nowMinutes)
         }
 
         static var nowMinutes: Int {
@@ -219,8 +219,9 @@ struct MyMedsCard: View {
     /// One checklist row as its own invalidation boundary (value inputs
     /// only), so toggling `supplementsExpanded` or logging one slot doesn't
     /// re-evaluate every other row's body.
+    @ViewBuilder
     private func slotRow(_ slot: MedSlot, indented: Bool) -> some View {
-        SlotRowView(
+        let row = SlotRowView(
             title: slot.med.displayName,
             subtitle: "\(slot.med.amount.doseFormatted) \(slot.med.unit)",
             timeText: slot.time.map(Self.timeText),
@@ -238,14 +239,64 @@ struct MyMedsCard: View {
                 navigator.push(.medDetail(identityKey: slot.med.identityKey, sortOrder: slot.med.sortOrder))
             },
         )
+        switch slot.state {
+        case .pending:
+            HStack(spacing: Spacing.sm) {
+                row
+                #if os(Android)
+                    Menu {
+                        Button("Skip Today") { setSkipped(true, for: slot) }
+                    } label: {
+                        Image(systemName: "ellipsis").minimumHitTarget()
+                    }
+                    .accessibilityLabel(Text("Skip Today"))
+                #endif
+            }.contextMenu {
+                Button { setSkipped(true, for: slot) } label: {
+                    Label("Skip Today", systemImage: "minus.circle")
+                }
+            }
+            .accessibilityAction(named: Text("Skip Today")) { setSkipped(true, for: slot) }
+        case .skipped:
+            HStack(spacing: Spacing.sm) {
+                row
+                #if os(Android)
+                    Menu {
+                        Button("Undo Skip") { setSkipped(false, for: slot) }
+                    } label: {
+                        Image(systemName: "ellipsis").minimumHitTarget()
+                    }
+                    .accessibilityLabel(Text("Undo Skip"))
+                #endif
+            }.contextMenu {
+                Button { setSkipped(false, for: slot) } label: {
+                    Label("Undo Skip", systemImage: "arrow.uturn.backward")
+                }
+            }
+            .accessibilityAction(named: Text("Undo Skip")) { setSkipped(false, for: slot) }
+        case .taken:
+            row
+        }
+    }
+
+    private func setSkipped(_ skipped: Bool, for slot: MedSlot) {
+        guard let item = liveItem(for: slot) else { return }
+        let key = RoutineOccurrenceService.slotKey(substance: item.substance,
+            substanceUID: item.substanceUID, route: item.route, slotMinutes: slot.time)
+        if skipped {
+            RoutineOccurrenceService.skipToday(slotKeys: [key], in: modelContext)
+        } else {
+            RoutineOccurrenceService.unskipToday(slotKeys: [key], in: modelContext)
+        }
     }
 
     private func supplementsRow(quietSlots: [MedSlot]) -> some View {
         SupplementsRowView(
             takenCount: quietSlots.count(where: \.taken),
             total: quietSlots.count,
+            pendingCount: quietSlots.count { $0.state == .pending },
             expanded: $supplementsExpanded,
-            onTakeAll: { attemptLog(slots: quietSlots.filter { !$0.taken }) },
+            onTakeAll: { attemptLog(slots: quietSlots.filter { $0.state == .pending }) },
         )
     }
 
@@ -446,6 +497,7 @@ private struct MyMedsHeader: View {
 private struct SupplementsRowView: View {
     let takenCount: Int
     let total: Int
+    let pendingCount: Int
     @Binding var expanded: Bool
     let onTakeAll: () -> Void
 
@@ -471,7 +523,7 @@ private struct SupplementsRowView: View {
             .accessibilityValue("\(takenCount) of \(total) taken")
             .accessibilityHint(expanded ? Text("Collapses the list") : Text("Expands the list"))
 
-            if takenCount < total {
+            if pendingCount > 0 {
                 Button(action: onTakeAll) {
                     Text("Take All")
                         .capsuleChip(

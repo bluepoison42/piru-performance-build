@@ -15,6 +15,7 @@ struct TrayProductCell: View {
     /// through the model, so the card passes no closures.
     let model: DoseTrayModel
     let namespace: Namespace.ID
+    let routineItem: StagedDose
 
     var body: some View {
         let rows = model.staged.filter { $0.combinationName == product.name }
@@ -34,18 +35,7 @@ struct TrayProductCell: View {
                 withAnimation(.snappy) { model.openForEditing(leadID, focusesAmount: product.isLiquidCombination) }
             }
             .contextMenuPreviewShape(Rectangle())
-            .contextMenu {
-                Button {
-                    withAnimation(.snappy) { _ = model.expandedItemIDs.insert(leadID) }
-                } label: {
-                    Label("Edit", systemImage: "slider.horizontal.3")
-                }
-                Button(role: .destructive) {
-                    withAnimation(.snappy) { model.removeCombination(product.name) }
-                } label: {
-                    Label("Remove", systemImage: "trash")
-                }
-            }
+            .modifier(TrayRowActions(model: model, item: routineItem))
         }
     }
 }

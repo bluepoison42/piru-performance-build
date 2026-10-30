@@ -43,7 +43,7 @@ struct TrayStagedListCard: View {
                         // doesn't fight the morph because no pair spans it.
                         Group {
                             if let product = products.leads[item.id] {
-                                TrayProductCell(product: product, leadID: item.id, model: model, namespace: morphNamespace)
+                                TrayProductCell(product: product, leadID: item.id, model: model, namespace: morphNamespace, routineItem: item)
                             } else if model.expandedItemIDs.contains(item.id) {
                                 StagedDoseEditor(
                                     item: $item,
@@ -59,9 +59,7 @@ struct TrayStagedListCard: View {
                                 // (cursor, paste) a context menu would take over.
                                 TrayRow(dose: item, model: model, namespace: morphNamespace)
                                     .contextMenuPreviewShape(Rectangle())
-                                    .contextMenu {
-                                        TrayRowContextMenu(model: model, item: item)
-                                    }
+                                    .modifier(TrayRowActions(model: model, item: item))
                             }
                         }
                         .padding(.horizontal, Spacing.xxl)
@@ -319,6 +317,60 @@ struct TrayTagsPopover: View {
 /// revealed, the first tap anywhere on the row closes it again.
 /// The long-press actions on a collapsed staged dose: open it, or remove it —
 /// the same Remove the swipe reveals.
+struct TrayRowActions: ViewModifier {
+    let model: DoseTrayModel
+    let item: StagedDose
+    @Environment(\.modelContext) private var modelContext
+    @Query(filter: #Predicate<RoutineOccurrence> { $0.stateRaw == "pending" }) private var pending: [RoutineOccurrence]
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        let key = RoutineOccurrenceService.pendingTraySlotKey(
+            slotKeys: item.routineSlotKeys, stagedDay: item.routineDay, occurrences: pending)
+        let row = accessibleRow(content: content, key: key).contextMenu {
+            TrayRowContextMenu(model: model, item: item)
+            if let key {
+                Button { skip(key) } label: {
+                    Label("Skip Today", systemImage: "minus.circle")
+                }
+            }
+        }
+        Group {
+            if let key {
+                row.accessibilityAction(named: Text("Skip Today")) { skip(key) }
+            } else {
+                row
+            }
+        }
+        .task(id: Calendar.current.medicationDayLabel(for: .now)) {
+            RoutineOccurrenceService.reconcile(in: modelContext)
+        }
+    }
+
+    @ViewBuilder
+    private func accessibleRow(content: Content, key: String?) -> some View {
+        #if os(Android)
+            HStack(spacing: Spacing.sm) {
+                content
+                if let key {
+                    Menu {
+                        Button("Skip Today") { skip(key) }
+                    } label: {
+                        Image(systemName: "ellipsis").minimumHitTarget()
+                    }
+                    .accessibilityLabel(Text("Skip Today"))
+                }
+            }
+        #else
+            content
+        #endif
+    }
+
+    private func skip(_ key: String) {
+        withAnimation(.snappy) { _ = model.skipToday(item, slotKey: key, in: modelContext) }
+    }
+}
+
 struct TrayRowContextMenu: View {
     let model: DoseTrayModel
     let item: StagedDose
@@ -330,7 +382,13 @@ struct TrayRowContextMenu: View {
             Label("Edit", systemImage: "slider.horizontal.3")
         }
         Button(role: .destructive) {
-            withAnimation(.snappy) { model.remove(item) }
+            withAnimation(.snappy) {
+                if let product = item.combinationName {
+                    model.removeCombination(product)
+                } else {
+                    model.remove(item)
+                }
+            }
         } label: {
             Label("Remove", systemImage: "trash")
         }
@@ -363,7 +421,6 @@ struct TraySwipeRow<Content: View>: View {
                         .fill(Color.platformSecondarySystemFill)
                         .opacity(offset < -1 ? 1 : 0)
                 }
-                .offset(x: offset)
                 .overlay {
                     if offset != 0 {
                         // Tap-catcher while revealed — swallows the tap that
@@ -377,6 +434,8 @@ struct TraySwipeRow<Content: View>: View {
                             .accessibilityLabel(Text("Dismiss"))
                     }
                 }
+                // Move the tap-catcher too, leaving the revealed delete button hittable.
+                .offset(x: offset)
                 // The swipe gesture is invisible to assistive tech — expose
                 // deletion as a rotor action on the row itself.
                 .accessibilityAction(named: Text("Remove")) {
@@ -414,6 +473,7 @@ struct TraySwipeRow<Content: View>: View {
         .padding(.trailing, Spacing.md)
         .accessibilityLabel("Remove")
         .opacity(offset < -1 ? 1 : 0)
+        .allowsHitTesting(offset < -1)
         // Hidden until the swipe reveals it — otherwise VoiceOver stops on an
         // invisible button behind every row.
         .accessibilityHidden(offset >= -1)
@@ -471,6 +531,16 @@ struct TrayRow: View {
     }
 
     var body: some View {
+        Button(action: expand) {
+            rowContent
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint("Expands the editor")
+    }
+
+    private var rowContent: some View {
         // Session-row grammar (Specs/meds-ux-review.md §6): identity leading,
         // the *numbers* on the trailing edge — ROA as a pill, the amount bold
         // and large — with the disclosure chevron at the far trailing edge
@@ -547,9 +617,5 @@ struct TrayRow: View {
         }
         .padding(.vertical, Spacing.xl)
         .contentShape(Rectangle())
-        .onTapGesture(perform: expand)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityHint("Expands the editor")
     }
 }

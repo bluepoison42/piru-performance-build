@@ -192,6 +192,15 @@ enum DoseNotificationManager {
     /// app foreground. Runs the occurrence reconciler first, so follow-up
     /// cancellation reads the durable record (spec §D), not a re-inference
     /// over raw dose scans.
+    static func medicationDayBoundaryChanged(in context: ModelContext) throws {
+        UserDefaults.standard.removeObject(forKey: "piru.medicationHistoryBoundary.v2")
+        try RoutineOccurrenceService.repairHistoricalDays(in: context)
+        try context.save()
+        DoseLogService.shared.changed()
+        syncMedReminders(in: context)
+        UserDefaults.standard.set(Calendar.sessionDayBoundaryHour, forKey: "piru.medicationHistoryBoundary.v2")
+    }
+
     static func syncMedReminders(in context: ModelContext) {
         RoutineOccurrenceService.reconcile(in: context)
         scheduleMedReminders(in: context)
@@ -250,7 +259,6 @@ enum DoseNotificationManager {
             }
             RoutineOccurrenceService.skipToday(slotKeys: keys, in: context)
         }
-        syncMedReminders(in: context)
     }
 
     /// The app's shared container, set once at launch — the notification
@@ -424,11 +432,11 @@ enum DoseNotificationManager {
                     // due days. Today's are skipped once the slot is
                     // satisfied (a luxury the repeating trigger can't offer).
                     for day in nextDueDays(for: item, limit: duePrimariesPerSlot, now: now) {
-                        let isToday = calendar.isDate(day, inSameDayAs: now)
+                        let isToday = day == calendar.medicationDayLabel(for: now)
                         if isToday, satisfied { continue }
                         let parts = calendar.dateComponents([.year, .month, .day], from: day)
                         let dayKey = String(format: "%04d%02d%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
-                        if let fireDate = calendar.date(byAdding: .minute, value: time, to: day), fireDate > now {
+                        if let fireDate = calendar.medicationDayMoment(minutes: time, onLabel: day), fireDate > now {
                             primaries.append(PrimaryRequest(
                                 identifier: NotificationType.routine.identifier(anchor: anchor, ordinal: dayKey),
                                 title: title,
@@ -443,7 +451,9 @@ enum DoseNotificationManager {
                         }
                         guard followUpsAllowed, !cadence.isEmpty else { continue }
                         for (ordinal, offset) in cadence.enumerated() {
-                            guard let fireDate = calendar.date(byAdding: .minute, value: time + offset, to: day),
+                            guard let primary = calendar.medicationDayMoment(minutes: time, onLabel: day),
+                                  let fireDate = calendar.date(byAdding: .minute, value: offset, to: primary),
+                                  fireDate < calendar.sessionDayEnd(for: calendar.medicationDayStart(forLabel: day)),
                                   fireDate > now,
                                   !NotificationPreferencesStore.isInQuietHours(fireDate) else { continue }
                             followUps.append(FollowUpRequest(
@@ -650,7 +660,7 @@ enum DoseNotificationManager {
     /// days, ``DoseFrequency/intervalRange``).
     private static func nextDueDays(for item: DailyDoseItem, limit: Int, now: Date) -> [Date] {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: now)
+        let today = calendar.medicationDayLabel(for: now)
         var result: [Date] = []
         for offset in 0 ..< 2 * DoseFrequency.intervalRange.upperBound + 1 {
             guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
@@ -731,7 +741,7 @@ enum DoseNotificationManager {
         now: Date,
         calendar: Calendar = .current,
     ) -> [(dayKey: String, ordinal: Int, fireDate: Date)] {
-        let todayStart = calendar.startOfDay(for: now)
+        let todayStart = calendar.medicationDayLabel(for: now)
         var slots: [(dayKey: String, ordinal: Int, fireDate: Date)] = []
         for day in 0 ..< max(0, days) {
             if day == 0, skipToday { continue }
@@ -739,7 +749,9 @@ enum DoseNotificationManager {
             let parts = calendar.dateComponents([.year, .month, .day], from: dayStart)
             let dayKey = String(format: "%04d%02d%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
             for (ordinal, offset) in offsets.enumerated() {
-                guard let fireDate = calendar.date(byAdding: .minute, value: timeMinutes + offset, to: dayStart),
+                guard let primary = calendar.medicationDayMoment(minutes: timeMinutes, onLabel: dayStart),
+                      let fireDate = calendar.date(byAdding: .minute, value: offset, to: primary),
+                      fireDate < calendar.sessionDayEnd(for: calendar.medicationDayStart(forLabel: dayStart)),
                       fireDate > now else { continue }
                 slots.append((dayKey: dayKey, ordinal: ordinal, fireDate: fireDate))
             }

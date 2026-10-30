@@ -15,10 +15,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import java.io.File
 
+class BackupStageResult(val uri: String?, val error: String?)
+
 class AndroidBackupFolder {
     companion object {
         private const val MIME_TYPE = "application/octet-stream"
-        private const val PARTIAL_SUFFIX = ".partial"
         private const val GRANT = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
         private var context: Context? = null
@@ -89,43 +90,138 @@ class AndroidBackupFolder {
             }
         }
 
-        /// Writes the file at `sourcePath` into the folder as `name`. The bytes land in a
-        /// `.partial` file first, so a write cut short leaves the previous backup whole; the
-        /// partial then takes the backup's name, or, where the provider cannot rename, its
-        /// bytes are copied over the backup and it is removed. Returns null on success, else
-        /// why it failed.
+        /// Return the provider's actual URI separately from any error.
         @JvmStatic
-        fun write(tree: String, name: String, sourcePath: String): String? {
+        @Synchronized
+        fun stage(tree: String, name: String, partialName: String, sourcePath: String): BackupStageResult {
+            val context = context ?: return BackupStageResult(null, "unavailable")
+            var partial: Uri? = null
+            var complete = false
+            return try {
+                val created = DocumentsContract.createDocument(
+                    context.contentResolver, folder(Uri.parse(tree)), MIME_TYPE, partialName
+                ) ?: throw IllegalStateException("The folder refused a new file.")
+                partial = created
+                copy(context, File(sourcePath), created)
+                complete = true
+                val copies = completePartials(context, tree, name)
+                copies.add(created.toString())
+                savePartials(context, tree, name, copies)
+                prunePartials(context, tree, name, keep = 2)
+                BackupStageResult(created.toString(), null)
+            } catch (error: Exception) {
+                if (!complete) partial?.let { deleteChecked(context, it) }
+                BackupStageResult(null, error.localizedMessage ?: error.toString())
+            }
+        }
+
+        /// Called only after stage completed and closed the stream. A failed publish
+        /// leaves its complete partial intact, including when the final name was lost.
+        @JvmStatic
+        @Synchronized
+        fun publish(tree: String, name: String, partialUri: String, sourcePath: String): String? {
             val context = context ?: return "unavailable"
             val resolver = context.contentResolver
+            var incompleteTarget: Uri? = null
             return try {
                 val treeUri = Uri.parse(tree)
-                val source = File(sourcePath)
-                val partialName = name + PARTIAL_SUFFIX
-                child(context, treeUri, partialName)?.let { DocumentsContract.deleteDocument(resolver, it) }
-                val partial = DocumentsContract.createDocument(resolver, folder(treeUri), MIME_TYPE, partialName)
-                    ?: throw IllegalStateException("The folder refused a new file.")
-                copy(context, source, partial)
-
+                val partial = Uri.parse(partialUri)
                 val existing = child(context, treeUri, name)
+                // Remove the recovery entry durably BEFORE its URI can become the final.
+                // A later index-write failure must never make pruning delete that final.
+                val pending = completePartials(context, tree, name)
+                pending.remove(partialUri)
+                savePartials(context, tree, name, pending)
                 val renamed = try {
-                    existing?.let { DocumentsContract.deleteDocument(resolver, it) }
-                    DocumentsContract.renameDocument(resolver, partial, name) != null
+                    existing?.let {
+                        if (!deleteChecked(context, it)) {
+                            throw IllegalStateException("The previous backup could not be replaced.")
+                        }
+                    }
+                    DocumentsContract.renameDocument(resolver, partial, name)
                 } catch (error: Exception) {
-                    // Providers that cannot rename throw, each its own exception.
-                    false
+                    android.util.Log.w("PiruBackup", "Rename failed; trying a copy.", error)
+                    null
                 }
-                if (!renamed) {
+                val published = if (renamed != null) {
+                    renamed
+                } else {
+                    pending.add(partialUri)
+                    savePartials(context, tree, name, pending)
                     val target = child(context, treeUri, name)
                         ?: DocumentsContract.createDocument(resolver, folder(treeUri), MIME_TYPE, name)
                         ?: throw IllegalStateException("The folder refused a new file.")
-                    copy(context, source, target)
-                    DocumentsContract.deleteDocument(resolver, partial)
+                    incompleteTarget = target
+                    copy(context, File(sourcePath), target)
+                    incompleteTarget = null
+                    target
+                }
+                // The final is now complete. Cleanup failures must not turn it into a
+                // failed publication; keep failed deletions in the ledger for a retry.
+                try {
+                    prunePartials(context, tree, name, keep = 0)
+                    cleanupLegacyPartials(context, treeUri, name, published)
+                } catch (error: Exception) {
+                    android.util.Log.w("PiruBackup", "Partial cleanup failed.", error)
                 }
                 null
             } catch (error: Exception) {
+                incompleteTarget?.let { deleteChecked(context, it) }
                 error.localizedMessage ?: error.toString()
             }
+        }
+
+        // Persist actual URIs in creation order: provider names and directory visibility
+        // are not reliable identifiers, and process restarts must not reset retention.
+        private fun completePartials(context: Context, tree: String, name: String): MutableList<String> =
+            (context.getSharedPreferences("piru-backup-partials", Context.MODE_PRIVATE)
+                .getString(tree + "\n" + name, "") ?: "")
+                .split('\n').filter { it.isNotEmpty() }.distinct().toMutableList()
+
+        private fun savePartials(context: Context, tree: String, name: String, copies: List<String>) {
+            if (!context.getSharedPreferences("piru-backup-partials", Context.MODE_PRIVATE).edit()
+                .putString(tree + "\n" + name, copies.joinToString("\n")).commit()) {
+                throw IllegalStateException("The recovery-copy index could not be saved.")
+            }
+        }
+
+        private fun prunePartials(context: Context, tree: String, name: String, keep: Int) {
+            val copies = completePartials(context, tree, name)
+            for (uri in copies.dropLast(keep)) {
+                if (deleteChecked(context, Uri.parse(uri))) copies.remove(uri)
+            }
+            savePartials(context, tree, name, copies)
+        }
+
+        private fun deleteChecked(context: Context, uri: Uri): Boolean = try {
+            val deleted = DocumentsContract.deleteDocument(context.contentResolver, uri)
+            if (!deleted) android.util.Log.w("PiruBackup", "Provider refused to delete a backup document: $uri")
+            deleted
+        } catch (error: Exception) {
+            android.util.Log.w("PiruBackup", "Backup document deletion failed: $uri", error)
+            false
+        }
+
+        // Old versions did not record URIs. Reclaim recognizable leftovers only after
+        // a final backup is complete, never by assuming that an old partial is complete.
+        private fun cleanupLegacyPartials(context: Context, tree: Uri, name: String, published: Uri) {
+            val children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+                ?: throw IllegalStateException("The folder did not return a children URI.")
+            val columns = arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+            val stale = mutableListOf<Uri>()
+            val cursor = context.contentResolver.query(children, columns, null, null, null)
+                ?: throw IllegalStateException("The folder could not be listed for cleanup.")
+            cursor.use {
+                while (it.moveToNext()) {
+                    val label = it.getString(1) ?: continue
+                    val id = it.getString(0) ?: continue
+                    if (label.startsWith(name + ".") && label.endsWith(".partial")) {
+                        val uri = DocumentsContract.buildDocumentUriUsingTree(tree, id)
+                        if (uri != null && uri != published) stale.add(uri)
+                    }
+                }
+            }
+            for (uri in stale) deleteChecked(context, uri)
         }
 
         private fun picked(activity: ComponentActivity, uri: Uri?) {
@@ -144,15 +240,21 @@ class AndroidBackupFolder {
 
         private fun folder(tree: Uri): Uri =
             DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+                ?: throw IllegalStateException("The folder did not return a document URI.")
 
         /// The document called `name` directly inside the folder.
         private fun child(context: Context, tree: Uri, name: String): Uri? {
             val children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+                ?: throw IllegalStateException("The folder did not return a children URI.")
             val columns = arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME)
-            context.contentResolver.query(children, columns, null, null, null)?.use { cursor ->
+            val result = context.contentResolver.query(children, columns, null, null, null)
+                ?: throw IllegalStateException("The folder could not be listed.")
+            result.use { cursor ->
                 while (cursor.moveToNext()) {
                     if (cursor.getString(1) == name) {
-                        return DocumentsContract.buildDocumentUriUsingTree(tree, cursor.getString(0))
+                        val id = cursor.getString(0) ?: continue
+                        return DocumentsContract.buildDocumentUriUsingTree(tree, id)
+                            ?: throw IllegalStateException("The folder did not return a document URI.")
                     }
                 }
             }

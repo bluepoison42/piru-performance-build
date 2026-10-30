@@ -28,7 +28,7 @@ final class AdherenceModel {
     /// The displayed month's days that had something due and have already
     /// happened — the only ones a count can honestly be taken over.
     private var actionableDays: [DayAdherence] {
-        monthAdherence.filter { $0.status != .noData && $0.date <= .now }
+        monthAdherence.filter { $0.status != .noData && $0.date <= calendar.medicationDayLabel(for: .now) }
     }
 
     /// Scheduled doses taken so far this month, and how many were scheduled.
@@ -40,15 +40,16 @@ final class AdherenceModel {
         actionableDays.reduce(0) { $0 + $1.totalCount }
     }
 
-    func recompute(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date) {
-        recomputeMonth(entries: entries, dailyItems: dailyItems, month: month)
-        today = AdherenceCalculator.adherence(for: .now, entries: entries, dailyItems: dailyItems)
+    func recompute(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date, skipped: [AdherenceCalculator.SkippedSlotSnapshot]) {
+        recomputeMonth(entries: entries, dailyItems: dailyItems, month: month, skipped: skipped)
+        today = AdherenceCalculator.adherence(for: calendar.medicationDayLabel(for: .now), entries: entries, dailyItems: dailyItems, skipped: skipped)
     }
 
-    func recomputeMonth(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date) {
+    func recomputeMonth(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date, skipped: [AdherenceCalculator.SkippedSlotSnapshot]) {
+        let skippedByDay = Dictionary(grouping: skipped, by: \.dueDay)
         var entriesByDay: [Date: [DoseEntry]] = [:]
         for entry in entries {
-            let day = calendar.startOfDay(for: entry.timestamp)
+            let day = calendar.medicationDayLabel(for: entry.timestamp)
             entriesByDay[day, default: []].append(entry)
         }
 
@@ -60,7 +61,7 @@ final class AdherenceModel {
         for dayOffset in range {
             let date = calendar.date(byAdding: .day, value: dayOffset - 1, to: start)!
             let dayStart = calendar.startOfDay(for: date)
-            let adherence = AdherenceCalculator.adherence(for: date, entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems)
+            let adherence = AdherenceCalculator.adherence(for: date, entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems, skipped: skippedByDay[date] ?? [])
             data.append(adherence)
             byDay[dayStart] = adherence
         }

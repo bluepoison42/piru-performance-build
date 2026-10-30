@@ -25,3 +25,15 @@ Shared/Formatting/P3Color.swift
 Shared/Formatting/Oklch.swift
 Shared/Formatting/Oklch+DisplayP3.swift
 Shared/Formatting/DoseFormatting.swift
+
+Shared/CalendarSessionDay.swift
+
+Shared/MedSchedule.swift
+
+android/app/Sources/Piru/Android/Backup/FolderBackupPublication.swift
+
+Shared/InjectionSite.swift
+Piru/Utilities/AdherenceCalculator.swift
+Piru/Data/Services/RoutineOccurrenceService.swift
+Piru/Data/Persistence/DatabaseActor.swift
+Piru/Domain/DailyMedSnapshot.swift

@@ -85,6 +85,18 @@ enum PiruAndroidLaunch {
         let task = Task(name: "Finish launching") {
             AppUpdateCheck.shared.startLaunchCheck()
             await AppLaunch.finishLaunching(container: container)
+            let historyKey = "piru.medicationHistoryBoundary.v2"
+            let boundary = Calendar.sessionDayBoundaryHour
+            if UserDefaults.standard.object(forKey: historyKey) as? Int != boundary {
+                do {
+                    _ = try await RoutineOccurrenceService.repairHistoricalDays(container: container)
+                    UserDefaults.standard.set(boundary, forKey: historyKey)
+                    DoseLogService.shared.changed()
+                    DoseNotificationManager.syncMedReminders(in: container.mainContext)
+                } catch {
+                    print("Piru: medication-day history repair failed; will retry next launch.")
+                }
+            }
             finishedLaunching = true
         }
         launch = task

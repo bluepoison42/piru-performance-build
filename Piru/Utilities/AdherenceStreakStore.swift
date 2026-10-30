@@ -29,6 +29,7 @@ final class AdherenceStreakStore {
         let revision: Int
         let schedule: Int
         let day: Date
+        let boundary: Int
     }
 
     /// The streak for the store as of now — a cache hit when neither the dose
@@ -42,7 +43,8 @@ final class AdherenceStreakStore {
         let key = Key(
             revision: DoseLogService.shared.revision,
             schedule: Self.scheduleSignature(items),
-            day: Calendar.current.startOfDay(for: .now),
+            day: Calendar.current.medicationDayLabel(for: .now),
+            boundary: Calendar.sessionDayBoundaryHour,
         )
         if let streak, computedKey == key { return streak }
         if let inFlight, inFlight.key == key { return await inFlight.task.value }

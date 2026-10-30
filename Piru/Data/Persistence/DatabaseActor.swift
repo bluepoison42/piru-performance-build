@@ -46,6 +46,13 @@ enum AdherenceStreakFetcher {
         let entries = (try? context.fetch(entryDescriptor)) ?? []
         let items = (try? context.fetch(FetchDescriptor<DailyDoseItem>())) ?? []
 
+        let skippedRows = (try? context.fetch(FetchDescriptor<RoutineOccurrence>(
+            predicate: #Predicate { $0.dueDay >= cutoff && $0.stateRaw == "skipped" }
+        ))) ?? []
+        let skipped = skippedRows.map {
+            AdherenceCalculator.SkippedSlotSnapshot(substance: $0.substance, substanceUID: $0.substanceUID,
+                route: $0.route, dueDay: $0.dueDay, slotMinutes: $0.slotMinutes)
+        }
         let entrySnaps = entries.map {
             AdherenceCalculator.EntrySnapshot(
                 substance: $0.substance, identityKey: $0.identityKey,
@@ -56,13 +63,14 @@ enum AdherenceStreakFetcher {
         let itemSnaps = items.map {
             AdherenceCalculator.DailyItemSnapshot(
                 substance: $0.substance, identityKey: $0.identityKey, route: $0.route,
-                expectedPerDay: max(1, $0.reminderTimesMinutes.count), isAsNeeded: $0.isAsNeeded,
+                expectedPerDay: max(1, $0.reminderTimesMinutes.count), substanceUID: $0.substanceUID,
+                reminderTimesMinutes: $0.reminderTimesMinutes, isAsNeeded: $0.isAsNeeded,
                 startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays,
                 intervalDays: $0.frequencyIntervalDays, product: products[$0.substance.lowercased()],
             )
         }
         return AdherenceCalculator.currentStreak(
-            spanningDays: spanningDays, endingAt: end, entries: entrySnaps, items: itemSnaps,
+            spanningDays: spanningDays, endingAt: end, entries: entrySnaps, items: itemSnaps, skipped: skipped,
         )
     }
 }

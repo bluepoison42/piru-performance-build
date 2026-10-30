@@ -26,8 +26,8 @@ final class MyMedsModel {
             occurrences.map { (RoutineOccurrenceService.slotKey(for: $0), $0) },
             uniquingKeysWith: { _, last in last },
         )
-        for item in items where !item.isAsNeeded && AdherenceCalculator.isDue(item, on: .now) {
-            let times = item.reminderTimesMinutes.sorted()
+        for item in items where !item.isAsNeeded && AdherenceCalculator.isDue(item, on: Calendar.current.medicationDayLabel(for: .now)) {
+            let times = item.reminderTimesMinutes.sorted { Calendar.medicationClockMinutes($0) < Calendar.medicationClockMinutes($1) }
             let expected = max(1, times.count)
             for index in 0 ..< expected {
                 let slotMinutes = times.indices.contains(index) ? times[index] : nil
@@ -51,7 +51,7 @@ final class MyMedsModel {
                 ))
             }
         }
-        return slots.sorted { ($0.time ?? .max) < ($1.time ?? .max) }
+        return slots.sorted { ($0.time.map(Calendar.medicationClockMinutes) ?? .max) < ($1.time.map(Calendar.medicationClockMinutes) ?? .max) }
     }
 
     /// The past-year streak, from the shared ``AdherenceStreakStore`` — a cache
@@ -100,6 +100,8 @@ final class MyMedsInfoModel {
     func refresh(items: [DailyDoseItem], in context: ModelContext) {
         var hasher = Hasher()
         hasher.combine(DoseLogService.shared.revision)
+        hasher.combine(Calendar.sessionDayBoundaryHour)
+        hasher.combine(Calendar.current.medicationDayLabel(for: .now))
         for item in items {
             hasher.combine(item.persistentModelID)
             hasher.combine(item.isAsNeeded)

@@ -156,6 +156,9 @@ struct StagedDose: Identifiable, Equatable {
     /// Staged from the Daily routine card. Daily items keep their own surface,
     /// so they don't mint quick-log chips on commit.
     var isFromDailySet = false
+    /// Only an unmixed routine row can skip, and only on its staging day.
+    var routineSlotKeys: Set<String> = []
+    var routineDay: Date?
     /// Carried from `DailyDoseItem.isBackgroundMed` onto the committed entry.
     var isBackgroundMed = false
     /// Per-dose "had grapefruit" flag (Stage 4c). Only ever toggled for CYP3A4-heavy
@@ -586,12 +589,15 @@ final class DoseTrayModel {
     /// Stage a daily-set med from the My Meds pills' value snapshot. A med
     /// saved as a combination product stages the product: its amount is a
     /// count of units, or a volume in mL for a liquid.
-    func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color]) {
+    func stage(dailyMed item: DailyMedSnapshot, colorLookup: [String: P3Color], group: MedTimeGroup? = nil) {
         if let product = CustomSubstanceStore.shared.combination(named: item.substance) {
+            let alreadyStaged = staged.contains { $0.combinationName == product.name }
             stage(product: product, amount: item.amount, colorLookup: colorLookup)
             for index in staged.indices where staged[index].combinationName == product.name {
                 staged[index].isFromDailySet = true
                 staged[index].isBackgroundMed = item.isBackgroundMed
+                staged[index].routineSlotKeys = alreadyStaged ? [] : item.routineSlotKeys(in: group)
+                staged[index].routineDay = alreadyStaged ? nil : Calendar.current.medicationDayLabel(for: .now)
             }
             return
         }
@@ -604,6 +610,7 @@ final class DoseTrayModel {
             librarySubstance: SubstanceLibrary.lookup(item.substance.lowercased()),
             productName: item.productName,
             isFromDailySet: true,
+            routineSlotKeys: item.routineSlotKeys(in: group),
             isBackgroundMed: item.isBackgroundMed,
         )
     }
@@ -637,7 +644,7 @@ final class DoseTrayModel {
         for med in meds {
             let units = Self.chipUnits(for: med)
             guard !units.keys.allSatisfy({ stagedCount(of: $0) > 0 }) else { continue }
-            stage(dailyMed: med, colorLookup: colorLookup)
+            stage(dailyMed: med, colorLookup: colorLookup, group: MedTimeGroup(slug: pillID))
             for (unit, count) in units {
                 contribution[unit, default: 0] += count
             }
@@ -748,6 +755,7 @@ final class DoseTrayModel {
         productName: String? = nil,
         saltForm: String? = nil,
         isFromDailySet: Bool = false,
+        routineSlotKeys: Set<String> = [],
         isBackgroundMed: Bool = false,
         volumeML: Double? = nil,
         abv: Double? = nil,
@@ -763,6 +771,9 @@ final class DoseTrayModel {
             } else {
                 staged[index].components.append(.init(amount: amount, count: count))
             }
+            // A merged row no longer identifies one routine dose.
+            staged[index].routineSlotKeys = []
+            staged[index].routineDay = nil
             incrementTick += 1
         } else {
             var dose = StagedDose(
@@ -778,6 +789,8 @@ final class DoseTrayModel {
                 isFromDailySet: isFromDailySet,
                 isBackgroundMed: isBackgroundMed,
             )
+            dose.routineSlotKeys = routineSlotKeys
+            dose.routineDay = isFromDailySet ? Calendar.current.medicationDayLabel(for: .now) : nil
             dose.components = [.init(amount: amount, count: count)]
             dose.volumeML = volumeML
             dose.abv = abv
@@ -1076,6 +1089,22 @@ final class DoseTrayModel {
         expandedItemIDs.insert(draft.id)
         stageTick += 1
         syncEmptiness()
+    }
+
+    /// Revalidate the exact menu target; a stale menu must not skip another slot.
+    @discardableResult
+    func skipToday(_ item: StagedDose, slotKey: String, in context: ModelContext, now: Date = .now) -> Bool {
+        guard let live = staged.first(where: { $0.id == item.id }),
+              live.routineDay == Calendar.current.medicationDayLabel(for: now),
+              live.routineSlotKeys.contains(slotKey),
+              RoutineOccurrenceService.skipToday(slotKeys: [slotKey], in: context, now: now)
+        else { return false }
+        if let product = live.combinationName {
+            removeCombination(product)
+        } else {
+            remove(live)
+        }
+        return true
     }
 
     func remove(_ item: StagedDose) {

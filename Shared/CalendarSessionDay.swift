@@ -32,16 +32,42 @@ nonisolated extension Calendar {
     /// the configured boundary hour, returns the boundary hour on the previous
     /// calendar day; otherwise returns the boundary hour on the same day.
     func sessionDayStart(for date: Date) -> Date {
-        let cutoff = Self.sessionDayBoundaryHour
-        let hour = component(.hour, from: date)
         let midnight = startOfDay(for: date)
-        let cutoffToday = midnight.addingTimeInterval(TimeInterval(cutoff) * 3_600)
-        return hour < cutoff ? cutoffToday.addingTimeInterval(-86_400) : cutoffToday
+        let boundary = medicationDayStart(forLabel: midnight)
+        if date >= boundary { return boundary }
+        let previous = self.date(byAdding: .day, value: -1, to: midnight) ?? midnight
+        return medicationDayStart(forLabel: previous)
     }
 
-    /// End of the session day containing `date` (start of the next session day).
+    /// End at the next local boundary, including daylight-saving transitions.
     func sessionDayEnd(for date: Date) -> Date {
-        sessionDayStart(for: date).addingTimeInterval(86_400)
+        let label = medicationDayLabel(for: date)
+        let next = self.date(byAdding: .day, value: 1, to: label) ?? label.addingTimeInterval(86_400)
+        return medicationDayStart(forLabel: next)
+    }
+
+    /// Midnight label for the medication day containing a real timestamp.
+    func medicationDayLabel(for date: Date) -> Date {
+        startOfDay(for: sessionDayStart(for: date))
+    }
+
+    /// A calendar cell is a day label, not an event at midnight.
+    func medicationDayStart(forLabel date: Date) -> Date {
+        self.date(bySettingHour: Self.sessionDayBoundaryHour, minute: 0, second: 0,
+                  of: startOfDay(for: date)) ?? startOfDay(for: date)
+    }
+
+    /// Local clock minutes ordered from the configured day boundary.
+    static func medicationClockMinutes(_ minutes: Int) -> Int {
+        minutes < sessionDayBoundaryHour * 60 ? minutes + 1440 : minutes
+    }
+
+    /// A 02:00 slot on Monday's medication day fires on Tuesday morning.
+    func medicationDayMoment(minutes: Int, onLabel label: Date) -> Date? {
+        let day = startOfDay(for: label)
+        let clockDay = minutes < Self.sessionDayBoundaryHour * 60
+            ? (date(byAdding: .day, value: 1, to: day) ?? day) : day
+        return date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: clockDay)
     }
 
     /// `shortWeekdaySymbols` rotated to start at `firstWeekday`.

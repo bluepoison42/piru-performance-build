@@ -284,12 +284,12 @@ struct DueNowSlot: Identifiable {
     static func derive(items: [DailyDoseItem], todayEntries: [DoseEntry], now: Date = .now) -> [DueNowSlot] {
         guard !items.isEmpty else { return [] }
         let calendar = Calendar.current
-        let nowMinutes = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
+        let nowMinutes = Calendar.medicationClockMinutes(calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now))
 
         var slots: [DueNowSlot] = []
-        for item in items where !item.isAsNeeded && AdherenceCalculator.isDue(item, on: now) {
+        for item in items where !item.isAsNeeded && AdherenceCalculator.isDue(item, on: Calendar.current.medicationDayLabel(for: now)) {
             let taken = todayEntries.count { AdherenceCalculator.entryMatches(entry: $0, item: item) }
-            let times = item.reminderTimesMinutes.sorted()
+            let times = item.reminderTimesMinutes.sorted { Calendar.medicationClockMinutes($0) < Calendar.medicationClockMinutes($1) }
             if times.isEmpty {
                 guard taken == 0 else { continue }
                 slots.append(DueNowSlot(id: "\(item.identityKey)|any", item: DailyMedSnapshot(item), slotMinutes: nil))
@@ -298,11 +298,11 @@ struct DueNowSlot: Identifiable {
             // The earliest uncovered slot, and only if its window has opened.
             guard taken < times.count else { continue }
             let slot = times[taken]
-            guard slot <= nowMinutes + dueSoonLeadMinutes else { continue }
+            guard Calendar.medicationClockMinutes(slot) <= nowMinutes + dueSoonLeadMinutes else { continue }
             slots.append(DueNowSlot(id: "\(item.identityKey)|\(slot)", item: DailyMedSnapshot(item), slotMinutes: slot))
         }
         return slots.sorted {
-            ($0.slotMinutes ?? .max, $0.item.sortOrder) < ($1.slotMinutes ?? .max, $1.item.sortOrder)
+            ($0.slotMinutes.map(Calendar.medicationClockMinutes) ?? .max, $0.item.sortOrder) < ($1.slotMinutes.map(Calendar.medicationClockMinutes) ?? .max, $1.item.sortOrder)
         }
     }
 }
@@ -466,7 +466,7 @@ final class QuickLogContentModel {
             // dose satisfies a Concerta card/item, not a plain Methylphenidate one.
             let identity = entry.identityKey
             if displayed.contains(identity), mostRecentEntry[identity] == nil { mostRecentEntry[identity] = entry }
-            if stillToday, Calendar.current.isDateInToday(entry.timestamp) {
+            if stillToday, Calendar.current.medicationDayLabel(for: entry.timestamp) == Calendar.current.medicationDayLabel(for: .now) {
                 todayEntries.append(entry)
             } else {
                 stillToday = false

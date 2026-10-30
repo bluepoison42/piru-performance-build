@@ -16,13 +16,14 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:label="${PRODUCT_NAME}"
+        android:label="Piru Perf Test"
         android:name=".AndroidAppMain"
         android:supportsRtl="true"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_rules"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher">
+        <profileable android:shell="true" tools:targetApi="29" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -39,25 +40,8 @@
                  Unverified, Android hands every tap to the browser. Exact paths, so the app claims no
                  other page under /piru; the query is not part of the match. The trailing-slash forms
                  are the ones DeepLink.decodeWebLink also reads. -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" />
-                <data android:host="kagerou.glass" />
-                <data android:path="/piru/log" />
-                <data android:path="/piru/log/" />
-                <data android:path="/piru/open" />
-                <data android:path="/piru/open/" />
-            </intent-filter>
             <!-- piru:// links (DeepLink.swift), read by ContentView's onOpenURL. singleTop hands a link
                  to the running activity through onNewIntent; Main.kt forwards the cases it cannot. -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="piru" />
-            </intent-filter>
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
         <!-- The launcher shortcut that writes a problem report (Skip/AndroidDiagnostics.kt). -->

@@ -6,7 +6,7 @@
 set -e
 TOOLS="${0:A:h}"
 . "$TOOLS/env.sh"
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"
 CONFIG="${PIRU_CONFIG:-debug}"
 # The app depends on the included skipstone build's Piru project, which packages
 # <its build dir>/jni-libs; build-app.sh compiled into the root build's copy. A release
@@ -26,7 +26,7 @@ fi
 cd "$PIRU_ANDROID/stage/Android"
 LOG="$PIRU_ANDROID/build/gradle.log"
 SKIP_BRIDGE_ANDROID_BUILD_DISABLED=1 SKIP_BRIDGE_ROBOLECTRIC_BUILD_DISABLED=1 \
-    gradle "assemble${(C)${PIRU_CONFIG:-debug}}" --console=plain > "$LOG" 2>&1 || { grep -E '^e: |What went wrong' -A4 "$LOG" | head -40; exit 1; }
+    gradle ":app:assemble${(C)${PIRU_CONFIG:-debug}}" --console=plain > "$LOG" 2>&1 || { grep -E '^e: |What went wrong' -A4 "$LOG" | head -40; exit 1; }
 OUT="$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/$CONFIG"
 # The APK ships arm64-v8a alone, with libPiru.so in it: an ABI directory without libPiru.so
 # would let a device of that ABI install an app that cannot load.

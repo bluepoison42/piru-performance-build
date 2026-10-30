@@ -16,7 +16,7 @@
 set -e
 TOOLS="${0:A:h}"
 . "$TOOLS/env.sh"
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"
 python3 "$TOOLS/stage.py"
 cd "$PIRU_ANDROID/stage"
 LOG="$PIRU_ANDROID/build/app.log"
@@ -26,8 +26,9 @@ KOTLIN="$PIRU_ANDROID/stage/.build/plugins/outputs/stage/Piru/destination/skipst
 # Resolve first: after stage.py purges a moved vendored package, the build alone does not
 # check it out again, and would transpile nothing new.
 xcrun swift package resolve --package-path . > "$PIRU_ANDROID/build/transpile.log" 2>&1
+python3 "$TOOLS/../../ci/perf/verify_pins.py" "$PIRU_ANDROID/stage" "$TOOLS/stage.py" || exit 1
 env -u SKIP_BRIDGE xcrun swift build --triple arm64-apple-ios --sdk "$(xcrun --sdk iphoneos --show-sdk-path)" \
-    --package-path . --build-system native >> "$PIRU_ANDROID/build/transpile.log" 2>&1
+    --package-path . --build-system native --jobs 4 >> "$PIRU_ANDROID/build/transpile.log" 2>&1
 if grep -q "because of missing inputs" "$PIRU_ANDROID/build/transpile.log"; then
     echo "transpile could not read its sources; see $PIRU_ANDROID/build/transpile.log"
     STATUS=1

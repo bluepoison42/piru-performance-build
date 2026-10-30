@@ -417,7 +417,7 @@ struct QuickLogView: View {
         guard !items.isEmpty else { return }
         withAnimation(.snappy) {
             for item in items where stagedQuantity(item) == 0 {
-                stageDailyItem(item)
+                tray.stage(dailyMed: DailyMedSnapshot(item), colorLookup: content.cachedColorLookup, group: MedTimeGroup(slug: name))
             }
         }
     }

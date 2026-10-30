@@ -293,6 +293,7 @@ nonisolated struct PsyLogIngestion: Codable {
     var substanceName: String?
     var customUnitId: Int?
     var dose: Double?
+    var isUnknownDose: Bool
     var time: Int64
     var administrationRoute: String
     var notes: String
@@ -306,6 +307,7 @@ nonisolated struct PsyLogIngestion: Codable {
     private enum CodingKeys: String, CodingKey {
         case substanceName
         case dose
+        case isUnknownDose
         case time
         case administrationRoute
         case notes
@@ -321,10 +323,11 @@ nonisolated struct PsyLogIngestion: Codable {
         case isHiddenInTimeline
     }
 
-    init(substanceName: String, dose: Double, time: Int64, route: String, notes: String, units: String, location: PsyLogLocation? = nil) {
+    init(substanceName: String, dose: Double, time: Int64, route: String, notes: String, units: String, location: PsyLogLocation? = nil, isUnknownDose: Bool = false) {
         self.substanceName = substanceName
         self.customUnitId = nil
         self.dose = dose
+        self.isUnknownDose = isUnknownDose
         self.time = time
         self.administrationRoute = route
         self.notes = notes
@@ -337,6 +340,7 @@ nonisolated struct PsyLogIngestion: Codable {
         substanceName = try c.decodeIfPresent(String.self, forKey: .substanceName)
         customUnitId = try c.decodeIfPresent(Int.self, forKey: .customUnitId)
         dose = try c.decodeIfPresent(Double.self, forKey: .dose)
+        isUnknownDose = try c.decodeIfPresent(Bool.self, forKey: .isUnknownDose) ?? false
         time = try c.decode(Int64.self, forKey: .time)
         administrationRoute = try c.decodeIfPresent(String.self, forKey: .administrationRoute) ?? "ORAL"
         notes = try c.decodeIfPresent(String.self, forKey: .notes) ?? ""
@@ -354,6 +358,7 @@ nonisolated struct PsyLogIngestion: Codable {
         try c.encode(false, forKey: .isDoseAnEstimate)
         try c.encodeNil(forKey: .stomachFullness)
         try c.encode(dose, forKey: .dose)
+        if isUnknownDose { try c.encode(true, forKey: .isUnknownDose) }
         try c.encodeNil(forKey: .endTime)
         try c.encode(time, forKey: .time)
         try c.encode(administrationRoute, forKey: .administrationRoute)
@@ -465,6 +470,7 @@ extension DataExportImport {
                     route: entry.route.psylogName,
                     notes: noteText,
                     units: entry.unit,
+                    isUnknownDose: entry.isUnknownDose,
                 )
             }
             let startMs = (group.doses.first?.timestamp ?? group.start).msSince1970
@@ -512,14 +518,14 @@ extension DataExportImport {
         // natural id, so the key is its content: substance, time, dose, unit, route.
         let existingDoses = (try? context.fetch(FetchDescriptor<DoseEntry>())) ?? []
         var seenDoseKeys = Set(existingDoses.map {
-            doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.amount, unit: $0.unit, route: $0.route)
+            doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.isUnknownDose ? 0 : $0.amount, unit: $0.unit, route: $0.route) + ($0.isUnknownDose ? "|unknown" : "|known")
         })
         // Stored doses on route Other, keyed as if the file's dose were Other too.
         // An earlier build filed PW's SMOKED as Other; when the same file comes
         // in again, its dose names the real route, so the stored copy takes that
         // route instead of a second copy landing beside it.
         var unroutedDoses = Dictionary(grouping: existingDoses.filter { $0.route == .other }) {
-            doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.amount, unit: $0.unit, route: .other)
+            doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.isUnknownDose ? 0 : $0.amount, unit: $0.unit, route: .other) + ($0.isUnknownDose ? "|unknown" : "|known")
         }
 
         for experience in file.experiences {
@@ -535,8 +541,11 @@ extension DataExportImport {
                     continue
                 }
 
-                // Skip entries with missing or zero dose
-                guard let dose = ingestion.dose, dose > 0 else { continue }
+                // Zero is meaningful only when the file explicitly marks the dose unknown.
+                guard let rawDose = ingestion.dose,
+                      rawDose > 0 || (rawDose == 0 && ingestion.isUnknownDose)
+                else { continue }
+                let dose = ingestion.isUnknownDose ? 0 : rawDose
 
                 // The shared parser, never a table of this importer's own: PW
                 // writes SMOKED beside INHALED (and PsyLog files carry the same
@@ -544,10 +553,10 @@ extension DataExportImport {
                 // such dose as Other.
                 let route = RouteOfAdministration.from(string: ingestion.administrationRoute)
                 let timestamp = Date(ms: ingestion.time)
-                let key = doseDedupKey(substance: name, timestamp: timestamp, amount: dose, unit: ingestion.units, route: route)
+                let key = doseDedupKey(substance: name, timestamp: timestamp, amount: dose, unit: ingestion.units, route: route) + (ingestion.isUnknownDose ? "|unknown" : "|known")
                 guard seenDoseKeys.insert(key).inserted else { continue }
                 if route != .other {
-                    let unroutedKey = doseDedupKey(substance: name, timestamp: timestamp, amount: dose, unit: ingestion.units, route: .other)
+                    let unroutedKey = doseDedupKey(substance: name, timestamp: timestamp, amount: dose, unit: ingestion.units, route: .other) + (ingestion.isUnknownDose ? "|unknown" : "|known")
                     if let stored = unroutedDoses[unroutedKey]?.popLast() {
                         stored.route = route
                         continue
@@ -571,6 +580,7 @@ extension DataExportImport {
                     locationName: location?.name,
                     latitude: location?.latitude,
                     longitude: location?.longitude,
+                    isUnknownDose: ingestion.isUnknownDose,
                 )
                 context.insert(entry)
                 sessionDoses.append(entry)

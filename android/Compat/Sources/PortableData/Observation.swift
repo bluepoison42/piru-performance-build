@@ -25,7 +25,7 @@ public struct ModelObservationRegistrar: Sendable {
     public init() {}
 
     public func access<Subject: Observable>(_ subject: Subject, keyPath: KeyPath<Subject, some Any>) {
-        slot.bridge(making: true)?.access(subject, keyPath: keyPath)
+        slot.reader()?.access(subject, keyPath: keyPath)
         native.access(subject, keyPath: keyPath)
     }
 
@@ -35,6 +35,10 @@ public struct ModelObservationRegistrar: Sendable {
     }
 
     public func didSet<Subject: Observable>(_ subject: Subject, keyPath: KeyPath<Subject, some Any>) {
+        if let model = subject as? any PersistentModel {
+            // Discard reads made by synchronous willSet observers, after the assignment.
+            model._$backing.context?.noteMutation(of: model)
+        }
         slot.bridge(making: false)?.didSet(subject, keyPath: keyPath)
         native.didSet(subject, keyPath: keyPath)
     }
@@ -100,6 +104,13 @@ func isMainThread() -> Bool {
 /// the slot needs no lock.
 private final class BridgeSlot: @unchecked Sendable {
     private var made: (any ModelObservationBridge)?
+
+    /// The bridge a main-thread read reports to; none during PortableData's own passes,
+    /// whose reads a view does not depend on.
+    func reader() -> (any ModelObservationBridge)? {
+        guard isMainThread(), ModelObservation.makesBridges else { return nil }
+        return bridge(making: true)
+    }
 
     /// The bridge a main-thread report goes to, making it when `making` and nothing holds
     /// creation off; `nil` on any other thread.

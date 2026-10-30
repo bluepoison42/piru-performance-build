@@ -63,6 +63,31 @@ struct DayAdherence: Identifiable {
 }
 
 enum AdherenceCalculator {
+    nonisolated struct SkippedSlotSnapshot: Sendable {
+        let substance: String
+        let substanceUID: String?
+        let route: RouteOfAdministration
+        let dueDay: Date
+        let slotMinutes: Int?
+    }
+
+    static func skippedSnapshots(_ occurrences: [RoutineOccurrence]) -> [SkippedSlotSnapshot] {
+        occurrences.filter { $0.state == .skipped }.map {
+            SkippedSlotSnapshot(substance: $0.substance, substanceUID: $0.substanceUID,
+                route: $0.route, dueDay: $0.dueDay, slotMinutes: $0.slotMinutes)
+        }
+    }
+
+    nonisolated static func skippedSlots(
+        on date: Date, substance: String, substanceUID: String?, route: RouteOfAdministration,
+        skipped: [SkippedSlotSnapshot]
+    ) -> Set<Int?> {
+        Set(skipped.filter {
+            $0.dueDay == date && $0.route == route && MedSchedule.identityMatches(
+                keyA: $0.substanceUID, nameA: $0.substance, keyB: substanceUID, nameB: substance)
+        }.map(\.slotMinutes))
+    }
+
     /// A dose satisfies a med when the substance identity AND the route match
     /// (Specs/meds-reminders-redesign.md, boundary semantics) — the same
     /// substance by another route is deliberately a plain journal entry, not
@@ -113,10 +138,11 @@ enum AdherenceCalculator {
         for date: Date,
         entries: [DoseEntry],
         dailyItems: [DailyDoseItem],
+        skipped: [SkippedSlotSnapshot] = [],
     ) -> DayAdherence {
         let calendar = Calendar.current
-        let dayStart = calendar.startOfDay(for: date)
-        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart.addingTimeInterval(86_400)
+        let dayStart = calendar.medicationDayStart(forLabel: date)
+        let dayEnd = calendar.sessionDayEnd(for: dayStart)
         let dayEntries = entries.filter { $0.timestamp >= dayStart && $0.timestamp < dayEnd }
 
         // Filter to only items due on this date. As-needed (PRN) meds carry
@@ -140,26 +166,32 @@ enum AdherenceCalculator {
         let products = CustomSubstanceStore.shared.productMeds
         for item in dueItems {
             // A multi-time med expects one dose slot per reminder time.
-            let itemExpected = max(1, item.reminderTimesMinutes.count)
+            let excluded = skippedSlots(on: date, substance: item.substance,
+                substanceUID: item.substanceUID, route: item.route, skipped: skipped)
+            let times = item.reminderTimesMinutes.filter { !excluded.contains($0) }
+            let itemExpected = item.reminderTimesMinutes.isEmpty
+                ? (excluded.contains(nil) ? 0 : 1) : times.count
+            guard itemExpected > 0 else { continue }
             let hits = dayEntries.count { entryMatches(entry: $0, item: item, products: products) }
             let itemTaken = min(hits, itemExpected)
             itemResults.append(ItemAdherence(item: item, takenCount: itemTaken, totalCount: itemExpected))
             matched += itemTaken
             expected += itemExpected
 
-            let times = item.reminderTimesMinutes
             guard !times.isEmpty else { splittable = false; continue }
-            let morningSlots = times.count { $0 < noonMinutes }
+            let morningSlots = times.count { $0 >= Calendar.sessionDayBoundaryHour * 60 && $0 < noonMinutes }
             let eveningSlots = times.count - morningSlots
             let itemDoses = dayEntries.filter { entryMatches(entry: $0, item: item, products: products) }
-            let morningHits = itemDoses.count { minutesOfDay($0.timestamp, calendar: calendar) < noonMinutes }
+            let morningHits = itemDoses.count { let minutes = minutesOfDay($0.timestamp, calendar: calendar); return minutes >= Calendar.sessionDayBoundaryHour * 60 && minutes < noonMinutes }
             morningTotal += morningSlots
             eveningTotal += eveningSlots
             morningTaken += min(morningHits, morningSlots)
             eveningTaken += min(itemDoses.count - morningHits, eveningSlots)
         }
 
-        let status: AdherenceStatus = if matched == expected {
+        let status: AdherenceStatus = if expected == 0 {
+            .noData
+        } else if matched == expected {
             .complete
         } else if matched > 0 {
             .partial
@@ -202,7 +234,7 @@ enum AdherenceCalculator {
     /// (and `nonisolated`) so the off-main year scan shares the exact same logic.
     nonisolated static func streak(fromDays days: [(date: Date, status: AdherenceStatus)]) -> Int {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: .now)
+        let today = calendar.medicationDayLabel(for: .now)
 
         // Filter to only days that had items due (skip .noData days)
         let actionable = days
@@ -267,6 +299,8 @@ enum AdherenceCalculator {
         let route: RouteOfAdministration
         /// `max(1, reminderTimesMinutes.count)` — dose slots expected per due day.
         let expectedPerDay: Int
+        var substanceUID: String? = nil
+        var reminderTimesMinutes: [Int] = []
         let isAsNeeded: Bool
         let startDate: Date
         let frequency: DoseFrequency
@@ -281,18 +315,18 @@ enum AdherenceCalculator {
     /// Per-day adherence **status** over Sendable snapshots — all the streak
     /// needs. Mirrors ``adherence(for:entries:dailyItems:)``'s status derivation
     /// without materializing the non-`Sendable` `DayAdherence`/`ItemAdherence`.
-    nonisolated static func dayStatus(for date: Date, entries: [EntrySnapshot], items: [DailyItemSnapshot]) -> AdherenceStatus {
+    nonisolated static func dayStatus(for date: Date, entries: [EntrySnapshot], items: [DailyItemSnapshot], skipped: [SkippedSlotSnapshot] = []) -> AdherenceStatus {
         let calendar = Calendar.current
-        let dayStart = calendar.startOfDay(for: date)
-        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart.addingTimeInterval(86_400)
+        let dayStart = calendar.medicationDayStart(forLabel: date)
+        let dayEnd = calendar.sessionDayEnd(for: dayStart)
         let dayEntries = entries.filter { $0.timestamp >= dayStart && $0.timestamp < dayEnd }
-        return dayStatus(for: date, dayEntries: dayEntries, items: items)
+        return dayStatus(for: date, dayEntries: dayEntries, items: items, skipped: skipped)
     }
 
     /// ``dayStatus(for:entries:items:)`` over entries already narrowed to the
     /// day — the year walk buckets once and calls this per day, instead of
     /// scanning the whole year's entries 366 times.
-    nonisolated static func dayStatus(for date: Date, dayEntries: [EntrySnapshot], items: [DailyItemSnapshot]) -> AdherenceStatus {
+    nonisolated static func dayStatus(for date: Date, dayEntries: [EntrySnapshot], items: [DailyItemSnapshot], skipped: [SkippedSlotSnapshot] = []) -> AdherenceStatus {
         let dueItems = items.filter {
             !$0.isAsNeeded && isDue(
                 startDate: $0.startDate, frequency: $0.frequency, frequencyDays: $0.frequencyDays,
@@ -318,10 +352,16 @@ enum AdherenceCalculator {
             // Clamped here, not just at snapshot construction — a zero
             // expectation would otherwise make `matched == expected` read as
             // a false `.complete`.
-            let itemExpected = max(1, item.expectedPerDay)
+            let excluded = skippedSlots(on: date, substance: item.substance,
+                substanceUID: item.substanceUID, route: item.route, skipped: skipped)
+            let skippedCount = item.reminderTimesMinutes.isEmpty
+                ? (excluded.contains(nil) ? 1 : 0)
+                : item.reminderTimesMinutes.filter { excluded.contains($0) }.count
+            let itemExpected = max(0, max(1, item.expectedPerDay) - skippedCount)
             matched += min(hits, itemExpected)
             expected += itemExpected
         }
+        if expected == 0 { return .noData }
         if matched == expected { return .complete }
         return matched > 0 ? .partial : .missed
     }
@@ -333,18 +373,21 @@ enum AdherenceCalculator {
     /// ``currentStreak(adherenceData:)``, but without touching `@Model`s.
     nonisolated static func currentStreak(
         spanningDays dayCount: Int,
-        endingAt now: Date,
+        endingAt timestamp: Date,
         entries: [EntrySnapshot],
         items: [DailyItemSnapshot],
+        skipped: [SkippedSlotSnapshot] = [],
     ) -> Int {
         let calendar = Calendar.current
+        let now = calendar.medicationDayLabel(for: timestamp)
         guard let start = calendar.date(byAdding: .day, value: -dayCount, to: now) else { return 0 }
-        let entriesByDay = Dictionary(grouping: entries) { calendar.startOfDay(for: $0.timestamp) }
+        let entriesByDay = Dictionary(grouping: entries) { calendar.medicationDayLabel(for: $0.timestamp) }
+        let skippedByDay = Dictionary(grouping: skipped, by: \.dueDay)
         var days: [(date: Date, status: AdherenceStatus)] = []
         var day = start
         while day <= now {
             let dayEntries = entriesByDay[calendar.startOfDay(for: day)] ?? []
-            days.append((date: day, status: dayStatus(for: day, dayEntries: dayEntries, items: items)))
+            days.append((date: day, status: dayStatus(for: day, dayEntries: dayEntries, items: items, skipped: skippedByDay[day] ?? [])))
             guard let next = calendar.date(byAdding: .day, value: 1, to: day) else { break }
             day = next
         }

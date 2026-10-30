@@ -7,10 +7,11 @@ set -e
 
 # Host tools this script does not fetch. Versions are the ones the pipeline is built and
 # tested with; the skip CLI must match the vendored skip/skipstone tag (1.9.13).
+export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"
 missing=()
 [[ "$(skip version 2>/dev/null)" == *"1.9.13"* ]] || missing+=("skip 1.9.13 (brew install skiptools/skip/skip)")
 command -v gradle > /dev/null || missing+=("gradle 9.x (brew install gradle)")
-/usr/libexec/java_home -v 21 > /dev/null 2>&1 || missing+=("JDK 21 (brew install --cask temurin@21)")
+[[ -x "${JAVA_HOME}/bin/java" ]] || missing+=("JDK 21 (brew install --cask temurin@21)")
 command -v rsvg-convert > /dev/null || missing+=("rsvg-convert (brew install librsvg)")
 python3 -c "import PIL" 2> /dev/null || missing+=("Pillow (pip install pillow)")
 command -v trash > /dev/null || missing+=("trash (brew install trash)")
@@ -47,7 +48,6 @@ if [[ ! -d "$ANDROID_HOME/cmdline-tools/latest" ]]; then
   unzip -qo cmdline-tools.zip -d "$ANDROID_HOME/cmdline-tools"
   mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
 fi
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" \
   platform-tools emulator "system-images;android-36;google_apis;arm64-v8a" > /dev/null
 echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd -n piru-spike \

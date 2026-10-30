@@ -178,6 +178,7 @@ public final class ModelContext: @unchecked Sendable {
     /// registry is dropped when the entity is next read.
     private var members: [String: [PersistentIdentifier]] = [:]
     private var loaded: Set<String> = []
+    private var backupReadFailures: [LoadFailure] = []
     private var inserted: Set<PersistentIdentifier> = []
     private var deleted: [PersistentIdentifier: Entry] = [:]
     /// Models whose accessors reported a write since the last save.
@@ -185,7 +186,12 @@ public final class ModelContext: @unchecked Sendable {
     /// The store generation this context has read up to.
     private var generation = 0
     /// Advances whenever what a fetch could return may have changed; see ``currentRevision()``.
-    private var revision = 0
+    private var revision = 0 {
+        didSet { sortedReads.removeAll(keepingCapacity: true) }
+    }
+    // Keep ascending, descending and unsorted reads from evicting each other
+    // between tabs. Only stored attributes qualify; computed keys may change.
+    private var sortedReads: [String: [(revision: Int, order: Any, result: Any)]] = [:]
     private var autosaveScheduled = false
     /// Set while the context itself writes into models (loading, applying another context's
     /// changes, rolling back), so the accessors' reports stand aside.
@@ -679,12 +685,30 @@ public final class ModelContext: @unchecked Sendable {
     private func fetchModels<T: PersistentModel>(_ descriptor: FetchDescriptor<T>) throws -> [T] {
         try refresh()
         try ensureLoaded(T.self)
-        var results = models(T._$entityName).compactMap { $0 as? T }
-        if let predicate = descriptor.predicate {
-            results = try results.filter { try predicate.evaluate($0) }
+        let entity = T._$entityName
+        let attributes = EntityDescription.of(T.self).attributePaths
+        let cacheable = descriptor.predicate == nil && reportsEveryWrite && descriptor.sortBy.allSatisfy {
+            $0.keyPath.map { attributes.contains($0) } ?? false
         }
-        if !descriptor.sortBy.isEmpty {
-            results.sort(using: descriptor.sortBy)
+        var results: [T]
+        if cacheable, let cached = sortedReads[entity]?.first(where: {
+            $0.revision == revision && ($0.order as? [SortDescriptor<T>]) == descriptor.sortBy
+        }),
+           let rows = cached.result as? [T] {
+            results = rows
+        } else {
+            results = models(entity).compactMap { $0 as? T }
+            if let predicate = descriptor.predicate {
+                results = try results.filter { try predicate.evaluate($0) }
+            }
+            if !descriptor.sortBy.isEmpty {
+                results.sort(using: descriptor.sortBy)
+            }
+            if cacheable {
+                var plans = sortedReads[entity] ?? []
+                plans.append((revision, descriptor.sortBy, results))
+                sortedReads[entity] = Array(plans.suffix(3))
+            }
         }
         let start = min(descriptor.fetchOffset ?? 0, results.count)
         let end = descriptor.fetchLimit.map { min(start + $0, results.count) } ?? results.count
@@ -805,6 +829,17 @@ public final class ModelContext: @unchecked Sendable {
 
     // MARK: Loading
 
+    // Called only on a fresh context dedicated to this complete backup read.
+    func readAllForBackup() throws -> [LoadFailure] {
+        for type in container.schema.types { try load(type) }
+        return backupReadFailures
+    }
+
+    private func reportLoadFailure(_ failure: LoadFailure) {
+        backupReadFailures.append(failure)
+        container.report(failure)
+    }
+
     private func load(_ type: any PersistentModel.Type) throws {
         func open<T: PersistentModel>(_: T.Type) throws {
             try ensureLoaded(T.self)
@@ -870,7 +905,7 @@ public final class ModelContext: @unchecked Sendable {
             model._$backing.context = self
             return (Entry(model, committed: fields), fields)
         } catch {
-            container.report(LoadFailure(entity: row.entity, primaryKey: row.primaryKey, reason: String(describing: error)))
+            reportLoadFailure(LoadFailure(entity: row.entity, primaryKey: row.primaryKey, reason: String(describing: error)))
             return nil
         }
     }
@@ -926,7 +961,7 @@ public final class ModelContext: @unchecked Sendable {
         do {
             try entry.model._$restore(from: Snapshot(identifier: id, fields: fields), keys: keys)
         } catch {
-            container.report(LoadFailure(entity: id.entityName, primaryKey: id.primaryKey, reason: String(describing: error)))
+            reportLoadFailure(LoadFailure(entity: id.entityName, primaryKey: id.primaryKey, reason: String(describing: error)))
         }
     }
 

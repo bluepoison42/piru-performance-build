@@ -1,7 +1,9 @@
+import SwiftData
 import SwiftUI
 
 /// Day-grouping, timeline and adherence-calendar preferences.
 struct JournalSettingsView: View {
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("stackRedoses", store: UserDefaults(suiteName: AppIdentity.appGroup)) private var stackRedoses = true
     @AppStorage(LaneModeDefaults.enabledKey, store: UserDefaults(suiteName: LaneModeDefaults.suite)) private var stackedLanesEnabled = LaneModeDefaults.enabledDefault
     @AppStorage(LaneModeDefaults.thresholdKey, store: UserDefaults(suiteName: LaneModeDefaults.suite)) private var laneModeThreshold = LaneModeDefaults.thresholdDefault
@@ -90,6 +92,13 @@ struct JournalSettingsView: View {
         .themedPage()
         .navigationTitle("Journal")
         .inlineNavigationTitle()
+        .onChange(of: dayBoundaryHour) {
+            do {
+                try DoseNotificationManager.medicationDayBoundaryChanged(in: modelContext)
+            } catch {
+                print("Piru: medication-day history repair failed; will retry next launch.")
+            }
+        }
     }
 
     private var boundaryHourLabel: String {

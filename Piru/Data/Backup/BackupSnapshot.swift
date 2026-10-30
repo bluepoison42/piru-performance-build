@@ -41,6 +41,17 @@ nonisolated struct BackupSnapshot: Sendable {
 }
 
 extension DataExportImport {
+    nonisolated static func checkedBackup<T>(container: ModelContainer, capture: () throws -> T) throws -> T {
+        #if canImport(PortableData)
+        try container.requireCompleteBackup()
+        #endif
+        let captured = try capture()
+        #if canImport(PortableData)
+        try container.requireCompleteBackup()
+        #endif
+        return captured
+    }
+
     /// Captures a backup with the main actor doing only the small reads: custom
     /// substances and settings here, then the model graph on a fresh background
     /// context and the revision hash beside it. The background context reads
@@ -57,7 +68,9 @@ extension DataExportImport {
 
     @DatabaseActor
     private static func captureBackup(container: ModelContainer, stores: ExportStoresSnapshot) throws -> BackupSnapshot {
-        try BackupSnapshot(file: makePiruFile(context: ModelContext(container), stores: stores))
+        try checkedBackup(container: container) {
+            try BackupSnapshot(file: makePiruFile(context: ModelContext(container), stores: stores))
+        }
     }
 }
 

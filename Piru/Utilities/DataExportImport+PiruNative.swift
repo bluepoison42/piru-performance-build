@@ -188,8 +188,8 @@ nonisolated struct PiruSessionNoteData: Codable {
 nonisolated struct PiruDoseData: Codable {
     /// The dose's stable ``DoseEntry/id``. Always emitted on export; optional
     /// on decode so files written before schema V4 still import (those doses
-    /// get fresh UUIDs). Not the dedup key — that stays content-based
-    /// (see ``DataExportImport/doseDedupKey``).
+    /// get fresh UUIDs). Present IDs take precedence over content dedup;
+    /// content keys are used only for records without an ID.
     var id: UUID?
     var substance: String
     var amount: Double
@@ -491,24 +491,23 @@ extension DataExportImport {
         let file = try JSONDecoder().decode(PiruFile.self, from: data)
         importCustomSubstances(file.customSubstances, into: customStore)
 
-        // Dedup doses by content against what's already stored and within the
-        // file, so a re-import (or merge) stays idempotent.
+        // A stable UUID identifies one record even when its content was edited.
+        // Content dedup is only for old records that have no exported UUID.
         let existingDoses = (try? context.fetch(FetchDescriptor<DoseEntry>())) ?? []
         var seen = Set(existingDoses.map {
             doseDedupKey(substance: $0.substance, timestamp: $0.timestamp, amount: $0.amount, unit: $0.unit, route: $0.route)
         })
-        // Stable-id bookkeeping, seeded with the store's ids: an imported dose
-        // keeps its exported id (so references like ramp-down keys survive a
-        // wipe-and-restore) unless that id is already taken — a merge where the
-        // dose's content was edited on one side — in which case the fresh UUID
-        // from the initializer stands. Pre-V4 files carry no ids at all and get
-        // fresh UUIDs throughout.
         var seenIDs = Set(existingDoses.map(\.id))
 
         func makeDose(_ d: PiruDoseData) -> DoseEntry? {
             let timestamp = Date(ms: d.timestamp)
             let key = doseDedupKey(substance: d.substance, timestamp: timestamp, amount: d.amount, unit: d.unit, route: d.route)
-            guard seen.insert(key).inserted else { return nil }
+            if let id = d.id {
+                guard seenIDs.insert(id).inserted else { return nil }
+                seen.insert(key)
+            } else {
+                guard seen.insert(key).inserted else { return nil }
+            }
             let entry = DoseEntry(
                 substance: d.substance, amount: d.amount, unit: d.unit, route: d.route,
                 saltForm: d.saltForm,
@@ -523,7 +522,7 @@ extension DataExportImport {
                 combinationName: d.combinationName,
                 injectionSite: d.injectionSite.flatMap(InjectionSite.init(rawValue:)),
             )
-            if let id = d.id, seenIDs.insert(id).inserted {
+            if let id = d.id {
                 entry.id = id
             } else {
                 seenIDs.insert(entry.id)
