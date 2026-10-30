@@ -177,7 +177,7 @@ struct DockMiddleContent: View {
     /// the same word: it is the product they named, and the library may carry
     /// that name as a brand alias of one component.
     private var results: [QuickLogSearchResult] {
-        let query = searchText.lowercased()
+        let query = searchText.substanceSearchKey
         guard !query.isEmpty else { return [] }
         let recentCards = content.cachedCards
             // Match the card's names, not its id — the id is now an opaque
@@ -185,9 +185,9 @@ struct DockMiddleContent: View {
             // a resolved card by its own name. Matching the product/form title
             // too makes a Concerta recents chip findable by "concerta" (D.1.6).
             .filter { card in
-                card.substanceName.lowercased().contains(query)
-                    || card.title?.lowercased().contains(query) == true
-                    || card.productName?.lowercased().contains(query) == true
+                card.substanceName.substanceSearchKey.contains(query)
+                    || card.title?.substanceSearchKey.contains(query) == true
+                    || card.productName?.substanceSearchKey.contains(query) == true
             }
             .prefix(2)
 
@@ -220,13 +220,13 @@ struct DockMiddleContent: View {
     /// gave it. Entries already covered by a recent card or a library hit are
     /// left out.
     private var matchingCustomEntries: [CustomSubstanceEntry] {
-        guard !searchText.isEmpty else { return [] }
-        let query = searchText.lowercased()
+        let query = searchText.substanceSearchKey
+        guard !query.isEmpty else { return [] }
         let libraryNames = Set(content.cachedLibraryResults.map { $0.substance.name.lowercased() })
         return customSubstanceStore.all.filter { custom in
             let nameLower = custom.name.lowercased()
-            let displayLower = custom.displayName?.lowercased() ?? ""
-            let matches = nameLower.contains(query) || (!displayLower.isEmpty && displayLower.contains(query))
+            let matches = custom.name.substanceSearchKey.contains(query)
+                || custom.displayName?.substanceSearchKey.contains(query) == true
             return matches
                 && !content.cachedHistoryNames.contains(nameLower)
                 && !libraryNames.contains(nameLower)

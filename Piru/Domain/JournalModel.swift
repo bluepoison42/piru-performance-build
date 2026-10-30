@@ -642,8 +642,9 @@ final class JournalModel {
                     }
                 }
             } else {
+                let substanceQuery = query.substanceSearchKey
                 result = result.filter {
-                    $0.substance.localizedCaseInsensitiveContains(query) ||
+                    (!substanceQuery.isEmpty && $0.substance.substanceSearchKey.contains(substanceQuery)) ||
                         ($0.notes?.localizedCaseInsensitiveContains(query) ?? false) ||
                         $0.tags.contains { $0.localizedCaseInsensitiveContains(query) }
                 }

@@ -79,7 +79,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70012-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70013-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload the dependency lock used by the build
         if: always()
