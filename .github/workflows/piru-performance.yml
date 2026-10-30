@@ -81,6 +81,14 @@ jobs:
           mkdir -p deliverables
           cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70012-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
+      - name: Upload the dependency lock used by the build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resolved-dependencies
+          path: ${{ runner.temp }}/piru-android/stage/Package.resolved
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
