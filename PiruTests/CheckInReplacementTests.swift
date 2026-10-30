@@ -16,20 +16,25 @@ struct CheckInReplacementTests {
     @MainActor
     final class RecordingCenter: PendingNotificationCenter {
         var pending: [String: UNNotificationRequest] = [:]
+        private var fireDates: [String: Date] = [:]
         var holdsAdds = false
         private var held: [CheckedContinuation<Void, Never>] = []
 
         func removePendingRequests(withIdentifiers identifiers: [String]) {
             for identifier in identifiers {
                 pending[identifier] = nil
+                fireDates[identifier] = nil
             }
         }
 
         func add(_ request: UNNotificationRequest) async throws {
+            let fireDate = (request.trigger as? UNTimeIntervalNotificationTrigger)
+                .map { Date.now.addingTimeInterval($0.timeInterval) }
             if holdsAdds {
                 await withCheckedContinuation { held.append($0) }
             }
             pending[request.identifier] = request
+            fireDates[request.identifier] = fireDate
         }
 
         /// Lets every held add finish, and stops holding new ones.
@@ -49,7 +54,7 @@ struct CheckInReplacementTests {
 
         /// Seconds from now until `identifier` fires, as its trigger says.
         func secondsUntil(_ identifier: String) -> TimeInterval? {
-            (pending[identifier]?.trigger as? UNTimeIntervalNotificationTrigger)?.timeInterval
+            fireDates[identifier]?.timeIntervalSinceNow
         }
     }
 
