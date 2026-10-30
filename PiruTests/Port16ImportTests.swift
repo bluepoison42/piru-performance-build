@@ -50,7 +50,7 @@ struct Port16ImportTests {
             "timestamp": 1_790_000_000_000 as Int64, "tags": [], "isBackgroundMed": false, "injectionSite": "thigh.left"]
         var a = row, b = row
         a["id"] = id.uuidString; b["id"] = twin.uuidString
-        let data = try JSONSerialization.data(withJSONObject: ["piruExportVersion": 4, "orphanDoses": [a, b],
+        let data = try JSONSerialization.data(withJSONObject: ["piruExportVersion": DataExportImport.piruExportVersion, "orphanDoses": [a, b],
             "dailyDoseItems": [["substance": "port-med", "amount": 10, "unit": "mg", "route": "intramuscular",
                 "sortOrder": 0, "category": "", "frequencyRaw": "everyNDays", "frequencyDays": [],
                 "frequencyIntervalDays": 5, "startDate": 1_790_000_000_000 as Int64, "isBackgroundMed": false]]])

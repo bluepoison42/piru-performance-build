@@ -1249,10 +1249,7 @@ struct DataExportImportStableIDTests {
         #expect(Set(imported.map(\.id)).count == 2)
     }
 
-    /// Merge safety: when an imported dose's id is already taken in the store
-    /// (same-id, different-content — e.g. one side edited the dose after
-    /// export), the existing row keeps the id and the imported dose gets a
-    /// fresh one. Content dedup is untouched by ids.
+    /// A same-id import preserves the local record, including local edits.
     @Test
     func `Imported id already in the journal preserves the local entry`() throws {
         let container = try makeTestContainer()
