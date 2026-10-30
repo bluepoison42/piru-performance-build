@@ -240,6 +240,7 @@ private let excludedSettingKeys: [String: String] = [
     "wellnessNotificationsEnabled": "legacy flag seeded into NotificationPreferences",
     "piru.customSubstances.v1": "legacy blob migrated into CustomSubstanceRecord",
     "piru.sourceOrderMigrationVersion": "migration bookkeeping",
+    "piru.medicationHistoryBoundary.v2": "local medication-day repair marker; a restored install must run its own repair",
     "piru.productMeds.v1": "widget mirror of combination products as meds",
     "piru.substanceDisplayNames.v1": "widget mirror of custom display names",
     "piruImportFile": "debug launch argument",

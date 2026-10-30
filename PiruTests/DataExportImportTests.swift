@@ -1254,7 +1254,7 @@ struct DataExportImportStableIDTests {
     /// export), the existing row keeps the id and the imported dose gets a
     /// fresh one. Content dedup is untouched by ids.
     @Test
-    func `Imported id colliding with an existing entry yields a fresh id`() throws {
+    func `Imported id already in the journal preserves the local entry`() throws {
         let container = try makeTestContainer()
         let context = ModelContext(container)
         let takenID = try #require(UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-000000000005"))
@@ -1266,8 +1266,7 @@ struct DataExportImportStableIDTests {
         context.insert(existing)
         try context.save()
 
-        // Same id, different content — must not dedup (content differs) and
-        // must not steal the id.
+        // The UUID is the record's identity even when one side was edited.
         let mergeJSON = """
         {
           "piruExportVersion": 1,
@@ -1288,9 +1287,10 @@ struct DataExportImportStableIDTests {
         try DataExportImport.importJSON(data: Data(mergeJSON.utf8), context: context)
 
         let entries = try context.fetch(FetchDescriptor<DoseEntry>(sortBy: [SortDescriptor(\.timestamp)]))
-        #expect(entries.count == 2)
-        #expect(entries[0].id == takenID)
-        #expect(entries[1].id != takenID)
+        let preserved = try #require(entries.first)
+        #expect(entries.count == 1)
+        #expect(preserved.id == takenID && preserved.amount == 100)
+        #expect(preserved.timestamp == existing.timestamp)
     }
 }
 
