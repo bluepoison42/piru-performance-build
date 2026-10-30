@@ -1,5 +1,5 @@
 {
-  "originHash" : "2123dc36c886c96221293b068585f213cd55cd98d5ba42bb8dbb3e4e57238565",
+  "originHash" : "e42ef0d0b13b58b3d8c45e797c5aeacfb459784ad4842bf903bd4439cfdfe903",
   "pins" : [
     {
       "identity" : "elfkit",
@@ -96,7 +96,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/skiptools/skip-ui.git",
       "state" : {
-        "revision" : "9f87864413e107a2fedb86abcfe620d048867b94",
+        "revision" : "07328c6265116281e5569fc30ea507ae9dcdd263",
         "version" : "1.64.0"
       }
     },
