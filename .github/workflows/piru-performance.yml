@@ -8,6 +8,8 @@ on:
         default: false
 permissions:
   contents: read
+env:
+  PIRU_DB_URL: https://github.com/bluepoison42/piru-performance-build/releases/download/db-v1.6-d36ebfef/piru-substances.sqlite
 jobs:
   cache-regression:
     runs-on: macos-26
