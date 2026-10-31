@@ -101,6 +101,18 @@ enum InventoryMath {
             .value(inUnitOf: DoseQuantity(1, unit: to, aliases: pieces))
     }
 
+    /// Imports and duplicate merges can carry a different strength on each side.
+    nonisolated static func mergeFactor(fromUnit: String, fromStrengthMG: Double?, toUnit: String, toStrengthMG: Double?) -> Double? {
+        let sourceAliases = fromStrengthMG.map { strength in
+            countUnits.map { UnitAlias(label: $0, amountPerUnit: strength, unit: "mg") }
+        } ?? []
+        let targetAliases = toStrengthMG.map { strength in
+            countUnits.map { UnitAlias(label: $0, amountPerUnit: strength, unit: "mg") }
+        } ?? []
+        return DoseQuantity(1, unit: fromUnit, aliases: sourceAliases)
+            .value(inUnitOf: DoseQuantity(1, unit: toUnit, aliases: targetAliases))
+    }
+
     /// A `Sendable` snapshot of one consumption dose, so the stock replay can run
     /// **off the main actor** over plain values (a `DoseEntry` is a non-`Sendable`
     /// `@Model`). Built on the actor that owns the entries; replayed anywhere.
@@ -349,8 +361,10 @@ enum InventoryService {
             let ordered = group.sorted { $0.createdAt < $1.createdAt }
             let keeper = ordered[0]
             for other in ordered.dropFirst() {
-                let strength = keeper.unitStrengthMG ?? other.unitStrengthMG
-                guard let factor = InventoryMath.convert(1, from: other.unit, to: keeper.unit, unitStrengthMG: strength) else { continue }
+                guard let factor = InventoryMath.mergeFactor(
+                    fromUnit: other.unit, fromStrengthMG: other.unitStrengthMG,
+                    toUnit: keeper.unit, toStrengthMG: keeper.unitStrengthMG,
+                ) else { continue }
                 var events = keeper.manualEvents
                 events.append(contentsOf: other.manualEvents.map { event in
                     var converted = event

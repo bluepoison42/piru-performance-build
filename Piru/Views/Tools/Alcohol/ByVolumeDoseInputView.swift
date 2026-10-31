@@ -194,8 +194,9 @@ enum ByVolumeDefaults {
         }
     }
 
-    /// Trim a numeric field value: integer when whole, else one decimal.
+    /// Keep the entered precision when a stored value seeds an editable field.
     static func format(_ value: Double) -> String {
-        ByVolumeDosing.formatTrimmed(value)
+        guard value.isFinite else { return "0" }
+        return String(format: "%.15g", value)
     }
 }

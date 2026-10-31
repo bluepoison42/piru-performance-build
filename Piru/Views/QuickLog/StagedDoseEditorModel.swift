@@ -245,12 +245,13 @@ final class StagedDoseEditorModel {
         }
     }
 
-    /// Push the custom drink's grams + metadata onto the staged dose. Only writes
-    /// once a usable volume + strength is entered, so opening the logger on a dose
-    /// already staged from a chip never wipes its grams.
+    /// Push the entered amount and metadata onto the staged dose.
     func syncCustomDrink(item: inout StagedDose, capability: ByVolumeDosing?, byDrinkPreferred: Bool) {
-        guard byDrinkPreferred, let capability, let grams = customDrinkGrams(capability: capability) else { return }
-        item.components = [StagedDose.Component(amount: (grams * 10).rounded() / 10)]
+        guard byDrinkPreferred, let capability else { return }
+        let grams = customDrinkGrams(capability: capability)
+        item.isVolumeInputValid = grams != nil
+        guard let grams else { return }
+        item.components = [StagedDose.Component(amount: grams)]
         item.isUnknownAmount = false
         item.unit = capability.canonicalUnit
         item.volumeML = enteredVolumeML

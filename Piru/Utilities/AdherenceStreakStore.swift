@@ -62,18 +62,19 @@ final class AdherenceStreakStore {
         return value
     }
 
-    private static func scheduleSignature(_ items: [DailyDoseItem]) -> Int {
+    static func scheduleSignature(_ items: [DailyDoseItem]) -> Int {
         var hasher = Hasher()
         for item in items {
             hasher.combine(item.persistentModelID)
             hasher.combine(item.substance)
+            hasher.combine(item.substanceUID)
             hasher.combine(item.route)
             hasher.combine(item.isAsNeeded)
             hasher.combine(item.startDate)
             hasher.combine(item.frequency)
             hasher.combine(item.frequencyDays)
             hasher.combine(item.frequencyIntervalDays)
-            hasher.combine(item.reminderTimesMinutes.count)
+            hasher.combine(item.reminderTimesMinutes.sorted())
         }
         return hasher.finalize()
     }

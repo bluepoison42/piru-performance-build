@@ -141,7 +141,7 @@ private struct StagedProductEditor: View {
             // Compared as shown, so seeding the field with a rounded volume
             // (0.125 mL reads "0.13") never writes the rounding back.
             guard let entered = volume.enteredML, entered.doseFormatted != quantity?.doseFormatted else { return }
-            model.setVolume(entered, ofCombination: product.name)
+            model.setVolume(entered, of: product)
         }
         .onChange(of: quantity) {
             guard product.isLiquidCombination else { return }

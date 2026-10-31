@@ -48,10 +48,24 @@ final class MyMedsModel {
                     time: slotMinutes,
                     index: index,
                     state: state,
+                    satisfyingEntryID: occurrencesByKey[key]?.satisfyingEntryID,
                 ))
             }
         }
         return slots.sorted { ($0.time.map(Calendar.medicationClockMinutes) ?? .max) < ($1.time.map(Calendar.medicationClockMinutes) ?? .max) }
+    }
+
+    static func unlog(_ slot: MyMedsCard.MedSlot, entries: [DoseEntry], colors: [SubstanceColor], in context: ModelContext) {
+        guard let entry = entries.first(where: { $0.id == slot.satisfyingEntryID }) else { return }
+        let id = entry.id
+        let timestamp = entry.timestamp
+        let session = entry.session
+        context.delete(entry)
+        session?.refreshDoseBounds()
+        ActiveSessionManager.shared.removeDose(
+            id: id, substanceName: slot.med.substance, timestamp: timestamp, allColors: colors,
+        )
+        DoseLogService.shared.changed()
     }
 
     /// The past-year streak, from the shared ``AdherenceStreakStore`` — a cache

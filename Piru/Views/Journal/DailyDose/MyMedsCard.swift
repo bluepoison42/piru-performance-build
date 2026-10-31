@@ -91,6 +91,7 @@ struct MyMedsCard: View {
         let time: Int?
         let index: Int
         let state: SlotState
+        let satisfyingEntryID: UUID?
 
         var taken: Bool {
             state == .taken
@@ -179,10 +180,8 @@ struct MyMedsCard: View {
             .padding(.bottom, Spacing.lg)
             .padding(.horizontal, Spacing.xxl)
             .themeCard()
-            // Both keyed on the commit counter: an id-less `.task` re-fires on
-            // every appearance, and a List recycles this row while scrolling,
-            // which would run the year-scale streak fetch mid-scroll.
-            .task(id: DoseLogService.shared.revision) {
+            // Cache the streak across appearances, refreshing on dose or schedule edits.
+            .task(id: "\(DoseLogService.shared.revision)|\(AdherenceStreakStore.scheduleSignature(items))") {
                 await model.refreshStreak(items: items, container: modelContext.container)
             }
             .task(id: DoseLogService.shared.revision) {
@@ -337,29 +336,10 @@ struct MyMedsCard: View {
         model.clearPending()
     }
 
-    /// Undo a logged dose: delete today's most-recent entry matching this
-    /// slot's med and drop it from the live session. The check-circle toggles,
-    /// so an accidental tap-to-log is reversed by tapping the circle again —
-    /// the whole-row log with no undo was the reported surprise.
+    /// Undo the entry that satisfied this slot and drop it from the live session.
     private func unlog(_ slot: MedSlot) {
-        guard let item = liveItem(for: slot),
-              let entry = todayEntries
-              .filter({ AdherenceCalculator.entryMatches(entry: $0, item: item) })
-              .max(by: { $0.timestamp < $1.timestamp })
-        else { return }
-
-        let id = entry.id
-        let timestamp = entry.timestamp
-        let session = entry.session
-        modelContext.delete(entry)
-        session?.refreshDoseBounds()
-        ActiveSessionManager.shared.removeDose(
-            id: id,
-            substanceName: item.substance,
-            timestamp: timestamp,
-            allColors: Array(substanceColors),
-        )
-        DoseLogService.shared.changed()
+        guard liveItem(for: slot) != nil else { return }
+        MyMedsModel.unlog(slot, entries: todayEntries, colors: Array(substanceColors), in: modelContext)
     }
 
     // MARK: Helpers

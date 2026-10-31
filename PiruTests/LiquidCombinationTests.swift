@@ -108,13 +108,13 @@ struct LiquidCombinationTests {
     func `Setting the volume rescales every component`() {
         let tray = DoseTrayModel()
         tray.stage(combination: solution, volumeML: 1)
-        tray.setVolume(1.5, ofCombination: "Test solution")
+        tray.setVolume(1.5, of: solution)
 
         #expect(tray.staged.map(\.totalAmount) == [3, 7.5])
         #expect(tray.staged.allSatisfy { $0.volumeML == 1.5 })
         #expect(tray.staged.allSatisfy { $0.components.count == 1 })
 
-        tray.setVolume(0, ofCombination: "Test solution")
+        tray.setVolume(0, of: solution)
         #expect(tray.staged.map(\.totalAmount) == [3, 7.5])
     }
 
@@ -204,7 +204,7 @@ struct LiquidCombinationTests {
         tray.stage(product: liquidCombo, amount: 1)
         tray.stage(product: compound, amount: 1)
 
-        tray.setVolume(2.5, ofCombination: "ZZLiquid Combo")
+        tray.setVolume(2.5, of: liquidCombo)
         #expect(row(tray, "ZZSharedPara", of: "ZZLiquid Combo").first?.totalAmount == 100)
         #expect(row(tray, "ZZMorphOnly", of: "ZZLiquid Combo").first?.totalAmount == 25)
         #expect(row(tray, "ZZSharedPara", of: "ZZCompound").first?.totalAmount == 400)

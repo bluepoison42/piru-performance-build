@@ -242,6 +242,7 @@ final class UnifiedTimelineModel {
         // fresh ones until they are replaced, so the list never shrinks to
         // the finished prefix and throws a scrolled-down reader back up.
         let previous = days
+        var previousIndex = 0
         var built: [TimelineDayLayout] = []
         built.reserveCapacity(builder.sliceCount)
         for index in 0 ..< builder.sliceCount {
@@ -250,7 +251,10 @@ final class UnifiedTimelineModel {
             // and a 30-slice chunk between yields is a 250 ms stall at launch.
             if index == 9 || (index > 9 && (index - 9).isMultiple(of: 6)) {
                 let frontier = built[built.count - 1].date
-                days = built + previous.filter { $0.date < frontier }
+                while previousIndex < previous.count, previous[previousIndex].date >= frontier {
+                    previousIndex += 1
+                }
+                days = built + previous[previousIndex...]
                 await Task.yield()
                 guard !Task.isCancelled else { return }
             }

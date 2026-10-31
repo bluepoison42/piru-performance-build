@@ -17,6 +17,54 @@ struct InventoryExportTests {
     private let drug = "ZZTestInventorySubstance"
     private let start = Date(timeIntervalSince1970: 1_700_000_000)
 
+    @Test
+    func `Import converts grams and settings into the existing milligram stock`() throws {
+        let source = try makeContext()
+        source.insert(InventoryItem(
+            substance: drug, unit: "g", trackingStart: start,
+            lowStockThreshold: 0.1, baselineQuantity: 1, doseSize: 0.25,
+            manualEvents: [ManualEvent(kind: .initial, amount: 1, date: start)],
+        ))
+        try source.save()
+        let data = try DataExportImport.exportJSON(context: source)
+        let destination = try makeContext()
+        destination.insert(InventoryItem(
+            substance: drug, unit: "mg", trackingStart: start,
+            manualEvents: [ManualEvent(kind: .initial, amount: 100, date: start)],
+        ))
+        try destination.save()
+        try DataExportImport.importJSON(data: data, context: destination)
+        try DataExportImport.importJSON(data: data, context: destination)
+        let items = try destination.fetch(FetchDescriptor<InventoryItem>())
+        let item = try #require(items.first)
+        #expect(items.count == 1)
+        #expect(item.currentQuantity == 1100)
+        #expect(item.lowStockThreshold == 100)
+        #expect(item.baselineQuantity == 1000)
+        #expect(item.doseSize == 250)
+    }
+
+    @Test
+    func `Import converts tablet counts using each stocks own strength`() throws {
+        let source = try makeContext()
+        source.insert(InventoryItem(
+            substance: drug, unit: "tabs", trackingStart: start, unitStrengthMG: 20,
+            manualEvents: [ManualEvent(kind: .initial, amount: 1, date: start)],
+        ))
+        try source.save()
+        let data = try DataExportImport.exportJSON(context: source)
+        let destination = try makeContext()
+        destination.insert(InventoryItem(
+            substance: drug, unit: "tabs", trackingStart: start, unitStrengthMG: 10,
+            manualEvents: [ManualEvent(kind: .initial, amount: 100, date: start)],
+        ))
+        try destination.save()
+        try DataExportImport.importJSON(data: data, context: destination)
+        let item = try #require(try destination.fetch(FetchDescriptor<InventoryItem>()).first)
+        #expect(item.unitStrengthMG == 10)
+        #expect(item.currentQuantity == 102)
+    }
+
     /// Build a tracked item (initial 100 mg, baseline 100, threshold 10, dose
     /// size 25) with one 30 mg dose, so live stock is 70.
     private func seed(_ ctx: ModelContext) {

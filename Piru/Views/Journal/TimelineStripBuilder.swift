@@ -239,10 +239,11 @@ struct TimelineStripBuilder {
         var sliceInfos: [Slice] = []
         let cardHeight = TimelineDoseBubble.height(for: style.bubbleStyle)
         var activeUntil = Date.distantPast
-        for day in dayDates.reversed() {
+        for index in dayDates.indices.reversed() {
+            let day = dayDates[index]
             activeUntil = max(activeUntil, activeByDay[day] ?? .distantPast)
             let nextDay = calendar.date(byAdding: .day, value: 1, to: day)!
-            let newerDay = dayDates.last(where: { $0 > day })
+            let newerDay = index > 0 ? dayDates[index - 1] : nil
             var topTime = newerDay ?? globalEnd
             var breakAbove = false
             if compressGaps, let newerDay, newerDay > nextDay {

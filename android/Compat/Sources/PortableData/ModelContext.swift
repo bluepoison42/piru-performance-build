@@ -355,6 +355,7 @@ public final class ModelContext: @unchecked Sendable {
         for (id, entry) in deleted {
             entry.model._$backing.isDeleted = false
             register(entry, id)
+            touched.insert(id)
         }
         deleted.removeAll()
         for id in candidates {

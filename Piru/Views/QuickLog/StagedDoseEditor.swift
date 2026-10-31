@@ -164,6 +164,7 @@ struct StagedDoseEditor: View {
                 model.seedByDrinkFieldsIfNeeded(from: item, capability: byVolumeCapability, force: true)
                 syncCustomDrink()
             } else {
+                item.isVolumeInputValid = true
                 // A solution weighed instead records no volume: the entry would
                 // otherwise claim a draw nobody measured.
                 if isSolution { model.clearSolution(item: &item) }

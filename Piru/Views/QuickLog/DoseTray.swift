@@ -169,6 +169,7 @@ struct StagedDose: Identifiable, Equatable {
     /// breakdown is shown, and the dose commits as ``DoseEntry/isUnknownDose``
     /// with `amount = 0`.
     var isUnknownAmount = false
+    var isVolumeInputValid = true
     /// By-volume metadata recorded when a custom drink is logged (alcohol),
     /// carried onto the committed entry's structured fields so it round-trips on
     /// edit. `nil` for preset/grams doses.
@@ -507,7 +508,7 @@ final class DoseTrayModel {
 
     /// Every staged dose carries a number, or has declared it has none.
     var isCommittable: Bool {
-        !staged.isEmpty && staged.allSatisfy { $0.isUnknownAmount || $0.totalAmount > 0 }
+        !staged.isEmpty && staged.allSatisfy { $0.isVolumeInputValid && ($0.isUnknownAmount || $0.totalAmount > 0) }
     }
 
     /// How many of a given chip are staged (drives the chip's count badge).
@@ -883,17 +884,22 @@ final class DoseTrayModel {
     }
 
     /// Set the volume of a liquid combination already in the tray: every row
-    /// staged from `combinationName` that records a volume is re-derived as
-    /// `volumeML` × its amount per mL. The editor's volume field calls this,
+    /// is re-derived from the product's amount per mL. The editor calls this,
     /// so one volume moves every component of the product together.
-    func setVolume(_ volumeML: Double, ofCombination combinationName: String) {
+    func setVolume(_ volumeML: Double, of product: CustomSubstanceEntry) {
         guard volumeML.isFinite, volumeML > 0 else { return }
         let volume = min(volumeML, CombinationComponent.maximumVolumeML)
-        for index in staged.indices where staged[index].combinationName == combinationName {
-            guard staged[index].isLiquidCombinationRow, let perML = staged[index].abv else { continue }
-            staged[index].components = [.init(amount: ByVolumeDosing.mass(volumeML: volume, concentrationPerML: perML))]
-            staged[index].volumeML = volume
-            staged[index].isUnknownAmount = false
+        for component in product.components ?? [] {
+            let name = Self.stagedName(of: component)
+            for index in staged.indices where staged[index].combinationName == product.name
+                && staged[index].substanceName == name && staged[index].unit == component.unit {
+                staged[index].components = [.init(amount: component.amount(inVolumeML: volume))]
+                if Self.recordsCombinationVolume(component: component, library: staged[index].librarySubstance) {
+                    staged[index].volumeML = volume
+                    staged[index].abv = component.amountPerUnit
+                }
+                staged[index].isUnknownAmount = false
+            }
         }
     }
 
@@ -930,10 +936,11 @@ final class DoseTrayModel {
     /// nothing of it is staged or its rows no longer say.
     func stagedQuantity(of product: CustomSubstanceEntry) -> Double? {
         guard let lead = staged.first(where: { $0.combinationName == product.name }) else { return nil }
-        if product.isLiquidCombination { return lead.volumeML }
         guard let component = product.components?.first(where: {
             Self.stagedName(of: $0) == lead.substanceName && $0.unit == lead.unit
-        }),
+        }) else { return nil }
+        if product.isLiquidCombination { return lead.totalAmount / component.amountPerUnit }
+        guard
             let units = lead.components.first(where: { Self.sameAmount($0.amount, component.amountPerUnit) })?.count
         else { return nil }
         return Double(units)

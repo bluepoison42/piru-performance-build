@@ -636,17 +636,28 @@ extension DataExportImport {
                         setsBaseline: event.setsBaseline,
                     )
                 }
-                if let item = InventoryService.find(substance: inv.substance, saltForm: inv.saltForm, among: existingItems) {
+                let compatibleItems = existingItems.filter {
+                    InventoryMath.mergeFactor(
+                        fromUnit: inv.unit, fromStrengthMG: inv.unitStrengthMG,
+                        toUnit: $0.unit, toStrengthMG: $0.unitStrengthMG,
+                    ) != nil
+                }
+                if let item = InventoryService.find(substance: inv.substance, saltForm: inv.saltForm, among: compatibleItems),
+                   let factor = InventoryMath.mergeFactor(
+                       fromUnit: inv.unit, fromStrengthMG: inv.unitStrengthMG,
+                       toUnit: item.unit, toStrengthMG: item.unitStrengthMG,
+                   ) {
                     var byID = Dictionary(item.manualEvents.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-                    for event in importedEvents where byID[event.id] == nil {
+                    for var event in importedEvents where byID[event.id] == nil {
+                        event.amount *= factor
                         byID[event.id] = event
                     }
                     item.manualEvents = byID.values.sorted { $0.date < $1.date }
                     let importedStart = Date(ms: inv.trackingStart)
                     if importedStart < item.trackingStart { item.trackingStart = importedStart }
-                    if item.lowStockThreshold == nil { item.lowStockThreshold = inv.lowStockThreshold }
-                    if item.baselineQuantity == nil { item.baselineQuantity = inv.baselineQuantity }
-                    if item.doseSize == nil { item.doseSize = inv.doseSize }
+                    if item.lowStockThreshold == nil { item.lowStockThreshold = inv.lowStockThreshold.map { $0 * factor } }
+                    if item.baselineQuantity == nil { item.baselineQuantity = inv.baselineQuantity.map { $0 * factor } }
+                    if item.doseSize == nil { item.doseSize = inv.doseSize.map { $0 * factor } }
                     if item.unitStrengthMG == nil, item.unit == inv.unit { item.unitStrengthMG = inv.unitStrengthMG }
                 } else {
                     let id = inv.id.flatMap { takenIDs.contains($0) ? nil : $0 } ?? UUID()
