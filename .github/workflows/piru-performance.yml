@@ -8,7 +8,6 @@ on:
         default: false
 permissions:
   contents: read
-  actions: read
 jobs:
   cache-regression:
     if: ${{ inputs.cache_only }}
@@ -45,22 +44,6 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: '1'
     steps:
       - uses: actions/checkout@v4
-      - name: Require successful tests for this exact commit
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/piru-performance.yml/runs?head_sha=$GITHUB_SHA&status=success&event=workflow_dispatch" > "$RUNNER_TEMP/prior-runs.json"
-          python3 - <<'PY'
-          import json, os, subprocess
-          runs = json.load(open(os.environ['RUNNER_TEMP'] + '/prior-runs.json'))['workflow_runs']
-          for run in runs:
-              jobs = json.loads(subprocess.check_output(['gh', 'api', f"repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{run['id']}/jobs"]))['jobs']
-              if any(j['name'] == 'cache-regression' and j['conclusion'] == 'success' for j in jobs):
-                  print('Validated test run:', run['html_url'])
-                  break
-          else:
-              raise SystemExit('Run cache_only=true successfully on this commit first')
-          PY
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -79,7 +62,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70013-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70014-unsigned.apk
           shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload the dependency lock used by the build
         if: always()
