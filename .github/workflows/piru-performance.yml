@@ -10,7 +10,6 @@ permissions:
   contents: read
 jobs:
   cache-regression:
-    if: ${{ inputs.cache_only }}
     runs-on: macos-26
     timeout-minutes: 75
     steps:
@@ -35,6 +34,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
   android:
+    needs: cache-regression
     if: ${{ !inputs.cache_only }}
     runs-on: macos-26-intel
     timeout-minutes: 180
@@ -62,8 +62,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70014-unsigned.apk
-          shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.6.1-70015-unsigned.apk
       - name: Upload the dependency lock used by the build
         if: always()
         uses: actions/upload-artifact@v4
@@ -72,6 +71,14 @@ jobs:
           path: ${{ runner.temp }}/piru-android/stage/Package.resolved
           if-no-files-found: ignore
           retention-days: 7
+      - name: Package an isolated app for destructive fixture tests
+        shell: zsh {0}
+        run: |
+          source android/tools/env.sh
+          cd "$PIRU_ANDROID/stage/Android"
+          SKIP_BRIDGE_ANDROID_BUILD_DISABLED=1 SKIP_BRIDGE_ROBOLECTRIC_BUILD_DISABLED=1 zsh "$GITHUB_WORKSPACE/android/tools/gradle.sh" :app:assembleAudit --console=plain > "$PIRU_ANDROID/build/audit-gradle.log" 2>&1 || { tail -80 "$PIRU_ANDROID/build/audit-gradle.log"; exit 1; }
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/audit/app-audit.apk" "$GITHUB_WORKSPACE/deliverables/Piru-Audit-70015.apk"
+          shasum -a 256 "$GITHUB_WORKSPACE"/deliverables/*.apk > "$GITHUB_WORKSPACE/deliverables/SHA256SUMS.txt"
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

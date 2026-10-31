@@ -80,6 +80,9 @@ enum RoutineOccurrenceService {
         let products = MedSchedule.productMeds()
         var changed = 0
         for (day, occurrences) in Dictionary(grouping: rows, by: \.dueDay) {
+            // An old midnight in another time zone cannot be joined to this calendar's day keys.
+            // Keep its saved states and associations instead of reclassifying it as an empty day.
+            guard calendar.startOfDay(for: day) == day else { continue }
             let entries = entriesByDay[day] ?? []
             let snapshots = occurrences.map {
                 OccurrenceSnapshot(id: $0.persistentModelID, substance: $0.substance,
@@ -88,7 +91,7 @@ enum RoutineOccurrenceService {
             }
             let entrySnapshots = entries.map {
                 EntrySnapshot(id: $0.id, substance: $0.substance, substanceUID: $0.substanceUID,
-                              route: $0.route, timestamp: $0.timestamp, combinationName: $0.combinationName)
+                              route: $0.route, timestamp: $0.timestamp, combinationName: $0.combinationName, productName: $0.productName)
             }
             let result = historicalPlan(occurrences: snapshots, entries: entrySnapshots, products: products)
             for occurrence in occurrences {
@@ -140,11 +143,12 @@ enum RoutineOccurrenceService {
         let timestamp: Date
         /// ``DoseEntry/combinationName``: the product this dose was one component of.
         var combinationName: String?
+        var productName: String? = nil
     }
 
     /// What one reconcile has to write. Empty on an unchanged day.
     nonisolated struct Plan: Sendable {
-        struct NewOccurrence: Sendable {
+        struct NewOccurrence: Sendable, LiveOccurrence {
             let substance: String
             let substanceUID: String?
             let route: RouteOfAdministration
@@ -164,6 +168,40 @@ enum RoutineOccurrenceService {
         var isEmpty: Bool {
             expire.isEmpty && inserts.isEmpty && deletes.isEmpty && updates.isEmpty
         }
+    }
+
+    @MainActor
+    static func pendingSlotKeys(items: [DailyDoseItem], entries: [DoseEntry], occurrences: [RoutineOccurrence], now: Date) -> Set<String> {
+        let today = Calendar.current.medicationDayLabel(for: now)
+        let due = items.filter { !$0.isDeleted && !$0.isAsNeeded && AdherenceCalculator.isDue($0, on: today) }.map { item in
+            ItemSnapshot(substance: item.substance, substanceUID: item.substanceUID, route: item.route,
+                         slots: item.reminderTimesMinutes.isEmpty ? [nil] : item.reminderTimesMinutes.sorted { Calendar.medicationClockMinutes($0) < Calendar.medicationClockMinutes($1) }.map { Optional($0) })
+        }
+        let rows = occurrences.filter { !$0.isDeleted && $0.dueDay == today }.map {
+            OccurrenceSnapshot(id: $0.persistentModelID, substance: $0.substance, substanceUID: $0.substanceUID,
+                               route: $0.route, slotMinutes: $0.slotMinutes, state: $0.state, satisfyingEntryID: $0.satisfyingEntryID)
+        }
+        let snapshots = entries.filter { !$0.isDeleted && Calendar.current.medicationDayLabel(for: $0.timestamp) == today }.map {
+            EntrySnapshot(id: $0.id, substance: $0.substance, substanceUID: $0.substanceUID, route: $0.route,
+                          timestamp: $0.timestamp, combinationName: $0.combinationName, productName: $0.productName)
+        }
+        let result = plan(dueItems: due, occurrences: rows, expired: [], entries: snapshots, products: MedSchedule.productMeds())
+        var pending = Set<String>()
+        for item in due {
+            for slot in item.slots {
+                let state: RoutineOccurrence.State
+                if let row = rows.first(where: { corresponds($0, to: item, slot: slot) }) {
+                    state = result.updates[row.id]?.state ?? row.state
+                } else {
+                    guard let row = result.inserts.first(where: { corresponds($0, to: item, slot: slot) }) else { continue }
+                    state = row.state
+                }
+                if state == .pending {
+                    pending.insert(slotKey(substance: item.substance, substanceUID: item.substanceUID, route: item.route, slotMinutes: slot))
+                }
+            }
+        }
+        return pending
     }
 
     /// Read today's inputs from `context` and plan the reconcile.
@@ -197,6 +235,7 @@ enum RoutineOccurrenceService {
                 EntrySnapshot(
                     id: $0.id, substance: $0.substance, substanceUID: $0.substanceUID, route: $0.route,
                     timestamp: $0.timestamp, combinationName: $0.combinationName,
+                    productName: $0.productName,
                 )
             }
 
@@ -440,7 +479,7 @@ enum RoutineOccurrenceService {
     ) -> Bool {
         if let product = products[occurrence.substance.lowercased()] {
             return MedSchedule.productMatches(
-                entryName: entry.substance, entryCombination: entry.combinationName, product: product,
+                entryName: entry.substance, entryCombination: entry.combinationName, entryProductName: entry.productName, product: product,
             )
         }
         return entry.route == occurrence.route

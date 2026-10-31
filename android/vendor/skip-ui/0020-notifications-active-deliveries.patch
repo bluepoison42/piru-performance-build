@@ -1,0 +1,50 @@
+Delivered notifications come from Android activeNotifications; repeating requests retain separate pending state and old delivered banners can be cleared.
+
+diff --git a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
+index e011e87..46716fb 100644
+--- a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
++++ b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
+@@ -249,6 +249,10 @@ public final class UNUserNotificationCenter {
+         let deliveredNotifications = getDeliveredNotifications()
+         let identifiers = deliveredNotifications.compactMap { ($0 as? UNNotification)?.request.identifier }
+         removeDeliveredNotifications(withIdentifiers: identifiers)
++        // Also clears notifications posted by older versions before request IDs were attached.
++        let context = ProcessInfo.processInfo.androidContext
++        let manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as! NotificationManager
++        manager.cancelAll()
+         #else
+         fatalError()
+         #endif
+@@ -777,13 +781,15 @@ public final class UNUserNotificationCenter {
+     }
+ 
+     private func getDeliveredNotifications() -> [Any /* UNNotification */] {
+-        let now = Date().currentTimeMillis
+-        return getAllNotificationRequests()
+-            .filter { $0.timestamp <= now }
+-            .map {
+-                let request = UNNotificationRequest(identifier: $0.id, content: UNMutableNotificationContent(), trigger: nil)
+-                return UNNotification(request: request, date: Date(timeIntervalSince1970: Double($0.timestamp) / 1000.0))
+-            }
++        let context = ProcessInfo.processInfo.androidContext
++        let manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as! NotificationManager
++        let stored = getAllNotificationRequests()
++        return manager.activeNotifications.compactMap { posted in
++            guard let identifier = posted.notification.extras.getString(NotificationWorker.identifierKey)
++                ?? stored.first(where: { $0.id.hashValue == posted.id })?.id else { return nil }
++            let request = UNNotificationRequest(identifier: identifier, content: UNMutableNotificationContent(), trigger: nil)
++            return UNNotification(request: request, date: Date(timeIntervalSince1970: Double(posted.postTime) / 1000.0))
++        }
+     }
+ 
+     /// A tap that arrived before there was a delegate to receive it.
+@@ -1587,6 +1593,9 @@ public class NotificationWorker : Worker {
+         }
+         
+         // Display the notification.
++        let delivery = android.os.Bundle()
++        delivery.putString(NotificationWorker.identifierKey, inputData.getString(NotificationWorker.identifierKey))
++        builder.addExtras(delivery)
+         notificationManager.notify(id, builder.build())
+         UNUserNotificationCenter.scheduleNextOccurrence(of: inputData, context: context)
+         return ListenableWorker.Result.success()

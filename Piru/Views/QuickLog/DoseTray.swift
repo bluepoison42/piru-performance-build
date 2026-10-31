@@ -727,8 +727,9 @@ final class DoseTrayModel {
         for component in product.components ?? [] {
             let library = SubstanceLibrary.lookup(component.substance)
             let identity = stagedIdentity(
-                substance: library?.name ?? component.substance, productName: nil,
-                librarySubstance: library, route: component.route,
+                substance: library?.name ?? component.substance, productName: component.productName,
+                librarySubstance: library, route: component.route, saltForm: component.saltForm,
+                isomer: component.isomer, releaseForm: component.releaseForm,
             )
             let amount = isLiquid ? component.amount(inVolumeML: volume) : component.amountPerUnit
             let chip = StagedChipKey(route: component.route, unit: component.unit, amountKey: displayKey(amount))
@@ -755,6 +756,8 @@ final class DoseTrayModel {
         librarySubstance: Substance?,
         productName: String? = nil,
         saltForm: String? = nil,
+        isomer: String? = nil,
+        releaseForm: String? = nil,
         isFromDailySet: Bool = false,
         routineSlotKeys: Set<String> = [],
         isBackgroundMed: Bool = false,
@@ -765,7 +768,7 @@ final class DoseTrayModel {
         count: Int = 1,
         combinationName: String? = nil,
     ) {
-        let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm)
+        let identity = Self.stagedIdentity(substance: substance, productName: productName, librarySubstance: librarySubstance, route: route, saltForm: saltForm, isomer: isomer, releaseForm: releaseForm)
         if let index = stagedIndex(identity: identity, route: route, unit: unit, combinationName: combinationName) {
             if let componentIndex = staged[index].components.firstIndex(where: { Self.sameAmount($0.amount, amount) }) {
                 staged[index].components[componentIndex].count += count
@@ -783,7 +786,7 @@ final class DoseTrayModel {
                 unit: unit,
                 route: route,
                 saltForm: saltForm ?? librarySubstance?.saltForms(for: route).first,
-                isomer: Self.seedIsomer(productName: productName, librarySubstance: librarySubstance, route: route),
+                isomer: isomer ?? Self.seedIsomer(productName: productName, librarySubstance: librarySubstance, route: route),
                 productName: productName,
                 tint: tint,
                 librarySubstance: librarySubstance,
@@ -798,6 +801,7 @@ final class DoseTrayModel {
             dose.drinkName = drinkName
             dose.emoji = emoji
             dose.combinationName = combinationName
+            if let releaseForm { dose.releaseForm = releaseForm }
             staged.append(dose)
             stageTick += 1
             syncEmptiness()
@@ -831,6 +835,10 @@ final class DoseTrayModel {
                 unit: component.unit,
                 tint: SubstancePalette.tint(for: name, tintMap: colorLookup),
                 librarySubstance: library,
+                productName: component.productName,
+                saltForm: component.saltForm,
+                isomer: component.isomer,
+                releaseForm: component.releaseForm,
                 count: quantity,
                 combinationName: combination.name,
             )
@@ -852,7 +860,7 @@ final class DoseTrayModel {
             let library = SubstanceLibrary.lookup(component.substance)
             let name = library?.name ?? component.substance
             let amount = component.amount(inVolumeML: volume)
-            let identity = Self.stagedIdentity(substance: name, productName: nil, librarySubstance: library, route: component.route)
+            let identity = Self.componentIdentity(component)
             let existing = stagedIndex(identity: identity, route: component.route, unit: component.unit, combinationName: combination.name)
             let previous = existing.map { (volumeML: staged[$0].volumeML, perML: staged[$0].abv) }
             stage(
@@ -862,6 +870,10 @@ final class DoseTrayModel {
                 unit: component.unit,
                 tint: SubstancePalette.tint(for: name, tintMap: colorLookup),
                 librarySubstance: library,
+                productName: component.productName,
+                saltForm: component.saltForm,
+                isomer: component.isomer,
+                releaseForm: component.releaseForm,
                 combinationName: combination.name,
             )
             guard let index = existing ?? staged.indices.last else { continue }
@@ -890,9 +902,9 @@ final class DoseTrayModel {
         guard volumeML.isFinite, volumeML > 0 else { return }
         let volume = min(volumeML, CombinationComponent.maximumVolumeML)
         for component in product.components ?? [] {
-            let name = Self.stagedName(of: component)
+            let identity = Self.componentIdentity(component)
             for index in staged.indices where staged[index].combinationName == product.name
-                && staged[index].substanceName == name && staged[index].unit == component.unit {
+                && staged[index].identityKey == identity && staged[index].route == component.route && staged[index].unit == component.unit {
                 staged[index].components = [.init(amount: component.amount(inVolumeML: volume))]
                 if Self.recordsCombinationVolume(component: component, library: staged[index].librarySubstance) {
                     staged[index].volumeML = volume
@@ -937,7 +949,7 @@ final class DoseTrayModel {
     func stagedQuantity(of product: CustomSubstanceEntry) -> Double? {
         guard let lead = staged.first(where: { $0.combinationName == product.name }) else { return nil }
         guard let component = product.components?.first(where: {
-            Self.stagedName(of: $0) == lead.substanceName && $0.unit == lead.unit
+            Self.componentIdentity($0) == lead.identityKey && $0.route == lead.route && $0.unit == lead.unit
         }) else { return nil }
         if product.isLiquidCombination { return lead.totalAmount / component.amountPerUnit }
         guard
@@ -952,9 +964,9 @@ final class DoseTrayModel {
     func setUnits(_ count: Int, of product: CustomSubstanceEntry) {
         let units = min(max(count, 1), CombinationComponent.maximumUnits)
         for component in product.components ?? [] {
-            let name = Self.stagedName(of: component)
+            let identity = Self.componentIdentity(component)
             for index in staged.indices where staged[index].combinationName == product.name
-                && staged[index].substanceName == name && staged[index].unit == component.unit {
+                && staged[index].identityKey == identity && staged[index].route == component.route && staged[index].unit == component.unit {
                 if let share = staged[index].components.firstIndex(where: { Self.sameAmount($0.amount, component.amountPerUnit) }) {
                     staged[index].components[share].count = units
                 } else {
@@ -979,6 +991,15 @@ final class DoseTrayModel {
     /// raw name of a substance the library doesn't carry.
     static func stagedName(of component: CombinationComponent) -> String {
         SubstanceLibrary.lookup(component.substance)?.name ?? component.substance
+    }
+
+    static func componentIdentity(_ component: CombinationComponent) -> String {
+        let library = SubstanceLibrary.lookup(component.substance)
+        return stagedIdentity(
+            substance: library?.name ?? component.substance, productName: component.productName,
+            librarySubstance: library, route: component.route, saltForm: component.saltForm,
+            isomer: component.isomer, releaseForm: component.releaseForm,
+        )
     }
 
     /// Whether a liquid component's row may carry the volume on the by-volume
@@ -1022,12 +1043,14 @@ final class DoseTrayModel {
         librarySubstance: Substance?,
         route: RouteOfAdministration,
         saltForm: String? = nil,
+        isomer: String? = nil,
+        releaseForm: String? = nil,
     ) -> String {
         QuickLogDose.identityKey(
             substanceUID: librarySubstance?.substanceUID,
             substance: substance,
-            isomer: seedIsomer(productName: productName, librarySubstance: librarySubstance, route: route),
-            releaseForm: SubstanceLibrary.releaseForm(for: productName ?? substance),
+            isomer: isomer ?? seedIsomer(productName: productName, librarySubstance: librarySubstance, route: route),
+            releaseForm: releaseForm ?? SubstanceLibrary.releaseForm(for: productName ?? substance),
             saltForm: saltForm ?? librarySubstance?.saltForms(for: route).first,
         )
     }

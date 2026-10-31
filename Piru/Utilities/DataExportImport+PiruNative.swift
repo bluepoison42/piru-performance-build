@@ -345,6 +345,12 @@ extension DataExportImport {
     /// into `stores`. Runs on whatever isolation owns `context`, so a
     /// background context gathers the graph off the main actor.
     nonisolated static func makePiruFile(context: ModelContext, stores: ExportStoresSnapshot) throws -> PiruFile {
+        try checkedBackup(container: context.container) {
+            try gatherPiruFile(context: context, stores: stores)
+        }
+    }
+
+    private nonisolated static func gatherPiruFile(context: ModelContext, stores: ExportStoresSnapshot) throws -> PiruFile {
         let sessions = try context.fetch(FetchDescriptor<Session>(sortBy: [SortDescriptor(\.startDate)]))
         let allEntries = try context.fetch(FetchDescriptor<DoseEntry>())
         let dailyDoses = try context.fetch(FetchDescriptor<DailyDoseItem>())

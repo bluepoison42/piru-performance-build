@@ -271,33 +271,26 @@ struct DueNowSlot: Identifiable {
     /// The due-now derivation, shared by the My Meds pills and the tab-bar
     /// accessory badge: for each non-PRN med due today, the earliest
     /// uncovered slot whose time is within ``dueSoonLeadMinutes`` (or already
-    /// past) — "covered" assigns today's logged doses to the earliest slots
-    /// first, mirroring MyMedsCard. Anytime meds (no set times) are due all
-    /// day until taken and sort behind timed slots so an overdue 8:00 pill
-    /// outranks the anytime vitamin.
-    ///
-    /// "Taken" is counted with ``AdherenceCalculator/entryMatches(entry:item:)``
-    /// — the SAME matcher MyMedsCard uses (identity *or* name, same route), so
-    /// the accessory and My Meds never disagree about what counts as taken: a
-    /// dose's PSID can resolve differently than its schedule item, so a
-    /// strict identity-only match would miss it. `todayEntries` is today's doses.
-    static func derive(items: [DailyDoseItem], todayEntries: [DoseEntry], now: Date = .now) -> [DueNowSlot] {
+    /// past). The occurrence service owns log matching and skips. Anytime meds
+    /// sort behind timed slots so an overdue 8:00 pill outranks the vitamin.
+    static func derive(items: [DailyDoseItem], todayEntries: [DoseEntry], occurrences: [RoutineOccurrence] = [], now: Date = .now) -> [DueNowSlot] {
         guard !items.isEmpty else { return [] }
         let calendar = Calendar.current
         let nowMinutes = Calendar.medicationClockMinutes(calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now))
+        let pending = RoutineOccurrenceService.pendingSlotKeys(items: items, entries: todayEntries, occurrences: occurrences, now: now)
 
         var slots: [DueNowSlot] = []
         for item in items where !item.isAsNeeded && AdherenceCalculator.isDue(item, on: Calendar.current.medicationDayLabel(for: now)) {
-            let taken = todayEntries.count { AdherenceCalculator.entryMatches(entry: $0, item: item) }
             let times = item.reminderTimesMinutes.sorted { Calendar.medicationClockMinutes($0) < Calendar.medicationClockMinutes($1) }
             if times.isEmpty {
-                guard taken == 0 else { continue }
+                guard pending.contains(RoutineOccurrenceService.slotKey(substance: item.substance, substanceUID: item.substanceUID, route: item.route, slotMinutes: nil)) else { continue }
                 slots.append(DueNowSlot(id: "\(item.identityKey)|any", item: DailyMedSnapshot(item), slotMinutes: nil))
                 continue
             }
             // The earliest uncovered slot, and only if its window has opened.
-            guard taken < times.count else { continue }
-            let slot = times[taken]
+            guard let slot = times.first(where: {
+                pending.contains(RoutineOccurrenceService.slotKey(substance: item.substance, substanceUID: item.substanceUID, route: item.route, slotMinutes: $0))
+            }) else { continue }
             guard Calendar.medicationClockMinutes(slot) <= nowMinutes + dueSoonLeadMinutes else { continue }
             slots.append(DueNowSlot(id: "\(item.identityKey)|\(slot)", item: DailyMedSnapshot(item), slotMinutes: slot))
         }
@@ -368,6 +361,7 @@ final class QuickLogContentModel {
     /// Read only at group-build time, through ``liveTodayEntries``, since a
     /// dose can be deleted after this was captured.
     private(set) var cachedTodayEntries: [DoseEntry] = []
+    private(set) var cachedOccurrences: [RoutineOccurrence] = []
 
     /// ``cachedTodayEntries`` minus any row deleted since it was captured —
     /// reading a deleted model's properties traps in SwiftData.
@@ -446,7 +440,7 @@ final class QuickLogContentModel {
     /// on open and whenever the history changes (a logged dose) — never from
     /// `body`. `allEntries` is newest-first, which every consumer relies on
     /// (today's slice stops at the first non-today row; most-recent wins).
-    func rebuildEntryDerived(allEntries: [DoseEntry], dailyDoseItems: [DailyDoseItem], routines: [DoseRoutine]) {
+    func rebuildEntryDerived(allEntries: [DoseEntry], dailyDoseItems: [DailyDoseItem], routines: [DoseRoutine], occurrences: [RoutineOccurrence] = []) {
         // The PK badge is only ever read for a *displayed* card (favorites + the
         // capped recents), so resolve `DosePK.status` for those substances only —
         // not the whole 120-day history (~50 substances). Requires `rebuildCards`
@@ -510,6 +504,7 @@ final class QuickLogContentModel {
         }
 
         cachedTodayEntries = todayEntries
+        cachedOccurrences = occurrences
         cachedMostRecent = badges
         cachedRecentLocations = locations
         cachedTagSuggestions = Array((used + extras).prefix(8))
@@ -658,7 +653,8 @@ final class QuickLogContentModel {
 
     /// Rebuild only the routine-pill groups (the settings sheet edited a routine
     /// row or daily item, but history is unchanged).
-    func rebuildDailyGroups(dailyDoseItems: [DailyDoseItem], routines: [DoseRoutine]) {
+    func rebuildDailyGroups(dailyDoseItems: [DailyDoseItem], routines: [DoseRoutine], occurrences: [RoutineOccurrence] = []) {
+        cachedOccurrences = occurrences
         cachedDailyGroups = makeDailyGroups(dailyDoseItems: dailyDoseItems, routines: routines)
     }
 
@@ -680,22 +676,23 @@ final class QuickLogContentModel {
         let dailyDoseItems = allItems.filter { !$0.isDeleted }
         guard !dailyDoseItems.isEmpty else { return [] }
 
-        let dueSlots = DueNowSlot.derive(items: dailyDoseItems, todayEntries: liveTodayEntries, now: now)
+        let pending = RoutineOccurrenceService.pendingSlotKeys(items: dailyDoseItems, entries: liveTodayEntries, occurrences: cachedOccurrences, now: now)
+        let dueSlots = DueNowSlot.derive(items: dailyDoseItems, todayEntries: liveTodayEntries, occurrences: cachedOccurrences, now: now)
         func due(in group: MedTimeGroup) -> [DueNowSlot] {
             dueSlots.filter { slot in
                 slot.slotMinutes.map { MedTimeGroup.group(forMinutes: $0) == group } ?? (group == .anytime)
             }
         }
 
-        func remaining(in items: [DailyDoseItem]) -> [DailyMedSnapshot] {
-            // Join via the shared adherence matcher (identity OR name, same
-            // route) — a "Concerta" med is satisfied by a dose logged as
-            // Methylphenidate XR, and the count agrees with My Meds even when
-            // PSID resolves the two sides differently. A multi-time med needs
-            // one dose per slot before it stops counting as remaining, so its
-            // morning log doesn't mark its evening group's pill done.
+        func remaining(in items: [DailyDoseItem], group: MedTimeGroup) -> [DailyMedSnapshot] {
             items
-                .filter { takenToday($0) < max(1, $0.reminderTimesMinutes.count) }
+                .filter { item in
+                    let times: [Int?] = item.reminderTimesMinutes.isEmpty ? [nil] : item.reminderTimesMinutes.map { Optional($0) }
+                    return times.contains { time in
+                        (time.map { MedTimeGroup.group(forMinutes: $0) == group } ?? (group == .anytime))
+                            && pending.contains(RoutineOccurrenceService.slotKey(substance: item.substance, substanceUID: item.substanceUID, route: item.route, slotMinutes: time))
+                    }
+                }
                 .map(DailyMedSnapshot.init)
         }
 
@@ -713,7 +710,7 @@ final class QuickLogContentModel {
                 title: title,
                 icon: group.symbol,
                 items: snapshots,
-                remaining: remaining(in: items),
+                remaining: remaining(in: items, group: group),
                 due: due(in: group),
             )
         }

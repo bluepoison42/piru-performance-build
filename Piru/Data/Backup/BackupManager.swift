@@ -45,6 +45,7 @@ final class BackupManager {
         case noBackupFound
         case fileTooLarge
         case snapshotFailed
+        case storeUnavailable
 
         var errorDescription: String? {
             switch self {
@@ -54,6 +55,8 @@ final class BackupManager {
                 String(localized: "No iCloud backup was found for this account yet.")
             case .snapshotFailed:
                 String(localized: "The safety snapshot could not be saved. Your journal was not replaced.")
+            case .storeUnavailable:
+                String(localized: "Automatic backup is paused because the journal could not be opened.")
             case .fileTooLarge:
                 String(localized: "This file is too large to be a Piru backup.")
             }
@@ -115,9 +118,8 @@ final class BackupManager {
 
         status = .running
         do {
-            let plaintext = try DataExportImport.checkedBackup(container: context.container) {
-                try DataExportImport.exportJSON(context: context)
-            }
+            try DataExportImport.prepareAutomaticBackup(context: context)
+            let plaintext = try DataExportImport.exportJSON(context: context)
             let hash = Self.sha256Hex(plaintext)
             if hash == lastBackupHash, lastBackupDate != nil {
                 status = .idle // nothing changed — no needless iCloud write

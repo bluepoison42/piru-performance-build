@@ -66,19 +66,20 @@ nonisolated enum MedSchedule {
     /// product twice reads as two doses, not two per component.
     struct ProductMed: Sendable, Hashable {
         let name: String
-        /// The first component's staged (library-canonical) name.
+        /// A component's staged name, preferring one with a named product so it counts once.
         let lead: String
+        var leadProductName: String? = nil
     }
 
     /// The App Group defaults key of the product-med map the app mirrors for
     /// its widgets and off-main scans: JSON of `[lowercased med name: [name,
-    /// lead]]`, keyed by the product's name and its label. A JSON string
+    /// lead, optional brand]]`, keyed by the product's name and its label. A JSON string
     /// because Android's `UserDefaults` stores no dictionaries.
     static let productMedMapKey = "piru.productMeds.v1"
 
     /// The product-med map as the mirror stores it.
     static func encodeProductMeds(_ map: [String: ProductMed]) -> String? {
-        guard let data = try? JSONEncoder().encode(map.mapValues { [$0.name, $0.lead] }) else { return nil }
+        guard let data = try? JSONEncoder().encode(map.mapValues { [$0.name, $0.lead] + ($0.leadProductName.map { [$0] } ?? []) }) else { return nil }
         return String(data: data, encoding: .utf8)
     }
 
@@ -89,7 +90,8 @@ nonisolated enum MedSchedule {
               let raw = try? JSONDecoder().decode([String: [String]].self, from: Data(json.utf8))
         else { return [:] }
         return raw.compactMapValues { pair in
-            pair.count == 2 ? ProductMed(name: pair[0], lead: pair[1]) : nil
+            guard pair.count == 2 || pair.count == 3 else { return nil }
+            return ProductMed(name: pair[0], lead: pair[1], leadProductName: pair.count == 3 ? pair[2] : nil)
         }
     }
 
@@ -98,12 +100,12 @@ nonisolated enum MedSchedule {
     /// in `products`, the dose must be that product's lead-component entry,
     /// whatever its route.
     static func matches(
-        entryKey: String, entryName: String, entryCombination: String?, entryRoute: RouteOfAdministration,
+        entryKey: String, entryName: String, entryCombination: String?, entryProductName: String? = nil, entryRoute: RouteOfAdministration,
         itemKey: String, itemName: String, itemRoute: RouteOfAdministration,
         products: [String: ProductMed],
     ) -> Bool {
         if let product = products[itemName.lowercased()] {
-            return productMatches(entryName: entryName, entryCombination: entryCombination, product: product)
+            return productMatches(entryName: entryName, entryCombination: entryCombination, entryProductName: entryProductName, product: product)
         }
         return matches(
             entryKey: entryKey, entryName: entryName, entryRoute: entryRoute,
@@ -114,10 +116,14 @@ nonisolated enum MedSchedule {
     /// Whether an entry is a dose of `product`: its lead-component entry, or
     /// one entry under the product's own name (what the widget's Take button
     /// and the watch log, having no catalog to split it by).
-    static func productMatches(entryName: String, entryCombination: String?, product: ProductMed) -> Bool {
+    static func productMatches(entryName: String, entryCombination: String?, entryProductName: String? = nil, product: ProductMed) -> Bool {
         guard let entryCombination else { return entryName.caseInsensitiveCompare(product.name) == .orderedSame }
         guard entryCombination.caseInsensitiveCompare(product.name) == .orderedSame else { return false }
-        return product.lead.caseInsensitiveCompare(entryName) == .orderedSame
+        guard product.lead.caseInsensitiveCompare(entryName) == .orderedSame else { return false }
+        if let lead = product.leadProductName {
+            return entryProductName?.caseInsensitiveCompare(lead) == .orderedSame
+        }
+        return true
     }
 
     /// Whether two substance references name the same drug: their identity

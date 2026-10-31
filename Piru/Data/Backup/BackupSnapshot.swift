@@ -41,6 +41,12 @@ nonisolated struct BackupSnapshot: Sendable {
 }
 
 extension DataExportImport {
+    @MainActor
+    static func prepareAutomaticBackup(context: ModelContext) throws {
+        guard !StoreLaunchState.shared.storeUnavailable else { throw BackupManager.ManagerError.storeUnavailable }
+        if context.hasChanges { try context.save() }
+    }
+
     nonisolated static func checkedBackup<T>(container: ModelContainer, capture: () throws -> T) throws -> T {
         #if canImport(PortableData)
         try container.requireCompleteBackup()
@@ -68,9 +74,7 @@ extension DataExportImport {
 
     @DatabaseActor
     private static func captureBackup(container: ModelContainer, stores: ExportStoresSnapshot) throws -> BackupSnapshot {
-        try checkedBackup(container: container) {
-            try BackupSnapshot(file: makePiruFile(context: ModelContext(container), stores: stores))
-        }
+        try BackupSnapshot(file: makePiruFile(context: ModelContext(container), stores: stores))
     }
 }
 

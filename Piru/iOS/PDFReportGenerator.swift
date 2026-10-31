@@ -83,6 +83,7 @@ nonisolated enum PDFReportGenerator {
         var halfLifeMinutes: Double?
         /// ``DoseEntry/combinationName``, for crediting a product med.
         var combinationName: String?
+        var productName: String? = nil
     }
 
     struct DailyDoseSnapshot {
@@ -446,7 +447,7 @@ nonisolated enum PDFReportGenerator {
                     .filter { entry in
                         if let product = dose.product {
                             return MedSchedule.productMatches(
-                                entryName: entry.substance, entryCombination: entry.combinationName, product: product,
+                                entryName: entry.substance, entryCombination: entry.combinationName, entryProductName: entry.productName, product: product,
                             )
                         }
                         return entry.routeRaw == dose.routeRaw

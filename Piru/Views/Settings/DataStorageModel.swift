@@ -192,6 +192,9 @@ final class DataStorageModel {
         isDeleting = true
         defer { isDeleting = false }
         DoseLogService.shared.cancelPendingBookkeeping()
+        #if os(Android)
+            FolderBackupManager.shared.disable()
+        #endif
         do {
             try DataExportImport.deleteAll(context: context)
         } catch {

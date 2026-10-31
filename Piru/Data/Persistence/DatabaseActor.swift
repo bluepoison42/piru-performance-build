@@ -57,6 +57,7 @@ enum AdherenceStreakFetcher {
             AdherenceCalculator.EntrySnapshot(
                 substance: $0.substance, identityKey: $0.identityKey,
                 route: $0.route, timestamp: $0.timestamp, combinationName: $0.combinationName,
+                productName: $0.productName,
             )
         }
         let products = MedSchedule.productMeds()

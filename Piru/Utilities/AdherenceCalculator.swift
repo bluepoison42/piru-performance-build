@@ -108,6 +108,7 @@ enum AdherenceCalculator {
     ) -> Bool {
         MedSchedule.matches(
             entryKey: entry.identityKey, entryName: entry.substance, entryCombination: entry.combinationName,
+            entryProductName: entry.productName,
             entryRoute: entry.route,
             itemKey: item.identityKey, itemName: item.substance, itemRoute: item.route, products: products,
         )
@@ -290,6 +291,7 @@ enum AdherenceCalculator {
         let timestamp: Date
         /// ``DoseEntry/combinationName``: the product this dose was one component of.
         var combinationName: String?
+        var productName: String? = nil
     }
 
     /// Sendable snapshot of a daily item's scheduling/matching fields.
@@ -341,7 +343,7 @@ enum AdherenceCalculator {
             let hits = dayEntries.count { entry in
                 if let product = item.product {
                     return MedSchedule.productMatches(
-                        entryName: entry.substance, entryCombination: entry.combinationName, product: product,
+                        entryName: entry.substance, entryCombination: entry.combinationName, entryProductName: entry.productName, product: product,
                     )
                 }
                 return MedSchedule.matches(

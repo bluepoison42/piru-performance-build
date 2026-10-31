@@ -185,7 +185,7 @@ struct DockLabelText: View {
     }
 
     private var recomputeKey: String {
-        "\(Int(currentTime.timeIntervalSinceReferenceDate / 60))|\(items.count)|\(DoseLogService.shared.revision)"
+        "\(Int(currentTime.timeIntervalSinceReferenceDate / 60))|\(AdherenceStreakStore.scheduleSignature(items))|\(DoseLogService.shared.revision)"
     }
 
     /// Display names resolve through the substance batch cache, which is cold
@@ -214,10 +214,13 @@ extension DockLabelContext {
         let dayStart = calendar.sessionDayStart(for: now)
         let descriptor = FetchDescriptor<DoseEntry>(predicate: #Predicate { $0.timestamp >= dayStart })
         let todays = (try? modelContext.fetch(descriptor)) ?? []
+        let today = calendar.medicationDayLabel(for: now)
+        let occurrences = (try? modelContext.fetch(FetchDescriptor<RoutineOccurrence>(predicate: #Predicate { $0.dueDay == today }))) ?? []
+        let pending = RoutineOccurrenceService.pendingSlotKeys(items: items, entries: todays, occurrences: occurrences, now: now)
 
-        context.dueMedNames = DueNowSlot.derive(items: items, todayEntries: todays, now: now)
+        context.dueMedNames = DueNowSlot.derive(items: items, todayEntries: todays, occurrences: occurrences, now: now)
             .map(\.item.displayName)
-        context.nextMed = nextMed(items: scheduled, todayEntries: todays, now: now, calendar: calendar)
+        context.nextMed = nextMed(items: scheduled, pending: pending, now: now, calendar: calendar)
         return context
     }
 
@@ -233,15 +236,15 @@ extension DockLabelContext {
 
     /// The earliest untaken timed slot still ahead today; failing that, the
     /// earliest slot of any med due tomorrow.
-    private static func nextMed(items: [DailyDoseItem], todayEntries: [DoseEntry], now: Date, calendar: Calendar) -> DockMedRef? {
+    private static func nextMed(items: [DailyDoseItem], pending: Set<String>, now: Date, calendar: Calendar) -> DockMedRef? {
         let today = calendar.medicationDayLabel(for: now)
         var candidates: [(item: DailyDoseItem, at: Date)] = []
         for offset in 0 ... 1 {
             guard let label = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
             for item in items where AdherenceCalculator.isDue(item, on: label) {
-                let taken = offset == 0 ? todayEntries.count { AdherenceCalculator.entryMatches(entry: $0, item: item) } : 0
                 let times = item.reminderTimesMinutes.sorted { Calendar.medicationClockMinutes($0) < Calendar.medicationClockMinutes($1) }
-                for minutes in times.dropFirst(taken) {
+                for minutes in times {
+                    if offset == 0, !pending.contains(RoutineOccurrenceService.slotKey(substance: item.substance, substanceUID: item.substanceUID, route: item.route, slotMinutes: minutes)) { continue }
                     if let at = calendar.medicationDayMoment(minutes: minutes, onLabel: label), at > now {
                         candidates.append((item, at))
                     }

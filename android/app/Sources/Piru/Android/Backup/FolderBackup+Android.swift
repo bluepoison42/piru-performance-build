@@ -111,15 +111,9 @@ final class FolderBackupManager {
         if !force, let last = lastBackupDate, Date().timeIntervalSince(last) < Self.minInterval { return }
 
         status = .running
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                Logger.backupManager.error("Folder backup could not save pending edits: \(error.localizedDescription, privacy: .public)")
-            }
-        }
         let container = context.container
         do {
+            try DataExportImport.prepareAutomaticBackup(context: context)
             let outcome = try await revisionGate.run {
                 try await DataExportImport.captureBackup(container: container)
             } write: { snapshot in

@@ -12,7 +12,8 @@ export PIRU_UNSIGNED=1
 xcodebuild -version
 sysctl -n hw.memsize
 "$JAVA_HOME/bin/java" -version
-brew install gradle librsvg trash
+brew install librsvg trash
+zsh android/tools/gradle.sh --version
 
 python3 -m venv "$RUNNER_TEMP/piru-venv"
 source "$RUNNER_TEMP/piru-venv/bin/activate"

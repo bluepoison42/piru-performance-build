@@ -77,6 +77,7 @@ struct QuickLogView: View {
     /// reverse-chronological order and needs no more than this window. Built in
     /// `init` because a `#Predicate` can't compute the cutoff itself.
     @Query private var allEntries: [DoseEntry]
+    @Query private var routineOccurrences: [RoutineOccurrence]
 
     @Query private var substanceColors: [SubstanceColor]
     @Query(sort: \DailyDoseItem.sortOrder) private var dailyDoseItems: [DailyDoseItem]
@@ -136,6 +137,8 @@ struct QuickLogView: View {
         self.prefillSubstance = prefillSubstance
         self.prefillDose = prefillDose
         self.prefillRoute = prefillRoute
+        let today = Calendar.current.medicationDayLabel(for: .now)
+        _routineOccurrences = Query(filter: #Predicate<RoutineOccurrence> { $0.dueDay >= today })
         // The windowed @Query closes over the init parameter — see QuickLogSheet
         // for the cutoff's meaning.
         _allEntries = Query(
@@ -177,7 +180,7 @@ struct QuickLogView: View {
                     // badge work to the *displayed* set (favorites + the 10 recents),
                     // so the card caches must exist before it runs.
                     content.rebuildCards(quickLogDoses: quickLogDoses, favorites: favorites)
-                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines)
+                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines, occurrences: routineOccurrences)
                     content.markLoaded()
                     if let prestagedRoutine {
                         stageRoutine(named: prestagedRoutine)
@@ -203,7 +206,7 @@ struct QuickLogView: View {
                 // `.task` above owns the first rebuild, so skip until it has run.
                 .task(id: DoseLogService.shared.revision) {
                     guard content.hasLoaded, !isCommitted else { return }
-                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines)
+                    content.rebuildEntryDerived(allEntries: allEntries, dailyDoseItems: dailyDoseItems, routines: routines, occurrences: routineOccurrences)
                 }
                 .onChange(of: substanceColors.count) {
                     content.rebuildColorLookup(substanceColors: substanceColors)
@@ -213,7 +216,7 @@ struct QuickLogView: View {
                 .onChange(of: favorites.map(\.substance)) { content.rebuildFavorites(favorites: favorites) }
                 // Routine pills depend on the routine rows + daily items; refresh
                 // the cache when either is edited (the Manage Routines sheet).
-                .onChange(of: routineSignature) { content.rebuildDailyGroups(dailyDoseItems: dailyDoseItems, routines: routines) }
+                .onChange(of: routineSignature) { content.rebuildDailyGroups(dailyDoseItems: dailyDoseItems, routines: routines, occurrences: routineOccurrences) }
                 .task(id: searchText) {
                     guard !searchText.isEmpty else {
                         content.setLibraryResults([])
