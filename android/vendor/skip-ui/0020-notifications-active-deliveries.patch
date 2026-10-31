@@ -1,7 +1,7 @@
 Delivered notifications come from Android activeNotifications; repeating requests retain separate pending state and old delivered banners can be cleared.
 
 diff --git a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
-index e011e87..46716fb 100644
+index e011e87..bd4f9c8 100644
 --- a/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
 +++ b/Sources/SkipUI/SkipUI/UIKit/UserNotifications.swift
 @@ -249,6 +249,10 @@ public final class UNUserNotificationCenter {
@@ -15,7 +15,7 @@ index e011e87..46716fb 100644
          #else
          fatalError()
          #endif
-@@ -777,13 +781,15 @@ public final class UNUserNotificationCenter {
+@@ -777,13 +781,17 @@ public final class UNUserNotificationCenter {
      }
  
      private func getDeliveredNotifications() -> [Any /* UNNotification */] {
@@ -29,16 +29,18 @@ index e011e87..46716fb 100644
 +        let context = ProcessInfo.processInfo.androidContext
 +        let manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as! NotificationManager
 +        let stored = getAllNotificationRequests()
-+        return manager.activeNotifications.compactMap { posted in
++        var delivered: [Any] = []
++        for posted in manager.activeNotifications {
 +            guard let identifier = posted.notification.extras.getString(NotificationWorker.identifierKey)
-+                ?? stored.first(where: { $0.id.hashValue == posted.id })?.id else { return nil }
++                ?? stored.first(where: { $0.id.hashValue == posted.id })?.id else { continue }
 +            let request = UNNotificationRequest(identifier: identifier, content: UNMutableNotificationContent(), trigger: nil)
-+            return UNNotification(request: request, date: Date(timeIntervalSince1970: Double(posted.postTime) / 1000.0))
++            delivered.append(UNNotification(request: request, date: Date(timeIntervalSince1970: Double(posted.postTime) / 1000.0)))
 +        }
++        return delivered
      }
  
      /// A tap that arrived before there was a delegate to receive it.
-@@ -1587,6 +1593,9 @@ public class NotificationWorker : Worker {
+@@ -1587,6 +1595,9 @@ public class NotificationWorker : Worker {
          }
          
          // Display the notification.
