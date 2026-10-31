@@ -492,6 +492,7 @@ nonisolated enum StoreRecovery {
         }
         var configuration = Configuration()
         configuration.readonly = true
+        configuration.busyMode = .timeout(5)
         let reader = try DatabaseQueue(path: source.path, configuration: configuration)
         let writer = try DatabaseQueue(path: staging.path)
         try reader.backup(to: writer)
