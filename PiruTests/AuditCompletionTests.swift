@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import SwiftData
+import SwiftUI
 import Testing
 @testable import Piru
 
@@ -146,6 +147,30 @@ struct AuditCompletionTests {
         try StoreRecovery.copyStore(from: source, to: destination)
         let second = try DatabaseQueue(path: destination.path)
         #expect(try second.read { try Int.fetchOne($0, sql: "SELECT value FROM sample") } == 300)
+    }
+
+    @Test
+    func `Changing only a color rebuilds the real timeline card`() async throws {
+        let container = try makeContainer()
+        let context = container.mainContext
+        let dose = DoseEntry(substance: "Caffeine", amount: 10, timestamp: Date.now.addingTimeInterval(-3600))
+        let red = P3Color(red: 1, green: 0, blue: 0)
+        let blue = P3Color(red: 0, green: 0, blue: 1)
+        let color = SubstanceColor(substance: dose.substance, tint: red, usesDefault: false)
+        context.insert(dose)
+        context.insert(color)
+        try context.save()
+        let model = UnifiedTimelineModel()
+        await model.rebuild(entries: [dose], colors: [color], colorMap: [color].colorMap, revision: 42,
+                            zoom: 1, compressGaps: true, pkCurves: false, curveScale: .doseStrength,
+                            showsAxis: true, bubbleStyle: .full, showsVitals: false, cacheable: false)
+        #expect(model.days.flatMap(\.cardGroups).flatMap(\.items).first?.color == red.color)
+        color.set(blue, usesDefault: false)
+        try context.save()
+        await model.rebuild(entries: [dose], colors: [color], colorMap: [color].colorMap, revision: 42,
+                            zoom: 1, compressGaps: true, pkCurves: false, curveScale: .doseStrength,
+                            showsAxis: true, bubbleStyle: .full, showsVitals: false, cacheable: false)
+        #expect(model.days.flatMap(\.cardGroups).flatMap(\.items).first?.color == blue.color)
     }
 
     @Test

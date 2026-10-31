@@ -107,7 +107,7 @@ struct UnifiedTimelineView: View {
     }
 
     private var rebuildKey: String {
-        "\(DoseLogService.shared.revision)|\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(dynamicTypeSize)|\(clockTick)"
+        "\(DoseLogService.shared.revision)|\(LaunchCacheInputs.colorSignature(substanceColors))|\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(dynamicTypeSize)|\(clockTick)"
     }
 
     /// Pinch on the graph: preview by stretching vertically while the fingers
@@ -197,7 +197,7 @@ final class UnifiedTimelineModel {
         showsVitals: Bool,
         cacheable: Bool = true,
     ) async {
-        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)"
+        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)|\(LaunchCacheInputs.colorSignature(colors))"
         let key = "\(revision)|\(preferences)|\(entries.count)"
         if key == builtKey, !days.isEmpty { return }
         let now = DebugClock.now
@@ -284,9 +284,9 @@ final class UnifiedTimelineModel {
         showsVitals: Bool,
     ) async -> Bool {
         guard days.isEmpty else { return false }
-        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)"
         let now = DebugClock.now
         let identity = await DoseLogIdentity.fetch(container: container)
+        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)|\(LaunchCacheInputs.colorSignature(identity.colors))"
         guard identity.entryCount > 0, !Task.isCancelled else { return false }
         let cacheKey = TimelineStripCache.key(
             storeGeneration: DoseLogService.storeGeneration,
