@@ -49,7 +49,7 @@ if [[ $STATUS == 0 ]]; then
     # Packaging reuses this Kotlin compilation after the native bridge is built.
     (cd "$PIRU_ANDROID/stage/Android" &&
         SKIP_BRIDGE_ANDROID_BUILD_DISABLED=1 SKIP_BRIDGE_ROBOLECTRIC_BUILD_DISABLED=1 \
-        zsh "$TOOLS/gradle.sh" ":app:compile${(C)${PIRU_CONFIG:-debug}}Kotlin" --console=plain) \
+        zsh "$TOOLS/gradle.sh" ":app:compile${(C)${PIRU_CONFIG:-debug}}Kotlin" --no-daemon --console=plain) \
         > "$PIRU_ANDROID/build/kotlin.log" 2>&1 || { tail -70 "$PIRU_ANDROID/build/kotlin.log"; exit 1; }
     TARGET_OS_ANDROID=1 skip android build --arch aarch64 --plain --ndk "$ANDROID_NDK_HOME" \
         -d "$BRIDGE/jni-libs" --scratch-path "$BRIDGE/swift" --product Piru \
