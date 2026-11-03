@@ -15,6 +15,7 @@ struct TrayProductCell: View {
     /// through the model, so the card passes no closures.
     let model: DoseTrayModel
     let namespace: Namespace.ID
+    let routineItem: StagedDose
 
     var body: some View {
         let rows = model.staged.filter { $0.combinationName == product.name }
@@ -34,18 +35,7 @@ struct TrayProductCell: View {
                 withAnimation(.snappy) { model.openForEditing(leadID, focusesAmount: product.isLiquidCombination) }
             }
             .contextMenuPreviewShape(Rectangle())
-            .contextMenu {
-                Button {
-                    withAnimation(.snappy) { _ = model.expandedItemIDs.insert(leadID) }
-                } label: {
-                    Label("Edit", systemImage: "slider.horizontal.3")
-                }
-                Button(role: .destructive) {
-                    withAnimation(.snappy) { model.removeCombination(product.name) }
-                } label: {
-                    Label("Remove", systemImage: "trash")
-                }
-            }
+            .modifier(TrayRowActions(model: model, item: routineItem))
         }
     }
 }
@@ -151,7 +141,7 @@ private struct StagedProductEditor: View {
             // Compared as shown, so seeding the field with a rounded volume
             // (0.125 mL reads "0.13") never writes the rounding back.
             guard let entered = volume.enteredML, entered.doseFormatted != quantity?.doseFormatted else { return }
-            model.setVolume(entered, ofCombination: product.name)
+            model.setVolume(entered, of: product)
         }
         .onChange(of: quantity) {
             guard product.isLiquidCombination else { return }

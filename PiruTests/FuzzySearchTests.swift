@@ -4,6 +4,18 @@ import Testing
 
 @Suite("Fuzzy Search")
 struct FuzzySearchTests {
+    @Test
+    @MainActor
+    func `Search finds substance names and aliases without their punctuation`() async throws {
+        let substances = await SubstanceLibrary.searchMatchesAsync("4dma78dhf")
+        let substance = try #require(substances.first)
+        #expect(substance.substance.name == "4'-DMA-7,8-DHF")
+        let aliases = await SubstanceLibrary.searchMatchesAsync("ritalin-la")
+        let alias = try #require(aliases.first)
+        #expect(alias.substance.name == "Methylphenidate")
+        #expect(alias.matchedAlias == "Ritalin LA")
+    }
+
     // MARK: - Levenshtein Distance (tested via search behavior)
 
     @Test

@@ -1,0 +1,116 @@
+The performance variant needs cold-start shadow A/B switches and activity content-capture controls; downsample only the recorded shadow while preserving patch 0006 single composition and padded blur bounds.
+
+diff --git a/Sources/SkipUI/Skip/Shadowed.kt b/Sources/SkipUI/Skip/Shadowed.kt
+--- a/Sources/SkipUI/Skip/Shadowed.kt
++++ b/Sources/SkipUI/Skip/Shadowed.kt
+@@ -5,11 +5,14 @@
+ import android.os.Build
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.draw.drawWithContent
++import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.BlurEffect
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.ColorFilter
+ import androidx.compose.ui.graphics.ColorMatrix
+ import androidx.compose.ui.graphics.TileMode
++import androidx.compose.ui.graphics.drawscope.clipRect
++import androidx.compose.ui.graphics.drawscope.scale
+ import androidx.compose.ui.graphics.drawscope.translate
+ import androidx.compose.ui.graphics.layer.drawLayer
+ import androidx.compose.ui.graphics.rememberGraphicsLayer
+@@ -18,7 +21,14 @@
+ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.IntSize
++import kotlin.jvm.JvmStatic
+ import kotlin.math.ceil
++
++// Added only by the performance variant's vendor patch; read before the first composition.
++object PiruPerfFlags {
++    @JvmStatic var shadowMode: Int = 2
++    var contentCapture: Boolean = false
++}
+ 
+ /// Compose the given content with a drop shadow on all non-transparent pixels.
+ ///
+@@ -26,28 +36,61 @@
+ /// recording through the shadow color and blur. Composing the content a second time for the shadow
+ /// would give every control inside a live twin, with its own state and its own focus target.
+ @Composable fun Shadowed(context: ComposeContext, color: Color, offsetX: Dp, offsetY: Dp, blurRadius: Dp, content: @Composable (ComposeContext) -> Unit) {
+-    val density = LocalDensity.current
+-    val offsetXPx = with(density) { offsetX.toPx() }.toInt()
+-    val offsetYPx = with(density) { offsetY.toPx() }.toInt()
+-    val blurRadiusPx = with(density) { blurRadius.toPx() }
+-    val paddingPx = ceil(blurRadiusPx).toInt()
+-    val contentLayer = rememberGraphicsLayer()
+-    val shadowLayer = rememberGraphicsLayer()
++    // Keep the same single Layout/content tree even when measuring the no-shadow ceiling.
++    val modifier = if (PiruPerfFlags.shadowMode == 1) {
++        context.modifier
++    } else {
++        val density = LocalDensity.current
++        val offsetXPx = with(density) { offsetX.toPx() }.toInt()
++        val offsetYPx = with(density) { offsetY.toPx() }.toInt()
++        val blurRadiusPx = with(density) { blurRadius.toPx() }
++        val paddingPx = ceil(blurRadiusPx).toInt()
++        val hasBlur = blurRadiusPx > 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
++        // Never downsample a sharp fallback, and keep small blurs from becoming pixelated.
++        val sampleScale = if (PiruPerfFlags.shadowMode != 2 || !hasBlur || blurRadiusPx < 2f) {
++            1f
++        } else if (blurRadiusPx < 8f) {
++            2f
++        } else {
++            4f
++        }
++        val contentLayer = rememberGraphicsLayer()
++        val shadowLayer = rememberGraphicsLayer()
+ 
+-    val modifier = context.modifier.drawWithContent {
+-        contentLayer.record { this@drawWithContent.drawContent() }
+-        // Padded by the blur radius so the blur is not clipped at the content's edges.
+-        shadowLayer.record(size = IntSize(size.width.toInt() + paddingPx * 2, size.height.toInt() + paddingPx * 2)) {
+-            translate(left = paddingPx.toFloat(), top = paddingPx.toFloat()) {
+-                drawLayer(contentLayer)
++        context.modifier.drawWithContent {
++            contentLayer.record { this@drawWithContent.drawContent() }
++            val paddedWidth = size.width.toInt() + paddingPx * 2
++            val paddedHeight = size.height.toInt() + paddingPx * 2
++            // Low-resolution bounds cover the same padded content, rounding outward only.
++            val shadowSize = IntSize(
++                ceil(paddedWidth / sampleScale).toInt(),
++                ceil(paddedHeight / sampleScale).toInt()
++            )
++            shadowLayer.record(size = shadowSize) {
++                // A source point x records at (x + paddingPx) / s (likewise for y).
++                scale(scale = 1f / sampleScale, pivot = Offset.Zero) {
++                    // Match mode 0's input bounds, including overflow from the content layer.
++                    clipRect(right = paddedWidth.toFloat(), bottom = paddedHeight.toFloat()) {
++                        translate(left = paddingPx.toFloat(), top = paddingPx.toFloat()) {
++                            drawLayer(contentLayer)
++                        }
++                    }
++                }
+             }
++            shadowLayer.colorFilter = ColorFilter.colorMatrix(shadowColorMatrix(color))
++            // RenderEffect runs in the small layer's local pixels, before its scale transform.
++            val sampledRadius = blurRadiusPx / sampleScale
++            shadowLayer.renderEffect = if (hasBlur) BlurEffect(sampledRadius, sampledRadius, TileMode.Decal) else null
++            // Use the local top-left as pivot, not the default layer center:
++            // (offset - padding) + s * ((x + padding) / s) = x + offset.
++            shadowLayer.pivotOffset = Offset.Zero
++            shadowLayer.scaleX = sampleScale
++            shadowLayer.scaleY = sampleScale
++            shadowLayer.topLeft = IntOffset(offsetXPx - paddingPx, offsetYPx - paddingPx)
++            // Like mode 0, let the filtered result extend beyond the layer's input bounds.
++            drawLayer(shadowLayer)
++            drawLayer(contentLayer)
+         }
+-        shadowLayer.colorFilter = ColorFilter.colorMatrix(shadowColorMatrix(color))
+-        // RenderEffect blur needs API 31; below it the shadow is drawn sharp.
+-        shadowLayer.renderEffect = if (blurRadiusPx > 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) BlurEffect(blurRadiusPx, blurRadiusPx, TileMode.Decal) else null
+-        shadowLayer.topLeft = IntOffset(offsetXPx - paddingPx, offsetYPx - paddingPx)
+-        drawLayer(shadowLayer)
+-        drawLayer(contentLayer)
+     }
+ 
+     Layout(modifier = modifier, content = {

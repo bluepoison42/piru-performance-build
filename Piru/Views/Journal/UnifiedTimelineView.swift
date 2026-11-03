@@ -107,7 +107,7 @@ struct UnifiedTimelineView: View {
     }
 
     private var rebuildKey: String {
-        "\(DoseLogService.shared.revision)|\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(dynamicTypeSize)|\(clockTick)"
+        "\(DoseLogService.shared.revision)|\(LaunchCacheInputs.colorSignature(substanceColors))|\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(dynamicTypeSize)|\(clockTick)"
     }
 
     /// Pinch on the graph: preview by stretching vertically while the fingers
@@ -197,7 +197,7 @@ final class UnifiedTimelineModel {
         showsVitals: Bool,
         cacheable: Bool = true,
     ) async {
-        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)"
+        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)|\(LaunchCacheInputs.colorSignature(colors))"
         let key = "\(revision)|\(preferences)|\(entries.count)"
         if key == builtKey, !days.isEmpty { return }
         let now = DebugClock.now
@@ -242,6 +242,7 @@ final class UnifiedTimelineModel {
         // fresh ones until they are replaced, so the list never shrinks to
         // the finished prefix and throws a scrolled-down reader back up.
         let previous = days
+        var previousIndex = 0
         var built: [TimelineDayLayout] = []
         built.reserveCapacity(builder.sliceCount)
         for index in 0 ..< builder.sliceCount {
@@ -250,7 +251,10 @@ final class UnifiedTimelineModel {
             // and a 30-slice chunk between yields is a 250 ms stall at launch.
             if index == 9 || (index > 9 && (index - 9).isMultiple(of: 6)) {
                 let frontier = built[built.count - 1].date
-                days = built + previous.filter { $0.date < frontier }
+                while previousIndex < previous.count, previous[previousIndex].date >= frontier {
+                    previousIndex += 1
+                }
+                days = built + previous[previousIndex...]
                 await Task.yield()
                 guard !Task.isCancelled else { return }
             }
@@ -280,9 +284,9 @@ final class UnifiedTimelineModel {
         showsVitals: Bool,
     ) async -> Bool {
         guard days.isEmpty else { return false }
-        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)"
         let now = DebugClock.now
         let identity = await DoseLogIdentity.fetch(container: container)
+        let preferences = "\(zoom)|\(compressGaps)|\(pkCurves)|\(curveScale.rawValue)|\(showsAxis)|\(bubbleStyle.rawValue)|\(showsVitals)|\(TimelineDoseBubble.heightScale)|\(LaunchCacheInputs.colorSignature(identity.colors))"
         guard identity.entryCount > 0, !Task.isCancelled else { return false }
         let cacheKey = TimelineStripCache.key(
             storeGeneration: DoseLogService.storeGeneration,

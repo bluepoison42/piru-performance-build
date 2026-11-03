@@ -11,7 +11,7 @@
         android:shortcutLongLabel="@string/report_shortcut_long">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="glass.kagerou.piru"
+            android:targetPackage="glass.kagerou.piru.perftest"
             android:targetClass="piru.module.ReportProblemActivity" />
     </shortcut>
 </shortcuts>

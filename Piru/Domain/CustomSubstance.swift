@@ -446,8 +446,9 @@ final class CustomSubstanceStore {
         if let productMedCache, productMedCache.revision == revision { return productMedCache.map }
         var map: [String: MedSchedule.ProductMed] = [:]
         for entry in all {
-            guard let lead = entry.components?.first else { continue }
-            let med = MedSchedule.ProductMed(name: entry.name, lead: DoseTrayModel.stagedName(of: lead))
+            guard let components = entry.components,
+                  let lead = components.first(where: { $0.productName != nil }) ?? components.first else { continue }
+            let med = MedSchedule.ProductMed(name: entry.name, lead: DoseTrayModel.stagedName(of: lead), leadProductName: lead.productName)
             map[entry.name.lowercased()] = map[entry.name.lowercased()] ?? med
             if let label = entry.displayName?.trimmingCharacters(in: .whitespaces).lowercased(), !label.isEmpty {
                 map[label] = map[label] ?? med
@@ -631,7 +632,8 @@ final class CustomSubstanceStore {
     /// is *kept* so the next launch retries — data is never lost to a half-done
     /// migration. Idempotent: a no-op once the blob is gone.
     private func migrateFromDefaultsIfNeeded() {
-        guard let context, let data = mirrorDefaults.data(forKey: Self.legacyStorageKey) else { return }
+        guard !StoreLaunchState.shared.storeUnavailable,
+              let context, let data = mirrorDefaults.data(forKey: Self.legacyStorageKey) else { return }
 
         guard let entries = try? JSONDecoder().decode([CustomSubstanceEntry].self, from: data),
               !entries.isEmpty
@@ -646,11 +648,16 @@ final class CustomSubstanceStore {
             context.insert(CustomSubstanceRecord(entry))
             present.insert(entry.name.lowercased())
         }
-        save()
+        do {
+            try context.save()
+        } catch {
+            Logger.customSubstance.error("Custom-substance migration could not save: \(error.localizedDescription, privacy: .public)")
+            return
+        }
 
-        // Verify every legacy substance is now represented in the store before
-        // discarding the blob — this catches a dropped insert / failed save.
-        let stored = Set(fetchRecords().map { $0.name.lowercased() })
+        let reader = ModelContext(context.container)
+        guard let records = try? reader.fetch(FetchDescriptor<CustomSubstanceRecord>()) else { return }
+        let stored = Set(records.map { $0.name.lowercased() })
         let migrated = entries.allSatisfy { stored.contains($0.name.lowercased()) }
         if migrated {
             mirrorDefaults.removeObject(forKey: Self.legacyStorageKey)

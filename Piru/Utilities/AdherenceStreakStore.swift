@@ -29,6 +29,7 @@ final class AdherenceStreakStore {
         let revision: Int
         let schedule: Int
         let day: Date
+        let boundary: Int
     }
 
     /// The streak for the store as of now — a cache hit when neither the dose
@@ -43,6 +44,7 @@ final class AdherenceStreakStore {
             revision: DoseLogService.shared.revision,
             schedule: Self.scheduleSignature(items),
             day: Calendar.current.journalDay(for: .now),
+            boundary: Calendar.sessionDayBoundaryHour,
         )
         if let streak, computedKey == key { return streak }
         if let inFlight, inFlight.key == key { return await inFlight.task.value }
@@ -60,18 +62,19 @@ final class AdherenceStreakStore {
         return value
     }
 
-    private static func scheduleSignature(_ items: [DailyDoseItem]) -> Int {
+    static func scheduleSignature(_ items: [DailyDoseItem]) -> Int {
         var hasher = Hasher()
         for item in items {
             hasher.combine(item.persistentModelID)
             hasher.combine(item.substance)
+            hasher.combine(item.substanceUID)
             hasher.combine(item.route)
             hasher.combine(item.isAsNeeded)
             hasher.combine(item.startDate)
             hasher.combine(item.frequency)
             hasher.combine(item.frequencyDays)
             hasher.combine(item.frequencyIntervalDays)
-            hasher.combine(item.reminderTimesMinutes.count)
+            hasher.combine(item.reminderTimesMinutes.sorted())
         }
         return hasher.finalize()
     }

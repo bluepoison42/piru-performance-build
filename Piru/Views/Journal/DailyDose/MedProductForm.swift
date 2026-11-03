@@ -12,6 +12,10 @@ struct ProductComponentDraft: Identifiable {
     var substance: String
     /// What the row shows: the brand the user picked, else the display title.
     var displayName: String
+    var productName: String?
+    var isomer: String?
+    var releaseForm: String?
+    var saltForm: String?
     var amount: Double?
     var unit: String
     var route: RouteOfAdministration
@@ -25,6 +29,10 @@ struct ProductComponentDraft: Identifiable {
     init(substance: Substance, displayName: String?) {
         self.substance = substance.name
         self.displayName = displayName ?? substance.displayTitle
+        productName = displayName
+        isomer = DoseTrayModel.seedIsomer(productName: displayName, librarySubstance: substance, route: substance.defaultRoute)
+        releaseForm = SubstanceLibrary.releaseForm(for: displayName ?? substance.name)
+        saltForm = nil
         amount = nil
         route = substance.defaultRoute
         let defaultUnit = substance.unit(for: substance.defaultRoute)
@@ -38,6 +46,10 @@ struct ProductComponentDraft: Identifiable {
     init(rawName: String) {
         substance = rawName
         displayName = rawName
+        productName = nil
+        isomer = nil
+        releaseForm = nil
+        saltForm = nil
         amount = nil
         unit = "mg"
         route = .oral
@@ -55,6 +67,11 @@ struct ProductComponentDraft: Identifiable {
         amount = component.amountPerUnit
         unit = component.unit
         route = component.route
+        productName = component.productName
+        isomer = component.isomer
+        releaseForm = component.releaseForm
+        saltForm = component.saltForm
+        if let productName { displayName = productName }
         if !availableUnits.contains(component.unit) { availableUnits.insert(component.unit, at: 0) }
         if !availableRoutes.contains(component.route) { availableRoutes.append(component.route) }
     }
@@ -132,7 +149,10 @@ final class MedProductDraft {
         var entry = existing ?? CustomSubstanceEntry(name: trimmedName)
         let built = components.compactMap { row -> CombinationComponent? in
             guard let amount = row.amount, amount > 0 else { return nil }
-            return CombinationComponent(substance: row.substance, amountPerUnit: amount, unit: row.unit, route: row.route)
+            return CombinationComponent(
+                substance: row.substance, amountPerUnit: amount, unit: row.unit, route: row.route,
+                productName: row.productName, isomer: row.isomer, releaseForm: row.releaseForm, saltForm: row.saltForm,
+            )
         }
         entry.name = trimmedName
         entry.unit = savedUnitWord

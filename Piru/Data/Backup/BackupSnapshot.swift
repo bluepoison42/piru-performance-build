@@ -41,6 +41,23 @@ nonisolated struct BackupSnapshot: Sendable {
 }
 
 extension DataExportImport {
+    @MainActor
+    static func prepareAutomaticBackup(context: ModelContext) throws {
+        guard !StoreLaunchState.shared.storeUnavailable else { throw BackupManager.ManagerError.storeUnavailable }
+        if context.hasChanges { try context.save() }
+    }
+
+    nonisolated static func checkedBackup<T>(container: ModelContainer, capture: () throws -> T) throws -> T {
+        #if canImport(PortableData)
+        try container.requireCompleteBackup()
+        #endif
+        let captured = try capture()
+        #if canImport(PortableData)
+        try container.requireCompleteBackup()
+        #endif
+        return captured
+    }
+
     /// Captures a backup with the main actor doing only the small reads: custom
     /// substances and settings here, then the model graph on a fresh background
     /// context and the revision hash beside it. The background context reads

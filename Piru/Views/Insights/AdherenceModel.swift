@@ -42,19 +42,21 @@ final class AdherenceModel {
         actionableDays.reduce(0) { $0 + $1.totalCount }
     }
 
-    func recompute(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date) {
-        recomputeMonth(entries: entries, dailyItems: dailyItems, month: month)
+    func recompute(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date, skipped: [AdherenceCalculator.SkippedSlotSnapshot] = []) {
+        recomputeMonth(entries: entries, dailyItems: dailyItems, month: month, skipped: skipped)
         let boundaryHour = Calendar.sessionDayBoundaryHour
         today = AdherenceCalculator.adherence(
             for: calendar.journalDay(for: .now, boundaryHour: boundaryHour), entries: entries, dailyItems: dailyItems,
+            skipped: skipped,
             boundaryHour: boundaryHour,
         )
     }
 
-    func recomputeMonth(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date) {
+    func recomputeMonth(entries: [DoseEntry], dailyItems: [DailyDoseItem], month: Date, skipped: [AdherenceCalculator.SkippedSlotSnapshot] = []) {
         // Bucketed by each dose's own journal day, read on the clock of the
         // zone it was logged in — the same test `adherence(for:)` applies.
         let boundaryHour = Calendar.sessionDayBoundaryHour
+        let skippedByDay = Dictionary(grouping: skipped, by: \.dueDay)
         var entriesByDay: [Date: [DoseEntry]] = [:]
         for entry in entries {
             entriesByDay[entry.journalDay(in: calendar, boundaryHour: boundaryHour), default: []].append(entry)
@@ -69,7 +71,8 @@ final class AdherenceModel {
             let date = calendar.date(byAdding: .day, value: dayOffset - 1, to: start)!
             let dayStart = calendar.startOfDay(for: date)
             let adherence = AdherenceCalculator.adherence(
-                for: dayStart, entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems, boundaryHour: boundaryHour,
+                for: dayStart, entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems,
+                skipped: skippedByDay[dayStart] ?? [], boundaryHour: boundaryHour,
             )
             data.append(adherence)
             byDay[dayStart] = adherence

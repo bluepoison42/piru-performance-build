@@ -36,6 +36,7 @@ enum MoleculeLibrary {
 /// 8-unit margin (a 116-unit drawing space), matched to the design prototype.
 struct MoleculeView: View {
     let key: String
+    var canvasSize: CGSize? = nil
     var color: Color = .white
     /// Stroke and ball weight at the reference 116-unit scale; scaled to the view.
     var lineWidth: CGFloat = 2.4
@@ -72,14 +73,16 @@ struct MoleculeView: View {
             )
 
             let r = ballRadius * scale
+            var balls = Path()
             for index in shape.atoms.indices {
                 guard let p = point(index) else { continue }
-                context.fill(
-                    Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2)),
-                    with: .color(color),
-                )
+                balls.addEllipse(in: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2))
             }
+            context.fill(balls, with: .color(color))
         }
+        #if os(Android)
+        .piruKnownSize(canvasSize)
+        #endif
         .accessibilityHidden(true)
     }
 }

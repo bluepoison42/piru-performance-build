@@ -9,7 +9,9 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.OpenableColumns
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,11 +34,20 @@ class AndroidDocuments {
         private var createLauncher: ActivityResultLauncher<String>? = null
         private val createContract = CreateAnyDocument()
         private var pendingExport: File? = null
+        private var restoredExport = false
+        private const val exportStateKey = "piru.pendingExport"
 
         /// Registers the pickers, which Android allows only while the activity is created.
         @JvmStatic
         fun register(activity: ComponentActivity) {
             this.activity = WeakReference(activity)
+            activity.savedStateRegistry.consumeRestoredStateForKey(exportStateKey)?.getString("source")?.let {
+                pendingExport = File(it)
+                restoredExport = true
+            }
+            activity.savedStateRegistry.registerSavedStateProvider(exportStateKey) {
+                Bundle().apply { putString("source", pendingExport?.path) }
+            }
             openLauncher = activity.registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
                 imported(activity, uri)
             }
@@ -136,12 +147,15 @@ class AndroidDocuments {
         private fun exported(activity: ComponentActivity, uri: Uri?) {
             val source = pendingExport
             pendingExport = null
-            if (uri == null || source == null) {
+            val wasRestored = restoredExport
+            restoredExport = false
+            if (uri == null) {
                 AndroidDocumentResults.shared.didExport(null, null)
                 return
             }
             Thread {
                 val failure = try {
+                    val source = source ?: throw IllegalStateException("The export source could not be restored. Export the file again.")
                     val output = activity.contentResolver.openOutputStream(uri, "wt")
                         ?: throw IllegalStateException("The document could not be written.")
                     output.use { stream -> source.inputStream().use { it.copyTo(stream) } }
@@ -150,6 +164,7 @@ class AndroidDocuments {
                     error.localizedMessage ?: error.toString()
                 }
                 activity.runOnUiThread {
+                    if (failure != null && wasRestored) Toast.makeText(activity, failure, Toast.LENGTH_LONG).show()
                     AndroidDocumentResults.shared.didExport(if (failure == null) uri.toString() else null, failure)
                 }
             }.start()

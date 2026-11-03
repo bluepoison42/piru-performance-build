@@ -298,6 +298,7 @@ struct ReportsView: View {
                     substanceID: SubstanceStore.shared.substanceID(forNameOrAlias: entry.substance),
                     halfLifeMinutes: SubstanceLibrary.lookup(entry.substance)?.halfLifeMinutes,
                     combinationName: entry.combinationName,
+                    productName: entry.productName,
                 )
             }
 

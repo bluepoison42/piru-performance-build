@@ -53,11 +53,11 @@ struct DueNowSlotTests {
     }
 
     @Test
-    func `Covered slots are skipped — earliest-first assignment`() {
+    func `A logged dose covers the nearest slot`() {
         let twice = med("Methylphenidate", times: [480, 11 * 60])
-        // One dose today covers the 8:00 slot; the 11:00 slot is uncovered and past.
+        // A noon dose covers the 11:00 slot; the 8:00 slot is still uncovered.
         let one = DueNowSlot.derive(items: [twice], todayEntries: [dose(for: twice)], now: noon)
-        #expect(one.map(\.slotMinutes) == [11 * 60])
+        #expect(one.map(\.slotMinutes) == [480])
         // Two doses cover both.
         let none = DueNowSlot.derive(items: [twice], todayEntries: [dose(for: twice), dose(for: twice)], now: noon)
         #expect(none.isEmpty)
