@@ -273,7 +273,7 @@ nonisolated enum AndroidBackupFolder {
         guard let kotlin else { return String(localized: "The backup folder could not be reached.") }
         do {
             return try FolderBackupPublication.write(name: name) { partial in
-                let uri: String = try kotlin.stage(tree, name, partial, source.path)
+                let uri = try kotlin.stage(tree, name, partial, source.path) as String?
                 return FolderBackupPublication.StageResult(uri: uri, error: nil)
             } publish: { uri in
                 try kotlin.publish(tree, name, uri, source.path) as String?
