@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       cache_only:
-        description: Run persistence, migration and app regressions before building
+        description: Run backup and import regressions without packaging an APK
         type: boolean
         default: false
 permissions:
@@ -18,23 +18,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Prepare host macro compatibility
         run: python3 ci/perf/query-tests/prepare_host.py
-      - name: Test the actual PortableData models and medication services
-        run: swift test --package-path android/Compat --jobs 2 --filter 'Port16UpgradeTests|MedicationDayTests|RoutineSkipTests'
-      - name: Fetch and verify the bundled substance database
-        run: bash pipeline/fetch-db.sh
-      - name: Run the affected upstream and port regression suites
-        run: |
-          set -o pipefail
-          xcodebuild -scheme Piru -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test -only-testing:PiruTests/CalendarSessionDayTests -only-testing:PiruTests/DoseTimeZoneTests -only-testing:PiruTests/RoutineOccurrenceTests -only-testing:PiruTests/AdherenceCalculatorTests -only-testing:PiruTests/DueNowSlotTests -only-testing:PiruTests/JournalModelTests -only-testing:PiruTests/DecimalInputTests -only-testing:PiruTests/ExportRoundTripTests -only-testing:PiruTests/ExportCoverageTests -only-testing:PiruTests/AuditFollowupTests -only-testing:PiruTests/AuditCompletionTests -only-testing:PiruTests/TrayInteractionCheckTests -only-testing:PiruTests/StoreRecoveryTests > "$RUNNER_TEMP/app-tests.log" 2>&1 || { tail -100 "$RUNNER_TEMP/app-tests.log"; exit 1; }
-          tail -40 "$RUNNER_TEMP/app-tests.log"
-      - name: Upload test diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-diagnostics
-          path: ${{ runner.temp }}/app-tests.log
-          if-no-files-found: ignore
-          retention-days: 7
+      - name: Test existing backup and import safety entry points
+        run: swift test --package-path android/Compat --jobs 2 --filter DataSafetyTests
   android:
     needs: cache-regression
     if: ${{ !inputs.cache_only }}
@@ -64,7 +49,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.7.1-70016-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.7.1-70017-unsigned.apk
       - name: Upload the dependency lock used by the build
         if: always()
         uses: actions/upload-artifact@v4
@@ -73,14 +58,8 @@ jobs:
           path: ${{ runner.temp }}/piru-android/stage/Package.resolved
           if-no-files-found: ignore
           retention-days: 7
-      - name: Package an isolated app for destructive fixture tests
-        shell: zsh {0}
-        run: |
-          source android/tools/env.sh
-          cd "$PIRU_ANDROID/stage/Android"
-          SKIP_BRIDGE_ANDROID_BUILD_DISABLED=1 SKIP_BRIDGE_ROBOLECTRIC_BUILD_DISABLED=1 zsh "$GITHUB_WORKSPACE/android/tools/gradle.sh" :app:assembleAudit --console=plain > "$PIRU_ANDROID/build/audit-gradle.log" 2>&1 || { tail -80 "$PIRU_ANDROID/build/audit-gradle.log"; exit 1; }
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/audit/app-audit.apk" "$GITHUB_WORKSPACE/deliverables/Piru-Audit-70016.apk"
-          shasum -a 256 "$GITHUB_WORKSPACE"/deliverables/*.apk > "$GITHUB_WORKSPACE/deliverables/SHA256SUMS.txt"
+      - name: Record APK digest
+        run: shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

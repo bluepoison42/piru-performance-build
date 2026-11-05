@@ -15,8 +15,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import java.io.File
 
-class BackupStageResult(val uri: String?, val error: String?)
-
 class AndroidBackupFolder {
     companion object {
         private const val MIME_TYPE = "application/octet-stream"
@@ -90,11 +88,11 @@ class AndroidBackupFolder {
             }
         }
 
-        /// Return the provider's actual URI separately from any error.
+        /// Return the actual URI as a JNI string; failed writes throw before publication.
         @JvmStatic
         @Synchronized
-        fun stage(tree: String, name: String, partialName: String, sourcePath: String): BackupStageResult {
-            val context = context ?: return BackupStageResult(null, "unavailable")
+        fun stage(tree: String, name: String, partialName: String, sourcePath: String): String {
+            val context = context ?: throw IllegalStateException("unavailable")
             var partial: Uri? = null
             var complete = false
             return try {
@@ -108,10 +106,10 @@ class AndroidBackupFolder {
                 copies.add(created.toString())
                 savePartials(context, tree, name, copies)
                 prunePartials(context, tree, name, keep = 2)
-                BackupStageResult(created.toString(), null)
+                created.toString()
             } catch (error: Exception) {
                 if (!complete) partial?.let { deleteChecked(context, it) }
-                BackupStageResult(null, error.localizedMessage ?: error.toString())
+                throw error
             }
         }
 
