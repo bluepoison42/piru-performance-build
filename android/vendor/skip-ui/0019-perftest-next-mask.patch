@@ -1,0 +1,63 @@
+Cold-start piru_next_mask experiments: fixed Canvas flag, simple color backgrounds, and actual-tab decorator slots; default zero.
+
+diff --git a/Sources/SkipUI/Skip/PiruNextPerf.kt b/Sources/SkipUI/Skip/PiruNextPerf.kt
+new file mode 100644
+--- /dev/null
++++ b/Sources/SkipUI/Skip/PiruNextPerf.kt
+@@ -0,0 +1,20 @@
++package skip.ui
++
++object PiruNextPerf {
++    @Volatile private var mask: Int = 0
++    private var initialized = false
++
++    @JvmStatic
++    @Synchronized
++    fun initialize(value: Int) {
++        if (initialized) return
++        mask = value
++        initialized = true
++    }
++
++    @JvmStatic
++    fun enabled(bit: Int): Boolean = (mask and bit) != 0
++
++    @JvmStatic
++    fun fixedCanvasEnabled(): Boolean = enabled(1)
++}
+diff --git a/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift b/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift
+--- a/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift
++++ b/Sources/SkipUI/SkipUI/View/AdditionalViewModifiers.swift
+@@ -168,3 +168,15 @@
+     public func background(_ style: any ShapeStyle, in shape: any Shape, fillStyle: FillStyle = FillStyle()) -> any View {
++        #if SKIP
++        if PiruNextPerf.enabled(2),
++           fillStyle.isAntialiased, !fillStyle.isEOFilled,
++           (shape is Rectangle || shape is RoundedRectangle || shape is Capsule),
++           let color = style as? Color {
++            return ModifiedContent(content: self, modifier: RenderModifier { context in
++                let fill = color.asColor(opacity: 1.0, animationContext: context)!
++                let outline = shape.asComposeShape(density: LocalDensity.current)
++                return context.modifier.background(fill, shape: outline)
++            })
++        }
++        #endif
+         return background(content: { shape.fill(style) })
+     }
+diff --git a/Sources/SkipUI/SkipUI/Containers/TabView.swift b/Sources/SkipUI/SkipUI/Containers/TabView.swift
+--- a/Sources/SkipUI/SkipUI/Containers/TabView.swift
++++ b/Sources/SkipUI/SkipUI/Containers/TabView.swift
+@@ -534,6 +534,12 @@
+                             // Keep a stable SaveableStateHolder for each tab's backStack
+                             let decoratedEntrySlots = remember { arrayOfNulls<kotlin.collections.List<NavEntry<NavKey>>?>(100) }
++                            // Retain decorators for previously committed tabs when tabs shrink.
++                            let committedDecoratorCount = remember { intArrayOf(0) }
++                            let decoratorCount = PiruNextPerf.enabled(4)
++                                ? min(100, max(tabRenderables.size, committedDecoratorCount[0]))
++                                : 100
++                            SideEffect { committedDecoratorCount[0] = decoratorCount }
+                             var tabIndex = 0
+-                            while tabIndex < 100 {
++                            while tabIndex < decoratorCount {
+                                 let ti = tabIndex
+                                 key(ti) {

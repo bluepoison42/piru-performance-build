@@ -79,12 +79,12 @@ enum MyMedsInfo {
     /// the line would otherwise point past it.
     static func nextDue(slots: [SlotSummary], nowMinutes: Int) -> MyMedsInfoLine? {
         let pending = slots.filter(\.pending)
-        let dueNow = pending.contains { ($0.minutes ?? 0) <= nowMinutes }
+        let dueNow = pending.contains { $0.minutes.map { Calendar.journalMinutes(ofSlot: $0) <= Calendar.journalMinutes(ofSlot: nowMinutes) } ?? true }
         guard !dueNow else { return nil }
         guard let next = pending
             .compactMap({ slot in slot.minutes.map { (name: slot.name, minutes: $0) } })
-            .filter({ $0.minutes > nowMinutes })
-            .min(by: { $0.minutes < $1.minutes })
+            .filter({ Calendar.journalMinutes(ofSlot: $0.minutes) > Calendar.journalMinutes(ofSlot: nowMinutes) })
+            .min(by: { Calendar.journalMinutes(ofSlot: $0.minutes) < Calendar.journalMinutes(ofSlot: $1.minutes) })
         else { return nil }
         return .nextDue(name: next.name, minutes: next.minutes)
     }

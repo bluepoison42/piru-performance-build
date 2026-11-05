@@ -93,7 +93,8 @@ extension SubstanceStore {
         limit: Int,
     ) -> [SubstanceMatch] {
         let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !q.isEmpty else { return [] }
+        let searchQuery = q.substanceSearchKey
+        guard !searchQuery.isEmpty else { return [] }
 
         var exactIDs: [Int64] = []
         var prefixIDs: [Int64] = []
@@ -126,7 +127,8 @@ extension SubstanceStore {
         var namePrefix: [(key: String, id: Int64)] = []
         var nameContains: [(key: String, id: Int64)] = []
         for (key, id) in nameIndex where !seen.contains(id) {
-            if key.hasPrefix(q) { namePrefix.append((key, id)) } else if key.contains(q) { nameContains.append((key, id)) }
+            let searchKey = key.substanceSearchKey
+            if searchKey.hasPrefix(searchQuery) { namePrefix.append((key, id)) } else if searchKey.contains(searchQuery) { nameContains.append((key, id)) }
         }
         for hit in namePrefix.sorted(by: byKey) where seen.insert(hit.id).inserted {
             prefixIDs.append(hit.id)
@@ -137,14 +139,14 @@ extension SubstanceStore {
         // Collect every alias-prefix candidate first, then claim by (length,
         // lexicographic), so both the ranking and the displayed alias are
         // deterministic and the shortest alias wins.
-        for (key, id) in aliasIndex where !seen.contains(id) && key.hasPrefix(q) {
+        for (key, id) in aliasIndex where !seen.contains(id) && key.substanceSearchKey.hasPrefix(searchQuery) {
             noteAlias(key, id)
         }
         for (id, _) in aliasHits.sorted(by: { ($0.value.count, $0.value) < ($1.value.count, $1.value) })
             where !seen.contains(id) {
             prefixIDs.append(id); seen.insert(id)
         }
-        let aliasContains = aliasIndex.filter { !seen.contains($0.value) && $0.key.contains(q) }
+        let aliasContains = aliasIndex.filter { !seen.contains($0.value) && $0.key.substanceSearchKey.contains(searchQuery) }
             .map { (key: $0.key, id: $0.value) }
         for hit in aliasContains.sorted(by: byKey) where seen.insert(hit.id).inserted {
             containsIDs.append(hit.id)

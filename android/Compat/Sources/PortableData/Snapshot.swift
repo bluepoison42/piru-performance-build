@@ -143,7 +143,7 @@ public struct Snapshot {
     static let decoder = JSONDecoder()
 
     static func decode<T: Decodable>(_: T.Type, from raw: Data, entity: String, key: String) throws -> T {
-        if let primitive = T.self as? any PrimitiveJSON.Type, let value = primitive.init(json: raw) as? T {
+        if let primitive = T.self as? any PrimitiveJSON.Type, let decoded = primitive.init(json: raw), let value = decoded as? T {
             return value
         }
         do {

@@ -15,6 +15,10 @@ nonisolated struct CombinationComponent: Codable, Hashable, Sendable {
     var amountPerUnit: Double
     var unit: String
     var route: RouteOfAdministration
+    var productName: String? = nil
+    var isomer: String? = nil
+    var releaseForm: String? = nil
+    var saltForm: String? = nil
 
     /// The most units one pick of a product can stage.
     static let maximumUnits = 1000

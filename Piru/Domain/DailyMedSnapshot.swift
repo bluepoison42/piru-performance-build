@@ -21,6 +21,9 @@ struct DailyMedSnapshot: Equatable {
     let sortOrder: Int
     /// ``DailyDoseItem/identityKey`` at the time of the copy.
     let identityKey: String
+    let substanceUID: String?
+    let reminderTimesMinutes: [Int]
+    let isAsNeeded: Bool
 
     init(_ item: DailyDoseItem) {
         substance = item.substance
@@ -32,6 +35,22 @@ struct DailyMedSnapshot: Equatable {
         isQuiet = item.isQuiet
         sortOrder = item.sortOrder
         identityKey = item.identityKey
+        substanceUID = item.substanceUID
+        reminderTimesMinutes = item.reminderTimesMinutes
+        isAsNeeded = item.isAsNeeded
+    }
+
+    /// Preserve schedule identity, including custom meds without a library UID.
+    func routineSlotKeys(in group: MedTimeGroup?) -> Set<String> {
+        guard !isAsNeeded else { return [] }
+        let slots: [Int?] = reminderTimesMinutes.isEmpty ? [nil] : reminderTimesMinutes.map { Optional($0) }
+        return Set(slots.filter { time in
+            guard let group else { return true }
+            return time.map { MedTimeGroup.group(forMinutes: $0) == group } ?? (group == .anytime)
+        }.map { time in
+            RoutineOccurrenceService.slotKey(substance: substance, substanceUID: substanceUID,
+                route: route, slotMinutes: time)
+        })
     }
 
     /// The name a med row, pill or the dock label titles this med by.

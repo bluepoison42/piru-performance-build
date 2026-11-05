@@ -1,4 +1,5 @@
 import Foundation
+import GRDB
 import Observation
 import os
 import SwiftData
@@ -286,8 +287,8 @@ nonisolated enum StoreRecovery {
             let dir = URL(fileURLWithPath: dirPath)
             guard let entries = try? fm.contentsOfDirectory(atPath: dirPath) else { continue }
             for name in entries {
-                // Sidecar main files only (skip their -shm/-wal): default.store.<tag>-<ts>
-                guard name.hasPrefix(storeName + "."), !name.hasSuffix("-shm"), !name.hasSuffix("-wal")
+                // Accept both legacy seconds and unique millisecond_UUID snapshots.
+                guard name.hasPrefix(storeName + "."), !name.hasSuffix("-shm"), !name.hasSuffix("-wal"), sidecarTimestamp(name) != nil
                 else { continue }
                 if !includeIntentional, let reason = sidecarReason(name), intentionalReasons.contains(reason) {
                     continue
@@ -351,26 +352,29 @@ nonisolated enum StoreRecovery {
         }
     }
 
-    /// Copy (not move) the canonical store and its siblings to a timestamped
-    /// sidecar, leaving the live store in place. Used before a destructive but
+    /// Capture the canonical SQLite store into a timestamped sidecar,
+    /// leaving the live store in place. Used before a destructive but
     /// intentional action (Settings → Delete All) so it's always recoverable.
-    static func snapshotStore(reason: String) {
+    @discardableResult
+    static func snapshotStore(reason: String) -> Bool {
         let fm = FileManager.default
         let store = canonicalStoreURL()
+        guard fm.fileExists(atPath: store.path) else {
+            Logger.storeRecovery.error("Snapshot failed: the live store is missing.")
+            return false
+        }
         let dir = store.deletingLastPathComponent()
         let base = store.lastPathComponent
-        let stamp = Int(Date().timeIntervalSince1970)
-        for suffix in storeSuffixes {
-            let src = dir.appendingPathComponent(base + suffix)
-            guard fm.fileExists(atPath: src.path) else { continue }
-            let dst = dir.appendingPathComponent("\(base).\(reason)-\(stamp)\(suffix)")
-            do {
-                try fm.copyItem(at: src, to: dst)
-            } catch {
-                Logger.storeRecovery.error("Snapshot of \(src.lastPathComponent, privacy: .public) failed: \(error.localizedDescription, privacy: .public)")
-            }
+        let stamp = "\(Int64(Date().timeIntervalSince1970 * 1000))_\(UUID().uuidString.prefix(8))"
+        let destination = dir.appendingPathComponent("\(base).\(reason)-\(stamp)")
+        do {
+            try copyStore(from: store, to: destination)
+            Logger.storeRecovery.notice("Snapshot taken before \(reason, privacy: .public)")
+            return true
+        } catch {
+            Logger.storeRecovery.error("Snapshot failed: \(error.localizedDescription, privacy: .public)")
+            return false
         }
-        Logger.storeRecovery.notice("Snapshot taken before \(reason, privacy: .public)")
     }
 
     // MARK: - Helpers
@@ -505,23 +509,32 @@ nonisolated enum StoreRecovery {
         FileManager.default.fileExists(atPath: storeURL.path)
     }
 
-    /// Copy a store and its siblings to `dest` (overwriting only after the
-    /// caller has backed up any existing dest). Copies -shm/-wal too so an
-    /// uncheckpointed WAL is preserved and replayed on open.
+    /// Capture a consistent SQLite snapshot, including committed WAL contents.
     static func copyStore(from source: URL, to dest: URL) throws {
         let fm = FileManager.default
-        let srcDir = source.deletingLastPathComponent()
-        let srcBase = source.lastPathComponent
-        let dstDir = dest.deletingLastPathComponent()
-        let dstBase = dest.lastPathComponent
-        for suffix in storeSuffixes {
-            let src = srcDir.appendingPathComponent(srcBase + suffix)
-            guard fm.fileExists(atPath: src.path) else { continue }
-            let dst = dstDir.appendingPathComponent(dstBase + suffix)
-            if fm.fileExists(atPath: dst.path) {
-                try fm.removeItem(at: dst) // safe: caller backed it up first
-            }
-            try fm.copyItem(at: src, to: dst)
+        let staging = dest.appendingPathExtension("copy-\(UUID().uuidString)")
+        defer {
+            for suffix in storeSuffixes { try? fm.removeItem(atPath: staging.path + suffix) }
+        }
+        var configuration = Configuration()
+        configuration.readonly = true
+        configuration.busyMode = .timeout(5)
+        let reader = try DatabaseQueue(path: source.path, configuration: configuration)
+        let writer = try DatabaseQueue(path: staging.path)
+        try reader.backup(to: writer)
+        try writer.writeWithoutTransaction { db in
+            try db.execute(sql: "PRAGMA wal_checkpoint(TRUNCATE)")
+            try db.execute(sql: "PRAGMA journal_mode=DELETE")
+        }
+        try writer.close()
+        for suffix in storeSuffixes.dropFirst() {
+            let sidecar = dest.path + suffix
+            if fm.fileExists(atPath: sidecar) { try fm.removeItem(atPath: sidecar) }
+        }
+        if fm.fileExists(atPath: dest.path) {
+            _ = try fm.replaceItemAt(dest, withItemAt: staging)
+        } else {
+            try fm.moveItem(at: staging, to: dest)
         }
     }
 
@@ -585,7 +598,7 @@ nonisolated enum StoreRecovery {
         Logger.storeRecovery.notice("Manually restored canonical store from \(sidecar.lastPathComponent, privacy: .public)")
     }
 
-    /// Parse the trailing `-<unix-seconds>` timestamp from a sidecar filename.
+    /// Parse legacy seconds or unique `<unix-milliseconds>_<UUID>` snapshot stamps.
     static func sidecarTimestamp(_ fileName: String) -> Date? {
         var tag = fileName
         for suffix in ["-shm", "-wal"] where tag.hasSuffix(suffix) {
@@ -593,7 +606,9 @@ nonisolated enum StoreRecovery {
         }
         guard let dash = tag.lastIndex(of: "-") else { return nil }
         let stamp = tag[tag.index(after: dash)...]
-        guard let seconds = TimeInterval(stamp) else { return nil }
+        let parts = stamp.split(separator: "_", maxSplits: 1)
+        guard let value = parts.first, let number = TimeInterval(value) else { return nil }
+        let seconds = parts.count == 2 ? number / 1000 : number
         return Date(timeIntervalSince1970: seconds)
     }
 }

@@ -28,11 +28,11 @@ final class MyMedsModel {
         boundaryHour: Int = Calendar.sessionDayBoundaryHour, now: Date = .now,
     ) -> [MyMedsCard.MedSlot] {
         var slots: [MyMedsCard.MedSlot] = []
+        let today = Calendar.current.journalDay(for: now, boundaryHour: boundaryHour)
         let occurrencesByKey = Dictionary(
-            occurrences.map { (RoutineOccurrenceService.slotKey(for: $0), $0) },
+            occurrences.filter { $0.dueDay == today }.map { (RoutineOccurrenceService.slotKey(for: $0), $0) },
             uniquingKeysWith: { _, last in last },
         )
-        let today = Calendar.current.journalDay(for: now, boundaryHour: boundaryHour)
         for item in items where !item.isAsNeeded && AdherenceCalculator.isDue(item, on: today) {
             let times = item.reminderTimesMinutes.sorted()
             let expected = max(1, times.count)

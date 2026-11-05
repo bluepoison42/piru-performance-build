@@ -152,6 +152,34 @@ struct BridgeTests {
         _ = try context.sessions().first?.title
         #expect(bridges.made == 1)
     }
+
+    @Test
+    func `A fetch's filter and sort report no reads to bridges views made, and writes still reach them`() throws {
+        let store = TestStore()
+        try seedJournal(store)
+        let context = try ModelContext(store.container())
+        let bridges = BridgeLog()
+        ModelObservation.makeBridge = { CountingBridge(log: bridges) }
+        defer { ModelObservation.makeBridge = nil }
+
+        for dose in try context.doses() {
+            _ = dose.substance
+        }
+        #expect(bridges.made == 3)
+        let shown = bridges.calls
+
+        let floor = origin.addingTimeInterval(-1)
+        let sorted = try context.fetch(FetchDescriptor<DoseEntry>(
+            predicate: #Predicate { $0.timestamp > floor },
+            sortBy: [SortDescriptor(\.substance, order: .reverse), SortDescriptor(\.timestamp)],
+        ))
+        #expect(bridges.calls == shown, "A fetch's own reads reached the renderer's bridge")
+        #expect(sorted.first?.substance == "caffeine2")
+        #expect(bridges.calls == shown + 1)
+        sorted[0].amount = 7
+        #expect(bridges.writes(to: \DoseEntry.amount) == 1)
+        #expect(bridges.made == 3)
+    }
 }
 
 private struct PassFailed: Error {}

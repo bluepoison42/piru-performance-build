@@ -1,0 +1,78 @@
+name: Build Piru performance test
+on:
+  workflow_dispatch:
+    inputs:
+      cache_only:
+        description: Run backup and import regressions without packaging an APK
+        type: boolean
+        default: false
+permissions:
+  contents: read
+env:
+  PIRU_DB_URL: https://github.com/bluepoison42/piru-performance-build/releases/download/db-v1.7-a43b3cc6/piru-substances.sqlite
+jobs:
+  cache-regression:
+    runs-on: macos-26
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare host macro compatibility
+        run: python3 ci/perf/query-tests/prepare_host.py
+      - name: Test existing backup and import safety entry points
+        run: swift test --package-path android/Compat --jobs 2 --filter DataSafetyTests
+  android:
+    needs: cache-regression
+    if: ${{ !inputs.cache_only }}
+    runs-on: macos-26-intel
+    timeout-minutes: 180
+    env:
+      PIRU_CONFIG: release
+      PIRU_UNSIGNED: '1'
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Set up pinned native Android build tools
+        run: zsh ci/perf/setup_ci.zsh
+      - name: Fetch and verify the bundled substance database
+        run: bash pipeline/fetch-db.sh
+      - name: Build optimized Swift and Kotlin bridges
+        shell: zsh {0}
+        run: |
+          source android/tools/env.sh
+          zsh android/tools/build-app.sh --jobs 4
+      - name: Package the unsigned release APK
+        shell: zsh {0}
+        run: |
+          zsh android/tools/package-apk.sh
+          mkdir -p deliverables
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.8.1-70018-unsigned.apk
+      - name: Upload the dependency lock used by the build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resolved-dependencies
+          path: ${{ runner.temp }}/piru-android/stage/Package.resolved
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Record APK digest
+        run: shasum -a 256 deliverables/*.apk > deliverables/SHA256SUMS.txt
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: piru-performance-apk
+          path: deliverables/
+          retention-days: 7
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-diagnostics
+          path: |
+            ${{ runner.temp }}/piru-android/build/*.log
+            ${{ runner.temp }}/piru-android/build/*.errors
+          if-no-files-found: ignore
+          retention-days: 7

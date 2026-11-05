@@ -55,6 +55,8 @@ final class InsightsModel {
     func changeToken(substanceColors: [SubstanceColor], dailyItemCount: Int) -> Int {
         var hasher = Hasher()
         hasher.combine(DoseLogService.shared.revision)
+        hasher.combine(Calendar.sessionDayBoundaryHour)
+        hasher.combine(calendar.journalDay(for: .now))
         for color in substanceColors {
             hasher.combine(color.substance)
             hasher.combine(color.tint)
@@ -66,6 +68,7 @@ final class InsightsModel {
     func recompute(
         entries: [DoseEntry],
         dailyItems: [DailyDoseItem],
+        skipped: [AdherenceCalculator.SkippedSlotSnapshot],
         substanceColors: [SubstanceColor],
     ) async {
         let token = changeToken(substanceColors: substanceColors, dailyItemCount: dailyItems.count)
@@ -87,7 +90,7 @@ final class InsightsModel {
             entriesByDay[entry.journalDay(in: cal, boundaryHour: boundaryHour), default: []].append(entry)
         }
 
-        let cells = computeMonthCells(cal: cal, entriesByDay: entriesByDay, dailyItems: dailyItems)
+        let cells = computeMonthCells(cal: cal, entriesByDay: entriesByDay, dailyItems: dailyItems, skipped: skipped)
         monthCells = cells
         adherence = Self.monthAdherence(fromCells: cells)
         usage = computeUsage(entries: entries)
@@ -105,18 +108,19 @@ final class InsightsModel {
         }
     }
 
-    private func computeMonthCells(cal: Calendar, entriesByDay: [Date: [DoseEntry]], dailyItems: [DailyDoseItem]) -> [DayAdherence?] {
+    private func computeMonthCells(cal: Calendar, entriesByDay: [Date: [DoseEntry]], dailyItems: [DailyDoseItem], skipped: [AdherenceCalculator.SkippedSlotSnapshot]) -> [DayAdherence?] {
         guard !dailyItems.isEmpty,
-              let start = cal.date(from: cal.dateComponents([.year, .month], from: .now)),
+              let start = cal.date(from: cal.dateComponents([.year, .month], from: cal.journalDay(for: .now))),
               let range = cal.range(of: .day, in: .month, for: start) else { return [] }
 
+        let skippedByDay = Dictionary(grouping: skipped, by: \.dueDay)
         let firstWeekday = cal.component(.weekday, from: start) - cal.firstWeekday
         let leadingBlanks = (firstWeekday + 7) % 7
         var cells: [DayAdherence?] = Array(repeating: nil, count: leadingBlanks)
         for dayOffset in range {
             guard let date = cal.date(byAdding: .day, value: dayOffset - 1, to: start) else { continue }
             let dayStart = cal.startOfDay(for: date)
-            cells.append(AdherenceCalculator.adherence(for: dayStart, entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems))
+            cells.append(AdherenceCalculator.adherence(for: date, entries: entriesByDay[dayStart] ?? [], dailyItems: dailyItems, skipped: skippedByDay[date] ?? []))
         }
         return cells
     }
@@ -156,6 +160,7 @@ struct InsightsView: View {
     @Query(sort: \DoseEntry.timestamp, order: .reverse) private var allEntries: [DoseEntry]
     @Query(sort: \DailyDoseItem.sortOrder) private var dailyItems: [DailyDoseItem]
     @Query private var substanceColors: [SubstanceColor]
+    @Query(filter: #Predicate<RoutineOccurrence> { $0.stateRaw == "skipped" }) private var skippedOccurrences: [RoutineOccurrence]
     /// Any note carrying a "did it work?" answer. The card appears once there
     /// is something for it to read; nobody who never rates a dose sees it.
     @Query(filter: #Predicate<SessionNote> { $0.worked != nil }) private var ratedNotes: [SessionNote]
@@ -220,6 +225,7 @@ struct InsightsView: View {
             await model.recompute(
                 entries: allEntries,
                 dailyItems: dailyItems,
+                skipped: AdherenceCalculator.skippedSnapshots(skippedOccurrences),
                 substanceColors: substanceColors,
             )
         }
@@ -317,7 +323,7 @@ struct InsightsView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Theme.secondaryLabel)
                             Spacer()
-                            Text(Date.now.formatted(.dateTime.month(.wide)))
+                            Text(Calendar.current.journalDay(for: .now).formatted(.dateTime.month(.wide)))
                                 .font(.subheadline)
                                 .foregroundStyle(Theme.secondaryLabel)
                         }
@@ -339,7 +345,7 @@ struct InsightsView: View {
                             .fill(adherenceDotColor(cell))
                             .frame(height: 15)
                             .overlay {
-                                if Calendar.current.isDateInToday(cell.date) {
+                                if cell.date == Calendar.current.journalDay(for: .now) {
                                     RoundedRectangle(cornerRadius: Theme.CornerRadius.tiny)
                                         .stroke(Theme.accent, lineWidth: 1.5)
                                 }
@@ -355,7 +361,7 @@ struct InsightsView: View {
     }
 
     private func adherenceDotColor(_ day: DayAdherence) -> Color {
-        if day.date > .now { return Color.platformTertiarySystemFill }
+        if day.date > Calendar.current.journalDay(for: .now) { return Color.platformTertiarySystemFill }
         switch day.status {
         // The dose scale's hues rather than the semantic green and red: a
         // month of those reads as a report card, and these sit quietly beside

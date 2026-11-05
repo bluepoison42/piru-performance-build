@@ -529,7 +529,7 @@ struct EntryListView: View {
     }
 
     private var timelineRebuildKey: String {
-        "\(grouping.rawValue)|\(DoseLogService.shared.revision)|\(prefs.layoutSignature)|\(dayBoundaryHour)|\(dynamicTypeSize)|\(searchText)|\(model.filterSignature)|\(clockTick)"
+        "\(grouping.rawValue)|\(DoseLogService.shared.revision)|\(LaunchCacheInputs.colorSignature(substanceColors))|\(prefs.layoutSignature)|\(dayBoundaryHour)|\(dynamicTypeSize)|\(searchText)|\(model.filterSignature)|\(clockTick)"
     }
 
     /// The Timeline grouping rendered as list rows — the same continuous

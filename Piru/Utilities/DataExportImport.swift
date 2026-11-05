@@ -210,6 +210,7 @@ enum DataExportImport {
     /// under the post-import revision, and nothing re-signals when autosave lands.
     @MainActor
     static func commitImport(context: ModelContext) throws {
+        try RoutineOccurrenceService.repairHistoricalDays(in: context)
         try context.save()
         DoseLogService.shared.changed()
         WidgetCenter.shared.reloadAllTimelines()

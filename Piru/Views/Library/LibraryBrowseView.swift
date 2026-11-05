@@ -166,11 +166,11 @@ private struct FamilyGradientCardEdge: ViewModifier {
     func body(content: Content) -> some View {
         switch surface {
         case .glass:
-            content.shadow(color: color.opacity(0.3), radius: 10, x: 0, y: 5)
+            content.background { shape.fill(color).shadow(color: color.opacity(0.3), radius: 10, x: 0, y: 5) }
         case let .soft(_, _, glowRadius):
-            content.shadow(color: color.opacity(0.45), radius: glowRadius, x: 0, y: 5)
+            content.background { shape.fill(color).shadow(color: color.opacity(0.45), radius: glowRadius, x: 0, y: 5) }
         case .frosted:
-            content.shadow(color: color.opacity(0.35), radius: 10, x: 0, y: 5)
+            content.background { shape.fill(color).shadow(color: color.opacity(0.35), radius: 10, x: 0, y: 5) }
         case let .paper(stroke, _):
             content.overlay(shape.stroke(stroke.opacity(0.25), lineWidth: 1))
         case let .neon(stroke, glow):
@@ -341,7 +341,7 @@ private struct LibraryFamilyCard: View {
             // Anchored to the header (top-trailing in both states with one fixed
             // offset) so expanding doesn't slide it down — only the card grows
             // beneath it. Faint, lightly blurred when expanded so the rows read.
-            MoleculeView(key: family.molecule)
+            MoleculeView(key: family.molecule, canvasSize: CGSize(width: 178, height: 178))
                 .frame(width: 178, height: 178)
                 .opacity(isExpanded ? 0.22 : 0.5)
                 .blur(radius: isExpanded ? 3 : 0)

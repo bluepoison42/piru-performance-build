@@ -44,6 +44,8 @@ final class BackupManager {
         case iCloudUnavailable
         case noBackupFound
         case fileTooLarge
+        case snapshotFailed
+        case storeUnavailable
 
         var errorDescription: String? {
             switch self {
@@ -51,6 +53,10 @@ final class BackupManager {
                 String(localized: "iCloud Drive isn't available. Check that you're signed in to iCloud and that iCloud Drive is on.")
             case .noBackupFound:
                 String(localized: "No iCloud backup was found for this account yet.")
+            case .snapshotFailed:
+                String(localized: "The safety snapshot could not be saved. Your journal was not replaced.")
+            case .storeUnavailable:
+                String(localized: "Automatic backup is paused because the journal could not be opened.")
             case .fileTooLarge:
                 String(localized: "This file is too large to be a Piru backup.")
             }
@@ -112,6 +118,7 @@ final class BackupManager {
 
         status = .running
         do {
+            try DataExportImport.prepareAutomaticBackup(context: context)
             let plaintext = try DataExportImport.exportJSON(context: context)
             let hash = Self.sha256Hex(plaintext)
             if hash == lastBackupHash, lastBackupDate != nil {
@@ -193,7 +200,9 @@ final class BackupManager {
             // import must leave the journal as it was.
             try DataExportImport.validate(plaintext)
             // Never wipe without a recoverable copy first.
-            StoreRecovery.snapshotStore(reason: "prerestore")
+            guard StoreRecovery.snapshotStore(reason: "prerestore") else {
+                throw ManagerError.snapshotFailed
+            }
             try DataExportImport.deleteAll(context: context)
             // The custom-substance cache still lists the deleted rows until it
             // reloads, and the importer skips any custom it already lists.

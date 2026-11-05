@@ -20,6 +20,22 @@ struct JournalModelTests {
     /// without coupling the test to bundled substance values.
     private let substanceName = "ZZTestSubstanceNotInLibrary"
 
+    @Test
+    func `Journal search finds an existing dose without punctuation`() throws {
+        let context = try makeContext()
+        let dose = DoseEntry(substance: "4'-DMA-7,8-DHF", amount: 10, timestamp: .now)
+        let other = DoseEntry(substance: "Caffeine", amount: 100, timestamp: .now)
+        context.insert(dose)
+        context.insert(other)
+        try context.save()
+        let model = JournalModel()
+        model.rebuildGroups(
+            entries: [dose, other], grouping: .byDay, searchText: "4dma78dhf",
+            filterTags: [], filterCategories: [], filterRoutes: [], stackRedoses: true, revision: 0,
+        )
+        #expect(model.filtered.map(\.id) == [dose.id])
+    }
+
     /// Two doses ~10 min apart in one recent cluster → one session → one day card.
     private func makeEntries(_ context: ModelContext) throws -> [DoseEntry] {
         let base = Date.now.addingTimeInterval(-30 * 60)

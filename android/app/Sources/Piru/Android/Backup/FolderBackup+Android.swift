@@ -111,15 +111,9 @@ final class FolderBackupManager {
         if !force, let last = lastBackupDate, Date().timeIntervalSince(last) < Self.minInterval { return }
 
         status = .running
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                Logger.backupManager.error("Folder backup could not save pending edits: \(error.localizedDescription, privacy: .public)")
-            }
-        }
         let container = context.container
         do {
+            try DataExportImport.prepareAutomaticBackup(context: context)
             let outcome = try await revisionGate.run {
                 try await DataExportImport.captureBackup(container: container)
             } write: { snapshot in
@@ -278,7 +272,12 @@ nonisolated enum AndroidBackupFolder {
     static func write(tree: String, name: String, source: URL) -> String? {
         guard let kotlin else { return String(localized: "The backup folder could not be reached.") }
         do {
-            return try kotlin.write(tree, name, source.path) as String?
+            return try FolderBackupPublication.write(name: name) { partial in
+                let uri = try kotlin.stage(tree, name, partial, source.path) as String?
+                return FolderBackupPublication.StageResult(uri: uri, error: nil)
+            } publish: { uri in
+                try kotlin.publish(tree, name, uri, source.path) as String?
+            }
         } catch {
             return error.localizedDescription
         }

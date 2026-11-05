@@ -10,6 +10,7 @@ public final class EntityDescription: @unchecked Sendable {
     /// Whether every stored property's accessors report writes, so a context need look only at
     /// the models it was told about. `@Model` clears it for a property it leaves untracked.
     public var tracksMutations = true
+    private(set) var attributePaths: Set<AnyKeyPath> = []
     private(set) var toOne: [ToOne] = []
     private(set) var toMany: [ToMany] = []
     private(set) var inverses: [Inverse] = []
@@ -38,7 +39,9 @@ public final class EntityDescription: @unchecked Sendable {
     // MARK: Building
 
     /// A stored attribute: nothing to record beyond its value.
-    public func property(_: String, _: KeyPath<some Any, some Any>, deleteRule _: Schema.Relationship.DeleteRule) {}
+    public func property(_: String, _ path: KeyPath<some Any, some Any>, deleteRule _: Schema.Relationship.DeleteRule) {
+        attributePaths.insert(path)
+    }
 
     public func property<Owner: PersistentModel, Target: PersistentModel>(
         _ key: String, _ path: ReferenceWritableKeyPath<Owner, Target?>, deleteRule: Schema.Relationship.DeleteRule,

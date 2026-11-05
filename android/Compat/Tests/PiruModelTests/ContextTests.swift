@@ -8,6 +8,25 @@ import Testing
 struct ContextTests {
     let store = TestStore()
 
+    @Test
+    func `Rollback restores a saved dose edited before it was deleted`() throws {
+        let seeded = try seedJournal(store)
+        let context = try ModelContext(store.container())
+        let held = try #require(try context.dose(seeded.doses[0]))
+        let savedAmount = held.amount
+        held.amount = 20
+        context.delete(held)
+        context.rollback()
+        #expect(held.amount == savedAmount)
+        #expect(!held.isDeleted)
+        #expect(!context.hasChanges)
+        held.notes = "later edit"
+        try context.save()
+        let reread = try ModelContext(store.container())
+        #expect(try reread.dose(held.id)?.amount == savedAmount)
+        #expect(try reread.dose(held.id)?.notes == "later edit")
+    }
+
     /// ToleranceStore.persist's shape: a background context that fetched only the tolerance
     /// cache saves it while the main context has edited and deleted journal entries.
     @Test

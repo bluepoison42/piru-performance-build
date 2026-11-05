@@ -73,11 +73,24 @@ open class MainActivity: AppCompatActivity {
     /// the app's lifecycle callbacks.
     private var isForwarding = false
 
+    @OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
         if (!isTaskRoot) {
             forwardToTaskRoot()
             return
+        }
+        skip.ui.PiruNextPerf.initialize(intent.getIntExtra("piru_next_mask", 0))
+        if (intent.hasExtra("piru_shadow_mode")) {
+            skip.ui.PiruPerfFlags.shadowMode = intent.getIntExtra("piru_shadow_mode", skip.ui.PiruPerfFlags.shadowMode)
+        }
+        if (intent.hasExtra("piru_content_capture")) {
+            skip.ui.PiruPerfFlags.contentCapture = intent.getBooleanExtra("piru_content_capture", skip.ui.PiruPerfFlags.contentCapture)
+        }
+        // The platform opt-out alone need not remove Compose's existing capture session.
+        androidx.compose.ui.contentcapture.ContentCaptureManager.isEnabled = skip.ui.PiruPerfFlags.contentCapture
+        if (!skip.ui.PiruPerfFlags.contentCapture && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            getSystemService(android.view.contentcapture.ContentCaptureManager::class.java)?.setContentCaptureEnabled(false)
         }
         logger.info("starting activity")
         UIApplication.launch(this)

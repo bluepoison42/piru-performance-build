@@ -6,8 +6,10 @@ struct AdherenceView: View {
     @Query(sort: \DoseEntry.timestamp) private var allEntries: [DoseEntry]
     @Query(sort: \DailyDoseItem.sortOrder) private var dailyItems: [DailyDoseItem]
 
+    @Query(filter: #Predicate<RoutineOccurrence> { $0.stateRaw == "skipped" }) private var skippedOccurrences: [RoutineOccurrence]
+
     @State private var model = AdherenceModel()
-    @State private var displayedMonth: Date = .now
+    @State private var displayedMonth: Date = Calendar.current.journalDay(for: .now)
     @State private var selectedDay: DayAdherence?
 
     var body: some View {
@@ -32,10 +34,10 @@ struct AdherenceView: View {
             }
             .skinBackdrop()
             .task(id: DoseLogService.shared.revision) {
-                model.recompute(entries: allEntries, dailyItems: dailyItems, month: displayedMonth)
+                model.recompute(entries: allEntries, dailyItems: dailyItems, month: displayedMonth, skipped: AdherenceCalculator.skippedSnapshots(skippedOccurrences))
             }
             .onChange(of: displayedMonth) {
-                model.recomputeMonth(entries: allEntries, dailyItems: dailyItems, month: displayedMonth)
+                model.recomputeMonth(entries: allEntries, dailyItems: dailyItems, month: displayedMonth, skipped: AdherenceCalculator.skippedSnapshots(skippedOccurrences))
             }
             .sheet(item: $selectedDay) { day in
                 AdherenceDayDetailSheet(day: day)
@@ -201,7 +203,7 @@ private struct AdherenceMonthCard: View {
             VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text("\(taken) of \(due) scheduled doses")
                     .font(.piru(.body, design: .rounded, weight: .semibold))
-                Text(Date.now.formatted(.dateTime.month(.wide)))
+                Text(Calendar.current.journalDay(for: .now).formatted(.dateTime.month(.wide)))
                     .font(.subheadline)
                     .foregroundStyle(Theme.secondaryLabel)
             }
@@ -283,7 +285,7 @@ private struct AdherenceMonthHeader: View {
                     .font(.body.weight(.semibold))
             }
             .accessibilityLabel(Text("Next Month"))
-            .disabled(calendar.isDate(displayedMonth, equalTo: .now, toGranularity: .month))
+            .disabled(calendar.isDate(displayedMonth, equalTo: calendar.journalDay(for: .now), toGranularity: .month))
         }
     }
 }
@@ -598,10 +600,10 @@ private struct AdherenceMonthPicker: View {
     }
 
     private var currentYear: Int {
-        calendar.component(.year, from: Date.now)
+        calendar.component(.year, from: calendar.journalDay(for: .now))
     }
     private var currentMonth: Int {
-        calendar.component(.month, from: Date.now)
+        calendar.component(.month, from: calendar.journalDay(for: .now))
     }
     private var selectedMonth: Int {
         calendar.component(.month, from: displayedMonth)
