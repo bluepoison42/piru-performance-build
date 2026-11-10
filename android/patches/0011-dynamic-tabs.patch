@@ -22,7 +22,7 @@ index fec3638c..69f0de1d 100644
          }
          // Apple-Music-style fold: scrolling down minimizes the tab bar and slides
          // the session accessory into its inline placement, which
-@@ -284,6 +288,45 @@ private struct MainTabView: View {
+@@ -284,6 +288,49 @@ private struct MainTabView: View {
                  navigator.reconcile(visible: visible)
              }
      }
@@ -56,6 +56,10 @@ index fec3638c..69f0de1d 100644
 +                        TabRootView(tab: tab, searchText: $searchText, librarySearchText: $librarySearchText)
 +                    }
 +                }
++                // This body, the root's and the sheet presenter's are evaluated in one Compose
++                // scope, so a tab switch, a sheet or a scene-phase change re-renders the tab bar.
++                // The tab's content depends on none of that: it is rebuilt only for another tab.
++                .androidEquatable(recomposeOverride: tab)
 +            } label: {
 +                Label {
 +                    Text(tab.title)

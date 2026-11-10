@@ -49,7 +49,7 @@ jobs:
         run: |
           zsh android/tools/package-apk.sh
           mkdir -p deliverables
-          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.8.1-70018-unsigned.apk
+          cp "$PIRU_ANDROID/stage/.build/Android/app/outputs/apk/release/app-release-unsigned.apk" deliverables/Piru-Perf-1.8.2-70019-unsigned.apk
       - name: Upload the dependency lock used by the build
         if: always()
         uses: actions/upload-artifact@v4
