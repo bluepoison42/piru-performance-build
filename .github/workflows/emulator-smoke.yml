@@ -1,0 +1,67 @@
+name: Piru emulator smoke
+on:
+  push:
+    branches: [emu-smoke]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the builds to run
+        id: target
+        run: cat ci/smoke/target.env >> "$GITHUB_OUTPUT"
+      - name: Download the baseline APK
+        uses: actions/download-artifact@v4
+        with:
+          name: piru-performance-apk
+          run-id: ${{ steps.target.outputs.baseline_run }}
+          github-token: ${{ github.token }}
+          path: apk/baseline
+      - name: Download the candidate APK
+        if: steps.target.outputs.candidate_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: piru-performance-apk
+          run-id: ${{ steps.target.outputs.candidate_run }}
+          github-token: ${{ github.token }}
+          path: apk/candidate
+      - name: Sign with a throwaway key
+        run: |
+          keytool -genkeypair -keystore smoke.p12 -storetype PKCS12 -storepass smoke-only -keypass smoke-only \
+            -alias smoke -keyalg RSA -keysize 2048 -validity 2 -dname "CN=Emulator smoke"
+          TOOLS=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          for apk in apk/*/*.apk; do
+            "$TOOLS/zipalign" -P 16 -f 4 "$apk" "${apk%-unsigned.apk}-aligned.apk"
+            "$TOOLS/apksigner" sign --ks smoke.p12 --ks-pass pass:smoke-only --key-pass pass:smoke-only \
+              --out "${apk%-unsigned.apk}-smoke.apk" "${apk%-unsigned.apk}-aligned.apk"
+          done
+          ls -l apk/*
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run both builds in an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7_pro
+          ram-size: 6144M
+          heap-size: 512M
+          disk-size: 8G
+          disable-animations: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: python3 ci/smoke/smoke.py apk out
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-smoke
+          path: out/
+          retention-days: 7
