@@ -1,0 +1,29 @@
+Reuse the bundled Library family catalog on tab return while refreshing favorites as before
+
+diff --git a/Piru/Views/Library/LibraryBrowseView.swift b/Piru/Views/Library/LibraryBrowseView.swift
+--- a/Piru/Views/Library/LibraryBrowseView.swift
++++ b/Piru/Views/Library/LibraryBrowseView.swift
+@@ -53,6 +53,15 @@
+             // Resolve against the warmed batch cache so the ~12 category counts
+             // and favorite lookups are dict hits, not a cold main-thread resolve.
+             await SubstanceStore.shared.ensureAllLoaded()
++            #if os(Android)
++                // The bundled family catalog is unchanged when returning to this tab.
++                if !loaded {
++                    visibleFamilies = LibraryFamily.browsable
++                    for family in visibleFamilies {
++                        _ = LibraryFamily.exemplars(for: family.source)
++                    }
++                }
++            #else
+             // Families with empty sub-classes / single cards pruned, so a category
+             // with nothing browsable never shows a dead card.
+             visibleFamilies = LibraryFamily.browsable
+@@ -64,6 +73,7 @@
+             for family in visibleFamilies {
+                 _ = LibraryFamily.exemplars(for: family.source)
+             }
++            #endif
+             rebuildFavorites()
+             loaded = true
+         }

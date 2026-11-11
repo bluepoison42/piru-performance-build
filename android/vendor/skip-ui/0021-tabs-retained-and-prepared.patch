@@ -1,22 +1,18 @@
-A tab keeps its content while the tab bar above it re-renders, and unvisited tabs are built ahead of their first visit; piru_next_mask bits 8/16/32/64 turn the parts off.
+Retain a tab view in a restartable scope and reuse the current top-level tab evaluation; piru_next_mask bit 16 bypasses retention.
 
 diff --git a/Sources/SkipUI/Skip/RetainedContent.kt b/Sources/SkipUI/Skip/RetainedContent.kt
 new file mode 100644
-index 0000000..bd2bae5
+index 0000000..56a7432
 --- /dev/null
 +++ b/Sources/SkipUI/Skip/RetainedContent.kt
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,38 @@
 +// Copyright 2023–2026 Skip
 +// SPDX-License-Identifier: MPL-2.0
 +package skip.ui
 +
 +import androidx.compose.runtime.Composable
-+import androidx.compose.runtime.LaunchedEffect
-+import androidx.compose.runtime.mutableStateListOf
 +import androidx.compose.runtime.remember
-+import kotlinx.coroutines.delay
 +
-+/// Holds the view an equality gate built, until the gate's override changes.
 +class RetainedViewStorage {
 +    private var recomposeOverride: Any? = null
 +    private var view: View? = null
@@ -33,11 +29,8 @@ index 0000000..bd2bae5
 +    }
 +}
 +
-+/// Renders the content of an equality gate. While `recomposeOverride` stays equal the view built
-+/// the first time is rendered again, and Compose skips it: a re-render of the gate's parent no
-+/// longer rebuilds the subtree. The view is evaluated in `RenderRetainedView`'s own scope, so
-+/// state its body reads re-evaluates it as usual.
-+/// `piru_next_mask` bit 16 turns the gate off, to measure it.
++// Keep body evaluation in a restartable scope so its state reads can invalidate it.
++// piru_next_mask bit 16 bypasses retention for comparison.
 +@Composable
 +fun RenderRetainedContent(recomposeOverride: Any, content: () -> View, context: ComposeContext) {
 +    val storage = remember { RetainedViewStorage() }
@@ -51,118 +44,55 @@ index 0000000..bd2bae5
 +        renderable.Render(context)
 +    }
 +}
-+
-+/// The tabs a tab bar builds ahead of their first visit: one more every 700 ms, starting 1.5 s
-+/// after the bar appears, so the launch tab settles first and each build is its own frame.
-+/// `piru_next_mask` bit 8 turns this off, to measure it.
-+@Composable
-+fun rememberPreparedTabs(count: Int): List<Int> {
-+    val prepared = remember { mutableStateListOf<Int>() }
-+    LaunchedEffect(count) {
-+        if (PiruNextPerf.enabled(8)) {
-+            return@LaunchedEffect
-+        }
-+        delay(1500)
-+        for (index in 0 until count) {
-+            if (!prepared.contains(index)) {
-+                prepared.add(index)
-+                delay(700)
-+            }
-+        }
-+    }
-+    return prepared
-+}
-diff --git a/Sources/SkipUI/Skip/TabContentActivity.kt b/Sources/SkipUI/Skip/TabContentActivity.kt
-index 0573358..5944eda 100644
---- a/Sources/SkipUI/Skip/TabContentActivity.kt
-+++ b/Sources/SkipUI/Skip/TabContentActivity.kt
-@@ -15,12 +15,16 @@ import androidx.compose.runtime.rememberUpdatedState
- /// they follow what is visible, as SwiftUI's do.
- val LocalTabContentIsActive = compositionLocalOf { true }
- 
--/// A disposable effect that runs only while its content's tab is on screen: `start` runs when the
--/// tab is shown and again whenever `key` changes while it is, and the function `start` returns runs
--/// when the tab is hidden, the key changes, or the content leaves the composition.
-+/// Whether tasks in this content may run: its tab is on screen, or `TabView` is building the tab
-+/// ahead of its first visit, when a task loads what the tab will show.
-+val LocalTabContentRunsTasks = compositionLocalOf { true }
-+
-+/// A disposable effect that runs only while its content's tab runs tasks: `start` runs when the
-+/// tab is shown or prepared and again whenever `key` changes while it is, and the function `start`
-+/// returns runs when the tab is hidden, the key changes, or the content leaves the composition.
- @Composable
- fun ActiveEffect(key: Any?, start: () -> () -> Unit) {
--    val isActive = LocalTabContentIsActive.current
-+    val isActive = LocalTabContentRunsTasks.current
-     DisposableEffect(key, isActive) {
-         val stop = if (isActive) start() else null
-         onDispose { stop?.invoke() }
 diff --git a/Sources/SkipUI/SkipUI/Containers/TabView.swift b/Sources/SkipUI/SkipUI/Containers/TabView.swift
-index 162ef1c..4c0001b 100644
+index 162ef1c..468ef2c 100644
 --- a/Sources/SkipUI/SkipUI/Containers/TabView.swift
 +++ b/Sources/SkipUI/SkipUI/Containers/TabView.swift
-@@ -553,7 +553,7 @@ public struct TabView : View, Renderable {
-                                 tabIndex += 1
-                             }
-                             // Every visited tab stays composed, as SwiftUI keeps it, and only the selected one is
--                            // measured and placed, so returning to a tab shows it as it was rather than rebuilding it.
-+                            // placed, so returning to a tab shows it as it was rather than rebuilding it.
-                             // A hidden tab's back dispatcher is disabled, so a stack pushed there cannot take Back
-                             // from the tab on screen, and `LocalTabContentIsActive` lets the appearance modifiers
-                             // and tasks follow which tab is visible.
-@@ -572,14 +572,30 @@ public struct TabView : View, Renderable {
-                             }
-                             // A TabView inside a hidden tab is hidden too, whichever of its own tabs is selected.
-                             let isTabViewActive = LocalTabContentIsActive.current
-+                            // The other tabs are built ahead of their first visit, one at a time once the first
-+                            // has settled, so the first tap on a tab shows a page that is already composed. A tab
-+                            // being prepared runs its tasks, which load what it shows; it appears, and takes
-+                            // focus and Back, only when selected.
-+                            let preparedTabs = rememberPreparedTabs(count: tabRenderables.size)
-+                            let preparingTabs: kotlin.collections.MutableList<Int> = mutableListOf()
-+                            if isTabViewActive {
-+                                for ti in preparedTabs {
-+                                    if !visitedTabs.contains(ti) && ti < tabs.size && tabs[ti] != nil && tabs[ti]?.isHidden != true {
-+                                        visitedTabs.add(ti)
-+                                        preparingTabs.add(ti)
-+                                    }
-+                                }
-+                            }
-                             Layout(modifier: Modifier.fillMaxSize(), content: {
-                                 for ti in visitedTabs {
-                                     key(ti) {
-                                         let isActive = isTabViewActive && ti == selectedIndex
-+                                        let runsTasks = isActive || (preparingTabs.contains(ti) && !PiruNextPerf.enabled(64))
-                                         let dispatcherOwner = rememberNavigationEventDispatcherOwner(enabled: isActive)
-                                         // SKIP INSERT: val providedDispatcher = LocalNavigationEventDispatcherOwner provides dispatcherOwner
-                                         // SKIP INSERT: val providedActivity = LocalTabContentIsActive provides isActive
--                                        CompositionLocalProvider(providedDispatcher, providedActivity) {
-+                                        // SKIP INSERT: val providedTasks = LocalTabContentRunsTasks provides runsTasks
-+                                        CompositionLocalProvider(providedDispatcher, providedActivity, providedTasks) {
-                                             Box(modifier: Modifier.fillMaxSize()) {
-                                                 decoratedEntrySlots[ti]?.lastOrNull()?.Content()
-                                             }
-@@ -591,6 +607,15 @@ public struct TabView : View, Renderable {
-                                 guard position >= 0 && position < measurables.size else {
-                                     return layout(width: constraints.minWidth, height: constraints.minHeight) {}
-                                 }
-+                                // A hidden tab is measured too: a lazy list composes its rows while measuring, and
-+                                // done here that work is not left for the frame that shows the tab.
-+                                if !PiruNextPerf.enabled(32) {
-+                                    for hiddenPosition in 0..<measurables.size {
-+                                        if hiddenPosition != position {
-+                                            measurables[hiddenPosition].measure(constraints)
-+                                        }
-+                                    }
-+                                }
-                                 let placeable = measurables[position].measure(constraints)
-                                 return layout(width: placeable.width, height: placeable.height) {
-                                     placeable.placeRelative(0, 0)
+@@ -245,6 +245,7 @@ public struct TabView : View, Renderable {
+ 
+         let tabContext = context.content()
+         let tabRenderables = EvaluateContent(context: tabContext)
++        let tabRenderablesState = rememberUpdatedState(tabRenderables)
+         let tabs: kotlin.collections.List<Tab?> = tabRenderables.map {
+             let renderable = $0 as Renderable // Let transpiler understand type
+             let badgeModifier = BadgeModifier.combined(for: renderable)
+@@ -526,7 +527,9 @@ public struct TabView : View, Renderable {
+                                         // recomposing when called with the same values
+                                         let arguments = TabEntryArguments(tabIndex: tabIndex, modifier: contentModifier, safeArea: contentSafeArea)
+                                         PreferenceValues.shared.collectPreferences([PreferenceCollector<ToolbarBarPreferences>(key: TabBarPreferenceKey.self, state: tabBarPreferencesByTab[tabIndex])]) {
+-                                            RenderEntry(with: arguments, context: entryContext)
++                                            let renderables = tabRenderablesState.value
++                                            let renderable = tabIndex < renderables.size ? renderables[tabIndex] : nil
++                                            RenderEntry(with: arguments, renderable: renderable, context: entryContext)
+                                         }
+                                     }
+                                 })
+@@ -603,7 +606,7 @@ public struct TabView : View, Renderable {
+         }
+     }
+ 
+-    @Composable private func RenderEntry(with arguments: TabEntryArguments, context: ComposeContext) {
++    @Composable private func RenderEntry(with arguments: TabEntryArguments, renderable: Renderable?, context: ComposeContext) {
+         // WARNING: This function is a potential recomposition hotspot. It should not need to be called
+         // multiple times for the same tab on tab change. Test after modifications
+         Box(modifier: arguments.modifier, contentAlignment: androidx.compose.ui.Alignment.Center) {
+@@ -613,10 +616,7 @@ public struct TabView : View, Renderable {
+                 }
+                 return ComposeResult.ok
+             } in: {
+-                let renderables = EvaluateContent(context: context)
+-                if renderables.size > arguments.tabIndex {
+-                    renderables[arguments.tabIndex].Render(context: context)
+-                }
++                renderable?.Render(context: context)
+             }
+         }
+     }
 diff --git a/Sources/SkipUI/SkipUI/View/EquatableView.swift b/Sources/SkipUI/SkipUI/View/EquatableView.swift
-index b2ffb32..a458a16 100644
+index b2ffb32..6db43b8 100644
 --- a/Sources/SkipUI/SkipUI/View/EquatableView.swift
 +++ b/Sources/SkipUI/SkipUI/View/EquatableView.swift
-@@ -76,20 +76,10 @@ public struct AndroidEquatableContent: View, Renderable {
+@@ -76,20 +76,7 @@ public struct AndroidEquatableContent: View, Renderable {
      }
  
      @Composable override func Render(context: ComposeContext) {
@@ -180,9 +110,6 @@ index b2ffb32..a458a16 100644
 -        ) {
 -            renderable.Render(context: context)
 -        }
-+        // The view is retained rather than its evaluated renderables, and evaluated in a scope of
-+        // its own: Compose skips it while the override is equal, and state its body reads still
-+        // re-evaluates it.
 +        RenderRetainedContent(recomposeOverride: recomposeOverride, content: content, context: context)
      }
  }
