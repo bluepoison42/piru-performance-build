@@ -27,15 +27,8 @@ def shot(name):
     (OUT / f"{name}.png").write_bytes(m.adb("exec-out", "screencap", "-p", binary=True))
 
 
-def texts():
-    try:
-        return [node["text"] for node in m.ui_nodes() if node["text"]]
-    except Exception as error:
-        return [f"<dump failed: {error}>"]
-
-
-def tap_text(*candidates):
-    for node in m.ui_nodes():
+def tap_text(nodes, *candidates):
+    for node in nodes:
         if node["text"] in candidates:
             m.shell(f"input tap {node['x']} {node['y']}")
             return node["text"]
@@ -46,17 +39,22 @@ def reach_tabs(name):
     """Past onboarding and any launch sheet, to the tab bar."""
     for step in range(12):
         time.sleep(6)
-        seen = texts()
+        try:
+            nodes = m.ui_nodes()
+        except Exception as error:
+            print(f"[{name}] step {step}: UI dump failed: {error}", flush=True)
+            continue
+        seen = [node["text"] for node in nodes if node["text"]]
         print(f"[{name}] step {step}: {seen[:25]}", flush=True)
         if {"Journal", "Library"} <= set(seen) and "Skip" not in seen:
             return True
-        if not tap_text("Skip", "Not Now", "Continue", "Get Started", "Done", "OK", "Allow", "Close"):
+        if not tap_text(nodes, "Skip", "Not Now", "Continue", "Get Started", "Done", "OK", "Allow", "Close"):
             m.shell("input keyevent 4")
     return False
 
 
 def measure(label, mask=0):
-    command = [sys.executable, str(HERE / "measure_nav.py"), "--usb", "run", "--label", label, "--rounds", "3",
+    command = [sys.executable, str(HERE / "measure_nav.py"), "--usb", "run", "--label", label, "--rounds", "1",
                "--settle", "25", "--wait", "4", "--shots"] + (["--mask", str(mask)] if mask else [])
     print("::group::" + label, flush=True)
     code = subprocess.call(command)
@@ -66,7 +64,7 @@ def measure(label, mask=0):
 
 def install(apk, name):
     print(f"installing {apk}", flush=True)
-    print(m.adb("install", "-r", apk, timeout=900))
+    print(m.adb("install", "--no-incremental", "-r", apk, timeout=900))
     m.shell(f"pm grant {m.PACKAGE} android.permission.POST_NOTIFICATIONS", check=False)
     m.shell(f"am start -W -n {m.ACTIVITY}")
     ok = reach_tabs(name)
@@ -76,7 +74,10 @@ def install(apk, name):
 
 def main():
     m.shell("settings put global window_animation_scale 1; settings put global transition_animation_scale 1; settings put global animator_duration_scale 1")
-    print(m.shell("getprop ro.product.cpu.abilist"), m.shell("wm size"), flush=True)
+    abi = m.shell("getprop ro.product.cpu.abilist").strip()
+    print(abi, m.shell("wm size"), flush=True)
+    if "arm64-v8a" not in abi.split(","):
+        raise RuntimeError(f"The emulator cannot run this arm64-v8a APK: {abi}")
     m.adb("logcat", "-c")
     status = {}
     baseline = glob.glob(str(APKS / "baseline/*-smoke.apk"))
@@ -88,9 +89,6 @@ def main():
         status["candidate_reached_tabs"] = install(candidate[0], "candidate")
         if status["candidate_reached_tabs"]:
             status["candidate_run"] = measure("emu-candidate")
-            status["candidate_all_off_run"] = measure("emu-candidate-mask120", 120)
-            status["candidate_no_prepare_run"] = measure("emu-candidate-mask8", 8)
-            status["candidate_again_run"] = measure("emu-candidate-again")
     log = m.adb("logcat", "-d", "-v", "threadtime", timeout=120)
     (OUT / "logcat.txt").write_text(log, encoding="utf-8")
     fatal = [line for line in log.splitlines() if re.search(r"FATAL EXCEPTION|Fatal signal|AndroidRuntime: |F DEBUG|ANR in", line)]
@@ -101,8 +99,11 @@ def main():
     results = sorted(OUT.glob("emu-*.json"))
     for path in results:
         m.summarize(json.loads(path.read_text(encoding="utf-8")))
-    failed = fatal or not status["baseline_reached_tabs"] or (candidate and not status.get("candidate_reached_tabs")) or not status["foreground_at_end"]
+    failed = (fatal or not status["baseline_reached_tabs"] or status.get("baseline_run") != 0
+              or (candidate and (not status.get("candidate_reached_tabs") or status.get("candidate_run") != 0))
+              or not status["foreground_at_end"])
     sys.exit(1 if failed else 0)
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -119,8 +119,18 @@ def tab_titles():
 
 
 def ui_nodes():
-    shell("uiautomator dump /data/local/tmp/piru-measure.xml", timeout=40)
-    root = ET.fromstring(adb("exec-out", "cat", "/data/local/tmp/piru-measure.xml"))
+    remote = "/data/local/tmp/piru-measure.xml"
+    OUT.mkdir(parents=True, exist_ok=True)
+    # Pull the file instead of parsing an adb command's stdout, which can include diagnostics.
+    dump = shell(f"rm -f {remote}; uiautomator dump --compressed {remote}", timeout=40)
+    (OUT / "ui-dump.txt").write_text(dump, encoding="utf-8")
+    local = OUT / "ui-latest.xml"
+    adb("pull", remote, str(local))
+    raw = local.read_bytes()
+    try:
+        root = ET.fromstring(raw)
+    except ET.ParseError as error:
+        raise RuntimeError(f"Invalid UI XML {local}: {raw[:160]!r}; dump: {dump.strip()}") from error
     nodes = []
     for node in root.iter("node"):
         a = node.attrib
@@ -129,6 +139,15 @@ def ui_nodes():
         x1, y1, x2, y2 = map(int, re.findall(r"\d+", a["bounds"]))
         nodes.append({"text": a.get("text") or a.get("content-desc") or "", "x": (x1 + x2) // 2, "y": (y1 + y2) // 2, "top": y1})
     return nodes
+
+
+def assert_page(tab, screen):
+    height = screen[1] if screen else 3120
+    nodes = ui_nodes()
+    titles = tab_titles()[tab]
+    if not any(node["text"] in titles and node["top"] < height * 0.5 for node in nodes):
+        seen = [node["text"] for node in nodes if node["text"] and node["top"] < height * 0.85]
+        raise RuntimeError(f"Did not reach {tab}: visible page text {seen[:30]}")
 
 
 def locate_tabs(screen):
@@ -235,6 +254,8 @@ def run(args):
     time.sleep(args.settle)
     positions, source = locate_tabs(state["screen"])
     order = [tab for tab in TABS if tab in positions]
+    if set(order) != set(TABS):
+        raise RuntimeError(f"Missing tabs in UI dump: {set(TABS) - set(order)}")
     print(f"launch TotalTime {total[1] if total else '?'} ms; tabs from {source}: {positions}")
 
     result = {"label": label, "version_code": code, "version_name": name, "mask": args.mask, "settle_s": args.settle,
@@ -245,10 +266,12 @@ def run(args):
         result["first_open"][tab] = timed(tap(positions[tab]), args.wait)
         if args.shots:
             (OUT / f"{label}-{tab}.png").write_bytes(adb("exec-out", "screencap", "-p", binary=True))
+        assert_page(tab, state["screen"])
         print(f"first open {tab:9} worst {result['first_open'][tab]['worst_ms']} ms, slow total {result['first_open'][tab]['slow_total_ms']} ms")
     for _ in range(args.rounds):
         for tab in order[1:] + order[:1]:
             result["warm"][tab].append(timed(tap(positions[tab]), args.wait))
+            assert_page(tab, state["screen"])
     if args.sheet:
         titles = tab_titles()["Record an entry"]
         button = next((node for node in ui_nodes() if node["text"] in titles), None)
