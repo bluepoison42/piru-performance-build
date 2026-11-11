@@ -12,7 +12,7 @@ env:
   PIRU_DB_URL: https://github.com/bluepoison42/piru-performance-build/releases/download/db-v1.7-a43b3cc6/piru-substances.sqlite
 jobs:
   cache-regression:
-    runs-on: macos-26
+    runs-on: macos-26-intel
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
